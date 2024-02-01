@@ -1,6 +1,9 @@
 {
   "name": "@v60swap/periphery",
   "version": "1.0.0",
+  "scripts": {
+    "build": "hardhat compile"
+  },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
     "@v60swap/core": "workspace:^",
