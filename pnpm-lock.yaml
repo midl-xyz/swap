@@ -106,6 +106,30 @@ importers:
         specifier: ^0.11.45
         version: 0.11.45
 
+  packages/contracts/periphery:
+    devDependencies:
+      '@nomicfoundation/hardhat-toolbox':
+        specifier: ^4.0.0
+        version: 4.0.0(@nomicfoundation/hardhat-chai-matchers@2.0.4)(@nomicfoundation/hardhat-ethers@3.0.5)(@nomicfoundation/hardhat-network-helpers@1.0.10)(@nomicfoundation/hardhat-verify@2.0.4)(@typechain/ethers-v6@0.5.1)(@typechain/hardhat@9.1.0)(@types/chai@4.3.11)(@types/mocha@10.0.6)(@types/node@20.11.13)(chai@4.4.1)(ethers@6.10.0)(hardhat-gas-reporter@1.0.10)(hardhat@2.19.5)(solidity-coverage@0.8.6)(ts-node@8.10.2)(typechain@8.3.2)(typescript@5.3.3)
+      '@uniswap/lib':
+        specifier: 4.0.1-alpha
+        version: 4.0.1-alpha
+      '@v60swap/core':
+        specifier: workspace:^
+        version: link:../core
+      dotenv:
+        specifier: ^16.4.1
+        version: 16.4.1
+      hardhat:
+        specifier: ^2.19.5
+        version: 2.19.5(ts-node@8.10.2)(typescript@5.3.3)
+      hardhat-abi-exporter:
+        specifier: ^2.10.1
+        version: 2.10.1(hardhat@2.19.5)
+      hardhat-deploy:
+        specifier: ^0.11.45
+        version: 0.11.45
+
 packages:
 
   /@aashutoshrathi/word-wrap@1.2.6:
@@ -2314,6 +2338,11 @@ packages:
 
   /@ungap/structured-clone@1.2.0:
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
+    dev: true
+
+  /@uniswap/lib@4.0.1-alpha:
+    resolution: {integrity: sha512-f6UIliwBbRsgVLxIaBANF6w09tYqc6Y/qXdsrbEmXHyFA7ILiKrIwRFXe1yOg8M3cksgVsO9N7yuL2DdCGQKBA==}
+    engines: {node: '>=10'}
     dev: true
 
   /@vue/compiler-core@3.3.4:
@@ -5634,7 +5663,7 @@ packages:
       chokidar: 3.5.3
       ci-info: 2.0.0
       debug: 4.3.4(supports-color@8.1.1)
-      enquirer: 2.3.4
+      enquirer: 2.4.1
       env-paths: 2.2.1
       ethereum-cryptography: 1.2.0
       ethereumjs-abi: 0.6.8

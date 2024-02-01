@@ -1,8 +1,10 @@
 {
-  "name": "@v60swap/core",
+  "name": "@v60swap/periphery",
   "version": "1.0.0",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@v60swap/core": "workspace:^",
+    "@uniswap/lib": "4.0.1-alpha",
     "dotenv": "^16.4.1",
     "hardhat": "^2.19.5",
     "hardhat-abi-exporter": "^2.10.1",
