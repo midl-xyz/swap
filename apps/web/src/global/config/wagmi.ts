@@ -1,7 +1,7 @@
-import { createConfig, http } from "wagmi";
-import { goerli } from "wagmi/chains";
+import { createConfig, http } from 'wagmi';
+import { goerli } from 'wagmi/chains';
 
-declare module "wagmi" {
+declare module 'wagmi' {
   interface Register {
     config: typeof wagmiConfig;
   }

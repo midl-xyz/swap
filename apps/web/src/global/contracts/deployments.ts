@@ -1,22 +1,22 @@
-import peripheryPackageJson from "@v60swap/periphery/package.json";
-import corePackageJson from "@v60swap/core/package.json";
-import { Address } from "viem";
-import { Config } from "wagmi";
-import { goerli } from "wagmi/chains";
+import peripheryPackageJson from '@v60swap/periphery/package.json';
+import corePackageJson from '@v60swap/core/package.json';
+import { Address } from 'viem';
+import { Config } from 'wagmi';
+import { goerli } from 'wagmi/chains';
 
 type UniswapV2Router02 =
-  typeof import("@v60swap/periphery/deployments/1.0.0/goerli/UniswapV2Router02.json");
+  typeof import('@v60swap/periphery/deployments/1.0.0/goerli/UniswapV2Router02.json');
 
 type UniswapV2Factory =
-  typeof import("@v60swap/core/deployments/1.0.0/goerli/UniswapV2Factory.json");
+  typeof import('@v60swap/core/deployments/1.0.0/goerli/UniswapV2Factory.json');
 
 type Deployments = Record<
-  Config["chains"][number]["id"],
+  Config['chains'][number]['id'],
   {
-    UniswapV2Router02: Omit<UniswapV2Router02, "address"> & {
+    UniswapV2Router02: Omit<UniswapV2Router02, 'address'> & {
       address: Address;
     };
-    UniswapV2Factory: Omit<UniswapV2Factory, "address"> & {
+    UniswapV2Factory: Omit<UniswapV2Factory, 'address'> & {
       address: Address;
     };
   }
