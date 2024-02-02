@@ -1,23 +1,23 @@
+import { wagmiConfig } from "@/global";
 import { Address, zeroAddress } from "viem";
-import { Chain, goerli } from "viem/chains";
+import { goerli } from "viem/chains";
+import { GetChainIdReturnType } from "wagmi/actions";
+
+type ChainId = GetChainIdReturnType<typeof wagmiConfig>;
 
 type TokenDescription = {
   name: string;
   symbol: string;
   decimals: number;
-  trustWalletAddress: string;
+  trustWalletAddress: Address;
 };
 
-type TokenAddress = Record<string, TokenDescription>;
-
-type Tokens = {
-  [key in Chain["id"]]: TokenAddress;
-};
+type TokenMap = Record<Address, TokenDescription>;
 
 // To find trustwallet alias - find a suitable token on Base in TrustWallet assets repo:
 // https://github.com/trustwallet/assets/tree/master/blockchains/base/assets
 
-export const tokenConfig: Partial<Tokens> = {
+export const tokenConfig: Record<ChainId, TokenMap> = {
   [goerli.id]: {
     ["0xD7889E9c1D27475C10C54C7a62e1DdE84f510f4d"]: {
       name: "Wrapped ETH", // "Name" on blockexplorer
@@ -40,10 +40,6 @@ export const tokenConfig: Partial<Tokens> = {
   },
 };
 
-type WETHConfig = {
-  [key in Chain["id"]]: Address;
-};
-
-export const WETHByChain: Partial<WETHConfig> = {
+export const WETHByChain: Record<ChainId, Address> = {
   [goerli.id]: "0xDDfBAaDB7BA1161Daf87Fb140d1B8A811ff76Edd",
 };

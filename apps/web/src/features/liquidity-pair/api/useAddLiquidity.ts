@@ -1,6 +1,12 @@
-import { writeContract } from "@wagmi/core";
-import { deployments, uniswapV2Router02Abi, wagmiConfig } from "@/global";
-import { Address, zeroAddress } from "viem";
+import { deployments, uniswapV2Router02Abi } from "@/global";
+import {
+  Abi,
+  Address,
+  ContractFunctionArgs,
+  ContractFunctionName,
+  zeroAddress,
+} from "viem";
+import { useChainId, useWriteContract } from "wagmi";
 
 export type AddLiquidityArgs = {
   tokenA: Address;
@@ -13,22 +19,15 @@ export type AddLiquidityArgs = {
   deadline: bigint;
 };
 
-type AddLiquidityParams = [
-  Address,
-  Address,
-  bigint,
-  bigint,
-  bigint,
-  bigint,
-  Address,
-  bigint,
-];
-
-type AddLiquidityETHParams = [Address, bigint, bigint, bigint, Address, bigint];
+type SmartContractFunctionArgs<
+  abi extends Abi,
+  functionName extends ContractFunctionName<abi, "payable" | "nonpayable">,
+> = ContractFunctionArgs<abi, "payable" | "nonpayable", functionName>;
 
 export const useAddLiquidity = async () => {
-  // TODO: Update chainId with global chainId component
-  const globalChainId = 5;
+  const globalChainId = useChainId();
+
+  const { writeContract } = useWriteContract();
 
   const addLiquidity = async ({
     tokenA,
@@ -48,13 +47,20 @@ export const useAddLiquidity = async () => {
           : undefined;
 
     const isETH = Boolean(ethValue);
+    let args:
+      | SmartContractFunctionArgs<
+          typeof uniswapV2Router02Abi,
+          "addLiquidityETH"
+        >
+      | SmartContractFunctionArgs<typeof uniswapV2Router02Abi, "addLiquidity">;
 
     if (isETH) {
       const erc20TokenAddress = tokenA === zeroAddress ? tokenA : tokenB;
       const erc20Value =
         tokenA === zeroAddress ? amountBDesired : amountADesired;
       const erc20Min = tokenA === zeroAddress ? amountBMin : amountAMin;
-      const args: AddLiquidityETHParams = [
+
+      args = [
         erc20TokenAddress,
         amountADesired,
         erc20Value,
@@ -62,15 +68,8 @@ export const useAddLiquidity = async () => {
         to,
         deadline,
       ];
-      return writeContract(wagmiConfig, {
-        address: deployments[globalChainId].UniswapV2Router02 as any,
-        abi: uniswapV2Router02Abi,
-        functionName: "addLiquidityETH",
-        args,
-        value: ethValue,
-      });
     } else {
-      const args: AddLiquidityParams = [
+      args = [
         tokenA,
         tokenB,
         amountADesired,
@@ -80,14 +79,17 @@ export const useAddLiquidity = async () => {
         to,
         deadline,
       ];
-
-      return writeContract(wagmiConfig, {
-        address: deployments[globalChainId].UniswapV2Router02 as any,
-        abi: uniswapV2Router02Abi,
-        functionName: "addLiquidity",
-        args,
-      });
     }
+
+    const functionName = isETH ? "addLiquidityETH" : "addLiquidity";
+
+    return writeContract({
+      address: deployments[globalChainId].UniswapV2Router02.address,
+      abi: uniswapV2Router02Abi,
+      functionName,
+      args: args as any,
+      value: ethValue as any,
+    });
   };
 
   return addLiquidity;
