@@ -1,11 +1,5 @@
 import { WETHByChain, deployments, uniswapV2Router02Abi } from "@/global";
-import {
-  Abi,
-  Address,
-  ContractFunctionArgs,
-  ContractFunctionName,
-  zeroAddress,
-} from "viem";
+import { Address, zeroAddress } from "viem";
 import { useChainId, useWriteContract } from "wagmi";
 
 export type SwapArgs = {
@@ -20,11 +14,6 @@ export type SwapArgs = {
 // ERC20/ERC20 or ERC20/ETH Swap params: AmountIn -> AmountOutMin -> Path -> Receiver -> Deadline
 
 // ETH/ERC20 params: AmountOut -> Path -> Receiver -> Deadline
-
-type SmartContractFunctionArgs<
-  abi extends Abi,
-  functionName extends ContractFunctionName<abi, "payable" | "nonpayable">,
-> = ContractFunctionArgs<abi, "payable" | "nonpayable", functionName>;
 
 export const useSwap = async () => {
   const globalChainId = useChainId();

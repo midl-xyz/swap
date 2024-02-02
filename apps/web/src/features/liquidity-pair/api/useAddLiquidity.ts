@@ -1,11 +1,5 @@
 import { deployments, uniswapV2Router02Abi } from "@/global";
-import {
-  Abi,
-  Address,
-  ContractFunctionArgs,
-  ContractFunctionName,
-  zeroAddress,
-} from "viem";
+import { Address, zeroAddress } from "viem";
 import { useChainId, useWriteContract } from "wagmi";
 
 export type AddLiquidityArgs = {
@@ -18,11 +12,6 @@ export type AddLiquidityArgs = {
   to: Address;
   deadline: bigint;
 };
-
-type SmartContractFunctionArgs<
-  abi extends Abi,
-  functionName extends ContractFunctionName<abi, "payable" | "nonpayable">,
-> = ContractFunctionArgs<abi, "payable" | "nonpayable", functionName>;
 
 export const useAddLiquidity = async () => {
   const globalChainId = useChainId();
