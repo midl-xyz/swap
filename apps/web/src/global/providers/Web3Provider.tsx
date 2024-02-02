@@ -1,9 +1,10 @@
-"use client";
+'use client';
 
-import { wagmiConfig } from "@/global";
-import { State, WagmiProvider } from "wagmi";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import { State, WagmiProvider } from 'wagmi';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useState } from 'react';
+
+import { wagmiConfig } from '@/global';
 
 export const Web3Provider = ({
   children,

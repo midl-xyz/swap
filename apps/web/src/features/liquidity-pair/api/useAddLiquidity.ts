@@ -1,6 +1,6 @@
-import { deployments, uniswapV2Router02Abi } from "@/global";
-import { Address, zeroAddress } from "viem";
-import { useChainId, useWriteContract } from "wagmi";
+import { deployments, uniswapV2Router02Abi } from '@/global';
+import { Address, zeroAddress } from 'viem';
+import { useChainId, useWriteContract } from 'wagmi';
 
 export type AddLiquidityArgs = {
   tokenA: Address;
@@ -36,12 +36,13 @@ export const useAddLiquidity = async () => {
           : undefined;
 
     const isETH = Boolean(ethValue);
+
     let args:
       | SmartContractFunctionArgs<
           typeof uniswapV2Router02Abi,
-          "addLiquidityETH"
+          'addLiquidityETH'
         >
-      | SmartContractFunctionArgs<typeof uniswapV2Router02Abi, "addLiquidity">;
+      | SmartContractFunctionArgs<typeof uniswapV2Router02Abi, 'addLiquidity'>;
 
     if (isETH) {
       const erc20TokenAddress = tokenA === zeroAddress ? tokenA : tokenB;
@@ -70,7 +71,7 @@ export const useAddLiquidity = async () => {
       ];
     }
 
-    const functionName = isETH ? "addLiquidityETH" : "addLiquidity";
+    const functionName = isETH ? 'addLiquidityETH' : 'addLiquidity';
 
     return writeContract({
       address: deployments[globalChainId].UniswapV2Router02.address,

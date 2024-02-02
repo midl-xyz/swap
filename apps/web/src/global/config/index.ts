@@ -1,2 +1,2 @@
-export * from "./wagmi";
-export * from "./tokenConfig";
+export * from './wagmi';
+export * from './tokenConfig';
