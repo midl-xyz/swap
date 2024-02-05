@@ -1,6 +1,6 @@
-import { WETHByChain, deployments, uniswapV2Router02Abi } from "@/global";
-import { Address, zeroAddress } from "viem";
-import { useChainId, useWriteContract } from "wagmi";
+import { WETHByChain, deployments, uniswapV2Router02Abi } from '@/global';
+import { Address, zeroAddress } from 'viem';
+import { useChainId, useWriteContract } from 'wagmi';
 
 export type SwapArgs = {
   tokenIn: Address;
@@ -33,30 +33,30 @@ export const useSwap = async () => {
     let args:
       | SmartContractFunctionArgs<
           typeof uniswapV2Router02Abi,
-          "swapExactETHForTokens"
+          'swapExactETHForTokens'
         >
       | SmartContractFunctionArgs<
           typeof uniswapV2Router02Abi,
-          "swapExactTokensForETH"
+          'swapExactTokensForETH'
         >
       | SmartContractFunctionArgs<
           typeof uniswapV2Router02Abi,
-          "swapExactTokensForTokens"
+          'swapExactTokensForTokens'
         >;
 
     let txName:
-      | "swapExactETHForTokens"
-      | "swapExactTokensForETH"
-      | "swapExactTokensForTokens";
+      | 'swapExactETHForTokens'
+      | 'swapExactTokensForETH'
+      | 'swapExactTokensForTokens';
 
     if (tokenIn === zeroAddress) {
-      txName = "swapExactETHForTokens";
+      txName = 'swapExactETHForTokens';
       args = [amountOutMin, [WETH, tokenOut], to, deadline];
     } else if (tokenOut === zeroAddress) {
-      txName = "swapExactTokensForETH";
+      txName = 'swapExactTokensForETH';
       args = [amountIn, amountOutMin, [tokenIn, WETH], to, deadline];
     } else {
-      txName = "swapExactTokensForTokens";
+      txName = 'swapExactTokensForTokens';
       args = [amountIn, amountOutMin, [tokenIn, tokenOut], to, deadline];
     }
 
