@@ -11,6 +11,6 @@ export const wagmiConfig = createConfig({
   chains: [goerli],
   ssr: true,
   transports: {
-    [goerli.id]: http(),
+    [goerli.id]: http('a'),
   },
 });
