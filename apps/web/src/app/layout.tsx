@@ -3,9 +3,9 @@ import { Inter } from 'next/font/google';
 import { headers } from 'next/headers';
 import { cookieToInitialState } from 'wagmi';
 
-import { Web3Provider, wagmiConfig } from '@/global';
+import { ConnectWalletProvider, Web3Provider, wagmiConfig } from '@/global';
 
-import { Header, Logo } from '@/widgets';
+import { Header, Logo, AccountButton } from '@/widgets';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -29,7 +29,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Web3Provider initialState={initialState}>
-          <Header leftSlot={<Logo />} />
+          <ConnectWalletProvider />
+          <Header leftSlot={<Logo />} rightSlot={<AccountButton />} />
           {children}
         </Web3Provider>
       </body>

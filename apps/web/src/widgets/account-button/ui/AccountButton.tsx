@@ -1,8 +1,21 @@
-import { useAccount, useConnect } from 'wagmi';
+'use client';
+
+import { isWalletDialogOpenAtom } from '@/features';
+import { Button } from '@/shared';
+import { useAtom } from 'jotai';
+import { useAccount } from 'wagmi';
 
 export const AccountButton = () => {
-  const { connect } = useConnect();
-  const account = useAccount();
+  const { isConnected, address } = useAccount();
+  const [, setDialogOpen] = useAtom(isWalletDialogOpenAtom);
 
-  return <div>{account.address}</div>;
+  return (
+    <div>
+      {isConnected ? (
+        <>{address}</>
+      ) : (
+        <Button onClick={() => setDialogOpen(true)}>Connect wallet</Button>
+      )}
+    </div>
+  );
 };

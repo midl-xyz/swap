@@ -1,14 +1,23 @@
 import { Dialog, DialogContent, DialogOverlay } from '@/shared';
+import { DialogProps } from '@radix-ui/react-dialog';
 import { useConnect } from 'wagmi';
 
-export const ConnectWalletDialog = () => {
+type ConnectWalletDialogProps = DialogProps & {
+  onClose: () => void;
+};
+
+export const ConnectWalletDialog = ({
+  onClose,
+  ...rest
+}: ConnectWalletDialogProps) => {
   const { connect } = useConnect();
 
   return (
-    <Dialog>
+    <Dialog {...rest}>
       <DialogOverlay />
-      <DialogContent>
-        <button
+      <DialogContent onEscapeKeyDown={onClose}>
+        Dialog
+        {/* <button
           onClick={() => {
             connect({
               connector: 'injected',
@@ -16,7 +25,7 @@ export const ConnectWalletDialog = () => {
           }}
         >
           Connect Wallet
-        </button>
+        </button> */}
       </DialogContent>
     </Dialog>
   );
