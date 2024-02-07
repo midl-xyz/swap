@@ -4,22 +4,24 @@ const localStorageKey = 'slippage';
 const DEFAULT_SLIPPAGE_VALUE = '5';
 
 export const useSlippage = () => {
-  const defaultValue = localStorage.getItem(localStorageKey);
+  let defaultValue: string | null = null;
+  if (typeof window !== 'undefined') {
+    defaultValue = localStorage.getItem(localStorageKey);
+  }
   const [slippage, setLocalSlippage] = useState(
     defaultValue ? defaultValue : DEFAULT_SLIPPAGE_VALUE,
   );
 
   const setSlippage = (newSlippage: number | string) => {
-    const slippage =
-      typeof newSlippage === 'string' ? newSlippage : newSlippage.toString();
+    const slippage = newSlippage.toString();
     localStorage.setItem(localStorageKey, slippage);
     setLocalSlippage(slippage);
   };
 
   const applySlippage = (amount: bigint, overrideSlippage?: number) => {
-    const _slippage = overrideSlippage || Number(slippage);
+    const slip = overrideSlippage || Number(slippage);
 
-    if (_slippage < 0 || _slippage > 100) {
+    if (slip < 0 || slip > 100) {
       console.warn('slippage percent out of range 0..100: -> ', slippage);
     }
 
