@@ -22,9 +22,6 @@ export async function GET(request: Request) {
         'X-CMC_PRO_API_KEY': apiKey,
         Accept: 'application/json',
       },
-      next: {
-        revalidate: 60,
-      },
     });
 
     const data: CoinMarketCapQuote = await response.json();
@@ -39,6 +36,7 @@ export async function GET(request: Request) {
       {
         symbol: symbol,
         price: tokenPrice,
+        timestamp: data.status.timestamp,
       },
       { status: 200 },
     );
@@ -49,3 +47,5 @@ export async function GET(request: Request) {
     );
   }
 }
+
+export const revalidate = 60;
