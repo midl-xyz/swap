@@ -10,7 +10,7 @@ type UniswapV2Router02 =
 type UniswapV2Factory =
   typeof import('@v60swap/core/deployments/1.0.0/goerli/UniswapV2Factory.json');
 
-type UniswapV2Pair = typeof import('./additional-abis/UniswapV2Pair.json');
+type UniswapV2Pair = typeof import('@v60swap/core/dist/IUniswapV2Pair.json');
 
 type Deployments = Record<
   Config['chains'][number]['id'],
@@ -33,6 +33,6 @@ export const deployments: Deployments = {
     UniswapV2Factory: require(
       `@v60swap/core/deployments/${corePackageJson.version}/goerli/UniswapV2Factory.json`,
     ),
-    UniswapV2Par: require('./additional-abis/UniswapV2Pair.json'),
+    UniswapV2Par: require('@v60swap/core/dist/IUniswapV2Pair.json'),
   },
 };

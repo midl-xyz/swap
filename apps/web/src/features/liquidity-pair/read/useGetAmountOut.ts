@@ -1,19 +1,22 @@
 import { deployments, uniswapV2Router02Abi } from '@/global';
 import { useChainId, useReadContract } from 'wagmi';
 
-export type GetAmountOutArgs = {
-  amountIn: bigint;
-  reserveIn: bigint;
-  reserveOut: bigint;
-};
+type GetAmountOutArgs = SmartContractReadFunctionArgs<
+  typeof uniswapV2Router02Abi,
+  'getAmountOut'
+>;
 
-// GetAmountOut Params: uint amountIn, uint reserveIn, uint reserveOut
+export type UseGetAmountOutParams = {
+  amountIn: GetAmountOutArgs['0'];
+  reserveIn: GetAmountOutArgs['1'];
+  reserveOut: GetAmountOutArgs['2'];
+};
 
 export const useGetAmountOut = async ({
   reserveIn,
   reserveOut,
   amountIn,
-}: GetAmountOutArgs) => {
+}: UseGetAmountOutParams) => {
   const globalChainId = useChainId();
 
   return useReadContract({

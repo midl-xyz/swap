@@ -1,18 +1,20 @@
 import { deployments, uniswapV2FactoryAbi } from '@/global';
-import { Address } from 'viem';
 import { useChainId, useReadContract } from 'wagmi';
 
-export type getLpTokenArgs = {
-  tokenA: Address;
-  tokenB: Address;
-};
+type GetPairArgs = SmartContractReadFunctionArgs<
+  typeof uniswapV2FactoryAbi,
+  'getPair'
+>;
 
-// GetAmountOut Params: uint amountIn, uint reserveIn, uint reserveOut
+export type UseGetLpTokenAddressParams = {
+  tokenA: GetPairArgs['0'];
+  tokenB: GetPairArgs['1'];
+};
 
 export const useGetLPTokenAddress = async ({
   tokenA,
   tokenB,
-}: getLpTokenArgs) => {
+}: UseGetLpTokenAddressParams) => {
   const globalChainId = useChainId();
 
   return useReadContract({
