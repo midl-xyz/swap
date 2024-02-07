@@ -15,7 +15,6 @@ export const Web3Provider = ({
   return (
     <WagmiProvider config={wagmiConfig} initialState={initialState}>
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-      {children}
     </WagmiProvider>
   );
 };

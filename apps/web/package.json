@@ -10,6 +10,7 @@
     "prepare": "panda codegen"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.0.5",
     "@tanstack/react-query": "^5.18.0",
     "@v60swap/core": "workspace:^",
     "@v60swap/periphery": "workspace:^",
