@@ -1,4 +1,7 @@
 import type { ContractFunctionName, ContractFunctionArgs, Abi } from 'viem';
+import type { UseReadContractParameters } from 'wagmi';
+import type { GetChainIdReturnType } from 'wagmi/actions';
+import { wagmiConfig } from '@/global/config';
 
 declare global {
   type SmartContractFunctionArgs<
@@ -10,4 +13,11 @@ declare global {
     abi extends Abi,
     functionName extends ContractFunctionName<abi, 'view' | 'pure'>,
   > = ContractFunctionArgs<abi, 'view' | 'pure', functionName>;
+
+  type ContractCallOverrides = Omit<
+    UseReadContractParameters,
+    'abi' | 'address' | 'functionName' | 'chainId' | 'args'
+  > & {
+    chainId?: GetChainIdReturnType<typeof wagmiConfig>;
+  };
 }

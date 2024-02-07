@@ -9,13 +9,12 @@ type PairStatsArgs = {
   lpTokenAddress: Address;
 };
 
-export const useGetPairStats = async ({
-  lpTokenAddress,
-  tokenA,
-  tokenB,
-  userAddress,
-}: PairStatsArgs) => {
-  const chainId = useChainId();
+export const useGetPairStats = async (
+  { lpTokenAddress, tokenA, tokenB, userAddress }: PairStatsArgs,
+  wagmiOverrides?: ContractCallOverrides,
+) => {
+  const globalChainId = useChainId();
+  const chainId = wagmiOverrides?.chainId || globalChainId;
 
   const callResults = useReadContracts({
     contracts: [
@@ -24,12 +23,14 @@ export const useGetPairStats = async ({
         address: lpTokenAddress,
         abi: uniswapV2PairAbi,
         functionName: 'token0',
+        ...wagmiOverrides,
       },
       // 1: Reserves returns uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast
       {
         address: lpTokenAddress,
         abi: uniswapV2PairAbi,
         functionName: 'getReserves',
+        ...wagmiOverrides,
       },
 
       // 2: TokenA Balance
@@ -38,6 +39,7 @@ export const useGetPairStats = async ({
         abi: erc20Abi,
         functionName: 'balanceOf',
         args: [userAddress],
+        ...wagmiOverrides,
       },
       // 3: TokenB Balance
       {
@@ -45,6 +47,7 @@ export const useGetPairStats = async ({
         abi: erc20Abi,
         functionName: 'balanceOf',
         args: [userAddress],
+        ...wagmiOverrides,
       },
       // 4: Lp token Balance
       {
@@ -52,6 +55,7 @@ export const useGetPairStats = async ({
         abi: uniswapV2PairAbi,
         functionName: 'balanceOf',
         args: [userAddress],
+        ...wagmiOverrides,
       },
       // 5: Lp Token Allowance
       {
@@ -59,6 +63,7 @@ export const useGetPairStats = async ({
         abi: uniswapV2PairAbi,
         functionName: 'allowance',
         args: [userAddress, deployments[chainId].UniswapV2Router02.address],
+        ...wagmiOverrides,
       },
       // 6: TokenA Allowance
       {
@@ -66,6 +71,7 @@ export const useGetPairStats = async ({
         abi: erc20Abi,
         functionName: 'allowance',
         args: [userAddress, deployments[chainId].UniswapV2Router02.address],
+        ...wagmiOverrides,
       },
       // 7: TokenB Allowance
       {
@@ -73,26 +79,10 @@ export const useGetPairStats = async ({
         abi: erc20Abi,
         functionName: 'allowance',
         args: [userAddress, deployments[chainId].UniswapV2Router02.address],
+        ...wagmiOverrides,
       },
     ],
   });
-
-  type Result = {
-    reserves: {
-      tokenA: bigint;
-      tokenB: bigint;
-    };
-    balances: {
-      lpToken: bigint;
-      tokenA: bigint;
-      tokenB: bigint;
-    };
-    allowances: {
-      lpToken: bigint;
-      tokenA: bigint;
-      tokenB: bigint;
-    };
-  };
 
   const isTokenAEqToken0 = tokenA === callResults?.data?.[0].result;
 
@@ -104,7 +94,7 @@ export const useGetPairStats = async ({
     ? callResults?.data?.[1].result?.[1] || BigInt(0)
     : callResults?.data?.[1].result?.[0] || BigInt(0);
 
-  const result: Result = {
+  const result = {
     reserves: {
       tokenA: tokenAReserve,
       tokenB: tokenBReserve,
@@ -119,7 +109,7 @@ export const useGetPairStats = async ({
       tokenA: callResults?.data?.[6].result || BigInt(0),
       tokenB: callResults?.data?.[7].result || BigInt(0),
     },
-  };
+  } as const;
 
   return result;
 };

@@ -11,16 +11,18 @@ export type UseGetLpTokenAddressParams = {
   tokenB: GetPairArgs['1'];
 };
 
-export const useGetLPTokenAddress = async ({
-  tokenA,
-  tokenB,
-}: UseGetLpTokenAddressParams) => {
+export const useGetLPTokenAddress = async (
+  { tokenA, tokenB }: UseGetLpTokenAddressParams,
+  wagmiOverrides?: ContractCallOverrides,
+) => {
   const globalChainId = useChainId();
+  const chainId = wagmiOverrides?.chainId || globalChainId;
 
   return useReadContract({
     abi: uniswapV2FactoryAbi,
-    address: deployments[globalChainId].UniswapV2Factory.address,
+    address: deployments[chainId].UniswapV2Factory.address,
     functionName: 'getPair',
     args: [tokenA, tokenB],
+    ...wagmiOverrides,
   });
 };

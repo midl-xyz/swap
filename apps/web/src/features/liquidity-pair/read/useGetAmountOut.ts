@@ -1,5 +1,5 @@
 import { deployments, uniswapV2Router02Abi } from '@/global';
-import { useChainId, useReadContract, UseReadContractParameters } from 'wagmi';
+import { useChainId, useReadContract } from 'wagmi';
 
 type GetAmountOutArgs = SmartContractReadFunctionArgs<
   typeof uniswapV2Router02Abi,
@@ -7,26 +7,31 @@ type GetAmountOutArgs = SmartContractReadFunctionArgs<
 >;
 
 export type UseGetAmountOutParams = {
-  args: {
-    amountIn: GetAmountOutArgs['0'];
-    reserveIn: GetAmountOutArgs['1'];
-    reserveOut: GetAmountOutArgs['2'];
-  };
-  overrides: UseReadContractParameters;
+  amountIn: GetAmountOutArgs['0'];
+  reserveIn: GetAmountOutArgs['1'];
+  reserveOut: GetAmountOutArgs['2'];
 };
 
-export const useGetAmountOut = async ({
-  args,
-  overrides,
-}: UseGetAmountOutParams) => {
+export const useGetAmountOut = async (
+  { amountIn, reserveIn, reserveOut }: UseGetAmountOutParams,
+  wagmiOverrides?: ContractCallOverrides,
+) => {
   const globalChainId = useChainId();
-  const { amountIn, reserveIn, reserveOut } = args;
+  const chainId = wagmiOverrides?.chainId || globalChainId;
 
   return useReadContract({
     abi: uniswapV2Router02Abi,
-    address: deployments[globalChainId].UniswapV2Router02.address,
+    address: deployments[chainId].UniswapV2Router02.address,
     functionName: 'getAmountOut',
     args: [amountIn, reserveIn, reserveOut],
-    ...overrides,
+    ...wagmiOverrides,
+  });
+};
+
+const useFoo = () => {
+  useGetAmountOut({
+    amountIn: BigInt(1),
+    reserveIn: BigInt(2),
+    reserveOut: BigInt(3),
   });
 };
