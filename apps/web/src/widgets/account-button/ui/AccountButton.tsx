@@ -1,7 +1,7 @@
 'use client';
 
 import { isWalletDialogOpenAtom } from '@/features';
-import { Button } from '@/shared';
+import { Button, shortenAddress } from '@/shared';
 import { useAtom } from 'jotai';
 import { useAccount, useDisconnect } from 'wagmi';
 
@@ -12,13 +12,13 @@ export const AccountButton = () => {
 
   return (
     <div>
-      {isConnected ? (
+      {isConnected && address ? (
         <Button
           onClick={() => {
             disconnect();
           }}
         >
-          {address}
+          {shortenAddress(address)}
         </Button>
       ) : (
         <Button onClick={() => setDialogOpen(true)}>Connect wallet</Button>
