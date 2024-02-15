@@ -14,6 +14,9 @@ const buttonStyle = cva({
     _disabled: {
       bg: 'neutral.300',
     },
+    _loading: {
+      bg: 'neutral.300',
+    },
   },
   variants: {
     appearance: {

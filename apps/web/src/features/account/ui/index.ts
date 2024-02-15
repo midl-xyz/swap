@@ -1,1 +1,1 @@
-export * from './ConnetWalletDialog';
+export * from './ConnectWalletDialog';
