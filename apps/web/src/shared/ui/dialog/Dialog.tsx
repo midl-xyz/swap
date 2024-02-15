@@ -5,7 +5,7 @@ export const DialogContent = styled(RadixDialog.Content, {
   base: {
     backgroundColor: 'white',
     borderRadius: 'md',
-    padding: 4,
+    padding: 8,
     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
     position: 'fixed',
     top: '50%',

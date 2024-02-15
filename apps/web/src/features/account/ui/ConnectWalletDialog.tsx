@@ -3,6 +3,7 @@ import { DialogProps } from '@radix-ui/react-dialog';
 import { useEffect } from 'react';
 import { useAccount, useConnect } from 'wagmi';
 import { css } from '~/styled-system/css';
+import { vstack } from '~/styled-system/patterns';
 
 type ConnectWalletDialogProps = DialogProps & {
   onClose: () => void;
@@ -25,18 +26,29 @@ export const ConnectWalletDialog = ({
     <Dialog {...rest}>
       <DialogOverlay onClick={onClose} />
       <DialogContent onEscapeKeyDown={onClose}>
-        <h1
-          className={css({
-            textStyle: 'h3',
+        <div
+          className={vstack({
+            gap: 8,
           })}
         >
-          Connect Wallet
-        </h1>
-        {connectors.map((connector) => (
-          <Button key={connector.uid} onClick={() => connect({ connector })}>
-            {connector.name}
-          </Button>
-        ))}
+          <h1
+            className={css({
+              textStyle: 'h3',
+            })}
+          >
+            Connect Wallet
+          </h1>
+          <div className={vstack({ gap: 4, alignItems: 'stretch' })}>
+            {connectors.map((connector) => (
+              <Button
+                key={connector.uid}
+                onClick={() => connect({ connector })}
+              >
+                {connector.name}
+              </Button>
+            ))}
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );
