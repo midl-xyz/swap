@@ -2,6 +2,8 @@ import { defineConfig } from '@pandacss/dev';
 
 export default defineConfig({
   // Whether to use css reset
+  presets: ['@pandacss/preset-base', '@pandacss/preset-panda'],
+
   preflight: true,
   jsxFramework: 'react',
 
@@ -12,9 +14,7 @@ export default defineConfig({
   exclude: [],
 
   // Useful for theme customization
-  theme: {
-    extend: {},
-  },
+  theme: {},
 
   // The output directory for your css system
   outdir: 'styled-system',
