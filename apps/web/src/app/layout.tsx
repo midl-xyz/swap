@@ -29,12 +29,21 @@ export default function RootLayout({
   );
 
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={css({
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      })}
+    >
       <body
         className={cx(
           inter.className,
           css({
-            bg: 'neutral.100',
+            display: 'flex',
+            flexDirection: 'column',
+            bg: 'neutral.50',
           }),
         )}
       >

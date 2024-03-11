@@ -10,14 +10,20 @@
     "prepare": "panda codegen"
   },
   "dependencies": {
+    "@maskito/core": "^2.2.0",
+    "@maskito/kit": "^2.2.0",
+    "@maskito/react": "^2.2.0",
     "@radix-ui/react-dialog": "^1.0.5",
     "@tanstack/react-query": "^5.18.0",
     "@v60swap/core": "workspace:^",
     "@v60swap/periphery": "workspace:^",
     "jotai": "^2.6.4",
+    "lucide-react": "^0.336.0",
     "next": "14.1.0",
+    "pino-pretty": "^10.3.1",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.50.1",
     "viem": "2.x",
     "wagmi": "^2.5.5"
   },

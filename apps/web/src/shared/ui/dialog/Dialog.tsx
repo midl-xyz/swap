@@ -11,6 +11,7 @@ export const DialogContent = styled(RadixDialog.Content, {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
+    zIndex: 200,
   },
 });
 
@@ -22,6 +23,7 @@ export const DialogOverlay = styled(RadixDialog.Overlay, {
     bottom: 0,
     left: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 100,
   },
 });
 
