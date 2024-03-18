@@ -3,7 +3,12 @@ import { Inter } from 'next/font/google';
 import { headers } from 'next/headers';
 import { cookieToInitialState } from 'wagmi';
 
-import { ConnectWalletProvider, Web3Provider, wagmiConfig } from '@/global';
+import {
+  ConnectWalletProvider,
+  TokenDialogProvider,
+  Web3Provider,
+  wagmiConfig,
+} from '@/global';
 
 import { AccountButton, AppMenu, Header, Logo } from '@/widgets';
 import Link from 'next/link';
@@ -49,6 +54,7 @@ export default function RootLayout({
       >
         <Web3Provider initialState={initialState}>
           <ConnectWalletProvider />
+          <TokenDialogProvider />
           <Header
             leftSlot={
               <div

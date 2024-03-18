@@ -1,45 +1,35 @@
 'use client';
 
-import { Button, Input, NumberInput } from '@/shared';
+import { Button, Input, InputGroup, NumberInput, SwapInput } from '@/shared';
 import { css } from '~/styled-system/css';
-import { vstack } from '~/styled-system/patterns';
+import { hstack, vstack } from '~/styled-system/patterns';
 import { ArrowDownUpIcon } from 'lucide-react';
 import { styled } from '~/styled-system/jsx';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useEffect } from 'react';
-
-const InputGroup = styled('div', {
-  base: {
-    bg: 'white',
-    borderRadius: 'lg',
-    px: 4,
-    py: 4,
-  },
-});
-
-const SwapInput = styled(NumberInput, {
-  base: {
-    textStyle: 'h4',
-    borderLeft: '2px solid',
-    borderLeftColor: 'transparent',
-    pl: 1,
-    // TODO: This doesn't look right, looks like more of a caret
-    _focus: {
-      outline: 'none',
-      boxShadow: 'none',
-      borderLeftColor: 'orange.500',
-    },
-  },
-});
+import { TokenButton, TokenSelect, useLastUsedTokens } from '@/features';
+import { useChainId } from 'wagmi';
 
 type FormData = {
   inputToken: string;
   outputToken: string;
+  inputTokenAmount: string;
+  outputTokenAmount: string;
 };
 
 export const SwapForm = () => {
-  const { handleSubmit, register, setValue, getValues, watch } =
-    useForm<FormData>();
+  const { tokens } = useLastUsedTokens();
+  const chainId = useChainId();
+
+  const { handleSubmit, register, setValue, getValues, watch, control } =
+    useForm<FormData>({
+      defaultValues: {
+        inputToken: '',
+        outputToken: '',
+        inputTokenAmount: '',
+        outputTokenAmount: '',
+      },
+    });
 
   const { inputToken, outputToken } = watch();
 
@@ -48,21 +38,28 @@ export const SwapForm = () => {
   };
 
   const onSwapInput = () => {
-    const { outputToken, inputToken } = getValues();
+    const { outputTokenAmount, inputTokenAmount, inputToken, outputToken } =
+      getValues();
 
-    if (inputToken && !outputToken) {
+    if (inputTokenAmount && !outputTokenAmount) {
+      setValue('outputTokenAmount', inputTokenAmount);
+      setValue('inputTokenAmount', '');
+      setValue('inputToken', outputToken);
       setValue('outputToken', inputToken);
-      setValue('inputToken', '');
     }
 
-    if (!inputToken && outputToken) {
+    if (!inputTokenAmount && outputTokenAmount) {
+      setValue('inputTokenAmount', outputTokenAmount);
+      setValue('outputTokenAmount', '');
       setValue('inputToken', outputToken);
-      setValue('outputToken', '');
+      setValue('outputToken', inputToken);
     }
 
-    if (inputToken && outputToken) {
+    if (inputTokenAmount && outputTokenAmount) {
+      setValue('inputTokenAmount', outputTokenAmount);
+      setValue('outputTokenAmount', '');
       setValue('inputToken', outputToken);
-      setValue('outputToken', '');
+      setValue('outputToken', inputToken);
     }
   };
 
@@ -81,7 +78,7 @@ export const SwapForm = () => {
         px: 16,
         py: 8,
         width: 'full',
-        maxWidth: '1/3',
+        maxWidth: 640,
       })}
     >
       <h2
@@ -108,7 +105,16 @@ export const SwapForm = () => {
             })}
           >
             <span>You pay</span>
-            <SwapInput placeholder="0" {...register('inputToken')} />
+            <div className={hstack()}>
+              <SwapInput placeholder="0" {...register('inputTokenAmount')} />
+              <Controller
+                control={control}
+                name="inputToken"
+                render={({ field }) => {
+                  return <TokenButton {...field} chainId={chainId} />;
+                }}
+              />
+            </div>
           </label>
         </InputGroup>
 
@@ -132,11 +138,20 @@ export const SwapForm = () => {
             })}
           >
             <span>You receive</span>
-            <SwapInput placeholder="0" {...register('outputToken')} />
+            <div className={hstack()}>
+              <SwapInput placeholder="0" {...register('outputTokenAmount')} />
+              <Controller
+                control={control}
+                name="outputToken"
+                render={({ field }) => {
+                  return <TokenButton {...field} chainId={chainId} />;
+                }}
+              />
+            </div>
           </label>
         </InputGroup>
       </div>
-      <Button type="submit">Confirm</Button>
+      <Button type="submit">Swap</Button>
     </form>
   );
 };

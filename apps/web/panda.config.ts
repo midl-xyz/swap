@@ -65,6 +65,20 @@ export default defineConfig({
           lineHeight: '1.5',
         },
       },
+      button: {
+        value: {
+          fontSize: 'md',
+          fontWeight: 'medium',
+          lineHeight: '1.2',
+        },
+      },
+      caption: {
+        value: {
+          fontSize: 'sm',
+          fontWeight: 'normal',
+          lineHeight: '1.2',
+        },
+      },
     },
   },
 

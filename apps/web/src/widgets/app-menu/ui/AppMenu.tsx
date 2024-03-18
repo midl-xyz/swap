@@ -8,12 +8,14 @@ import { hstack } from '~/styled-system/patterns';
 type AppMenuLink = {
   label: string;
   href: string;
+  isExact?: boolean;
 };
 
 const appMenuLinks: AppMenuLink[] = [
   {
     label: 'Swap',
     href: '/',
+    isExact: true,
   },
   {
     label: 'My Liquidity',
@@ -51,7 +53,13 @@ export const AppMenu = () => {
             color: 'neutral.800',
             fontWeight: 'medium',
             borderBottomWidth: 2,
-            borderColor: pathname === link.href ? 'neutral.800' : 'transparent',
+            borderColor: (
+              link.isExact
+                ? pathname === link.href
+                : pathname.startsWith(link.href)
+            )
+              ? 'neutral.800'
+              : 'transparent',
           })}
         >
           {link.label}

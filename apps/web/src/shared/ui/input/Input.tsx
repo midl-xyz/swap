@@ -1,6 +1,26 @@
+import { cva } from '~/styled-system/css';
 import { styled } from '~/styled-system/jsx';
 
-export const Input = styled('input', {
+const inputStyle = cva({
+  variants: {
+    appearance: {
+      primary: {},
+      secondary: {
+        bg: 'white',
+        borderRadius: 'xl',
+        border: '2px solid',
+        borderColor: 'neutral.100',
+        px: 4,
+        py: 3,
+        flexGrow: 1,
+        display: 'flex',
+        width: '100%',
+        _focus: {
+          boxShadow: 'none',
+        },
+      },
+    },
+  },
   base: {
     _focus: {
       outline: 'none',
@@ -14,5 +34,11 @@ export const Input = styled('input', {
       WebkitAppearance: 'none',
       margin: 0,
     },
+  },
+});
+
+export const Input = styled('input', inputStyle, {
+  defaultProps: {
+    appearance: 'primary',
   },
 });

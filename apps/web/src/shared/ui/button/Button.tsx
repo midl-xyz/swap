@@ -7,6 +7,13 @@ const buttonStyle = cva({
     size: 'medium',
   },
   base: {
+    flexGrow: 0,
+    flexShrink: 0,
+    appearance: 'none',
+    display: 'inline-flex',
+    gap: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
     fontWeight: 'medium',
     _hover: {
       cursor: 'pointer',
@@ -25,6 +32,20 @@ const buttonStyle = cva({
         color: 'white',
         _hover: {
           backgroundColor: 'neutral.950',
+        },
+      },
+      secondary: {
+        backgroundColor: 'neutral.100',
+        color: 'neutral.800',
+        _hover: {
+          backgroundColor: 'neutral.200',
+        },
+      },
+      ghost: {
+        backgroundColor: 'transparent',
+        color: 'neutral.800',
+        _hover: {
+          backgroundColor: 'neutral.100',
         },
       },
     },
@@ -46,4 +67,8 @@ const buttonStyle = cva({
   },
 });
 
-export const Button = styled('button', buttonStyle);
+export const Button = styled('button', buttonStyle, {
+  defaultProps: {
+    type: 'button',
+  },
+});
