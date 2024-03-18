@@ -25,5 +25,8 @@
   },
   "dependencies": {
     "mustache": "^4.2.0"
+  },
+  "volta": {
+    "node": "20.11.1"
   }
 }
