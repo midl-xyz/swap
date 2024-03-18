@@ -87,6 +87,9 @@ importers:
       '@v60swap/periphery':
         specifier: workspace:^
         version: link:../../packages/contracts/periphery
+      '@wagmi/core':
+        specifier: ^2.6.3
+        version: 2.6.3(@types/react@18.2.48)(react@18.2.0)(typescript@5.3.3)(viem@2.7.1)
       jotai:
         specifier: ^2.6.4
         version: 2.6.4(@types/react@18.2.48)(react@18.2.0)
