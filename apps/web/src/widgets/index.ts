@@ -5,4 +5,5 @@ export * from './header';
 export * from './liquidity';
 export * from './liquidity-form';
 export * from './logo';
+export * from './slippage-control';
 export * from './swap-form';

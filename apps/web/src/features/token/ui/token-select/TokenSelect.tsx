@@ -4,6 +4,7 @@ import { tokenList } from '@/global';
 import { Button, Input } from '@/shared';
 import { SearchIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
+import { Address } from 'viem';
 import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
@@ -16,7 +17,7 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
   const { tokens: lastUsedTokens, addToken } = useLastUsedTokens();
   const chainId = useChainId();
 
-  const onSubmit = (address: string, chainId: number) => {
+  const onSubmit = (address: Address, chainId: number) => {
     addToken(chainId, address);
     onSelect(address, chainId);
   };

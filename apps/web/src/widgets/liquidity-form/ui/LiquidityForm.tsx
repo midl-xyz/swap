@@ -9,6 +9,7 @@ import {
 import { useERC20ApproveAllowance } from '@/features/token/api/useERC20ApprovaAllowance';
 import { deployments } from '@/global';
 import { Button, SwapInput, parseNumberInput } from '@/shared';
+import { SlippageControl } from '@/widgets';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Address, parseUnits } from 'viem';
@@ -94,6 +95,8 @@ export const LiquidityForm = () => {
           amountName="tokenBAmount"
           placeholder="0"
         />
+
+        <SlippageControl />
 
         {tokenA && tokenB && tokenAAmount && tokenBAmount && (
           <div

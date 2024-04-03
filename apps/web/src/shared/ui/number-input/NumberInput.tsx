@@ -1,4 +1,4 @@
-import { Input, mergeRefs } from '@/shared';
+import { Input, InputProps, mergeRefs } from '@/shared';
 import { InputHTMLAttributes, forwardRef, useRef } from 'react';
 import { useMaskito } from '@maskito/react';
 import {
@@ -8,13 +8,16 @@ import {
 
 export const NumberInput = forwardRef<
   HTMLInputElement,
-  InputHTMLAttributes<HTMLInputElement>
->((props, ref) => {
+  InputProps & {
+    precision?: number;
+  }
+>(({ precision, ...props }, ref) => {
   let inputRef = useRef<HTMLInputElement | null>(null);
   const maskRef = useMaskito({
     options: maskitoNumberOptionsGenerator({
-      precision: Infinity,
+      precision: precision ?? Infinity,
       min: 0,
+      max: props.max ? parseFloat(props.max.toString()) : Infinity,
     }),
   });
 

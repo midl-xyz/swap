@@ -19,12 +19,22 @@ const inputStyle = cva({
           boxShadow: 'none',
         },
       },
+      tertiary: {
+        borderColor: 'neutral.100',
+        borderRadius: 'md',
+        borderWidth: 1,
+        borderStyle: 'solid',
+        px: 2,
+        py: 2,
+        color: 'neutral.800',
+      },
     },
   },
   base: {
+    width: 'full',
     _focus: {
       outline: 'none',
-      boxShadow: '0 0 0 2px rgba(0, 0, 0, 0.1)',
+      boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.1)',
     },
     '&::-webkit-inner-spin-button': {
       WebkitAppearance: 'none',
@@ -42,3 +52,5 @@ export const Input = styled('input', inputStyle, {
     appearance: 'primary',
   },
 });
+
+export type InputProps = React.ComponentProps<typeof Input>;

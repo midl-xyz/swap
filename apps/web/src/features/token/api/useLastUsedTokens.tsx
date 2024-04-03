@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState } from 'react';
+import { Address } from 'viem';
 
 export const LastUsedTokensProvider = ({
   children,
@@ -11,11 +12,11 @@ export const LastUsedTokensProvider = ({
     typeof window !== 'undefined' && localStorage.getItem('tokens');
   const initialTokens = localTokens ? JSON.parse(localTokens) : [];
 
-  const [tokens, setTokens] = useState<Map<number, string[]>>(
+  const [tokens, setTokens] = useState<Map<number, Address[]>>(
     new Map(initialTokens),
   );
 
-  const addToken = (chain: number, token: string) => {
+  const addToken = (chain: number, token: Address) => {
     const chainTokens = tokens.get(chain) || [];
     const newChainTokens = new Set([token, ...chainTokens]);
     setTokens(tokens.set(chain, Array.from(newChainTokens).slice(0, 5)));
@@ -40,8 +41,8 @@ export const LastUsedTokensProvider = ({
 
 const LastUsedTokensContext = createContext<
   | {
-      tokens: Map<number, string[]>;
-      addToken: (chain: number, token: string) => void;
+      tokens: Map<number, Address[]>;
+      addToken: (chain: number, token: Address) => void;
     }
   | undefined
 >(undefined);

@@ -6,6 +6,7 @@ import { cookieToInitialState } from 'wagmi';
 import { FiatQuotesProvider } from '@/features/fiat-quote';
 import {
   ConnectWalletProvider,
+  SettingsDialogProvider,
   TokenDialogProvider,
   Web3Provider,
   wagmiConfig,
@@ -57,6 +58,7 @@ export default function RootLayout({
           <FiatQuotesProvider>
             <ConnectWalletProvider />
             <TokenDialogProvider />
+            <SettingsDialogProvider />
             <Header
               leftSlot={
                 <div

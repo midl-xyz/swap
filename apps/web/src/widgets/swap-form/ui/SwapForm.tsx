@@ -1,6 +1,7 @@
 'use client';
 
 import { Button, SwapInput } from '@/shared';
+import { SlippageControl } from '@/widgets';
 import { ArrowDownUpIcon } from 'lucide-react';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -121,6 +122,8 @@ export const SwapForm = () => {
             amountName="outputTokenAmount"
           />
         </div>
+        <SlippageControl />
+
         <Button type="submit">Swap</Button>
       </form>
     </FormProvider>
