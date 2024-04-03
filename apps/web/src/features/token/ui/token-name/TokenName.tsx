@@ -1,16 +1,18 @@
 /* eslint-disable @next/next/no-img-element */
 import { useToken } from '@/entities';
+import { TokenLogo } from '@/features';
+import { Address } from 'viem';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
 
 type TokenNameProps = {
-  address: string;
+  address: Address;
   chainId: number;
   showName?: boolean;
 };
 
 export const TokenName = ({ address, chainId, showName }: TokenNameProps) => {
-  const { logoURI, symbol, name } = useToken(address, chainId);
+  const { symbol, name } = useToken(address, chainId);
 
   return (
     <span
@@ -21,15 +23,7 @@ export const TokenName = ({ address, chainId, showName }: TokenNameProps) => {
         width: 'full',
       })}
     >
-      <img
-        src={logoURI}
-        alt={symbol}
-        className={css({
-          width: 4,
-          height: 4,
-          borderRadius: 'full',
-        })}
-      />
+      <TokenLogo address={address} chainId={chainId} />
       <span
         className={vstack({
           gap: 0,

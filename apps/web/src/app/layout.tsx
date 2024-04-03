@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import { headers } from 'next/headers';
 import { cookieToInitialState } from 'wagmi';
 
+import { FiatQuotesProvider } from '@/features/fiat-quote';
 import {
   ConnectWalletProvider,
   TokenDialogProvider,
@@ -53,28 +54,30 @@ export default function RootLayout({
         )}
       >
         <Web3Provider initialState={initialState}>
-          <ConnectWalletProvider />
-          <TokenDialogProvider />
-          <Header
-            leftSlot={
-              <div
-                className={hstack({
-                  gap: 24,
-                })}
-              >
-                <Link href="/">
-                  <Logo />
-                </Link>
-                <AppMenu />
-              </div>
-            }
-            rightSlot={
-              <div className={hstack({ gap: 4 })}>
-                <AccountButton />
-              </div>
-            }
-          />
-          {children}
+          <FiatQuotesProvider>
+            <ConnectWalletProvider />
+            <TokenDialogProvider />
+            <Header
+              leftSlot={
+                <div
+                  className={hstack({
+                    gap: 24,
+                  })}
+                >
+                  <Link href="/">
+                    <Logo />
+                  </Link>
+                  <AppMenu />
+                </div>
+              }
+              rightSlot={
+                <div className={hstack({ gap: 4 })}>
+                  <AccountButton />
+                </div>
+              }
+            />
+            {children}
+          </FiatQuotesProvider>
         </Web3Provider>
       </body>
     </html>

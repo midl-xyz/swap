@@ -1,14 +1,11 @@
 'use client';
 
-import { Button, Input, InputGroup, NumberInput, SwapInput } from '@/shared';
-import { css } from '~/styled-system/css';
-import { hstack, vstack } from '~/styled-system/patterns';
+import { Button, SwapInput } from '@/shared';
 import { ArrowDownUpIcon } from 'lucide-react';
-import { styled } from '~/styled-system/jsx';
-import { Controller, useForm } from 'react-hook-form';
 import { useEffect } from 'react';
-import { TokenButton, TokenSelect, useLastUsedTokens } from '@/features';
-import { useChainId } from 'wagmi';
+import { FormProvider, useForm } from 'react-hook-form';
+import { css } from '~/styled-system/css';
+import { vstack } from '~/styled-system/patterns';
 
 type FormData = {
   inputToken: string;
@@ -18,18 +15,16 @@ type FormData = {
 };
 
 export const SwapForm = () => {
-  const { tokens } = useLastUsedTokens();
-  const chainId = useChainId();
+  const form = useForm<FormData>({
+    defaultValues: {
+      inputToken: '',
+      outputToken: '',
+      inputTokenAmount: '',
+      outputTokenAmount: '',
+    },
+  });
 
-  const { handleSubmit, register, setValue, getValues, watch, control } =
-    useForm<FormData>({
-      defaultValues: {
-        inputToken: '',
-        outputToken: '',
-        inputTokenAmount: '',
-        outputTokenAmount: '',
-      },
-    });
+  const { watch, handleSubmit, setValue, getValues } = form;
 
   const { inputToken, outputToken } = watch();
 
@@ -68,90 +63,66 @@ export const SwapForm = () => {
   }, [inputToken, outputToken]);
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className={vstack({
-        gap: 8,
-        alignItems: 'stretch',
-        bg: 'neutral.100',
-        borderRadius: '2xl',
-        px: 16,
-        py: 8,
-        width: 'full',
-        maxWidth: 640,
-      })}
-    >
-      <h2
-        className={css({
-          textStyle: 'h2',
-          textAlign: 'center',
-        })}
-      >
-        Swap
-      </h2>
-
-      <div
+    <FormProvider {...form}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
         className={vstack({
+          gap: 8,
           alignItems: 'stretch',
-          gap: 4,
-          position: 'relative',
+          bg: 'neutral.100',
+          borderRadius: '2xl',
+          px: 16,
+          py: 8,
+          width: 'full',
+          maxWidth: 640,
         })}
       >
-        <InputGroup>
-          <label
-            className={vstack({
-              alignItems: 'stretch',
-              gap: 2,
-            })}
-          >
-            <span>You pay</span>
-            <div className={hstack()}>
-              <SwapInput placeholder="0" {...register('inputTokenAmount')} />
-              <Controller
-                control={control}
-                name="inputToken"
-                render={({ field }) => {
-                  return <TokenButton {...field} chainId={chainId} />;
-                }}
-              />
-            </div>
-          </label>
-        </InputGroup>
-
-        <Button
-          onClick={onSwapInput}
-          aria-label="Swap input and output tokens"
+        <h2
           className={css({
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
+            textStyle: 'h2',
+            textAlign: 'center',
           })}
         >
-          <ArrowDownUpIcon />
-        </Button>
-        <InputGroup>
-          <label
-            className={vstack({
-              alignItems: 'stretch',
-              gap: 2,
+          Swap
+        </h2>
+
+        <div
+          className={vstack({
+            alignItems: 'stretch',
+            gap: 4,
+            position: 'relative',
+          })}
+        >
+          <SwapInput
+            placeholder="0"
+            label="You pay"
+            tokenName="inputToken"
+            amountName="inputTokenAmount"
+          />
+
+          <Button
+            onClick={onSwapInput}
+            aria-label="Swap input and output tokens"
+            className={css({
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              zIndex: 2,
+              transform: 'translate(-50%, -50%)',
             })}
           >
-            <span>You receive</span>
-            <div className={hstack()}>
-              <SwapInput placeholder="0" {...register('outputTokenAmount')} />
-              <Controller
-                control={control}
-                name="outputToken"
-                render={({ field }) => {
-                  return <TokenButton {...field} chainId={chainId} />;
-                }}
-              />
-            </div>
-          </label>
-        </InputGroup>
-      </div>
-      <Button type="submit">Swap</Button>
-    </form>
+            <ArrowDownUpIcon />
+          </Button>
+
+          <SwapInput
+            placeholder="0"
+            label="You receive"
+            tokenName="outputToken"
+            amountName="outputTokenAmount"
+          />
+        </div>
+        <Button type="submit">Swap</Button>
+      </form>
+    </FormProvider>
   );
 };

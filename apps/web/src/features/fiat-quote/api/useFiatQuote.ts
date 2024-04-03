@@ -1,28 +1,36 @@
-import { useEffect, useState } from 'react';
+'use client';
 
-const fetchFiatQuote = async (
-  tokenSymbol: string,
-  setFiatQuote: (value: number) => void,
-) => {
-  try {
-    const response = await fetch(`/api/coinmarketcap?symbol=${tokenSymbol}`);
+import { fetchFiatQuote, useFiatQuotes } from '@/features/fiat-quote';
+import { useCallback, useEffect } from 'react';
 
-    const data = await response.json();
-
-    setFiatQuote(data.price);
-  } catch (error) {
-    console.error('Failed to fetch price with error: ', error);
-  }
-};
+const FIAT_QUOTE_EXPIRY = 1000 * 60;
 
 export function useFiatQuote(tokenSymbol: string): number | null {
-  const [fiatQuote, setFiatQuote] = useState<number | null>(null);
+  const { fiatQuotes, setFiatQuotes } = useFiatQuotes();
+
+  const fiatQuote = fiatQuotes[tokenSymbol] ?? null;
+
+  const updateFiatQuote = useCallback(
+    async (tokenSymbol: string) => {
+      try {
+        const price = await fetchFiatQuote(tokenSymbol);
+        setFiatQuotes({ ...fiatQuotes, [tokenSymbol]: price });
+      } catch (error) {
+        console.error('Failed to fetch fiat quote', error);
+      }
+    },
+    [fiatQuotes, setFiatQuotes],
+  );
 
   useEffect(() => {
     if (!tokenSymbol) return;
 
-    fetchFiatQuote(tokenSymbol, setFiatQuote);
-  }, [tokenSymbol]);
+    if (fiatQuotes[tokenSymbol].lastUpdated > Date.now() - FIAT_QUOTE_EXPIRY) {
+      return;
+    }
 
-  return fiatQuote;
+    updateFiatQuote(tokenSymbol);
+  }, [tokenSymbol, fiatQuotes, updateFiatQuote]);
+
+  return fiatQuote.price;
 }

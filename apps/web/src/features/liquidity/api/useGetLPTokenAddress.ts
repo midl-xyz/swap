@@ -7,11 +7,11 @@ type GetPairArgs = SmartContractReadFunctionArgs<
 >;
 
 export type UseGetLpTokenAddressParams = {
-  tokenA: GetPairArgs['0'];
-  tokenB: GetPairArgs['1'];
+  tokenA?: GetPairArgs['0'];
+  tokenB?: GetPairArgs['1'];
 };
 
-export const useGetLPTokenAddress = async (
+export const useGetLPTokenAddress = (
   { tokenA, tokenB }: UseGetLpTokenAddressParams,
   wagmiOverrides?: ContractCallOverrides,
 ) => {
@@ -23,6 +23,9 @@ export const useGetLPTokenAddress = async (
     address: deployments[chainId].UniswapV2Factory.address,
     functionName: 'getPair',
     args: [tokenA, tokenB],
+    query: {
+      enabled: !!tokenA && !!tokenB,
+    },
     ...wagmiOverrides,
   });
 };

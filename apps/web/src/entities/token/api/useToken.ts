@@ -1,4 +1,5 @@
-import { Token, tokenList } from '@/entities';
+import { Token } from '@/entities';
+import { tokenList } from '@/global';
 
 export const useToken = (address: string, chainId: number): Token => {
   const token = tokenList.find(

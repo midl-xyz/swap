@@ -5,6 +5,7 @@ export const InputGroup = styled('div', {
     bg: 'white',
     borderRadius: 'lg',
     px: 4,
-    py: 4,
+    py: 6,
+    position: 'relative',
   },
 });

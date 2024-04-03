@@ -4,14 +4,18 @@ import { useChainId, useReadContracts } from 'wagmi';
 
 type PairStatsArgs = {
   userAddress: Address;
-  tokenA: Address;
-  tokenB: Address;
-  lpTokenAddress: Address;
+  tokenA?: Address;
+  tokenB?: Address;
+  lpTokenAddress?: Address;
 };
 
-export const useGetPairStats = async (
+export const useGetPairStats = (
   { lpTokenAddress, tokenA, tokenB, userAddress }: PairStatsArgs,
-  wagmiOverrides?: ContractCallOverrides,
+  wagmiOverrides: ContractCallOverrides = {
+    query: {
+      enabled: !!lpTokenAddress && !!tokenA && !!tokenB,
+    },
+  },
 ) => {
   const globalChainId = useChainId();
   const chainId = wagmiOverrides?.chainId || globalChainId;
@@ -81,6 +85,12 @@ export const useGetPairStats = async (
         args: [userAddress, deployments[chainId].UniswapV2Router02.address],
         ...wagmiOverrides,
       },
+      {
+        address: lpTokenAddress,
+        abi: uniswapV2PairAbi,
+        functionName: 'totalSupply',
+        ...wagmiOverrides,
+      },
     ],
   });
 
@@ -109,6 +119,7 @@ export const useGetPairStats = async (
       tokenA: callResults?.data?.[6].result || BigInt(0),
       tokenB: callResults?.data?.[7].result || BigInt(0),
     },
+    totalSupply: callResults?.data?.[8].result || BigInt(0),
   } as const;
 
   return result;

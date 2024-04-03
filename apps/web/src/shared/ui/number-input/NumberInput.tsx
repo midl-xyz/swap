@@ -1,7 +1,10 @@
 import { Input, mergeRefs } from '@/shared';
 import { InputHTMLAttributes, forwardRef, useRef } from 'react';
 import { useMaskito } from '@maskito/react';
-import { maskitoNumberOptionsGenerator } from '@maskito/kit';
+import {
+  maskitoNumberOptionsGenerator,
+  maskitoParseNumber,
+} from '@maskito/kit';
 
 export const NumberInput = forwardRef<
   HTMLInputElement,
@@ -17,7 +20,25 @@ export const NumberInput = forwardRef<
 
   const refs = mergeRefs<HTMLInputElement>(inputRef, maskRef, ref);
 
-  return <Input {...props} ref={refs} inputMode="decimal" type="text" />;
+  return (
+    <Input
+      {...props}
+      ref={refs}
+      inputMode="decimal"
+      type="text"
+      onInput={props.onChange}
+    />
+  );
 });
+
+export const parseNumberInput = (value: string, dot: string = '.') => {
+  const parsedNumber = maskitoParseNumber(value, dot);
+
+  if (isNaN(parsedNumber)) {
+    return '0';
+  }
+
+  return parsedNumber.toString();
+};
 
 NumberInput.displayName = 'NumberInput';

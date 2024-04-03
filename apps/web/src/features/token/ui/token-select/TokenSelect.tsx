@@ -1,5 +1,6 @@
-import { Token, tokenList } from '@/entities';
+import { Token } from '@/entities';
 import { TokenName, useLastUsedTokens } from '@/features';
+import { tokenList } from '@/global';
 import { Button, Input } from '@/shared';
 import { SearchIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';

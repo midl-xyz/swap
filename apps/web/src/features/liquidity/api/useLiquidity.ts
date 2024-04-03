@@ -1,8 +1,8 @@
 export const useLiquidity = (
   tokenA: string,
   tokenB: string,
-  tokenAAmount: string,
-  tokenBAmount: string,
+  tokenAAmount: bigint,
+  tokenBAmount: bigint,
   chainId: number,
 ) => {
   return {
