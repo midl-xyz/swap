@@ -75,6 +75,7 @@ export const usePoolShare = ({
         poolShare: 1,
         estimatedLPTokenBalance: parsedPoolTokenBalance,
         poolToken,
+        allowances: data.allowances,
       };
     }
 
@@ -82,12 +83,14 @@ export const usePoolShare = ({
       poolShare,
       estimatedLPTokenBalance: parsedPoolTokenBalance,
       poolToken,
+      allowances: data.allowances,
     };
   } catch (e) {
     return {
       poolShare: 1,
       estimatedLPTokenBalance: BigInt(0),
       poolToken,
+      allowances: data.allowances,
     };
   }
 };

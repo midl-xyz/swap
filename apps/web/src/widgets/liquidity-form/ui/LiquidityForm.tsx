@@ -6,11 +6,13 @@ import {
   useGetLPTokenAddress,
   usePoolShare,
 } from '@/features/liquidity';
+import { useERC20ApproveAllowance } from '@/features/token/api/useERC20ApprovaAllowance';
+import { deployments } from '@/global';
 import { Button, SwapInput, parseNumberInput } from '@/shared';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Address, parseUnits } from 'viem';
-import { useChainId } from 'wagmi';
+import { useAccount, useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
 
@@ -34,6 +36,7 @@ export const LiquidityForm = () => {
   const { watch, handleSubmit } = form;
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const chainId = useChainId();
+  const { address } = useAccount();
   const { tokenA, tokenB, tokenAAmount, tokenBAmount } = watch();
 
   const tokenAInfo = useToken(tokenA, chainId);
@@ -48,7 +51,15 @@ export const LiquidityForm = () => {
     tokenBInfo.decimals,
   );
 
-  const { poolShare } = usePoolShare({
+  const {
+    write: approveERC20,
+    isPending,
+    isConfirming,
+  } = useERC20ApproveAllowance();
+
+  const { UniswapV2Router02 } = deployments[chainId];
+
+  const { poolShare, allowances } = usePoolShare({
     tokenA,
     tokenB,
     formValues: {
@@ -177,7 +188,35 @@ export const LiquidityForm = () => {
           </div>
         )}
 
-        <Button type="submit">Supply</Button>
+        {allowances.tokenA < parsedTokenAAmount ? (
+          <Button
+            onClick={() =>
+              approveERC20(
+                tokenAInfo.address,
+                UniswapV2Router02.address,
+                parsedTokenAAmount,
+              )
+            }
+            disabled={isPending || isConfirming}
+          >
+            Approve {tokenAInfo.symbol}
+          </Button>
+        ) : allowances.tokenB < parsedTokenBAmount ? (
+          <Button
+            onClick={() =>
+              approveERC20(
+                tokenBInfo.address,
+                UniswapV2Router02.address,
+                parsedTokenBAmount,
+              )
+            }
+            disabled={isPending || isConfirming}
+          >
+            Approve {tokenBInfo.symbol}
+          </Button>
+        ) : (
+          <Button type="submit">Supply</Button>
+        )}
 
         <SupplyLiquidityDialog
           open={isDialogOpen}
