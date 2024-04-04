@@ -1,6 +1,10 @@
 import { deployments, uniswapV2Router02Abi } from '@/global';
 import { Address, zeroAddress } from 'viem';
-import { useChainId, useWriteContract } from 'wagmi';
+import {
+  useChainId,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from 'wagmi';
 
 export type AddLiquidityArgs = {
   tokenA: Address;
@@ -13,10 +17,15 @@ export type AddLiquidityArgs = {
   deadline: bigint;
 };
 
-export const useAddLiquidity = async () => {
+export const useAddLiquidity = () => {
   const globalChainId = useChainId();
 
-  const { writeContract } = useWriteContract();
+  const { writeContract, data: hash, ...rest } = useWriteContract();
+
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
 
   const addLiquidity = async ({
     tokenA,
@@ -82,5 +91,11 @@ export const useAddLiquidity = async () => {
     });
   };
 
-  return addLiquidity;
+  return {
+    addLiquidity,
+    hash,
+    isConfirming,
+    isConfirmed,
+    ...rest,
+  };
 };

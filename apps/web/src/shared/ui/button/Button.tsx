@@ -20,6 +20,7 @@ const buttonStyle = cva({
     },
     _disabled: {
       bg: 'neutral.300',
+      pointerEvents: 'none',
     },
     _loading: {
       bg: 'neutral.300',

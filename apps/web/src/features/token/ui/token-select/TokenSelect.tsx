@@ -84,7 +84,7 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
       </div>
 
       {!searchQuery && (
-        <div className={hstack({ gap: 1 })}>
+        <div className={hstack({ gap: 1, flexWrap: 'wrap' })}>
           {Array.from(lastUsedTokens.get(chainId) || []).map((address) => (
             <Button
               key={address}

@@ -1,10 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 import { useToken } from '@/entities';
-import { TokenLogo, TokenValue } from '@/features';
-import { usePoolShare } from '@/features/liquidity';
+import { TokenLogo, TokenValue, useSlippage } from '@/features';
+import { useAddLiquidity, usePoolShare } from '@/features/liquidity';
 import { Button, Dialog, DialogContent, DialogOverlay } from '@/shared';
 import { DialogProps } from '@radix-ui/react-dialog';
+import { useEffect } from 'react';
 import { Address } from 'viem';
+import { useAccount, useBlockNumber } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
 
@@ -36,6 +38,13 @@ export const SupplyLiquidityDialog = ({
       tokenBAmount,
     },
   });
+
+  const { address } = useAccount();
+
+  const [slippage] = useSlippage();
+
+  const { addLiquidity, isConfirmed, isConfirming, isPending, error } =
+    useAddLiquidity();
 
   const tokenAInfo = useToken(tokenA, chainId);
   const tokenBInfo = useToken(tokenB, chainId);
@@ -219,7 +228,30 @@ export const SupplyLiquidityDialog = ({
               </div>
             </div>
           </div>
-          <Button type="submit">
+          <Button
+            type="submit"
+            disabled={isPending || isConfirming}
+            onClick={() => {
+              addLiquidity({
+                tokenA,
+                tokenB,
+                amountADesired: tokenAAmount,
+                amountBDesired: tokenBAmount,
+                amountAMin:
+                  (tokenAAmount * BigInt(1000 - slippage * 1000)) /
+                  BigInt(1000),
+                amountBMin:
+                  (tokenBAmount * BigInt(1000 - slippage * 1000)) /
+                  BigInt(1000),
+                to: address as Address,
+                deadline: BigInt(
+                  parseInt(
+                    ((new Date().getTime() + 1000 * 60 * 15) / 1000).toString(),
+                  ),
+                ),
+              });
+            }}
+          >
             {isCreatePool ? 'Create Pool and Supply' : 'Supply'}
           </Button>
         </div>

@@ -1,19 +1,23 @@
 'use client';
 
 import { useToken } from '@/entities';
+import { useLastUsedTokens } from '@/features';
 import {
   SupplyLiquidityDialog,
   useGetLPTokenAddress,
   usePoolShare,
 } from '@/features/liquidity';
+import { useMinAmount } from '@/features/liquidity/api/useMinAmount';
 import { useERC20ApproveAllowance } from '@/features/token/api/useERC20ApprovaAllowance';
 import { deployments } from '@/global';
 import { Button, SwapInput, parseNumberInput } from '@/shared';
 import { SlippageControl } from '@/widgets';
-import { useState } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Address, parseUnits } from 'viem';
-import { useAccount, useChainId } from 'wagmi';
+import { Address, parseUnits, zeroAddress } from 'viem';
+import { useChainId } from 'wagmi';
+import * as yup from 'yup';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
 
@@ -24,21 +28,59 @@ type FormData = {
   tokenB: Address;
 };
 
+const schema = yup.object().shape({
+  tokenAAmount: yup
+    .number()
+    .transform((value) => (isNaN(value) ? undefined : value))
+    .required("Amount can't be empty")
+    .when(['$minAmountA'], ([minAmount], schema) => {
+      return schema.min(minAmount || 0, `Minimum amount is ${minAmount}`);
+    }),
+  tokenBAmount: yup
+    .number()
+    .transform((value) => (isNaN(value) ? undefined : value))
+    .required("Amount can't be empty")
+    .when(['$minAmountB'], ([minAmount], schema) => {
+      return schema.min(minAmount || 0, `Minimum amount is ${minAmount}`);
+    }),
+  tokenA: yup.string<Address>().required(),
+  tokenB: yup.string<Address>().required(),
+});
+
 export const LiquidityForm = () => {
-  const form = useForm<FormData>({
-    defaultValues: {
-      tokenAAmount: '',
-      tokenBAmount: '',
-      tokenA: '' as Address,
-      tokenB: '' as Address,
-    },
+  const [minValues, setValues] = useState({
+    minAmountA: 0,
+    minAmountB: 0,
   });
 
-  const { watch, handleSubmit } = form;
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { tokens } = useLastUsedTokens();
   const chainId = useChainId();
-  const { address } = useAccount();
+
+  const form = useForm<FormData>({
+    resolver: yupResolver(schema as any),
+    context: minValues,
+  });
+
+  const { watch, handleSubmit, formState } = form;
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { tokenA, tokenB, tokenAAmount, tokenBAmount } = watch();
+
+  useEffect(() => {
+    if (!tokenA && !tokenB) {
+      form.setValue('tokenA', tokens.get(chainId)?.[0] || zeroAddress);
+    }
+  }, [tokens, tokenA, chainId, form, tokenB]);
+
+  const { minAmountA, minAmountB } = useMinAmount({
+    tokenA,
+    tokenB,
+    tokenAAmount,
+    tokenBAmount,
+  });
+
+  useEffect(() => {
+    setValues({ minAmountA, minAmountB });
+  }, [minAmountA, minAmountB]);
 
   const tokenAInfo = useToken(tokenA, chainId);
   const tokenBInfo = useToken(tokenB, chainId);
@@ -52,14 +94,6 @@ export const LiquidityForm = () => {
     tokenBInfo.decimals,
   );
 
-  const {
-    write: approveERC20,
-    isPending,
-    isConfirming,
-  } = useERC20ApproveAllowance();
-
-  const { UniswapV2Router02 } = deployments[chainId];
-
   const { poolShare, allowances } = usePoolShare({
     tokenA,
     tokenB,
@@ -71,9 +105,21 @@ export const LiquidityForm = () => {
 
   const lpToken = useGetLPTokenAddress({ tokenA, tokenB });
 
+  const {
+    write: approveERC20,
+    isPending,
+    isConfirming,
+  } = useERC20ApproveAllowance();
+
+  const { UniswapV2Router02 } = deployments[chainId];
+
   const onSubmit = () => {
     setIsDialogOpen(true);
   };
+
+  const onChange = useCallback(() => {
+    form.trigger();
+  }, [form]);
 
   return (
     <FormProvider {...form}>
@@ -88,16 +134,15 @@ export const LiquidityForm = () => {
           tokenName="tokenA"
           amountName="tokenAAmount"
           placeholder="0"
+          onChange={onChange}
         />
-
         <SwapInput
           tokenName="tokenB"
           amountName="tokenBAmount"
           placeholder="0"
+          onChange={onChange}
         />
-
         <SlippageControl />
-
         {tokenA && tokenB && tokenAAmount && tokenBAmount && (
           <div
             className={css({
@@ -190,8 +235,7 @@ export const LiquidityForm = () => {
             </div>
           </div>
         )}
-
-        {allowances.tokenA < parsedTokenAAmount ? (
+        {formState.isValid && allowances.tokenA < parsedTokenAAmount ? (
           <Button
             onClick={() =>
               approveERC20(
@@ -204,7 +248,7 @@ export const LiquidityForm = () => {
           >
             Approve {tokenAInfo.symbol}
           </Button>
-        ) : allowances.tokenB < parsedTokenBAmount ? (
+        ) : formState.isValid && allowances.tokenB < parsedTokenBAmount ? (
           <Button
             onClick={() =>
               approveERC20(
@@ -218,13 +262,17 @@ export const LiquidityForm = () => {
             Approve {tokenBInfo.symbol}
           </Button>
         ) : (
-          <Button type="submit">Supply</Button>
+          <Button
+            type="submit"
+            disabled={!formState.isValid || isPending || isConfirming}
+          >
+            {!tokenA || !tokenB ? 'Select token' : 'Supply'}
+          </Button>
         )}
-
         <SupplyLiquidityDialog
           open={isDialogOpen}
           tokenA={tokenA}
-          isCreatePool={lpToken.data === null}
+          isCreatePool={lpToken.data === zeroAddress}
           tokenB={tokenB}
           tokenAAmount={parsedTokenAAmount}
           tokenBAmount={parsedTokenBAmount}

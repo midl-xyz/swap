@@ -12,7 +12,7 @@ import {
   wagmiConfig,
 } from '@/global';
 
-import { AccountButton, AppMenu, Header, Logo } from '@/widgets';
+import { AccountButton, AppMenu, Header, Logo, RPCStatus } from '@/widgets';
 import Link from 'next/link';
 import { css, cx } from '~/styled-system/css';
 import { hstack } from '~/styled-system/patterns';
@@ -59,6 +59,7 @@ export default function RootLayout({
             <ConnectWalletProvider />
             <TokenDialogProvider />
             <SettingsDialogProvider />
+            <RPCStatus />
             <Header
               leftSlot={
                 <div

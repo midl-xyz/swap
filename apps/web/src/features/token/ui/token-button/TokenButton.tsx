@@ -1,11 +1,12 @@
 import { TokenName, tokenDialogAtom } from '@/features';
 import { Button, mergeRefs } from '@/shared';
 import { useAtom } from 'jotai';
-import { InputHTMLAttributes, forwardRef, useRef } from 'react';
+import { InputHTMLAttributes, forwardRef, useEffect, useRef } from 'react';
+import { Address } from 'viem';
 import { css } from '~/styled-system/css';
 
 type TokenButtonProps = InputHTMLAttributes<HTMLInputElement> & {
-  value?: string;
+  value?: Address;
   chainId?: number;
 };
 

@@ -1,10 +1,10 @@
 import { Input, InputProps, mergeRefs } from '@/shared';
-import { InputHTMLAttributes, forwardRef, useRef } from 'react';
-import { useMaskito } from '@maskito/react';
 import {
   maskitoNumberOptionsGenerator,
   maskitoParseNumber,
 } from '@maskito/kit';
+import { useMaskito } from '@maskito/react';
+import { forwardRef, useRef } from 'react';
 
 export const NumberInput = forwardRef<
   HTMLInputElement,
@@ -34,7 +34,7 @@ export const NumberInput = forwardRef<
   );
 });
 
-export const parseNumberInput = (value: string, dot: string = '.') => {
+export const parseNumberInput = (value: string = '', dot: string = '.') => {
   const parsedNumber = maskitoParseNumber(value, dot);
 
   if (isNaN(parsedNumber)) {

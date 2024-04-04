@@ -45,7 +45,7 @@ export const SwapInput = ({
   label,
   ...rest
 }: SwapInputProps) => {
-  const { control, watch, setValue } = useFormContext();
+  const { control, watch, setValue, formState } = useFormContext();
   const chainId = useChainId();
   const token = watch(tokenName);
   const tokenInfo = useToken(token, chainId);
@@ -57,6 +57,9 @@ export const SwapInput = ({
       formatUnits(balance.data?.balance ?? BigInt(0), tokenInfo.decimals),
     );
   };
+
+  const { error } = control.getFieldState(amountName);
+  const hasError = !!error;
 
   return (
     <InputGroup className={hstack()}>
@@ -72,7 +75,18 @@ export const SwapInput = ({
           <Controller
             control={control}
             name={amountName}
-            render={({ field }) => <StyledNumberInput {...rest} {...field} />}
+            render={({ field }) => (
+              <>
+                <StyledNumberInput
+                  {...rest}
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    rest.onChange?.(e);
+                  }}
+                />
+              </>
+            )}
           />
           <Controller
             control={control}
@@ -119,6 +133,19 @@ export const SwapInput = ({
             </>
           ) : null}
         </div>
+        {hasError && (
+          <div
+            className={css({
+              position: 'absolute',
+              bottom: 1,
+              left: 4,
+              color: 'red.500',
+              fontSize: 12,
+            })}
+          >
+            {error.message}
+          </div>
+        )}
       </label>
     </InputGroup>
   );
