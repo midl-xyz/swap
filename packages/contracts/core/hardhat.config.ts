@@ -11,8 +11,8 @@ const accounts = process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [];
 const config: HardhatUserConfig = {
   solidity: "0.5.16",
   networks: {
-    goerli: {
-      url: "https://goerli.drpc.org/",
+    sepolia: {
+      url: "https://eth-sepolia.g.alchemy.com/v2/MLItZDJKDvcgpwPFsc2V_FTKGyawnnWq",
       accounts,
     },
   },
