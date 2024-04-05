@@ -6,7 +6,6 @@ import {
   Dialog,
   DialogContent,
   DialogOverlay,
-  Input,
   NumberInput,
 } from '@/shared';
 import { DialogPortal, DialogProps } from '@radix-ui/react-dialog';
@@ -27,6 +26,7 @@ export const SlippageControlDialog = ({
   ...rest
 }: SlippageControlDialogProps) => {
   const [slippage, setSlippage] = useSlippage();
+
   const { handleSubmit, register, setValue } = useForm<FormData>({
     defaultValues: {
       slippage: parseFloat((slippage * 100).toFixed(2)).toString(),
@@ -43,7 +43,7 @@ export const SlippageControlDialog = ({
   };
 
   return (
-    <Dialog {...rest} modal>
+    <Dialog {...rest}>
       <DialogPortal>
         <DialogOverlay onClick={onClose} />
         <DialogContent

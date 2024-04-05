@@ -62,7 +62,13 @@ export const SwapInput = ({
   const hasError = !!error;
 
   return (
-    <InputGroup className={hstack()}>
+    <InputGroup
+      className={hstack({
+        borderColor: hasError ? 'red.500' : 'transparent',
+        borderWidth: 1,
+        borderStyle: 'solid',
+      })}
+    >
       <label
         className={vstack({
           alignItems: 'stretch',
@@ -80,6 +86,7 @@ export const SwapInput = ({
                 <StyledNumberInput
                   {...rest}
                   {...field}
+                  value={field.value ?? ''}
                   onChange={(e) => {
                     field.onChange(e);
                     rest.onChange?.(e);
@@ -137,7 +144,7 @@ export const SwapInput = ({
           <div
             className={css({
               position: 'absolute',
-              bottom: 1,
+              bottom: -5,
               left: 4,
               color: 'red.500',
               fontSize: 12,

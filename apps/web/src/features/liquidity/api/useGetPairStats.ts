@@ -20,7 +20,6 @@ export const useGetPairStats = (
 ) => {
   const globalChainId = useChainId();
   const chainId = wagmiOverrides?.chainId || globalChainId;
-  const blockNumber = useBlockNumber({ watch: true });
 
   const { data: callResults, refetch } = useReadContracts({
     contracts: [
@@ -95,10 +94,6 @@ export const useGetPairStats = (
       },
     ],
   });
-
-  useEffect(() => {
-    refetch();
-  }, [blockNumber, refetch]);
 
   const isTokenAEqToken0 = tokenA === callResults?.[0].result;
 

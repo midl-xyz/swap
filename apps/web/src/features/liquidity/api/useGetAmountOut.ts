@@ -12,7 +12,7 @@ export type UseGetAmountOutParams = {
   reserveOut: GetAmountOutArgs['2'];
 };
 
-export const useGetAmountOut = async (
+export const useGetAmountOut = (
   { amountIn, reserveIn, reserveOut }: UseGetAmountOutParams,
   wagmiOverrides?: ContractCallOverrides,
 ) => {
@@ -25,13 +25,5 @@ export const useGetAmountOut = async (
     functionName: 'getAmountOut',
     args: [amountIn, reserveIn, reserveOut],
     ...wagmiOverrides,
-  });
-};
-
-const useFoo = () => {
-  useGetAmountOut({
-    amountIn: BigInt(1),
-    reserveIn: BigInt(2),
-    reserveOut: BigInt(3),
   });
 };

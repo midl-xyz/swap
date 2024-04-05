@@ -1,7 +1,6 @@
 import { promTestnet } from '@/global';
-import corePackageJson from '@v60swap/core/package.json';
-import peripheryPackageJson from '@v60swap/periphery/package.json';
 import { Address } from 'viem';
+import { sepolia } from 'viem/chains';
 import { Config } from 'wagmi';
 
 type UniswapV2Router02 =
@@ -33,6 +32,11 @@ export const deployments: Deployments = {
     UniswapV2Factory: {
       address: '0xfc9cE15BDd57234382692B27f133acb9E23573F8',
     },
+    UniswapV2Par: require('@v60swap/core/dist/IUniswapV2Pair.json'),
+  },
+  [sepolia.id]: {
+    UniswapV2Factory: require('@v60swap/core/deployments/1.0.1/sepolia/UniswapV2Factory.json'),
+    UniswapV2Router02: require('@v60swap/periphery/deployments/1.0.1/sepolia/UniswapV2Router02.json'),
     UniswapV2Par: require('@v60swap/core/dist/IUniswapV2Pair.json'),
   },
 };

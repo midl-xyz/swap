@@ -1,5 +1,5 @@
 import { createConfig, http } from 'wagmi';
-import { Chain, goerli } from 'wagmi/chains';
+import { Chain, sepolia } from 'wagmi/chains';
 import { walletConnect } from 'wagmi/connectors';
 
 declare module 'wagmi' {
@@ -37,7 +37,7 @@ export const promTestnet: Chain = {
 };
 
 export const wagmiConfig = createConfig({
-  chains: [promTestnet],
+  chains: [sepolia],
   ssr: true,
   connectors: [
     walletConnect({
@@ -45,6 +45,8 @@ export const wagmiConfig = createConfig({
     }),
   ],
   transports: {
-    [promTestnet.id]: http(),
+    [sepolia.id]: http(),
   },
 });
+
+export type ChainId = (typeof wagmiConfig)['chains'][number]['id'];

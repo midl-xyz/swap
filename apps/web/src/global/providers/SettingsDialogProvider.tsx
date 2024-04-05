@@ -7,6 +7,10 @@ import { useAtom } from 'jotai';
 export const SettingsDialogProvider = () => {
   const [dialogState, setDialogState] = useAtom(isSlippageDialogOpen);
 
+  if (!dialogState) {
+    return null;
+  }
+
   return (
     <SlippageControlDialog
       open={dialogState}

@@ -15,6 +15,7 @@
     "@maskito/kit": "^2.2.0",
     "@maskito/react": "^2.2.0",
     "@radix-ui/react-dialog": "^1.0.5",
+    "@sentry/react": "^7.109.0",
     "@tanstack/react-query": "^5.18.0",
     "@v60swap/core": "workspace:^",
     "@v60swap/periphery": "workspace:^",
@@ -27,6 +28,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.50.1",
+    "react-hot-toast": "^2.4.1",
+    "use-debounce": "^10.0.0",
     "viem": "2.x",
     "wagmi": "^2.5.5",
     "yup": "^1.4.0"

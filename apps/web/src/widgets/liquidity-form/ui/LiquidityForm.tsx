@@ -1,7 +1,7 @@
 'use client';
 
 import { useToken } from '@/entities';
-import { useLastUsedTokens } from '@/features';
+import { useLastUsedTokens, useTokenBalance } from '@/features';
 import {
   SupplyLiquidityDialog,
   useGetLPTokenAddress,
@@ -13,13 +13,14 @@ import { deployments } from '@/global';
 import { Button, SwapInput, parseNumberInput } from '@/shared';
 import { SlippageControl } from '@/widgets';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Address, parseUnits, zeroAddress } from 'viem';
 import { useChainId } from 'wagmi';
 import * as yup from 'yup';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
+import { useDebouncedCallback } from 'use-debounce';
 
 type FormData = {
   tokenAAmount: string;
@@ -51,6 +52,8 @@ export const LiquidityForm = () => {
   const [minValues, setValues] = useState({
     minAmountA: 0,
     minAmountB: 0,
+    balanceA: 0,
+    balanceB: 0,
   });
 
   const { tokens } = useLastUsedTokens();
@@ -66,10 +69,15 @@ export const LiquidityForm = () => {
   const { tokenA, tokenB, tokenAAmount, tokenBAmount } = watch();
 
   useEffect(() => {
-    if (!tokenA && !tokenB) {
-      form.setValue('tokenA', tokens.get(chainId)?.[0] || zeroAddress);
+    if (!tokenA && !tokenB && tokens.get(chainId)?.[0]) {
+      form.setValue('tokenA', tokens.get(chainId)?.[0] as Address);
     }
   }, [tokens, tokenA, chainId, form, tokenB]);
+
+  const tokenAInfo = useToken(tokenA, chainId);
+  const tokenBInfo = useToken(tokenB, chainId);
+  const { data: balanceA } = useTokenBalance(tokenA);
+  const { data: balanceB } = useTokenBalance(tokenB);
 
   const { minAmountA, minAmountB } = useMinAmount({
     tokenA,
@@ -78,12 +86,21 @@ export const LiquidityForm = () => {
     tokenBAmount,
   });
 
-  useEffect(() => {
-    setValues({ minAmountA, minAmountB });
-  }, [minAmountA, minAmountB]);
+  const update = useDebouncedCallback(
+    (balanceA, balanceB, minAmountA, minAmountB) => {
+      setValues({
+        minAmountA,
+        minAmountB,
+        balanceA: parseFloat(balanceA?.formattedBalance ?? '0'),
+        balanceB: parseFloat(balanceB?.formattedBalance ?? '0'),
+      });
+    },
+    100,
+  );
 
-  const tokenAInfo = useToken(tokenA, chainId);
-  const tokenBInfo = useToken(tokenB, chainId);
+  useEffect(() => {
+    //update(balanceA, balanceB, minAmountA, minAmountB);
+  }, [update, balanceA, balanceB, minAmountA, minAmountB]);
 
   const parsedTokenAAmount = parseUnits(
     parseNumberInput(tokenAAmount),
@@ -117,16 +134,26 @@ export const LiquidityForm = () => {
     setIsDialogOpen(true);
   };
 
+  const timeoutRef = useRef<NodeJS.Timeout>();
+
   const onChange = useCallback(() => {
-    form.trigger();
-  }, [form]);
+    timeoutRef.current = setTimeout(() => {
+      form.trigger();
+    }, 0);
+  }, [form, timeoutRef]);
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   return (
     <FormProvider {...form}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className={vstack({
-          gap: 4,
+          gap: 8,
           alignItems: 'stretch',
         })}
       >

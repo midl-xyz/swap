@@ -49,6 +49,15 @@ const buttonStyle = cva({
           backgroundColor: 'neutral.100',
         },
       },
+      outline: {
+        backgroundColor: 'transparent',
+        color: 'neutral.800',
+        border: '1px solid',
+        borderColor: 'neutral.200',
+        _hover: {
+          backgroundColor: 'neutral.100',
+        },
+      },
     },
     size: {
       small: {

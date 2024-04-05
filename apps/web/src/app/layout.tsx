@@ -1,8 +1,3 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import { headers } from 'next/headers';
-import { cookieToInitialState } from 'wagmi';
-
 import { FiatQuotesProvider } from '@/features/fiat-quote';
 import {
   ConnectWalletProvider,
@@ -11,12 +6,19 @@ import {
   Web3Provider,
   wagmiConfig,
 } from '@/global';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import { headers } from 'next/headers';
+import { cookieToInitialState } from 'wagmi';
+import { Toaster } from 'react-hot-toast';
 
+import { ErrorBoundary } from '@/global/providers/ErrorBoundary';
 import { AccountButton, AppMenu, Header, Logo, RPCStatus } from '@/widgets';
 import Link from 'next/link';
 import { css, cx } from '~/styled-system/css';
 import { hstack } from '~/styled-system/patterns';
 import './globals.css';
+import { renderErrorMessage } from '@/widgets/error-message';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -79,7 +81,10 @@ export default function RootLayout({
                 </div>
               }
             />
-            {children}
+            <Toaster position="bottom-right" />
+            <ErrorBoundary fallback={renderErrorMessage}>
+              {children}
+            </ErrorBoundary>
           </FiatQuotesProvider>
         </Web3Provider>
       </body>

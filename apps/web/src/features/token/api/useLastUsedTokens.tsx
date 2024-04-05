@@ -1,5 +1,6 @@
 'use client';
 
+import { wagmiConfig } from '@/global';
 import { createContext, useContext, useState } from 'react';
 import { Address } from 'viem';
 
@@ -10,7 +11,16 @@ export const LastUsedTokensProvider = ({
 }) => {
   const localTokens =
     typeof window !== 'undefined' && localStorage.getItem('tokens');
-  const initialTokens = localTokens ? JSON.parse(localTokens) : [];
+
+  let initialTokens = [];
+
+  try {
+    initialTokens = localTokens
+      ? JSON.parse(localTokens).filter(([chainId]: [number, any]) => {
+          return wagmiConfig.chains.some((chain) => chain.id === chainId);
+        })
+      : [];
+  } catch {}
 
   const [tokens, setTokens] = useState<Map<number, Address[]>>(
     new Map(initialTokens),
