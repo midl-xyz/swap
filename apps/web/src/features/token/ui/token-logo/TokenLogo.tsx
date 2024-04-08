@@ -26,6 +26,10 @@ export const TokenLogo = ({
           backgroundColor: 'white',
           borderRadius: 'full',
           position: 'relative',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          aspectRatio: '1/1',
         }),
         className,
       )}

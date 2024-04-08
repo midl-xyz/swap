@@ -21,6 +21,14 @@ const GetPools = graphql(`
       reserve0
       reserve1
       totalSupply
+      txCount
+      volumeToken0
+      volumeToken1
+      volumeUSD
+      reserveUSD
+      reserveETH
+      token0Price
+      token1Price
     }
   }
 `);

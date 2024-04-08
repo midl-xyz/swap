@@ -2983,6 +2983,14 @@ export type GetPoolsQuery = {
     reserve0: any;
     reserve1: any;
     totalSupply: any;
+    txCount: any;
+    volumeToken0: any;
+    volumeToken1: any;
+    volumeUSD: any;
+    reserveUSD: any;
+    reserveETH: any;
+    token0Price: any;
+    token1Price: any;
     token0: { __typename?: 'Token'; id: string; symbol: string; name: string };
     token1: { __typename?: 'Token'; id: string; symbol: string; name: string };
   }>;
@@ -3070,6 +3078,20 @@ export const GetPoolsDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'reserve0' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'reserve1' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'totalSupply' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'txCount' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'volumeToken0' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'volumeToken1' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'volumeUSD' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'reserveUSD' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'reserveETH' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'token0Price' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'token1Price' } },
               ],
             },
           },
