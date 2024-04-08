@@ -1,15 +1,23 @@
 'use client';
 
 import { useToken } from '@/entities';
+import {
+  useERC20Allowance,
+  useERC20ApproveAllowance,
+  useSlippage,
+  useSwap,
+} from '@/features';
 import { useSwapRates } from '@/features/swap/api/useSwapRates';
+import { deployments } from '@/global';
 import { Button, SwapInput, parseNumberInput } from '@/shared';
 import { SlippageControl } from '@/widgets';
 import { ArrowDownUpIcon } from 'lucide-react';
 import { ChangeEventHandler, useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { useDebouncedCallback } from 'use-debounce';
 import { Address, formatUnits, parseUnits } from 'viem';
-import { useChainId } from 'wagmi';
+import { useAccount, useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { vstack } from '~/styled-system/patterns';
 
@@ -42,6 +50,10 @@ export const SwapForm = () => {
 
   const onInputTokenAmountChange: ChangeEventHandler<HTMLInputElement> =
     useDebouncedCallback(async (e) => {
+      if (!e.target) {
+        return;
+      }
+
       const value = parseUnits(
         parseNumberInput(e.target.value),
         inputTokenInfo.decimals,
@@ -88,8 +100,57 @@ export const SwapForm = () => {
       );
     }, 500);
 
+  const { swap, error: swapError } = useSwap();
+  const { address } = useAccount();
+  const { data: tokenAllowance } = useERC20Allowance({
+    token: inputToken,
+    spender: deployments[chainId].UniswapV2Router02.address as Address,
+    user: address as Address,
+  });
+
+  const { write: approveERC20 } = useERC20ApproveAllowance();
+
+  useEffect(() => {
+    if (swapError) {
+      toast.error(swapError.message);
+      console.error(swapError);
+    }
+  }, [swapError]);
+
+  const parsedInputTokenAmount = parseUnits(
+    parseNumberInput(inputTokenAmount),
+    inputTokenInfo.decimals,
+  );
+
+  const [slippage] = useSlippage();
+
   const onSubmit = () => {
-    // TODO: Implement token swap
+    if ((tokenAllowance as bigint) < parsedInputTokenAmount) {
+      return approveERC20(
+        inputToken,
+        deployments[chainId].UniswapV2Router02.address as Address,
+        parsedInputTokenAmount,
+      );
+    }
+
+    swap({
+      tokenIn: inputToken,
+      tokenOut: outputToken,
+      amountIn: parsedInputTokenAmount,
+      amountOutMin:
+        parseUnits(
+          parseNumberInput(outputTokenAmount),
+          outputTokenInfo.decimals,
+        ) -
+        parseUnits(
+          (
+            parseFloat(parseNumberInput(outputTokenAmount)) * slippage
+          ).toString(),
+          outputTokenInfo.decimals,
+        ),
+      to: address!,
+      deadline: BigInt(Math.floor(Date.now() / 1000) + 60 * 20),
+    });
   };
 
   const onSwapInput = () => {
@@ -209,7 +270,11 @@ export const SwapForm = () => {
         <SlippageControl />
 
         <Button type="submit" disabled={isFetching}>
-          {isFetching ? 'Getting the best rate...' : 'Swap'}
+          {isFetching
+            ? 'Getting the best rate...'
+            : (tokenAllowance as bigint) < parsedInputTokenAmount
+              ? 'Approve'
+              : 'Swap'}
         </Button>
       </form>
     </FormProvider>

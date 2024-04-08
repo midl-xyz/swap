@@ -15,9 +15,9 @@ export type SwapArgs = {
 
 // ETH/ERC20 params: AmountOut -> Path -> Receiver -> Deadline
 
-export const useSwap = async () => {
+export const useSwap = () => {
   const globalChainId = useChainId();
-  const { writeContract } = useWriteContract();
+  const { writeContract, ...rest } = useWriteContract();
 
   const swap = async ({
     tokenIn,
@@ -61,13 +61,13 @@ export const useSwap = async () => {
     }
 
     return writeContract({
-      address: deployments[globalChainId].UniswapV2Router02 as any,
+      address: deployments[globalChainId].UniswapV2Router02.address,
       abi: uniswapV2Router02Abi,
       functionName: txName,
       args: args as any,
-      value: amountIn as any,
+      value: (tokenIn === zeroAddress ? amountIn : BigInt(0)) as any,
     });
   };
 
-  return swap;
+  return { swap, ...rest };
 };
