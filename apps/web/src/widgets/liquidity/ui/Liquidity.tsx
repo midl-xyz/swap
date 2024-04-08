@@ -1,11 +1,21 @@
+'use client';
+
+import { useGetPools, useLiquidityPositions } from '@/features/liquidity';
+import { LiquidityItem } from '@/features/liquidity/ui/liquidity';
+import { Address, getAddress } from 'viem';
+import { useAccount } from 'wagmi';
 import { css } from '~/styled-system/css';
+import { vstack } from '~/styled-system/patterns';
 
 export const Liquidity = () => {
-  const providedLiquidities: any[] = [];
+  const { address } = useAccount();
+
+  const { data: positions } = useLiquidityPositions(address!);
 
   return (
     <div>
-      {providedLiquidities.length === 0 ? (
+      {!positions?.liquidityPositions ||
+      positions?.liquidityPositions.length === 0 ? (
         <p
           className={css({
             px: 4,
@@ -20,11 +30,18 @@ export const Liquidity = () => {
         </p>
       ) : (
         <div>
-          <h3>My liquidity</h3>
-          <div>
-            {providedLiquidities.map((liquidity) => (
+          <div className={vstack({ gap: 4, alignItems: 'stretch' })}>
+            {positions?.liquidityPositions.map((liquidity) => (
               <div key={liquidity.id}>
-                <p>{liquidity.id}</p>
+                <LiquidityItem
+                  liquidityToken={getAddress(liquidity.pair.id)}
+                  tokenA={getAddress(liquidity.pair.token0.id)}
+                  tokenB={getAddress(liquidity.pair.token1.id)}
+                  reserveA={liquidity.pair.reserve0}
+                  reserveB={liquidity.pair.reserve1}
+                  liquidityTokenBalance={liquidity.liquidityTokenBalance}
+                  totalSupply={liquidity.pair.totalSupply}
+                />
               </div>
             ))}
           </div>

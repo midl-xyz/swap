@@ -14,6 +14,7 @@
     "@maskito/core": "^2.2.0",
     "@maskito/kit": "^2.2.0",
     "@maskito/react": "^2.2.0",
+    "@radix-ui/react-collapsible": "^1.0.3",
     "@radix-ui/react-dialog": "^1.0.5",
     "@sentry/react": "^7.109.0",
     "@tanstack/react-query": "^5.18.0",
@@ -21,6 +22,7 @@
     "@v60swap/periphery": "workspace:^",
     "@wagmi/core": "^2.6.3",
     "evm-maths": "^6.2.0",
+    "graphql-request": "5",
     "jotai": "^2.6.4",
     "lucide-react": "^0.336.0",
     "next": "14.1.0",
@@ -35,6 +37,8 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/typescript-react-query": "^6.1.0",
     "@pandacss/dev": "^0.29.1",
     "@types/node": "^20",
     "@types/react": "^18",

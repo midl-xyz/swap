@@ -25,20 +25,20 @@ export const TokenLogo = ({
         css({
           backgroundColor: 'white',
           borderRadius: 'full',
-          width: size,
-          height: size,
-          p: 1,
+          position: 'relative',
         }),
         className,
       )}
+      style={{
+        width: `${size * 4}px`,
+        height: `${size * 4}px`,
+        padding: '2px',
+      }}
     >
       <img
         src={logoURI}
         alt={symbol}
         style={{
-          width: '100%',
-          height: '100%',
-          aspectRatio: '1/1',
           objectFit: 'contain',
         }}
       />
