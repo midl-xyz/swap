@@ -5,6 +5,7 @@ import { useAddLiquidity, usePoolShare } from '@/features/liquidity';
 import { Button, Dialog, DialogContent, DialogOverlay } from '@/shared';
 import { DialogProps } from '@radix-ui/react-dialog';
 import { useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { Address } from 'viem';
 import { useAccount, useBlockNumber } from 'wagmi';
 import { css } from '~/styled-system/css';
@@ -48,6 +49,12 @@ export const SupplyLiquidityDialog = ({
 
   const tokenAInfo = useToken(tokenA, chainId);
   const tokenBInfo = useToken(tokenB, chainId);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error.message);
+    }
+  }, [error]);
 
   return (
     <Dialog {...rest}>

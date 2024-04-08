@@ -19,6 +19,38 @@ export const TokenLogo = ({
 }: TokenLogoProps) => {
   const { logoURI, symbol } = useToken(address, chainId);
 
+  if (!logoURI) {
+    return (
+      <div
+        className={css({
+          backgroundColor: 'neutral.800',
+          borderRadius: 'full',
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          aspectRatio: '1/1',
+          overflow: 'hidden',
+        })}
+        style={{
+          width: `${size * 4}px`,
+          height: `${size * 4}px`,
+          padding: '2px',
+        }}
+      >
+        <span
+          className={css({
+            color: 'white',
+            fontWeight: 'bold',
+            fontSize: '8px',
+          })}
+        >
+          {symbol}
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div
       className={cx(

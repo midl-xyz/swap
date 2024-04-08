@@ -99,7 +99,7 @@ export const LiquidityForm = () => {
   );
 
   useEffect(() => {
-    //update(balanceA, balanceB, minAmountA, minAmountB);
+    update(balanceA, balanceB, minAmountA, minAmountB);
   }, [update, balanceA, balanceB, minAmountA, minAmountB]);
 
   const parsedTokenAAmount = parseUnits(

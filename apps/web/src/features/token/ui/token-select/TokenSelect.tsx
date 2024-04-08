@@ -1,10 +1,10 @@
-import { Token } from '@/entities';
+import { Token, useToken } from '@/entities';
 import { TokenName, useLastUsedTokens } from '@/features';
 import { tokenList } from '@/global';
 import { Button, Input } from '@/shared';
 import { SearchIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import { Address } from 'viem';
+import { Address, getAddress } from 'viem';
 import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
@@ -51,6 +51,15 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
       }),
     );
   }, [searchQuery]);
+
+  let customTokenAddress;
+  try {
+    customTokenAddress = getAddress(searchQuery);
+  } catch {}
+
+  const customToken = useToken(customTokenAddress as Address, chainId);
+
+  console.log(customToken);
 
   useEffect(() => {
     onSearch();
@@ -128,7 +137,33 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
 
       {searchQuery && filteredTokens.length === 0 && (
         <div>
-          <p>No tokens found</p>
+          {customToken.symbol !== 'N/A' ? (
+            <Button
+              onClick={() => {
+                onSubmit(customToken.address, chainId);
+              }}
+              appearance="ghost"
+              className={css({
+                width: '100%',
+                justifyContent: 'flex-start',
+                textAlign: 'left',
+              })}
+            >
+              <TokenName
+                address={customToken.address}
+                chainId={chainId}
+                showName
+              />
+            </Button>
+          ) : (
+            <div
+              className={css({
+                color: 'neutral.400',
+              })}
+            >
+              No results
+            </div>
+          )}
         </div>
       )}
     </div>
