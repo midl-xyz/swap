@@ -54,19 +54,14 @@ export const useAddLiquidity = () => {
       | SmartContractFunctionArgs<typeof uniswapV2Router02Abi, 'addLiquidity'>;
 
     if (isETH) {
-      const erc20TokenAddress = tokenA === zeroAddress ? tokenA : tokenB;
-      const erc20Value =
+      const erc20TokenAddress = tokenA === zeroAddress ? tokenB : tokenA;
+
+      const erc20Desired =
         tokenA === zeroAddress ? amountBDesired : amountADesired;
       const erc20Min = tokenA === zeroAddress ? amountBMin : amountAMin;
+      const ethMin = tokenA === zeroAddress ? amountAMin : amountBMin;
 
-      args = [
-        erc20TokenAddress,
-        amountADesired,
-        erc20Value,
-        erc20Min,
-        to,
-        deadline,
-      ];
+      args = [erc20TokenAddress, erc20Desired, erc20Min, ethMin, to, deadline];
     } else {
       args = [
         tokenA,

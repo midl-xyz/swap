@@ -16,7 +16,7 @@ import { ChangeEventHandler, useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDebouncedCallback } from 'use-debounce';
-import { Address, formatUnits, parseUnits } from 'viem';
+import { Address, formatUnits, parseUnits, zeroAddress } from 'viem';
 import { useAccount, useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { vstack } from '~/styled-system/patterns';
@@ -125,7 +125,10 @@ export const SwapForm = () => {
   const [slippage] = useSlippage();
 
   const onSubmit = () => {
-    if ((tokenAllowance as bigint) < parsedInputTokenAmount) {
+    if (
+      (tokenAllowance as bigint) < parsedInputTokenAmount &&
+      inputToken !== zeroAddress
+    ) {
       return approveERC20(
         inputToken,
         deployments[chainId].UniswapV2Router02.address as Address,
@@ -272,7 +275,8 @@ export const SwapForm = () => {
         <Button type="submit" disabled={isFetching}>
           {isFetching
             ? 'Getting the best rate...'
-            : (tokenAllowance as bigint) < parsedInputTokenAmount
+            : (tokenAllowance as bigint) < parsedInputTokenAmount &&
+                inputToken !== zeroAddress
               ? 'Approve'
               : 'Swap'}
         </Button>

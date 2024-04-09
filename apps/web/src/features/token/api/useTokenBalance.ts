@@ -1,6 +1,7 @@
+import { tokenList } from '@/global';
 import { useMemo } from 'react';
-import { Address, erc20Abi, formatUnits } from 'viem';
-import { useAccount, useReadContracts } from 'wagmi';
+import { Address, erc20Abi, formatUnits, zeroAddress } from 'viem';
+import { useAccount, useBalance, useReadContracts } from 'wagmi';
 
 export const useTokenBalance = (
   contract: Address,
@@ -53,6 +54,13 @@ export const useTokenBalance = (
     },
   });
 
+  const { data: balance, ...restBalance } = useBalance({
+    address: address ?? userAddress,
+    query: {
+      enabled: Boolean(contract),
+    },
+  });
+
   const parsedData: {
     decimals?: number;
     name?: string;
@@ -74,6 +82,23 @@ export const useTokenBalance = (
     }),
     [data],
   );
+
+  if (contract === zeroAddress) {
+    return {
+      data: {
+        decimals: balance?.decimals,
+        name: tokenList.find((it) => it.address === zeroAddress)?.name,
+        symbol: tokenList.find((it) => it.address === zeroAddress)?.symbol,
+        totalSupply: 0,
+        balance: balance?.value,
+        formattedBalance: formatUnits(
+          balance?.value ?? BigInt(0),
+          balance?.decimals ?? 18,
+        ),
+      },
+      ...restBalance,
+    };
+  }
 
   return {
     ...rest,

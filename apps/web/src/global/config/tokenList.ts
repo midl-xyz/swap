@@ -1,8 +1,18 @@
 import { Token } from '@/entities';
 import { promTestnet } from '@/global/config/wagmi';
+import { zeroAddress } from 'viem';
 import { sepolia } from 'viem/chains';
 
 export const tokenList: Token[] = [
+  {
+    symbol: 'PROM',
+    name: 'PROM Token',
+    address: zeroAddress,
+    chainId: sepolia.id,
+    decimals: 18,
+    logoURI:
+      'https://assets.coingecko.com/coins/images/8825/standard/Ticker.png?1696508978',
+  },
   {
     symbol: 'USDT',
     name: 'Tether USD',

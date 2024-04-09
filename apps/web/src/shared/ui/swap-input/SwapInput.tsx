@@ -45,7 +45,7 @@ export const SwapInput = ({
   label,
   ...rest
 }: SwapInputProps) => {
-  const { control, watch, setValue, formState } = useFormContext();
+  const { control, watch, setValue } = useFormContext();
   const chainId = useChainId();
   const token = watch(tokenName);
   const tokenInfo = useToken(token, chainId);

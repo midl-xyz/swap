@@ -262,7 +262,9 @@ export const LiquidityForm = () => {
             </div>
           </div>
         )}
-        {formState.isValid && allowances.tokenA < parsedTokenAAmount ? (
+        {formState.isValid &&
+        allowances.tokenA < parsedTokenAAmount &&
+        tokenA !== zeroAddress ? (
           <Button
             onClick={() =>
               approveERC20(
@@ -275,7 +277,9 @@ export const LiquidityForm = () => {
           >
             Approve {tokenAInfo.symbol}
           </Button>
-        ) : formState.isValid && allowances.tokenB < parsedTokenBAmount ? (
+        ) : formState.isValid &&
+          allowances.tokenB < parsedTokenBAmount &&
+          tokenB !== zeroAddress ? (
           <Button
             onClick={() =>
               approveERC20(

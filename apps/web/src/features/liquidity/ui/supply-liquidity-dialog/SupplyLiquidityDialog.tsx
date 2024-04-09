@@ -44,8 +44,7 @@ export const SupplyLiquidityDialog = ({
 
   const [slippage] = useSlippage();
 
-  const { addLiquidity, isConfirmed, isConfirming, isPending, error } =
-    useAddLiquidity();
+  const { addLiquidity, isConfirming, isPending, error } = useAddLiquidity();
 
   const tokenAInfo = useToken(tokenA, chainId);
   const tokenBInfo = useToken(tokenB, chainId);
@@ -196,7 +195,7 @@ export const SupplyLiquidityDialog = ({
                 <span>{tokenBInfo.symbol} Deposited</span>
                 <TokenValue
                   address={tokenB}
-                  value={tokenAAmount}
+                  value={tokenBAmount}
                   chainId={chainId}
                   className={css({
                     textStyle: 'h6',
