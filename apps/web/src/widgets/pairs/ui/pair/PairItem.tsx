@@ -29,11 +29,17 @@ export const PairItem = ({
 
   return (
     <Link href={`/pairs/${id}`} legacyBehavior>
-      <a className={css({ display: 'table-row' })}>
+      <a
+        className={css({
+          display: 'table-row',
+          padding: 2,
+        })}
+      >
         <div
           className={css({
             width: '5%',
             display: 'table-cell',
+            verticalAlign: 'middle',
           })}
         >
           {index + 1}

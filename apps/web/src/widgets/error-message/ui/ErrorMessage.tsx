@@ -102,7 +102,7 @@ export const ErrorMessage = ({
 
       <br />
       <div className={hstack()}>
-        <Button onClick={resetError}>
+        <Button onClick={resetError} appearance="tertiary">
           <RotateCwIcon width={16} height={16} />
           <span>Reload the page</span>
         </Button>

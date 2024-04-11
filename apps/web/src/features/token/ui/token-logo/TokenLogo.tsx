@@ -31,6 +31,7 @@ export const TokenLogo = ({
           justifyContent: 'center',
           aspectRatio: '1/1',
           overflow: 'hidden',
+          flexShrink: 0,
         })}
         style={{
           width: `${size * 4}px`,

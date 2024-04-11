@@ -1,7 +1,8 @@
 import { useToken } from '@/entities';
 import { TokenLogo } from '@/features';
+import { Button } from '@/shared';
 import * as Collapsible from '@radix-ui/react-collapsible';
-import { Address, formatUnits } from 'viem';
+import { Address } from 'viem';
 import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
@@ -90,6 +91,9 @@ export const LiquidityItem = ({
                 100}
               %
             </span>
+          </div>
+          <div>
+            <Button appearance="secondary">Remove</Button>
           </div>
         </div>
       </Collapsible.Content>
