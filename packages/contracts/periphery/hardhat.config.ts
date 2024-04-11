@@ -19,8 +19,8 @@ const config: HardhatUserConfig = {
     },
   },
   networks: {
-    goerli: {
-      url: "https://goerli.drpc.org/",
+    sepolia: {
+      url: "https://eth-sepolia.g.alchemy.com/v2/MLItZDJKDvcgpwPFsc2V_FTKGyawnnWq",
       accounts,
       tags: ["weth", "core"],
     },

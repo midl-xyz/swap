@@ -1,5 +1,19 @@
-import { useFiatQuote } from '@/features';
+import { SwapForm } from '@/widgets';
+import dynamic from 'next/dynamic';
+import { css, cx } from '~/styled-system/css';
+import { center } from '~/styled-system/patterns';
 
 export default function Home() {
-  return <main />;
+  return (
+    <main
+      className={cx(
+        center(),
+        css({
+          flexGrow: 1,
+        }),
+      )}
+    >
+      <SwapForm />
+    </main>
+  );
 }

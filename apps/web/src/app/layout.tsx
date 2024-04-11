@@ -1,11 +1,25 @@
+import { FiatQuotesProvider } from '@/features/fiat-quote';
+import {
+  ConnectWalletProvider,
+  SettingsDialogProvider,
+  TokenDialogProvider,
+  Web3Provider,
+  wagmiConfig,
+} from '@/global';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { headers } from 'next/headers';
 import { cookieToInitialState } from 'wagmi';
+import { Toaster } from 'react-hot-toast';
 
-import { Web3Provider, wagmiConfig } from '@/global';
-
+import { ErrorBoundary } from '@/global/providers/ErrorBoundary';
+import { AccountButton, AppMenu, Header, Logo, RPCStatus } from '@/widgets';
+import Link from 'next/link';
+import { css, cx } from '~/styled-system/css';
+import { hstack } from '~/styled-system/patterns';
 import './globals.css';
+import { renderErrorMessage } from '@/widgets/error-message';
+import { Footer } from '@/widgets/footer/ui';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -25,9 +39,63 @@ export default function RootLayout({
   );
 
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <Web3Provider initialState={initialState}>{children}</Web3Provider>
+    <html
+      lang="en"
+      className={css({
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      })}
+    >
+      <body
+        className={cx(
+          inter.className,
+          css({
+            display: 'flex',
+            flexDirection: 'column',
+            bg: 'neutral.50',
+          }),
+        )}
+      >
+        <Web3Provider initialState={initialState}>
+          <FiatQuotesProvider>
+            <ConnectWalletProvider />
+            <TokenDialogProvider />
+            <SettingsDialogProvider />
+            <RPCStatus />
+            <Header
+              leftSlot={
+                <div
+                  className={hstack({
+                    gap: 24,
+                  })}
+                >
+                  <Link href="/">
+                    <Logo />
+                  </Link>
+                  <AppMenu />
+                </div>
+              }
+              rightSlot={
+                <div className={hstack({ gap: 4 })}>
+                  <AccountButton />
+                </div>
+              }
+            />
+            <Toaster position="bottom-right" />
+            <ErrorBoundary fallback={renderErrorMessage}>
+              <div
+                className={css({
+                  paddingBlock: 4,
+                  flexGrow: 1,
+                })}
+              >
+                {children}
+              </div>
+              <Footer />
+            </ErrorBoundary>
+          </FiatQuotesProvider>
+        </Web3Provider>
       </body>
     </html>
   );

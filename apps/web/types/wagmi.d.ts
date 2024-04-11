@@ -20,6 +20,4 @@ declare global {
   > & {
     chainId?: GetChainIdReturnType<typeof wagmiConfig>;
   };
-    functionName extends ContractFunctionName<abi, "payable" | "nonpayable">,
-  > = ContractFunctionArgs<abi, "payable" | "nonpayable", functionName>;
 }
