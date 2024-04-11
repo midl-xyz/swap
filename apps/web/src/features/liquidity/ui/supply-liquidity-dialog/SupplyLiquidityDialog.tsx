@@ -51,7 +51,7 @@ export const SupplyLiquidityDialog = ({
 
   useEffect(() => {
     if (error) {
-      toast.error(error.message);
+      toast.error(error.name);
     }
   }, [error]);
 

@@ -29,6 +29,13 @@ const buttonStyle = cva({
   variants: {
     appearance: {
       primary: {
+        backgroundColor: '#FE9780',
+        color: 'neutral.800',
+        _hover: {
+          backgroundColor: '#FFBAA4',
+        },
+      },
+      tertiary: {
         backgroundColor: 'neutral.800',
         color: 'white',
         _hover: {
@@ -67,7 +74,7 @@ const buttonStyle = cva({
         h: 11,
         px: 4,
         py: 2,
-        borderRadius: 'lg',
+        borderRadius: 'xl',
         fontSize: 'md',
       },
       large: {

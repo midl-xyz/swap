@@ -19,6 +19,7 @@ import { css, cx } from '~/styled-system/css';
 import { hstack } from '~/styled-system/patterns';
 import './globals.css';
 import { renderErrorMessage } from '@/widgets/error-message';
+import { Footer } from '@/widgets/footer/ui';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -83,7 +84,14 @@ export default function RootLayout({
             />
             <Toaster position="bottom-right" />
             <ErrorBoundary fallback={renderErrorMessage}>
-              {children}
+              <div
+                className={css({
+                  paddingBlock: 4,
+                })}
+              >
+                {children}
+              </div>
+              <Footer />
             </ErrorBoundary>
           </FiatQuotesProvider>
         </Web3Provider>

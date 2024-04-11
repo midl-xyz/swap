@@ -17,6 +17,7 @@ export const AccountButton = () => {
       {isConnected && address ? (
         chains.find((it) => it.id === chainId) ? (
           <Button
+            appearance="tertiary"
             onClick={() => {
               disconnect();
             }}
@@ -25,6 +26,7 @@ export const AccountButton = () => {
           </Button>
         ) : (
           <Button
+            appearance="tertiary"
             onClick={() => {
               switchChain({
                 chainId: chains[0].id,
@@ -35,7 +37,9 @@ export const AccountButton = () => {
           </Button>
         )
       ) : (
-        <Button onClick={() => setDialogOpen(true)}>Connect wallet</Button>
+        <Button appearance="tertiary" onClick={() => setDialogOpen(true)}>
+          Connect wallet
+        </Button>
       )}
     </div>
   );

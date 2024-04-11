@@ -20,6 +20,9 @@ import { Address, formatUnits, parseUnits, zeroAddress } from 'viem';
 import { useAccount, useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { vstack } from '~/styled-system/patterns';
+import { AiOutlineSwapVertical } from '@/shared/assets';
+
+console.log(AiOutlineSwapVertical);
 
 type FormData = {
   inputToken: Address;
@@ -46,7 +49,11 @@ export const SwapForm = () => {
   const inputTokenInfo = useToken(inputToken, chainId);
   const outputTokenInfo = useToken(outputToken, chainId);
 
-  const { read: readSwapRates, error, isFetching } = useSwapRates();
+  const {
+    read: readSwapRates,
+    error: swapRatesError,
+    isFetching,
+  } = useSwapRates();
 
   const onInputTokenAmountChange: ChangeEventHandler<HTMLInputElement> =
     useDebouncedCallback(async (e) => {
@@ -117,7 +124,7 @@ export const SwapForm = () => {
 
   useEffect(() => {
     if (swapError) {
-      toast.error(swapError.message);
+      toast.error(swapError.name);
       console.error(swapError);
     }
   }, [swapError]);
@@ -128,7 +135,6 @@ export const SwapForm = () => {
   );
 
   const lastChangedInput = useRef(true);
-
   const [slippage] = useSlippage();
 
   const onSubmit = () => {
@@ -245,6 +251,7 @@ export const SwapForm = () => {
           <Button
             onClick={onSwapInput}
             aria-label="Swap input and output tokens"
+            appearance="secondary"
             className={css({
               position: 'absolute',
               top: '50%',
@@ -253,7 +260,7 @@ export const SwapForm = () => {
               transform: 'translate(-50%, -50%)',
             })}
           >
-            <ArrowDownUpIcon />
+            <AiOutlineSwapVertical width={24} height={24} />
           </Button>
 
           <SwapInput
@@ -266,13 +273,15 @@ export const SwapForm = () => {
         </div>
         <SlippageControl />
 
-        <Button type="submit" disabled={isFetching}>
+        <Button type="submit" disabled={isFetching || Boolean(swapRatesError)}>
           {isFetching
             ? 'Getting the best rate...'
             : (tokenAllowance as bigint) < parsedInputTokenAmount &&
                 inputToken !== zeroAddress
               ? 'Approve'
-              : 'Swap'}
+              : swapRatesError
+                ? 'Insufficient liquidity'
+                : 'Swap'}
         </Button>
       </form>
     </FormProvider>

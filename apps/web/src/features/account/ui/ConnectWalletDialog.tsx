@@ -25,7 +25,13 @@ export const ConnectWalletDialog = ({
   return (
     <Dialog {...rest}>
       <DialogOverlay onClick={onClose} />
-      <DialogContent onEscapeKeyDown={onClose}>
+      <DialogContent
+        onEscapeKeyDown={onClose}
+        className={css({
+          width: 'full',
+          maxWidth: 400,
+        })}
+      >
         <div
           className={vstack({
             gap: 8,
@@ -41,6 +47,7 @@ export const ConnectWalletDialog = ({
           <div className={vstack({ gap: 4, alignItems: 'stretch' })}>
             {connectors.map((connector) => (
               <Button
+                appearance="tertiary"
                 key={connector.uid}
                 onClick={() => connect({ connector })}
               >

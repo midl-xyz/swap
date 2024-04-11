@@ -1,6 +1,7 @@
 import { TokenName, tokenDialogAtom } from '@/features';
 import { Button, mergeRefs } from '@/shared';
 import { useAtom } from 'jotai';
+import { ChevronDownIcon } from 'lucide-react';
 import { InputHTMLAttributes, forwardRef, useEffect, useRef } from 'react';
 import { Address } from 'viem';
 import { css } from '~/styled-system/css';
@@ -40,6 +41,7 @@ export const TokenButton = forwardRef<HTMLInputElement, TokenButtonProps>(
             }
           >
             Select a token
+            <ChevronDownIcon />
           </Button>
           <input type="hidden" ref={refs} {...rest} />
         </>
@@ -62,6 +64,7 @@ export const TokenButton = forwardRef<HTMLInputElement, TokenButtonProps>(
           }
         >
           <TokenName address={value} chainId={chainId} />
+          <ChevronDownIcon />
         </Button>
         <input type="hidden" ref={refs} {...rest} />
       </>

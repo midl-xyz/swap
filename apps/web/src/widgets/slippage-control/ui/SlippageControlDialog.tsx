@@ -115,6 +115,7 @@ export const SlippageControlDialog = ({
             </div>
             <Button
               type="submit"
+              appearance="tertiary"
               className={css({
                 alignSelf: 'flex-end',
               })}

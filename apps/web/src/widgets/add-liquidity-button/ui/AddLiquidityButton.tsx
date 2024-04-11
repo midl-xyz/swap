@@ -6,7 +6,7 @@ import Link from 'next/link';
 export const AddLiquidityButton = () => {
   return (
     <Link href="/liquidity/new">
-      <Button>Add Liquidity</Button>
+      <Button appearance="tertiary">Add Liquidity</Button>
     </Link>
   );
 };

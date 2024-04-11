@@ -8,6 +8,7 @@ import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { styled } from '~/styled-system/jsx';
 import { hstack, vstack } from '~/styled-system/patterns';
+import millify from 'millify';
 
 export const StyledNumberInput = styled(
   NumberInput,
@@ -134,7 +135,17 @@ export const SwapInput = ({
               >
                 Balance:{' '}
                 {balance.data?.balance && balance.data?.decimals
-                  ? formatUnits(balance.data?.balance, balance.data?.decimals)
+                  ? millify(
+                      parseFloat(
+                        formatUnits(
+                          balance.data?.balance,
+                          balance.data?.decimals,
+                        ),
+                      ),
+                      {
+                        precision: 4,
+                      },
+                    )
                   : '0'}
               </div>
             </>

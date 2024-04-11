@@ -17,7 +17,7 @@ export const useERC20ApproveAllowance = () => {
   } = useWriteContract({
     mutation: {
       onError: (error) => {
-        toast.error(error.message);
+        toast.error(error.name);
       },
     },
   });
