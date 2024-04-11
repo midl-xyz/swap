@@ -16,18 +16,26 @@ export const useSwapRates = () => {
   const read = async ({
     value,
     pair,
+    reverse,
   }: {
     value: GetAmountsOutArgs['0'];
     pair: GetAmountsOutArgs['1'];
+    reverse?: boolean;
   }) => {
     setIsFetching(true);
     setError(null);
+
+    let method: 'getAmountsIn' | 'getAmountsOut' = 'getAmountsOut';
+
+    if (reverse) {
+      method = 'getAmountsIn';
+    }
 
     try {
       const result = await readContract(wagmiConfig, {
         abi: uniswapV2Router02Abi,
         address: deployments[chainId].UniswapV2Router02.address,
-        functionName: 'getAmountsOut',
+        functionName: method,
         args: [value, pair],
       });
 

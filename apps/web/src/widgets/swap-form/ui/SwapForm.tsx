@@ -12,7 +12,7 @@ import { deployments } from '@/global';
 import { Button, SwapInput, parseNumberInput } from '@/shared';
 import { SlippageControl } from '@/widgets';
 import { ArrowDownUpIcon } from 'lucide-react';
-import { ChangeEventHandler, useEffect } from 'react';
+import { ChangeEventHandler, useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDebouncedCallback } from 'use-debounce';
@@ -54,6 +54,8 @@ export const SwapForm = () => {
         return;
       }
 
+      lastChangedInput.current = true;
+
       const value = parseUnits(
         parseNumberInput(e.target.value),
         inputTokenInfo.decimals,
@@ -83,9 +85,12 @@ export const SwapForm = () => {
         outputTokenInfo.decimals,
       );
 
+      lastChangedInput.current = false;
+
       const swapRates = await readSwapRates({
         value,
-        pair: [outputToken, inputToken],
+        pair: [inputToken, outputToken],
+        reverse: true,
       });
 
       if (!swapRates) {
@@ -121,6 +126,8 @@ export const SwapForm = () => {
     parseNumberInput(inputTokenAmount),
     inputTokenInfo.decimals,
   );
+
+  const lastChangedInput = useRef(true);
 
   const [slippage] = useSlippage();
 
@@ -160,51 +167,38 @@ export const SwapForm = () => {
     const { outputTokenAmount, inputTokenAmount, inputToken, outputToken } =
       getValues();
 
-    if (inputTokenAmount && !outputTokenAmount) {
+    if (lastChangedInput.current) {
       setValue('outputTokenAmount', inputTokenAmount);
-      onOutputTokenAmountChange({
-        target: { value: inputTokenAmount },
-      } as any);
+
       setValue('inputTokenAmount', '');
       setValue('inputToken', outputToken);
       setValue('outputToken', inputToken);
-    }
 
-    if (!inputTokenAmount && outputTokenAmount) {
+      onOutputTokenAmountChange({
+        target: { value: inputTokenAmount },
+      } as any);
+    } else {
       setValue('inputTokenAmount', outputTokenAmount);
+      setValue('outputTokenAmount', '');
+      setValue('inputToken', outputToken);
+      setValue('outputToken', inputToken);
 
       onInputTokenAmountChange({
         target: { value: outputTokenAmount },
       } as any);
-
-      setValue('outputTokenAmount', '');
-      setValue('inputToken', outputToken);
-      setValue('outputToken', inputToken);
-    }
-
-    if (inputTokenAmount && outputTokenAmount) {
-      setValue('inputTokenAmount', outputTokenAmount);
-
-      onInputTokenAmountChange({
-        target: { value: outputTokenAmount },
-      } as any);
-
-      setValue('outputTokenAmount', '');
-      setValue('inputToken', outputToken);
-      setValue('outputToken', inputToken);
     }
   };
 
   useEffect(() => {
     if (inputToken && inputTokenAmount) {
       onInputTokenAmountChange({
-        currentTarget: { value: inputTokenAmount },
+        target: { value: inputTokenAmount },
       } as any);
     }
 
     if (outputToken && outputTokenAmount) {
       onOutputTokenAmountChange({
-        currentTarget: { value: outputTokenAmount },
+        target: { value: outputTokenAmount },
       } as any);
     }
   }, [inputToken, outputToken]);
