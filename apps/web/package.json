@@ -10,6 +10,7 @@
     "prepare": "panda codegen"
   },
   "dependencies": {
+    "@graphql-typed-document-node/core": "^3.2.0",
     "@hookform/resolvers": "^3.3.4",
     "@maskito/core": "^2.2.0",
     "@maskito/kit": "^2.2.0",
@@ -22,6 +23,7 @@
     "@v60swap/periphery": "workspace:^",
     "@wagmi/core": "^2.6.3",
     "evm-maths": "^6.2.0",
+    "graphql": "^16.8.1",
     "graphql-request": "5",
     "jotai": "^2.6.4",
     "lucide-react": "^0.336.0",
