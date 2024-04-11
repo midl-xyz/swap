@@ -87,6 +87,7 @@ export default function RootLayout({
               <div
                 className={css({
                   paddingBlock: 4,
+                  flexGrow: 1,
                 })}
               >
                 {children}
