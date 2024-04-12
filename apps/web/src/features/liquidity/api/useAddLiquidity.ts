@@ -25,6 +25,10 @@ export const useAddLiquidity = () => {
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt({
       hash,
+      query: {
+        enabled: Boolean(hash),
+        retry: true,
+      },
     });
 
   const addLiquidity = async ({

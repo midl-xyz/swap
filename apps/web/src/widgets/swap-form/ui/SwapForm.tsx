@@ -11,7 +11,7 @@ import { useSwapRates } from '@/features/swap/api/useSwapRates';
 import { deployments } from '@/global';
 import { Button, SwapInput, parseNumberInput } from '@/shared';
 import { SlippageControl } from '@/widgets';
-import { ArrowDownUpIcon } from 'lucide-react';
+import { ArrowDownUpIcon, Loader2Icon } from 'lucide-react';
 import { ChangeEventHandler, useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -52,7 +52,7 @@ export const SwapForm = () => {
   const {
     read: readSwapRates,
     error: swapRatesError,
-    isFetching,
+    isFetching: isSwapRatesFetching,
   } = useSwapRates();
 
   const onInputTokenAmountChange: ChangeEventHandler<HTMLInputElement> =
@@ -83,7 +83,7 @@ export const SwapForm = () => {
         'outputTokenAmount',
         formatUnits(outputAmount, outputTokenInfo.decimals),
       );
-    }, 500);
+    }, 0);
 
   const onOutputTokenAmountChange: ChangeEventHandler<HTMLInputElement> =
     useDebouncedCallback(async (e) => {
@@ -110,17 +110,42 @@ export const SwapForm = () => {
         'inputTokenAmount',
         formatUnits(inputAmount, inputTokenInfo.decimals),
       );
-    }, 500);
+    }, 0);
 
-  const { swap, error: swapError } = useSwap();
+  const {
+    swap,
+    error: swapError,
+    isPending: isSwapPending,
+    isConfirming: isSwapConfirming,
+    isConfirmed: isSwapSuccess,
+  } = useSwap();
+
   const { address } = useAccount();
-  const { data: tokenAllowance } = useERC20Allowance({
+
+  const {
+    data: tokenAllowance,
+    refetch,
+    dataUpdatedAt,
+  } = useERC20Allowance({
     token: inputToken,
     spender: deployments[chainId].UniswapV2Router02.address as Address,
     user: address as Address,
   });
 
-  const { write: approveERC20 } = useERC20ApproveAllowance();
+  const {
+    write: approveERC20,
+    isConfirmed,
+    isPending,
+    isConfirming,
+    confirmedAt,
+  } = useERC20ApproveAllowance();
+
+  useEffect(() => {
+    if (isConfirmed && dataUpdatedAt < confirmedAt) {
+      refetch();
+      toast.success('Approved');
+    }
+  }, [isConfirmed, dataUpdatedAt, confirmedAt, refetch]);
 
   useEffect(() => {
     if (swapError) {
@@ -128,6 +153,12 @@ export const SwapForm = () => {
       console.error(swapError);
     }
   }, [swapError]);
+
+  useEffect(() => {
+    if (isSwapSuccess) {
+      toast.success('Swap successful');
+    }
+  }, [isSwapSuccess]);
 
   const parsedInputTokenAmount = parseUnits(
     parseNumberInput(inputTokenAmount),
@@ -209,6 +240,12 @@ export const SwapForm = () => {
     }
   }, [inputToken, outputToken]);
 
+  const isApproving = isPending || isConfirming;
+  const shouldApprove = (tokenAllowance as bigint) < parsedInputTokenAmount;
+  const isSwapping = (isSwapPending || isSwapConfirming) && !shouldApprove;
+
+  console.log('isSwapSuccess', isSwapSuccess);
+
   return (
     <FormProvider {...form}>
       <form
@@ -273,15 +310,43 @@ export const SwapForm = () => {
         </div>
         <SlippageControl />
 
-        <Button type="submit" disabled={isFetching || Boolean(swapRatesError)}>
-          {isFetching
-            ? 'Getting the best rate...'
-            : (tokenAllowance as bigint) < parsedInputTokenAmount &&
-                inputToken !== zeroAddress
-              ? 'Approve'
-              : swapRatesError
-                ? 'Insufficient liquidity'
-                : 'Swap'}
+        <Button
+          type="submit"
+          disabled={
+            isSwapRatesFetching ||
+            isConfirming ||
+            Boolean(swapRatesError) ||
+            isApproving ||
+            isPending ||
+            isSwapping
+          }
+        >
+          {isSwapRatesFetching && <>Getting the best rate...</>}
+
+          {!isSwapRatesFetching &&
+            !swapRatesError &&
+            (shouldApprove ? (
+              isApproving ? (
+                <>
+                  <Loader2Icon
+                    className={css({
+                      animation: 'spin 1s linear infinite',
+                    })}
+                  />
+                  Approving...
+                </>
+              ) : (
+                'Approve'
+              )
+            ) : isSwapping ? (
+              <>Swapping...</>
+            ) : (
+              'Swap'
+            ))}
+
+          {!isSwapRatesFetching &&
+            Boolean(swapRatesError) &&
+            'Insufficient liquidity'}
         </Button>
       </form>
     </FormProvider>

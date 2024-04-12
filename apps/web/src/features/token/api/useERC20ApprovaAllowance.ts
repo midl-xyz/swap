@@ -21,10 +21,17 @@ export const useERC20ApproveAllowance = () => {
       },
     },
   });
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({
-      hash,
-    });
+  const {
+    isLoading: isConfirming,
+    isSuccess: isConfirmed,
+    dataUpdatedAt: confirmedAt,
+  } = useWaitForTransactionReceipt({
+    hash,
+    query: {
+      enabled: Boolean(hash),
+      retry: true,
+    },
+  });
 
   const write = (
     tokenAddress: Address,
@@ -43,5 +50,5 @@ export const useERC20ApproveAllowance = () => {
     });
   };
 
-  return { write, hash, isConfirming, isConfirmed, ...rest };
+  return { write, hash, isConfirming, isConfirmed, confirmedAt, ...rest };
 };

@@ -1,6 +1,10 @@
 import { WETHByChain, deployments, uniswapV2Router02Abi } from '@/global';
 import { Address, zeroAddress } from 'viem';
-import { useChainId, useWriteContract } from 'wagmi';
+import {
+  useChainId,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from 'wagmi';
 
 export type SwapArgs = {
   tokenIn: Address;
@@ -17,7 +21,19 @@ export type SwapArgs = {
 
 export const useSwap = () => {
   const globalChainId = useChainId();
-  const { writeContract, ...rest } = useWriteContract();
+  const { writeContract, data: hash, ...rest } = useWriteContract();
+
+  const {
+    isLoading: isConfirming,
+    isSuccess: isConfirmed,
+    dataUpdatedAt: confirmedAt,
+  } = useWaitForTransactionReceipt({
+    hash,
+    query: {
+      enabled: Boolean(hash),
+      retry: true,
+    },
+  });
 
   const swap = async ({
     tokenIn,
@@ -69,5 +85,5 @@ export const useSwap = () => {
     });
   };
 
-  return { swap, ...rest };
+  return { swap, hash, isConfirmed, isConfirming, ...rest };
 };
