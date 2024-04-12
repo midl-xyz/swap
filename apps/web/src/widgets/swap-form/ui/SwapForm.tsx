@@ -15,8 +15,10 @@ import {
   parseNumberInput,
   scopeKeyPredicate,
 } from '@/shared';
+import { AiOutlineSwapVertical } from '@/shared/assets';
 import { SlippageControl } from '@/widgets';
-import { ArrowDownUpIcon, Loader2Icon } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
+import { Loader2Icon } from 'lucide-react';
 import { ChangeEventHandler, useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -25,10 +27,6 @@ import { Address, formatUnits, parseUnits, zeroAddress } from 'viem';
 import { useAccount, useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { vstack } from '~/styled-system/patterns';
-import { AiOutlineSwapVertical } from '@/shared/assets';
-import { useQueryClient } from '@tanstack/react-query';
-
-console.log(AiOutlineSwapVertical);
 
 type FormData = {
   inputToken: Address;
@@ -170,9 +168,13 @@ export const SwapForm = () => {
         predicate: scopeKeyPredicate(['balance', 'allowance']),
       });
 
+      onInputTokenAmountChange({
+        target: { value: inputTokenAmount },
+      } as any);
+
       toast.success('Swap successful');
     }
-  }, [isSwapSuccess, queryClient]);
+  }, [isSwapSuccess, queryClient, inputTokenAmount]);
 
   const parsedInputTokenAmount = parseUnits(
     parseNumberInput(inputTokenAmount),
@@ -257,8 +259,6 @@ export const SwapForm = () => {
   const isApproving = isPending || isConfirming;
   const shouldApprove = (tokenAllowance as bigint) < parsedInputTokenAmount;
   const isSwapping = (isSwapPending || isSwapConfirming) && !shouldApprove;
-
-  console.log('queryClient', queryClient);
 
   return (
     <FormProvider {...form}>
