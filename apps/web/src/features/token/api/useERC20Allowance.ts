@@ -18,6 +18,7 @@ export const useERC20Allowance = (
     abi: erc20Abi,
     functionName: 'allowance',
     args: [user, spender],
+    scopeKey: 'allowance',
     ...wagmiOverrides,
   });
 };

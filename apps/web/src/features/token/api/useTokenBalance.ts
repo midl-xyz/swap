@@ -2,6 +2,7 @@ import { tokenList } from '@/global';
 import { useMemo } from 'react';
 import { Address, erc20Abi, formatUnits, zeroAddress } from 'viem';
 import { useAccount, useBalance, useReadContracts } from 'wagmi';
+import { readContractsQueryKey } from 'wagmi/query';
 
 export const useTokenBalance = (
   contract: Address,
@@ -48,6 +49,7 @@ export const useTokenBalance = (
 
   const { data, ...rest } = useReadContracts({
     allowFailure: true,
+    scopeKey: 'balance',
     contracts,
     query: {
       enabled: Boolean(contract),

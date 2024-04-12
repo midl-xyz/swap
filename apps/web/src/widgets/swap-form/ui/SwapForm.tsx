@@ -9,7 +9,12 @@ import {
 } from '@/features';
 import { useSwapRates } from '@/features/swap/api/useSwapRates';
 import { deployments } from '@/global';
-import { Button, SwapInput, parseNumberInput } from '@/shared';
+import {
+  Button,
+  SwapInput,
+  parseNumberInput,
+  scopeKeyPredicate,
+} from '@/shared';
 import { SlippageControl } from '@/widgets';
 import { ArrowDownUpIcon, Loader2Icon } from 'lucide-react';
 import { ChangeEventHandler, useEffect, useRef } from 'react';
@@ -21,6 +26,7 @@ import { useAccount, useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { vstack } from '~/styled-system/patterns';
 import { AiOutlineSwapVertical } from '@/shared/assets';
+import { useQueryClient } from '@tanstack/react-query';
 
 console.log(AiOutlineSwapVertical);
 
@@ -48,6 +54,7 @@ export const SwapForm = () => {
     watch();
   const inputTokenInfo = useToken(inputToken, chainId);
   const outputTokenInfo = useToken(outputToken, chainId);
+  const queryClient = useQueryClient();
 
   const {
     read: readSwapRates,
@@ -142,7 +149,10 @@ export const SwapForm = () => {
 
   useEffect(() => {
     if (isConfirmed && dataUpdatedAt < confirmedAt) {
-      refetch();
+      queryClient.invalidateQueries({
+        predicate: scopeKeyPredicate(['balance', 'allowance']),
+      });
+
       toast.success('Approved');
     }
   }, [isConfirmed, dataUpdatedAt, confirmedAt, refetch]);
@@ -156,9 +166,13 @@ export const SwapForm = () => {
 
   useEffect(() => {
     if (isSwapSuccess) {
+      queryClient.invalidateQueries({
+        predicate: scopeKeyPredicate(['balance', 'allowance']),
+      });
+
       toast.success('Swap successful');
     }
-  }, [isSwapSuccess]);
+  }, [isSwapSuccess, queryClient]);
 
   const parsedInputTokenAmount = parseUnits(
     parseNumberInput(inputTokenAmount),
@@ -244,7 +258,7 @@ export const SwapForm = () => {
   const shouldApprove = (tokenAllowance as bigint) < parsedInputTokenAmount;
   const isSwapping = (isSwapPending || isSwapConfirming) && !shouldApprove;
 
-  console.log('isSwapSuccess', isSwapSuccess);
+  console.log('queryClient', queryClient);
 
   return (
     <FormProvider {...form}>
