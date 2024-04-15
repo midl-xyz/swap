@@ -33,16 +33,35 @@ const schema = yup.object().shape({
   tokenAAmount: yup
     .number()
     .transform((value) => (isNaN(value) ? undefined : value))
-    .required("Amount can't be empty")
+
     .when(['$minAmountA'], ([minAmount], schema) => {
-      return schema.min(minAmount || 0, `Minimum amount is ${minAmount}`);
+      const rules = schema.min(
+        minAmount || 0,
+        `Minimum amount is ${minAmount}`,
+      );
+
+      if (minAmount > 0) {
+        return rules.required(`Minimum amount is ${minAmount}`);
+      }
+
+      return rules;
     }),
   tokenBAmount: yup
     .number()
     .transform((value) => (isNaN(value) ? undefined : value))
-    .required("Amount can't be empty")
     .when(['$minAmountB'], ([minAmount], schema) => {
-      return schema.min(minAmount || 0, `Minimum amount is ${minAmount}`);
+      const rules = schema.min(
+        minAmount || 0,
+        `Minimum amount is ${minAmount}`,
+      );
+
+      console.log(minAmount);
+
+      if (minAmount > 0) {
+        return rules.required(`Minimum amount is ${minAmount}`);
+      }
+
+      return rules;
     }),
   tokenA: yup.string<Address>().required(),
   tokenB: yup.string<Address>().required(),
@@ -62,6 +81,8 @@ export const LiquidityForm = () => {
   const form = useForm<FormData>({
     resolver: yupResolver(schema as any),
     context: minValues,
+    reValidateMode: 'onChange',
+    mode: 'onChange',
   });
 
   const { watch, handleSubmit, formState } = form;
@@ -82,8 +103,8 @@ export const LiquidityForm = () => {
   const { minAmountA, minAmountB } = useMinAmount({
     tokenA,
     tokenB,
-    tokenAAmount,
-    tokenBAmount,
+    tokenAAmount: tokenAAmount ?? '0',
+    tokenBAmount: tokenBAmount ?? '0',
   });
 
   const update = useDebouncedCallback(
@@ -94,9 +115,17 @@ export const LiquidityForm = () => {
         balanceA: parseFloat(balanceA?.formattedBalance ?? '0'),
         balanceB: parseFloat(balanceB?.formattedBalance ?? '0'),
       });
+
+      setTimeout(() => {
+        form.trigger();
+      }, 0);
     },
-    100,
+    0,
   );
+
+  useEffect(() => {
+    form.trigger();
+  }, [tokenA, tokenB, form]);
 
   useEffect(() => {
     update(balanceA, balanceB, minAmountA, minAmountB);
@@ -134,19 +163,9 @@ export const LiquidityForm = () => {
     setIsDialogOpen(true);
   };
 
-  const timeoutRef = useRef<NodeJS.Timeout>();
-
-  const onChange = useCallback(() => {
-    timeoutRef.current = setTimeout(() => {
-      form.trigger();
-    }, 0);
-  }, [form, timeoutRef]);
-
-  useEffect(() => {
-    return () => {
-      clearTimeout(timeoutRef.current);
-    };
-  }, []);
+  const onChange = useDebouncedCallback(() => {
+    form.trigger();
+  }, 0);
 
   return (
     <FormProvider {...form}>
