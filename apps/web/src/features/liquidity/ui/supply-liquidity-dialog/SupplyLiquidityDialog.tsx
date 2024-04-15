@@ -7,7 +7,7 @@ import { DialogProps } from '@radix-ui/react-dialog';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { Address } from 'viem';
-import { useAccount, useBlockNumber } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
 
@@ -19,6 +19,7 @@ type SupplyLiquidityDialogProps = DialogProps & {
   tokenBAmount: bigint;
   chainId: number;
   isCreatePool: boolean;
+  onSuccess: () => void;
 };
 
 export const SupplyLiquidityDialog = ({
@@ -29,6 +30,7 @@ export const SupplyLiquidityDialog = ({
   tokenBAmount,
   isCreatePool,
   chainId,
+  onSuccess,
   ...rest
 }: SupplyLiquidityDialogProps) => {
   const { poolShare, estimatedLPTokenBalance, poolToken } = usePoolShare({
@@ -44,7 +46,8 @@ export const SupplyLiquidityDialog = ({
 
   const [slippage] = useSlippage();
 
-  const { addLiquidity, isConfirming, isPending, error } = useAddLiquidity();
+  const { addLiquidity, isConfirming, isPending, error, isConfirmed } =
+    useAddLiquidity();
 
   const tokenAInfo = useToken(tokenA, chainId);
   const tokenBInfo = useToken(tokenB, chainId);
@@ -54,6 +57,14 @@ export const SupplyLiquidityDialog = ({
       toast.error(error.name);
     }
   }, [error]);
+
+  useEffect(() => {
+    if (isConfirmed) {
+      onClose();
+      toast.success('Supply successful');
+      onSuccess();
+    }
+  }, [isConfirmed]);
 
   return (
     <Dialog {...rest}>

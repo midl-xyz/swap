@@ -10,7 +10,12 @@ import {
 import { useMinAmount } from '@/features/liquidity/api/useMinAmount';
 import { useERC20ApproveAllowance } from '@/features/token/api/useERC20ApprovaAllowance';
 import { deployments } from '@/global';
-import { Button, SwapInput, parseNumberInput } from '@/shared';
+import {
+  Button,
+  SwapInput,
+  parseNumberInput,
+  scopeKeyPredicate,
+} from '@/shared';
 import { SlippageControl } from '@/widgets';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -21,6 +26,7 @@ import * as yup from 'yup';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
 import { useDebouncedCallback } from 'use-debounce';
+import { useQueryClient } from '@tanstack/react-query';
 
 type FormData = {
   tokenAAmount: string;
@@ -54,8 +60,6 @@ const schema = yup.object().shape({
         minAmount || 0,
         `Minimum amount is ${minAmount}`,
       );
-
-      console.log(minAmount);
 
       if (minAmount > 0) {
         return rules.required(`Minimum amount is ${minAmount}`);
@@ -166,6 +170,15 @@ export const LiquidityForm = () => {
   const onChange = useDebouncedCallback(() => {
     form.trigger();
   }, 0);
+
+  const queryClient = useQueryClient();
+
+  const onSuccess = () => {
+    queryClient.invalidateQueries({
+      predicate: scopeKeyPredicate(['balance', 'allowance', 'pairStats']),
+    });
+    form.resetField('tokenBAmount');
+  };
 
   return (
     <FormProvider {...form}>
@@ -328,6 +341,7 @@ export const LiquidityForm = () => {
           tokenBAmount={parsedTokenBAmount}
           chainId={chainId}
           onClose={() => setIsDialogOpen(false)}
+          onSuccess={onSuccess}
         />
       </form>
     </FormProvider>

@@ -21,7 +21,8 @@ export const useGetPairStats = (
   const globalChainId = useChainId();
   const chainId = wagmiOverrides?.chainId || globalChainId;
 
-  const { data: callResults, refetch } = useReadContracts({
+  const { data: callResults } = useReadContracts({
+    scopeKey: 'pairStats',
     contracts: [
       // 0: Token0 Address in Pair
       {
