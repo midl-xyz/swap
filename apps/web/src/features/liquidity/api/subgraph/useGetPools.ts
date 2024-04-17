@@ -36,6 +36,7 @@ const GetPools = graphql(`
 export const useGetPools = () => {
   return useQuery<GetPoolsQuery>({
     queryKey: ['GetPools'],
+    refetchOnWindowFocus: false,
     queryFn: () => {
       return graphqlClient.request(GetPools);
     },

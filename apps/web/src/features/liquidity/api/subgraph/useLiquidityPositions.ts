@@ -32,6 +32,7 @@ const GetLiquidityPositions = graphql(`
 export const useLiquidityPositions = (account: Address) => {
   return useQuery<GetLiquidityPositionsQuery>({
     queryKey: ['GetLiquidityPositions', account],
+    refetchOnWindowFocus: false,
     queryFn: () => {
       return graphqlClient.request(GetLiquidityPositions, {
         account: account.toLowerCase(),
