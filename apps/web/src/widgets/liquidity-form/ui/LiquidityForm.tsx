@@ -20,7 +20,7 @@ import { SlippageControl } from '@/widgets';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Address, parseUnits, zeroAddress } from 'viem';
+import { Address, formatUnits, parseUnits, zeroAddress } from 'viem';
 import { useChainId } from 'wagmi';
 import * as yup from 'yup';
 import { css } from '~/styled-system/css';
@@ -132,8 +132,17 @@ export const LiquidityForm = () => {
   }, [tokenA, tokenB, form]);
 
   useEffect(() => {
+    if (
+      minValues.balanceA === parseFloat(balanceA?.formattedBalance ?? '0') &&
+      minValues.balanceB === parseFloat(balanceB?.formattedBalance ?? '0') &&
+      minValues.minAmountA === minAmountA &&
+      minValues.minAmountB === minAmountB
+    ) {
+      return;
+    }
+
     update(balanceA, balanceB, minAmountA, minAmountB);
-  }, [update, balanceA, balanceB, minAmountA, minAmountB]);
+  }, [update, balanceA, balanceB, minAmountA, minAmountB, minValues]);
 
   const parsedTokenAAmount = parseUnits(
     parseNumberInput(tokenAAmount),
@@ -144,7 +153,7 @@ export const LiquidityForm = () => {
     tokenBInfo.decimals,
   );
 
-  const { poolShare, allowances } = usePoolShare({
+  const { poolShare, allowances, reserves } = usePoolShare({
     tokenA,
     tokenB,
     formValues: {
@@ -173,12 +182,30 @@ export const LiquidityForm = () => {
 
   const queryClient = useQueryClient();
 
-  const onSuccess = () => {
+  const onSuccess = useCallback(() => {
     queryClient.invalidateQueries({
       predicate: scopeKeyPredicate(['balance', 'allowance', 'pairStats']),
     });
     form.resetField('tokenBAmount');
-  };
+  }, [form, queryClient]);
+
+  const onClose = useCallback(() => {
+    setIsDialogOpen(false);
+  }, []);
+
+  let priceAtoB = 0;
+  let priceBtoA = 0;
+
+  const formattedReserveA = formatUnits(reserves.tokenA, tokenAInfo.decimals);
+  const formattedReserveB = formatUnits(reserves.tokenB, tokenBInfo.decimals);
+
+  const a = parseFloat(formattedReserveA) + parseFloat(tokenAAmount);
+  const b = parseFloat(formattedReserveB) + parseFloat(tokenBAmount);
+
+  try {
+    priceAtoB = a / b;
+    priceBtoA = b / a;
+  } catch {}
 
   return (
     <FormProvider {...form}>
@@ -244,7 +271,7 @@ export const LiquidityForm = () => {
                     fontWeight: 'bold',
                   })}
                 >
-                  2372.01
+                  {parseFloat(priceAtoB.toFixed(4))}
                 </span>
                 <div
                   className={css({
@@ -262,7 +289,7 @@ export const LiquidityForm = () => {
                     fontWeight: 'bold',
                   })}
                 >
-                  0.123
+                  {parseFloat(priceBtoA.toFixed(4))}
                 </span>
                 <div
                   className={css({
@@ -340,7 +367,7 @@ export const LiquidityForm = () => {
           tokenAAmount={parsedTokenAAmount}
           tokenBAmount={parsedTokenBAmount}
           chainId={chainId}
-          onClose={() => setIsDialogOpen(false)}
+          onClose={onClose}
           onSuccess={onSuccess}
         />
       </form>
