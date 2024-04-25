@@ -130,7 +130,7 @@ library UniswapV2LiquidityMathLibrary {
     address tokenA,
     address tokenB,
     uint256 liquidityAmount
-  ) internal view returns (uint256 tokenAAmount, uint256 tokenBAmount) {
+  ) public view returns (uint256 tokenAAmount, uint256 tokenBAmount) {
     (uint256 reservesA, uint256 reservesB) = UniswapV2Library.getReserves(
       factory,
       tokenA,
@@ -162,7 +162,7 @@ library UniswapV2LiquidityMathLibrary {
     uint256 truePriceTokenA,
     uint256 truePriceTokenB,
     uint256 liquidityAmount
-  ) internal view returns (uint256 tokenAAmount, uint256 tokenBAmount) {
+  ) public view returns (uint256 tokenAAmount, uint256 tokenBAmount) {
     bool feeOn = IUniswapV2Factory(factory).feeTo() != address(0);
     IUniswapV2Pair pair = IUniswapV2Pair(
       UniswapV2Library.pairFor(factory, tokenA, tokenB)
