@@ -6,7 +6,7 @@ import { Button, Dialog, DialogContent, DialogOverlay } from '@/shared';
 import { DialogProps } from '@radix-ui/react-dialog';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { Address } from 'viem';
+import { Address, formatUnits } from 'viem';
 import { useAccount } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
@@ -33,14 +33,15 @@ export const SupplyLiquidityDialog = ({
   onSuccess,
   ...rest
 }: SupplyLiquidityDialogProps) => {
-  const { poolShare, estimatedLPTokenBalance, poolToken } = usePoolShare({
-    tokenA,
-    tokenB,
-    formValues: {
-      tokenAAmount,
-      tokenBAmount,
-    },
-  });
+  const { poolShare, estimatedLPTokenBalance, poolToken, reserves } =
+    usePoolShare({
+      tokenA,
+      tokenB,
+      formValues: {
+        tokenAAmount,
+        tokenBAmount,
+      },
+    });
 
   const { address } = useAccount();
 
@@ -65,6 +66,23 @@ export const SupplyLiquidityDialog = ({
       onSuccess();
     }
   }, [isConfirmed]);
+
+  let priceAtoB = 0;
+  let priceBtoA = 0;
+
+  const formattedReserveA = formatUnits(reserves.tokenA, tokenAInfo.decimals);
+  const formattedReserveB = formatUnits(reserves.tokenB, tokenBInfo.decimals);
+
+  const formattedTokenA = formatUnits(tokenAAmount, tokenAInfo.decimals);
+  const formattedTokenB = formatUnits(tokenBAmount, tokenBInfo.decimals);
+
+  const a = parseFloat(formattedReserveA) + parseFloat(formattedTokenA);
+  const b = parseFloat(formattedReserveB) + parseFloat(formattedTokenB);
+
+  try {
+    priceAtoB = a / b;
+    priceBtoA = b / a;
+  } catch {}
 
   return (
     <Dialog {...rest}>
@@ -230,10 +248,12 @@ export const SupplyLiquidityDialog = ({
                   })}
                 >
                   <span>
-                    1 {tokenAInfo.symbol} = 2372.01 {tokenBInfo.symbol}
+                    1 {tokenAInfo.symbol} = {parseFloat(priceAtoB.toFixed(4))}{' '}
+                    {tokenBInfo.symbol}
                   </span>
                   <span>
-                    1 {tokenBInfo.symbol} = 0.123 {tokenAInfo.symbol}
+                    1 {tokenBInfo.symbol} = {parseFloat(priceBtoA.toFixed(4))}{' '}
+                    {tokenAInfo.symbol}
                   </span>
                 </div>
               </div>

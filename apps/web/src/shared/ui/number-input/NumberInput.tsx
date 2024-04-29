@@ -10,14 +10,16 @@ export const NumberInput = forwardRef<
   HTMLInputElement,
   InputProps & {
     precision?: number;
+    postfix?: string;
   }
->(({ precision, ...props }, ref) => {
+>(({ precision, postfix, ...props }, ref) => {
   let inputRef = useRef<HTMLInputElement | null>(null);
   const maskRef = useMaskito({
     options: maskitoNumberOptionsGenerator({
       precision: precision ?? Infinity,
       min: 0,
       max: props.max ? parseFloat(props.max.toString()) : Infinity,
+      postfix,
     }),
   });
 
