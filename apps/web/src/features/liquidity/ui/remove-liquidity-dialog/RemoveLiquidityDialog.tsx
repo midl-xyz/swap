@@ -30,6 +30,7 @@ import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useEstimateLiquidityPair } from '@/features/liquidity';
 
 type RemoveLiquidityDialogProps = {
   onClose?: () => void;
@@ -104,6 +105,12 @@ export const RemoveLiquidityDialog = ({
     removeLPAmount.toString(),
     lpTokenInfo.decimals,
   );
+
+  const { data, error, failureReason } = useEstimateLiquidityPair({
+    tokenA,
+    tokenB,
+    liquidityAmount: balances.lpToken - parsedLPToken,
+  });
 
   const shouldApprove =
     parsedLPToken > BigInt(0) && (allowance as bigint) < parsedLPToken;
@@ -263,7 +270,7 @@ export const RemoveLiquidityDialog = ({
               <TokenValue
                 address={tokenA}
                 chainId={chainId}
-                value={reserves.tokenA}
+                value={data?.[0] || reserves.tokenA}
                 hideLogo
                 hideSymbol
                 className={css({
@@ -285,7 +292,7 @@ export const RemoveLiquidityDialog = ({
               <TokenValue
                 address={tokenB}
                 chainId={chainId}
-                value={reserves.tokenB}
+                value={data?.[1] || reserves.tokenB}
                 hideLogo
                 hideSymbol
                 className={css({

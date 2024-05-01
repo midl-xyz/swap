@@ -1,6 +1,7 @@
 export * from './gql';
 export * from './subgraph';
 export * from './useAddLiquidity';
+export * from './useEstimateLiquidityPair';
 export * from './useGetAmountOut';
 export * from './useGetLPTokenAddress';
 export * from './useGetPairStats';

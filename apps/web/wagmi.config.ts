@@ -2,6 +2,7 @@ import { defineConfig } from '@wagmi/cli';
 import UniswapV2Router02 from '@v60swap/periphery/dist/UniswapV2Router02.json' with { type: 'json' };
 import UniswapV2Factory from '@v60swap/core/dist/UniswapV2Factory.json' with { type: 'json' };
 import UniswapV2Pair from '@v60swap/core/dist/IUniswapV2Pair.json' with { type: 'json' };
+import UV2Library from '@v60swap/periphery/dist/UV2Library.json' with { type: 'json' };
 import { Abi } from 'viem';
 
 export default defineConfig({
@@ -18,6 +19,10 @@ export default defineConfig({
     {
       name: 'UniswapV2Factory',
       abi: UniswapV2Factory as Abi,
+    },
+    {
+      name: 'UV2Library',
+      abi: UV2Library as Abi,
     },
   ],
 });

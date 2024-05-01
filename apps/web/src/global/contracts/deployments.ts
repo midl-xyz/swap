@@ -10,6 +10,8 @@ type UniswapV2Factory =
   typeof import('@v60swap/core/deployments/1.0.0/goerli/UniswapV2Factory.json');
 
 type UniswapV2Pair = typeof import('@v60swap/core/dist/IUniswapV2Pair.json');
+type UV2Library =
+  typeof import('@v60swap/periphery/deployments/1.0.1/sepolia/UV2Library.json');
 
 type Deployments = Record<
   Config['chains'][number]['id'],
@@ -21,6 +23,7 @@ type Deployments = Record<
       address: Address;
     };
     UniswapV2Par: UniswapV2Pair;
+    UV2Library: UV2Library;
   }
 >;
 
@@ -33,10 +36,12 @@ export const deployments: Deployments = {
       address: '0xfc9cE15BDd57234382692B27f133acb9E23573F8',
     },
     UniswapV2Par: require('@v60swap/core/dist/IUniswapV2Pair.json'),
+    UV2Library: require('@v60swap/periphery/dist/UV2Library.json'),
   },
   [sepolia.id]: {
     UniswapV2Factory: require('@v60swap/core/deployments/1.0.1/sepolia/UniswapV2Factory.json'),
     UniswapV2Router02: require('@v60swap/periphery/deployments/1.0.1/sepolia/UniswapV2Router02.json'),
     UniswapV2Par: require('@v60swap/core/dist/IUniswapV2Pair.json'),
+    UV2Library: require('@v60swap/periphery/deployments/1.0.1/sepolia/UV2Library.json'),
   },
 };
