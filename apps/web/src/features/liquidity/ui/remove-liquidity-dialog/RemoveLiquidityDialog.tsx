@@ -111,21 +111,21 @@ export const RemoveLiquidityDialog = ({
   const parsedLPTokenBalance = formatUnits(
     balances.lpToken ?? BigInt(0),
     lpTokenInfo.decimals,
-  );
+  ); // 1
 
   const removeLPAmount =
     parseFloat(parsedLPTokenBalance) *
-    (parseFloat(parseNumberInput(value)) / 100);
+    (parseFloat(parseNumberInput(value)) / 100); // 1* 0.25 = 0.25
 
   const parsedLPToken = parseUnits(
     removeLPAmount.toString(),
     lpTokenInfo.decimals,
-  );
+  ); // 250000000000
 
   const { tokenAAmount, tokenBAmount } = useEstimateLiquidityPair({
     tokenA,
     tokenB,
-    liquidityAmount: balances.lpToken - parsedLPToken,
+    liquidityAmount: parsedLPToken, // 1 - 0.25
   });
 
   const shouldApprove =
