@@ -31,6 +31,7 @@ import { hstack, vstack } from '~/styled-system/patterns';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useEstimateLiquidityPair } from '@/features/liquidity';
+import { useSlippage } from '@/features/slippage';
 
 type RemoveLiquidityDialogProps = {
   onClose?: () => void;
@@ -78,7 +79,22 @@ export const RemoveLiquidityDialog = ({
     userAddress: userAddress as Address,
   });
 
-  const { removeLiquidity, hash } = useRemoveLiquidity();
+  const {
+    removeLiquidity,
+    hash,
+    error,
+    isConfirmed: isRemovalConfirmed,
+  } = useRemoveLiquidity();
+
+  useEffect(() => {
+    if (isRemovalConfirmed) {
+      toast.success('Removed Liquidity');
+      queryClient.invalidateQueries({
+        queryKey: ['GetLiquidityPositions', userAddress],
+      });
+      onClose?.();
+    }
+  }, [isRemovalConfirmed]);
 
   const tokenAInfo = useToken(tokenA, chainId);
   const tokenBInfo = useToken(tokenB, chainId);
@@ -106,7 +122,7 @@ export const RemoveLiquidityDialog = ({
     lpTokenInfo.decimals,
   );
 
-  const { data, error, failureReason } = useEstimateLiquidityPair({
+  const { tokenAAmount, tokenBAmount } = useEstimateLiquidityPair({
     tokenA,
     tokenB,
     liquidityAmount: balances.lpToken - parsedLPToken,
@@ -127,7 +143,17 @@ export const RemoveLiquidityDialog = ({
     trigger();
   };
 
+  const [slippage] = useSlippage();
+
   const queryClient = useQueryClient();
+
+  const tokenAAmountWithSlippage =
+    (parseFloat(formatUnits(tokenAAmount ?? BigInt(0), tokenAInfo.decimals)) ??
+      0) * (1 - slippage ?? 0);
+
+  const tokenBAmountWithSlippage =
+    (parseFloat(formatUnits(tokenBAmount ?? BigInt(0), tokenBInfo.decimals)) ??
+      0) * (1 - slippage ?? 0);
 
   const onSubmit = (formData: FormData) => {
     if (shouldApprove) {
@@ -136,6 +162,22 @@ export const RemoveLiquidityDialog = ({
         deployments[chainId].UniswapV2Router02.address,
         parsedLPToken,
       );
+    } else {
+      removeLiquidity({
+        tokenA,
+        tokenB,
+        liquidity: parsedLPToken,
+        amountAMin: parseUnits(
+          tokenAAmountWithSlippage.toString(),
+          tokenAInfo.decimals,
+        ),
+        amountBMin: parseUnits(
+          tokenBAmountWithSlippage.toString(),
+          tokenBInfo.decimals,
+        ),
+        to: userAddress as Address,
+        deadline: BigInt(Math.floor(Date.now() / 1000) + 60 * 20),
+      });
     }
   };
 
@@ -147,6 +189,12 @@ export const RemoveLiquidityDialog = ({
       });
     }
   }, [isConfirmed, queryClient]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error.message);
+    }
+  }, [error]);
 
   let priceAtoB = 0;
   let priceBtoA = 0;
@@ -270,7 +318,10 @@ export const RemoveLiquidityDialog = ({
               <TokenValue
                 address={tokenA}
                 chainId={chainId}
-                value={data?.[0] || reserves.tokenA}
+                value={parseUnits(
+                  tokenAAmountWithSlippage.toString(),
+                  tokenAInfo.decimals,
+                )}
                 hideLogo
                 hideSymbol
                 className={css({
@@ -292,7 +343,10 @@ export const RemoveLiquidityDialog = ({
               <TokenValue
                 address={tokenB}
                 chainId={chainId}
-                value={data?.[1] || reserves.tokenB}
+                value={parseUnits(
+                  tokenBAmountWithSlippage.toString(),
+                  tokenBInfo.decimals,
+                )}
                 hideLogo
                 hideSymbol
                 className={css({

@@ -15,16 +15,22 @@ export type UseGetLiquidityAmountParams = {
 
 export const useEstimateLiquidityPair = (
   { tokenA, tokenB, liquidityAmount }: UseGetLiquidityAmountParams,
-  wagmiOverrides?: ContractCallOverrides,
+  wagmiOverrides?: Pick<ContractCallOverrides, 'chainId'>,
 ) => {
   const globalChainId = useChainId();
   const chainId = wagmiOverrides?.chainId || globalChainId;
 
-  return useReadContract({
+  const { data, ...rest } = useReadContract({
     abi: uv2LibraryAbi,
-    address: deployments[chainId].UV2Library.address as Address,
     functionName: 'getLiquidityValue',
+    address: deployments[chainId].UV2Library.address as Address,
     args: [tokenA, tokenB, liquidityAmount],
-    ...wagmiOverrides,
+    chainId,
   });
+
+  return {
+    ...rest,
+    tokenAAmount: data?.[0] as bigint,
+    tokenBAmount: data?.[1] as bigint,
+  };
 };

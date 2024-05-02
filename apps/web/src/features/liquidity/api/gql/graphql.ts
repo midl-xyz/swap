@@ -2973,6 +2973,31 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny',
 }
 
+export type GetPairQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+export type GetPairQuery = {
+  __typename?: 'Query';
+  pair?: {
+    __typename?: 'Pair';
+    id: string;
+    reserve0: any;
+    reserve1: any;
+    totalSupply: any;
+    txCount: any;
+    volumeToken0: any;
+    volumeToken1: any;
+    volumeUSD: any;
+    reserveUSD: any;
+    reserveETH: any;
+    token0Price: any;
+    token1Price: any;
+    token0: { __typename?: 'Token'; id: string; symbol: string; name: string };
+    token1: { __typename?: 'Token'; id: string; symbol: string; name: string };
+  } | null;
+};
+
 export type GetPoolsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetPoolsQuery = {
@@ -3028,31 +3053,98 @@ export type GetLiquidityPositionsQuery = {
   }>;
 };
 
-export type GetPairQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
-}>;
-
-export type GetPairQuery = {
-  __typename?: 'Query';
-  pair?: {
-    __typename?: 'Pair';
-    id: string;
-    reserve0: any;
-    reserve1: any;
-    totalSupply: any;
-    txCount: any;
-    volumeToken0: any;
-    volumeToken1: any;
-    volumeUSD: any;
-    reserveUSD: any;
-    reserveETH: any;
-    token0Price: any;
-    token1Price: any;
-    token0: { __typename?: 'Token'; id: string; symbol: string; name: string };
-    token1: { __typename?: 'Token'; id: string; symbol: string; name: string };
-  } | null;
-};
-
+export const GetPairDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetPair' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'pair' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'token0' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'symbol' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'token1' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'symbol' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'reserve0' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'reserve1' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'totalSupply' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'txCount' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'volumeToken0' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'volumeToken1' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'volumeUSD' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'reserveUSD' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'reserveETH' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'token0Price' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'token1Price' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetPairQuery, GetPairQueryVariables>;
 export const GetPoolsDocument = {
   kind: 'Document',
   definitions: [
@@ -3169,6 +3261,11 @@ export const GetLiquidityPositionsDocument = {
                         name: { kind: 'Name', value: 'account' },
                       },
                     },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'liquidityTokenBalance_gt' },
+                      value: { kind: 'IntValue', value: '0' },
+                    },
                   ],
                 },
               },
@@ -3256,95 +3353,3 @@ export const GetLiquidityPositionsDocument = {
   GetLiquidityPositionsQuery,
   GetLiquidityPositionsQueryVariables
 >;
-export const GetPairDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetPair' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'pair' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'id' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'id' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'token0' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'symbol' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'token1' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'symbol' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'reserve0' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'reserve1' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'totalSupply' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'txCount' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'volumeToken0' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'volumeToken1' },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'volumeUSD' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'reserveUSD' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'reserveETH' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'token0Price' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'token1Price' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<GetPairQuery, GetPairQueryVariables>;
