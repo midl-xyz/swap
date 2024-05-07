@@ -3,13 +3,36 @@
 import { useSlippage } from '@/features';
 import { isSlippageDialogOpen } from '@/features/slippage/model';
 import { Button } from '@/shared';
+import { SlippageControlForm } from '@/widgets/slippage-control/ui/SlippageControlForm';
 import { useAtom } from 'jotai';
 import { PencilIcon } from 'lucide-react';
-import { hstack } from '~/styled-system/patterns';
+import { useState } from 'react';
+import { css } from '~/styled-system/css';
+import { hstack, vstack } from '~/styled-system/patterns';
 
-export const SlippageControl = () => {
+type SlippageControlProps = {
+  inline?: boolean;
+};
+
+export const SlippageControl = ({ inline }: SlippageControlProps) => {
   const [slippage] = useSlippage();
   const [, setDialogOpen] = useAtom(isSlippageDialogOpen);
+  const [isInlineOpen, setInlineOpen] = useState(false);
+
+  if (isInlineOpen) {
+    return (
+      <div className={vstack({ gap: 4, alignItems: 'stretch' })}>
+        <span
+          className={css({
+            textStyle: 'body',
+          })}
+        >
+          Max. Slippage
+        </span>
+        <SlippageControlForm onClose={() => setInlineOpen(false)} autoCommit />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -20,7 +43,13 @@ export const SlippageControl = () => {
       <div>
         Max. slippage
         <Button
-          onClick={() => setDialogOpen(true)}
+          onClick={() => {
+            if (inline) {
+              setInlineOpen(true);
+            } else {
+              setDialogOpen(true);
+            }
+          }}
           appearance="ghost"
           aria-label="Edit slippage"
         >

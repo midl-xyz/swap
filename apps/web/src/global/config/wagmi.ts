@@ -1,4 +1,4 @@
-import { createConfig, http } from 'wagmi';
+import { createConfig, createStorage, http } from 'wagmi';
 import { Chain, sepolia } from 'wagmi/chains';
 import { walletConnect } from 'wagmi/connectors';
 
@@ -47,6 +47,10 @@ export const wagmiConfig = createConfig({
   transports: {
     [sepolia.id]: http('https://ethereum-sepolia-rpc.publicnode.com'),
   },
+  storage: createStorage({
+    storage: typeof localStorage === 'undefined' ? undefined : localStorage,
+    key: 'v60-1.0.0',
+  }),
 });
 
 export type ChainId = (typeof wagmiConfig)['chains'][number]['id'];

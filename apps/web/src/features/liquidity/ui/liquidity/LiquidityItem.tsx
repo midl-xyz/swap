@@ -1,7 +1,9 @@
 import { useToken } from '@/entities';
 import { TokenLogo } from '@/features';
+import { removeLiquidityDialogAtom } from '@/features/liquidity/model';
 import { Button } from '@/shared';
 import * as Collapsible from '@radix-ui/react-collapsible';
+import { useAtom } from 'jotai';
 import { Address } from 'viem';
 import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
@@ -29,6 +31,7 @@ export const LiquidityItem = ({
   const chainId = useChainId();
   const tokenAInfo = useToken(tokenA, chainId);
   const tokenBInfo = useToken(tokenB, chainId);
+  const [, setDialogState] = useAtom(removeLiquidityDialogAtom);
 
   return (
     <Collapsible.Root
@@ -93,7 +96,22 @@ export const LiquidityItem = ({
             </span>
           </div>
           <div>
-            <Button appearance="secondary">Remove</Button>
+            <Button
+              appearance="secondary"
+              onClick={() => {
+                setDialogState({
+                  open: true,
+                  lpToken: {
+                    address: liquidityToken,
+                    chainId: chainId,
+                    tokenA,
+                    tokenB,
+                  },
+                });
+              }}
+            >
+              Remove
+            </Button>
           </div>
         </div>
       </Collapsible.Content>

@@ -1,6 +1,7 @@
 import { FiatQuotesProvider } from '@/features/fiat-quote';
 import {
   ConnectWalletProvider,
+  RemoveLiquidityProvider,
   SettingsDialogProvider,
   TokenDialogProvider,
   Web3Provider,
@@ -62,6 +63,7 @@ export default function RootLayout({
             <ConnectWalletProvider />
             <TokenDialogProvider />
             <SettingsDialogProvider />
+            <RemoveLiquidityProvider />
             <RPCStatus />
             <Header
               leftSlot={
@@ -88,6 +90,8 @@ export default function RootLayout({
                 className={css({
                   paddingBlock: 4,
                   flexGrow: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
                 })}
               >
                 {children}

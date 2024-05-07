@@ -13,12 +13,12 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-  '\n  query GetPools {\n    pairs {\n      id\n      token0 {\n        id\n        symbol\n        name\n      }\n      token1 {\n        id\n        symbol\n        name\n      }\n\n      reserve0\n      reserve1\n      totalSupply\n      txCount\n      volumeToken0\n      volumeToken1\n      volumeUSD\n      reserveUSD\n      reserveETH\n      token0Price\n      token1Price\n    }\n  }\n':
-    types.GetPoolsDocument,
-  '\n  query GetLiquidityPositions($account: String!) {\n    liquidityPositions(where: { user: $account }) {\n      id\n      pair {\n        id\n        token0 {\n          id\n          symbol\n          name\n        }\n        token1 {\n          id\n          symbol\n          name\n        }\n        reserve0\n        reserve1\n        totalSupply\n      }\n      liquidityTokenBalance\n    }\n  }\n':
-    types.GetLiquidityPositionsDocument,
   '\n  query GetPair($id: ID!) {\n    pair(id: $id) {\n      id\n      token0 {\n        id\n        symbol\n        name\n      }\n      token1 {\n        id\n        symbol\n        name\n      }\n\n      reserve0\n      reserve1\n      totalSupply\n      txCount\n      volumeToken0\n      volumeToken1\n      volumeUSD\n      reserveUSD\n      reserveETH\n      token0Price\n      token1Price\n    }\n  }\n':
     types.GetPairDocument,
+  '\n  query GetPools {\n    pairs {\n      id\n      token0 {\n        id\n        symbol\n        name\n      }\n      token1 {\n        id\n        symbol\n        name\n      }\n\n      reserve0\n      reserve1\n      totalSupply\n      txCount\n      volumeToken0\n      volumeToken1\n      volumeUSD\n      reserveUSD\n      reserveETH\n      token0Price\n      token1Price\n    }\n  }\n':
+    types.GetPoolsDocument,
+  '\n  query GetLiquidityPositions($account: String!) {\n    liquidityPositions(where: { user: $account, liquidityTokenBalance_gt: 0 }) {\n      id\n      pair {\n        id\n        token0 {\n          id\n          symbol\n          name\n        }\n        token1 {\n          id\n          symbol\n          name\n        }\n        reserve0\n        reserve1\n        totalSupply\n      }\n      liquidityTokenBalance\n    }\n  }\n':
+    types.GetLiquidityPositionsDocument,
 };
 
 /**
@@ -39,20 +39,20 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
+  source: '\n  query GetPair($id: ID!) {\n    pair(id: $id) {\n      id\n      token0 {\n        id\n        symbol\n        name\n      }\n      token1 {\n        id\n        symbol\n        name\n      }\n\n      reserve0\n      reserve1\n      totalSupply\n      txCount\n      volumeToken0\n      volumeToken1\n      volumeUSD\n      reserveUSD\n      reserveETH\n      token0Price\n      token1Price\n    }\n  }\n',
+): (typeof documents)['\n  query GetPair($id: ID!) {\n    pair(id: $id) {\n      id\n      token0 {\n        id\n        symbol\n        name\n      }\n      token1 {\n        id\n        symbol\n        name\n      }\n\n      reserve0\n      reserve1\n      totalSupply\n      txCount\n      volumeToken0\n      volumeToken1\n      volumeUSD\n      reserveUSD\n      reserveETH\n      token0Price\n      token1Price\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
   source: '\n  query GetPools {\n    pairs {\n      id\n      token0 {\n        id\n        symbol\n        name\n      }\n      token1 {\n        id\n        symbol\n        name\n      }\n\n      reserve0\n      reserve1\n      totalSupply\n      txCount\n      volumeToken0\n      volumeToken1\n      volumeUSD\n      reserveUSD\n      reserveETH\n      token0Price\n      token1Price\n    }\n  }\n',
 ): (typeof documents)['\n  query GetPools {\n    pairs {\n      id\n      token0 {\n        id\n        symbol\n        name\n      }\n      token1 {\n        id\n        symbol\n        name\n      }\n\n      reserve0\n      reserve1\n      totalSupply\n      txCount\n      volumeToken0\n      volumeToken1\n      volumeUSD\n      reserveUSD\n      reserveETH\n      token0Price\n      token1Price\n    }\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query GetLiquidityPositions($account: String!) {\n    liquidityPositions(where: { user: $account }) {\n      id\n      pair {\n        id\n        token0 {\n          id\n          symbol\n          name\n        }\n        token1 {\n          id\n          symbol\n          name\n        }\n        reserve0\n        reserve1\n        totalSupply\n      }\n      liquidityTokenBalance\n    }\n  }\n',
-): (typeof documents)['\n  query GetLiquidityPositions($account: String!) {\n    liquidityPositions(where: { user: $account }) {\n      id\n      pair {\n        id\n        token0 {\n          id\n          symbol\n          name\n        }\n        token1 {\n          id\n          symbol\n          name\n        }\n        reserve0\n        reserve1\n        totalSupply\n      }\n      liquidityTokenBalance\n    }\n  }\n'];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-  source: '\n  query GetPair($id: ID!) {\n    pair(id: $id) {\n      id\n      token0 {\n        id\n        symbol\n        name\n      }\n      token1 {\n        id\n        symbol\n        name\n      }\n\n      reserve0\n      reserve1\n      totalSupply\n      txCount\n      volumeToken0\n      volumeToken1\n      volumeUSD\n      reserveUSD\n      reserveETH\n      token0Price\n      token1Price\n    }\n  }\n',
-): (typeof documents)['\n  query GetPair($id: ID!) {\n    pair(id: $id) {\n      id\n      token0 {\n        id\n        symbol\n        name\n      }\n      token1 {\n        id\n        symbol\n        name\n      }\n\n      reserve0\n      reserve1\n      totalSupply\n      txCount\n      volumeToken0\n      volumeToken1\n      volumeUSD\n      reserveUSD\n      reserveETH\n      token0Price\n      token1Price\n    }\n  }\n'];
+  source: '\n  query GetLiquidityPositions($account: String!) {\n    liquidityPositions(where: { user: $account, liquidityTokenBalance_gt: 0 }) {\n      id\n      pair {\n        id\n        token0 {\n          id\n          symbol\n          name\n        }\n        token1 {\n          id\n          symbol\n          name\n        }\n        reserve0\n        reserve1\n        totalSupply\n      }\n      liquidityTokenBalance\n    }\n  }\n',
+): (typeof documents)['\n  query GetLiquidityPositions($account: String!) {\n    liquidityPositions(where: { user: $account, liquidityTokenBalance_gt: 0 }) {\n      id\n      pair {\n        id\n        token0 {\n          id\n          symbol\n          name\n        }\n        token1 {\n          id\n          symbol\n          name\n        }\n        reserve0\n        reserve1\n        totalSupply\n      }\n      liquidityTokenBalance\n    }\n  }\n'];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

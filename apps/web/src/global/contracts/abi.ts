@@ -1,4 +1,81 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// UV2Library
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const uv2LibraryAbi = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [{ name: 'factory_', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'factory',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'tokenA', internalType: 'address', type: 'address' },
+      { name: 'tokenB', internalType: 'address', type: 'address' },
+      { name: 'truePriceTokenA', internalType: 'uint256', type: 'uint256' },
+      { name: 'truePriceTokenB', internalType: 'uint256', type: 'uint256' },
+      { name: 'liquidityAmount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getGasCostOfGetLiquidityValueAfterArbitrageToPrice',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'tokenA', internalType: 'address', type: 'address' },
+      { name: 'tokenB', internalType: 'address', type: 'address' },
+      { name: 'liquidityAmount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getLiquidityValue',
+    outputs: [
+      { name: 'tokenAAmount', internalType: 'uint256', type: 'uint256' },
+      { name: 'tokenBAmount', internalType: 'uint256', type: 'uint256' },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'tokenA', internalType: 'address', type: 'address' },
+      { name: 'tokenB', internalType: 'address', type: 'address' },
+      { name: 'truePriceTokenA', internalType: 'uint256', type: 'uint256' },
+      { name: 'truePriceTokenB', internalType: 'uint256', type: 'uint256' },
+      { name: 'liquidityAmount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getLiquidityValueAfterArbitrageToPrice',
+    outputs: [
+      { name: 'tokenAAmount', internalType: 'uint256', type: 'uint256' },
+      { name: 'tokenBAmount', internalType: 'uint256', type: 'uint256' },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'tokenA', internalType: 'address', type: 'address' },
+      { name: 'tokenB', internalType: 'address', type: 'address' },
+      { name: 'truePriceTokenA', internalType: 'uint256', type: 'uint256' },
+      { name: 'truePriceTokenB', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getReservesAfterArbitrage',
+    outputs: [
+      { name: 'reserveA', internalType: 'uint256', type: 'uint256' },
+      { name: 'reserveB', internalType: 'uint256', type: 'uint256' },
+    ],
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // UniswapV2Factory
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
