@@ -27,7 +27,7 @@ export const deployments: Deployments = {
     UniswapV2Factory: {
       address: '0xfc9cE15BDd57234382692B27f133acb9E23573F8',
     },
-    UV2Library: require('@v60swap/periphery/dist/UV2Library.json'),
+    UV2Library: require('@v60swap/periphery/deployments/1.0.1/sepolia/UV2Library.json'),
   },
   [sepolia.id]: {
     UniswapV2Factory: require('@v60swap/core/deployments/1.0.1/sepolia/UniswapV2Factory.json'),
