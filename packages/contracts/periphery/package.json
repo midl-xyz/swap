@@ -2,8 +2,12 @@
   "name": "@v60swap/periphery",
   "version": "1.0.2",
   "scripts": {
-    "build": "hardhat compile & hardhat export"
+    "build": "hardhat compile & hardhat export-abi"
   },
+  "files": [
+    "dist",
+    "deployments"
+  ],
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
     "@v60swap/core": "workspace:^",
