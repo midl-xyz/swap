@@ -123,6 +123,7 @@ export const SwapForm = () => {
     isPending: isSwapPending,
     isConfirming: isSwapConfirming,
     isConfirmed: isSwapSuccess,
+    reset,
   } = useSwap();
 
   const { address } = useAccount();
@@ -167,6 +168,8 @@ export const SwapForm = () => {
       queryClient.invalidateQueries({
         predicate: scopeKeyPredicate(['balance', 'allowance']),
       });
+
+      reset();
 
       onInputTokenAmountChange({
         target: { value: inputTokenAmount },
