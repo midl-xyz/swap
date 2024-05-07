@@ -32,6 +32,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useEstimateLiquidityPair } from '@/features/liquidity';
 import { useSlippage } from '@/features/slippage';
+import { Loader2Icon } from 'lucide-react';
 
 type RemoveLiquidityDialogProps = {
   onClose?: () => void;
@@ -83,6 +84,8 @@ export const RemoveLiquidityDialog = ({
     removeLiquidity,
     hash,
     error,
+    isConfirming: isRemoving,
+    isPending: isRemovalPending,
     isConfirmed: isRemovalConfirmed,
   } = useRemoveLiquidity();
 
@@ -125,7 +128,7 @@ export const RemoveLiquidityDialog = ({
   const { tokenAAmount, tokenBAmount } = useEstimateLiquidityPair({
     tokenA,
     tokenB,
-    liquidityAmount: parsedLPToken, // 1 - 0.25
+    liquidityAmount: parsedLPToken,
   });
 
   const shouldApprove =
@@ -388,9 +391,41 @@ export const RemoveLiquidityDialog = ({
 
           <Button
             type="submit"
-            disabled={isConfirming || isPending || !formState.isValid}
+            disabled={
+              isConfirming ||
+              isPending ||
+              !formState.isValid ||
+              isRemoving ||
+              isRemovalPending
+            }
           >
-            {shouldApprove ? 'Approve LP Token' : 'Remove Liquidity'}
+            {shouldApprove &&
+              (isConfirming || isPending ? (
+                <>
+                  <Loader2Icon
+                    className={css({
+                      animation: 'spin 1s linear infinite',
+                    })}
+                  />
+                  Approving...
+                </>
+              ) : (
+                'Approve LP Token'
+              ))}
+
+            {!shouldApprove &&
+              (isRemoving || isRemovalPending ? (
+                <>
+                  <Loader2Icon
+                    className={css({
+                      animation: 'spin 1s linear infinite',
+                    })}
+                  />
+                  Confirming...
+                </>
+              ) : (
+                'Remove Liquidity'
+              ))}
           </Button>
         </form>
       </DialogContent>
