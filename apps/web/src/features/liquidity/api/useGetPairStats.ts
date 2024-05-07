@@ -1,7 +1,6 @@
 import { deployments, uniswapV2PairAbi } from '@/global';
-import { useEffect } from 'react';
 import { Address, erc20Abi } from 'viem';
-import { useBlockNumber, useChainId, useReadContracts } from 'wagmi';
+import { useChainId, useReadContracts } from 'wagmi';
 
 type PairStatsArgs = {
   userAddress: Address;
