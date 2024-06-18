@@ -16,6 +16,10 @@ const config: HardhatUserConfig = {
       accounts,
     },
   },
+  etherscan: {
+    enabled: true,
+    apiKey: "TKNKBSY99DGWRUNV6TAZ7CEZ85R2SKAG5X",
+  },
   namedAccounts: {
     deployer: 0,
   },
