@@ -1,4 +1,4 @@
-import { promTestnet } from '@/global';
+import { promTestnet } from '@/global/config';
 import { Address } from 'viem';
 import { sepolia } from 'viem/chains';
 import { Config } from 'wagmi';

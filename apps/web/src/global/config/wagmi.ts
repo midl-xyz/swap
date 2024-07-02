@@ -1,4 +1,6 @@
-import { connectorsForWallets } from '@rainbow-me/rainbowkit';
+'use client';
+
+import { Chain, connectorsForWallets } from '@rainbow-me/rainbowkit';
 import {
   frameWallet,
   injectedWallet,
