@@ -21,6 +21,7 @@ import { hstack } from '~/styled-system/patterns';
 import './globals.css';
 import { renderErrorMessage } from '@/widgets/error-message';
 import { Footer } from '@/widgets/footer/ui';
+import * as RainbowKit from '@rainbow-me/rainbowkit';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -34,6 +35,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.log('kek: ', RainbowKit);
+  console.log('kit: ', RainbowKit);
+
   const initialState = cookieToInitialState(
     wagmiConfig,
     headers().get('cookie'),
