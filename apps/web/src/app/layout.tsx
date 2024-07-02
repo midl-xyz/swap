@@ -1,6 +1,5 @@
 import { FiatQuotesProvider } from '@/features/fiat-quote';
 import {
-  ConnectWalletProvider,
   RemoveLiquidityProvider,
   SettingsDialogProvider,
   TokenDialogProvider,
@@ -61,7 +60,6 @@ export default function RootLayout({
       >
         <Web3Provider initialState={initialState}>
           <FiatQuotesProvider>
-            <ConnectWalletProvider />
             <TokenDialogProvider />
             <SettingsDialogProvider />
             <RemoveLiquidityProvider />
