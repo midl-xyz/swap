@@ -1,7 +1,6 @@
 'use client';
 
 import { Button, shortenAddress } from '@/shared';
-import { gravatar } from '@eezyquote/gradient-avatar';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Address } from 'viem';
 import { vstack } from '~/styled-system/patterns';
@@ -17,10 +16,7 @@ export const AccountButton = () => (
       authenticationStatus,
       mounted,
     }) => {
-      // Note: If your app doesn't use authentication, you
-      // can remove all 'authenticationStatus' checks
       const ready = mounted && authenticationStatus !== 'loading';
-      const avatar = gravatar(account?.address || '', 50);
       const connected =
         ready &&
         account &&
@@ -73,14 +69,7 @@ export const AccountButton = () => (
                       aria-label="account menu"
                       onClick={openAccountModal}
                     >
-                      <div
-                        className={vstack({
-                          '@/xs': { display: 'hidden' },
-                          '@/md': { display: 'unset' },
-                        })}
-                      >
-                        {shortenAddress(account.address as Address)}
-                      </div>
+                      {shortenAddress(account.address as Address)}
                     </Button>
                   </div>
                 </div>

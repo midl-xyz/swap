@@ -10,7 +10,6 @@
     "prepare": "panda codegen"
   },
   "dependencies": {
-    "@eezyquote/gradient-avatar": "^1.0.2",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@hookform/resolvers": "^3.3.4",
     "@maskito/core": "^2.2.0",

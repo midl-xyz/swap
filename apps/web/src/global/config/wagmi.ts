@@ -41,7 +41,7 @@ const connectors = connectorsForWallets(
 );
 
 export const wagmiConfig = createConfig({
-  connectors: connectors,
+  connectors,
   chains: [sepolia],
   transports: {
     [sepolia.id]: http('https://ethereum-sepolia-rpc.publicnode.com'),
