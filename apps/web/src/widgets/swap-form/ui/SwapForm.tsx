@@ -6,6 +6,7 @@ import {
   useERC20ApproveAllowance,
   useSlippage,
   useSwap,
+  useTokenBalance,
 } from '@/features';
 import { useSwapRates } from '@/features/swap/api/useSwapRates';
 import { deployments } from '@/global';
@@ -259,9 +260,18 @@ export const SwapForm = () => {
     }
   }, [inputToken, outputToken]);
 
+  const {
+    data: { balance: inputTokenBalance },
+  } = useTokenBalance(inputToken, { chainId, address });
+
   const isApproving = isPending || isConfirming;
   const shouldApprove = (tokenAllowance as bigint) < parsedInputTokenAmount;
+  const isBalanceBigEnough =
+    parsedInputTokenAmount <= (inputTokenBalance ?? Infinity);
+
   const isSwapping = (isSwapPending || isSwapConfirming) && !shouldApprove;
+  const isFormFilled =
+    !!inputTokenAmount && !!outputTokenAmount && !!inputToken && !!outputToken;
 
   return (
     <FormProvider {...form}>
@@ -335,13 +345,17 @@ export const SwapForm = () => {
             Boolean(swapRatesError) ||
             isApproving ||
             isPending ||
-            isSwapping
+            isSwapping ||
+            !isFormFilled ||
+            !isBalanceBigEnough
           }
         >
           {isSwapRatesFetching && <>Getting the best rate...</>}
+          {!isBalanceBigEnough && <>Insufficient Balance</>}
 
           {!isSwapRatesFetching &&
             !swapRatesError &&
+            isBalanceBigEnough &&
             (shouldApprove ? (
               isApproving ? (
                 <>
@@ -363,6 +377,7 @@ export const SwapForm = () => {
 
           {!isSwapRatesFetching &&
             Boolean(swapRatesError) &&
+            isFormFilled &&
             'Insufficient liquidity'}
         </Button>
       </form>
