@@ -265,10 +265,9 @@ export const SwapForm = () => {
 
   const isApproving = isPending || isConfirming;
   const shouldApprove = (tokenAllowance as bigint) < parsedInputTokenAmount;
-  const isBalanceBigEnough = !!inputTokenBalance
-    ? parsedInputTokenAmount <= inputTokenBalance
-    : true;
-  console.log(isBalanceBigEnough, inputTokenBalance, parsedInputTokenAmount);
+  const isBalanceBigEnough =
+    parsedInputTokenAmount <= (inputTokenBalance ?? Infinity);
+
   const isSwapping = (isSwapPending || isSwapConfirming) && !shouldApprove;
   const isFormFilled =
     !!inputTokenAmount && !!outputTokenAmount && !!inputToken && !!outputToken;
