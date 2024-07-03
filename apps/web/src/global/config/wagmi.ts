@@ -1,6 +1,6 @@
 'use client';
 
-import { Chain, connectorsForWallets } from '@rainbow-me/rainbowkit';
+import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 import {
   frameWallet,
   injectedWallet,
@@ -11,8 +11,8 @@ import {
   walletConnectWallet,
   zerionWallet,
 } from '@rainbow-me/rainbowkit/wallets';
+import { sepolia } from 'viem/chains';
 import { createConfig, createStorage, http } from 'wagmi';
-import { sepolia } from 'wagmi/chains';
 declare module 'wagmi' {
   interface Register {
     config: typeof wagmiConfig;
