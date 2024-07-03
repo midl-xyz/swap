@@ -25,10 +25,6 @@ const appMenuLinks: AppMenuLink[] = [
     label: 'All Pairs',
     href: '/pairs',
   },
-  {
-    label: 'About',
-    href: '/about',
-  },
 ];
 
 export const AppMenu = () => {
