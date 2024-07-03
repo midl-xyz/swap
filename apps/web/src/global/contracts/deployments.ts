@@ -4,7 +4,7 @@ import { sepolia } from 'viem/chains';
 import { Config } from 'wagmi';
 
 type UV2Library =
-  typeof import('@v60swap/periphery/deployments/1.0.1/sepolia/UV2Library.json');
+  typeof import('@v60swap/periphery/deployments/1.0.3/sepolia/UV2Library.json');
 
 type Deployments = Record<
   Config['chains'][number]['id'],
@@ -27,11 +27,11 @@ export const deployments: Deployments = {
     UniswapV2Factory: {
       address: '0xfc9cE15BDd57234382692B27f133acb9E23573F8',
     },
-    UV2Library: require('@v60swap/periphery/deployments/1.0.1/sepolia/UV2Library.json'),
+    UV2Library: require('@v60swap/periphery/deployments/1.0.3/sepolia/UV2Library.json'),
   },
   [sepolia.id]: {
-    UniswapV2Factory: require('@v60swap/core/deployments/1.0.1/sepolia/UniswapV2Factory.json'),
-    UniswapV2Router02: require('@v60swap/periphery/deployments/1.0.1/sepolia/UniswapV2Router02.json'),
-    UV2Library: require('@v60swap/periphery/deployments/1.0.1/sepolia/UV2Library.json'),
+    UniswapV2Factory: require('@v60swap/core/deployments/1.0.3/sepolia/UniswapV2Factory.json'),
+    UniswapV2Router02: require('@v60swap/periphery/deployments/1.0.3/sepolia/UniswapV2Router02.json'),
+    UV2Library: require('@v60swap/periphery/deployments/1.0.3/sepolia/UV2Library.json'),
   },
 };
