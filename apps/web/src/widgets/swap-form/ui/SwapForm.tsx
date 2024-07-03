@@ -260,8 +260,9 @@ export const SwapForm = () => {
     }
   }, [inputToken, outputToken]);
 
-  const inputTokenBalance = useTokenBalance(inputToken, { chainId, address })
-    ?.data?.balance;
+  const {
+    data: { balance: inputTokenBalance },
+  } = useTokenBalance(inputToken, { chainId, address });
 
   const isApproving = isPending || isConfirming;
   const shouldApprove = (tokenAllowance as bigint) < parsedInputTokenAmount;
