@@ -1,6 +1,6 @@
 pragma solidity =0.6.6;
 
-import "../libraries/UniswapV2LiquidityMathLibrary.sol";
+import "./UniswapV2LiquidityMathLibrary.sol";
 
 contract UV2Library {
   using SafeMath for uint256;
