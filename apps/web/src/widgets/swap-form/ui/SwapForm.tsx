@@ -262,6 +262,8 @@ export const SwapForm = () => {
   const isApproving = isPending || isConfirming;
   const shouldApprove = (tokenAllowance as bigint) < parsedInputTokenAmount;
   const isSwapping = (isSwapPending || isSwapConfirming) && !shouldApprove;
+  const isFormFilled =
+    !!inputTokenAmount && !!outputTokenAmount && !!inputToken && !!outputToken;
 
   return (
     <FormProvider {...form}>
@@ -335,7 +337,8 @@ export const SwapForm = () => {
             Boolean(swapRatesError) ||
             isApproving ||
             isPending ||
-            isSwapping
+            isSwapping ||
+            !isFormFilled
           }
         >
           {isSwapRatesFetching && <>Getting the best rate...</>}
