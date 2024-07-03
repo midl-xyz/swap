@@ -2,7 +2,7 @@
 
 import { State, WagmiProvider } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
+import { RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit';
 import { wagmiConfig } from '@/global';
 import { LastUsedTokensProvider } from '@/features';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -16,9 +16,18 @@ export const Web3Provider = ({
   return (
     <WagmiProvider config={wagmiConfig} initialState={initialState}>
       <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen={false} />
+        <RainbowKitProvider
+          theme={lightTheme({
+            accentColor: '#212122',
+            accentColorForeground: 'white',
+            borderRadius: 'medium',
+            fontStack: 'system',
+          })}
+        >
+          <ReactQueryDevtools initialIsOpen={false} />
 
-        <LastUsedTokensProvider>{children}</LastUsedTokensProvider>
+          <LastUsedTokensProvider>{children}</LastUsedTokensProvider>
+        </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );

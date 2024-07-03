@@ -1,4 +1,3 @@
-export * from './ConnectWalletProvider';
 export * from './ErrorBoundary';
 export * from './RemoveLiquidityProvider';
 export * from './SettingsDialogProvider';

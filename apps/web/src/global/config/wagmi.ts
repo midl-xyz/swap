@@ -1,49 +1,48 @@
-import { createConfig, createStorage, http } from 'wagmi';
-import { Chain, sepolia } from 'wagmi/chains';
-import { walletConnect } from 'wagmi/connectors';
+'use client';
 
+import { Chain, connectorsForWallets } from '@rainbow-me/rainbowkit';
+import {
+  frameWallet,
+  injectedWallet,
+  metaMaskWallet,
+  okxWallet,
+  rainbowWallet,
+  trustWallet,
+  walletConnectWallet,
+  zerionWallet,
+} from '@rainbow-me/rainbowkit/wallets';
+import { createConfig, createStorage, http } from 'wagmi';
+import { sepolia } from 'wagmi/chains';
 declare module 'wagmi' {
   interface Register {
     config: typeof wagmiConfig;
   }
 }
-
-export const promTestnet: Chain = {
-  testnet: true,
-  id: 97072271,
-  name: 'Prom Testnet',
-  nativeCurrency: {
-    name: 'Prom',
-    symbol: 'PROM',
-    decimals: 18,
-  },
-  blockExplorers: {
-    default: {
-      name: 'Prom Testnet Explorer',
-      url: 'https://testnet.promscan.io',
+const connectors = connectorsForWallets(
+  [
+    {
+      groupName: 'Popular',
+      wallets: [
+        metaMaskWallet,
+        injectedWallet,
+        rainbowWallet,
+        zerionWallet,
+        trustWallet,
+        frameWallet,
+        okxWallet,
+        walletConnectWallet,
+      ],
     },
+  ],
+  {
+    appName: 'V60',
+    projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_ID as string,
   },
-  rpcUrls: {
-    default: {
-      http: ['https://testnet-rpc.prom.io/'],
-    },
-  },
-  contracts: {
-    multicall3: {
-      address: '0x56968A553f3d883bc54f96976Edf782684791F90',
-      blockCreated: 55613,
-    },
-  },
-};
+);
 
 export const wagmiConfig = createConfig({
+  connectors,
   chains: [sepolia],
-  ssr: true,
-  connectors: [
-    walletConnect({
-      projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_ID as string,
-    }),
-  ],
   transports: {
     [sepolia.id]: http('https://ethereum-sepolia-rpc.publicnode.com'),
   },
@@ -51,6 +50,7 @@ export const wagmiConfig = createConfig({
     storage: typeof localStorage === 'undefined' ? undefined : localStorage,
     key: 'v60-1.0.0',
   }),
+  ssr: true,
 });
 
 export type ChainId = (typeof wagmiConfig)['chains'][number]['id'];

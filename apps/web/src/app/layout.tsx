@@ -1,6 +1,5 @@
 import { FiatQuotesProvider } from '@/features/fiat-quote';
 import {
-  ConnectWalletProvider,
   RemoveLiquidityProvider,
   SettingsDialogProvider,
   TokenDialogProvider,
@@ -18,6 +17,7 @@ import { AccountButton, AppMenu, Header, Logo, RPCStatus } from '@/widgets';
 import Link from 'next/link';
 import { css, cx } from '~/styled-system/css';
 import { hstack } from '~/styled-system/patterns';
+import '@rainbow-me/rainbowkit/styles.css';
 import './globals.css';
 import { renderErrorMessage } from '@/widgets/error-message';
 import { Footer } from '@/widgets/footer/ui';
@@ -60,7 +60,6 @@ export default function RootLayout({
       >
         <Web3Provider initialState={initialState}>
           <FiatQuotesProvider>
-            <ConnectWalletProvider />
             <TokenDialogProvider />
             <SettingsDialogProvider />
             <RemoveLiquidityProvider />
