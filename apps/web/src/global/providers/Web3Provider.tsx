@@ -12,7 +12,7 @@ export const queryClient = new QueryClient({});
 export const Web3Provider = ({
   children,
   cookie,
-}: Readonly<{ children: React.ReactNode; cookie?: string }>) => {
+}: Readonly<{ children: React.ReactNode; cookie: string }>) => {
   return (
     <WagmiProvider
       config={wagmiConfig}
