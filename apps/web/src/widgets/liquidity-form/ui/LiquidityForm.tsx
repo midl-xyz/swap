@@ -9,7 +9,7 @@ import {
 } from '@/features/liquidity';
 import { useMinAmount } from '@/features/liquidity/api/useMinAmount';
 import { useERC20ApproveAllowance } from '@/features/token/api/useERC20ApprovaAllowance';
-import { deployments } from '@/global';
+import { deployments, tokenList } from '@/global';
 import {
   Button,
   SwapInput,
@@ -19,6 +19,7 @@ import {
 import { SlippageControl } from '@/widgets';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useQueryClient } from '@tanstack/react-query';
+import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useDebouncedCallback } from 'use-debounce';
@@ -72,6 +73,7 @@ const schema = yup.object().shape({
 });
 
 export const LiquidityForm = () => {
+  const searchParams = useSearchParams();
   const [minValues, setValues] = useState({
     minAmountA: 0,
     minAmountB: 0,
@@ -206,6 +208,26 @@ export const LiquidityForm = () => {
     priceAtoB = a / b;
     priceBtoA = b / a;
   } catch {}
+
+  useEffect(() => {
+    const inputTokenSymbol = searchParams.get('inputToken');
+    const outputTokenSymbol = searchParams.get('outputToken');
+    if (inputTokenSymbol && outputTokenSymbol) {
+      const inputTokenFound = tokenList.find(
+        ({ symbol }) => symbol === inputTokenSymbol,
+      );
+      const outputTokenFound = tokenList.find(
+        ({ symbol }) => outputTokenSymbol === symbol,
+      );
+
+      if (inputTokenFound && outputTokenFound) {
+        form.reset({
+          tokenA: inputTokenFound.address,
+          tokenB: outputTokenFound.address,
+        });
+      }
+    }
+  }, []);
 
   return (
     <FormProvider {...form}>

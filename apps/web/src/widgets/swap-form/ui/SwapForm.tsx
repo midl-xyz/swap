@@ -9,7 +9,7 @@ import {
   useTokenBalance,
 } from '@/features';
 import { useSwapRates } from '@/features/swap/api/useSwapRates';
-import { deployments } from '@/global';
+import { deployments, tokenList } from '@/global';
 import {
   Button,
   SwapInput,
@@ -20,6 +20,7 @@ import { AiOutlineSwapVertical } from '@/shared/assets';
 import { SlippageControl } from '@/widgets';
 import { useQueryClient } from '@tanstack/react-query';
 import { Loader2Icon } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 import { ChangeEventHandler, useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -37,6 +38,7 @@ type FormData = {
 };
 
 export const SwapForm = () => {
+  const searchParams = useSearchParams();
   const form = useForm<FormData>({
     defaultValues: {
       inputToken: '' as Address,
@@ -259,6 +261,26 @@ export const SwapForm = () => {
       } as any);
     }
   }, [inputToken, outputToken]);
+
+  useEffect(() => {
+    const inputTokenSymbol = searchParams.get('inputToken');
+    const outputTokenSymbol = searchParams.get('outputToken');
+    if (inputTokenSymbol && outputTokenSymbol) {
+      const inputTokenFound = tokenList.find(
+        ({ symbol }) => symbol === inputTokenSymbol,
+      );
+      const outputTokenFound = tokenList.find(
+        ({ symbol }) => outputTokenSymbol === symbol,
+      );
+
+      if (inputTokenFound && outputTokenFound) {
+        form.reset({
+          inputToken: inputTokenFound.address,
+          outputToken: outputTokenFound.address,
+        });
+      }
+    }
+  }, []);
 
   const {
     data: { balance: inputTokenBalance },

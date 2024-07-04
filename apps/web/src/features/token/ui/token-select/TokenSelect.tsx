@@ -116,9 +116,9 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
         })}
       >
         {(searchQuery ? filteredTokens : popularTokens).map(
-          ({ address, chainId }) => (
+          ({ address, chainId, symbol }) => (
             <Button
-              key={address}
+              key={`${address}_${symbol}_${chainId}`}
               onClick={() => onSubmit(address, chainId)}
               appearance="ghost"
               className={css({
