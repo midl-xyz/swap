@@ -11,8 +11,9 @@ import {
   walletConnectWallet,
   zerionWallet,
 } from '@rainbow-me/rainbowkit/wallets';
-import { sepolia } from 'viem/chains';
 import { createConfig, createStorage, http } from 'wagmi';
+import { sepolia } from 'wagmi/chains';
+
 declare module 'wagmi' {
   interface Register {
     config: typeof wagmiConfig;
@@ -41,7 +42,7 @@ const connectors = connectorsForWallets(
 );
 
 export const wagmiConfig = createConfig({
-  connectors,
+  connectors: connectors,
   chains: [sepolia],
   transports: {
     [sepolia.id]: http('https://ethereum-sepolia-rpc.publicnode.com'),

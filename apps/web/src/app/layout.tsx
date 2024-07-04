@@ -4,12 +4,10 @@ import {
   SettingsDialogProvider,
   TokenDialogProvider,
   Web3Provider,
-  wagmiConfig,
 } from '@/global';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { headers } from 'next/headers';
-import { cookieToInitialState } from 'wagmi';
 import { Toaster } from 'react-hot-toast';
 
 import { ErrorBoundary } from '@/global/providers/ErrorBoundary';
@@ -34,10 +32,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const initialState = cookieToInitialState(
-    wagmiConfig,
-    headers().get('cookie'),
-  );
+  const cookie = headers().get('cookie');
 
   return (
     <html
@@ -58,7 +53,7 @@ export default function RootLayout({
           }),
         )}
       >
-        <Web3Provider initialState={initialState}>
+        <Web3Provider cookie={cookie}>
           <FiatQuotesProvider>
             <TokenDialogProvider />
             <SettingsDialogProvider />

@@ -1,6 +1,6 @@
 'use client';
 
-import { State, WagmiProvider } from 'wagmi';
+import { cookieToInitialState, WagmiProvider } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit';
 import { wagmiConfig } from '@/global';
@@ -11,10 +11,13 @@ export const queryClient = new QueryClient({});
 
 export const Web3Provider = ({
   children,
-  initialState,
-}: Readonly<{ children: React.ReactNode; initialState?: State }>) => {
+  cookie,
+}: Readonly<{ children: React.ReactNode; cookie?: string }>) => {
   return (
-    <WagmiProvider config={wagmiConfig} initialState={initialState}>
+    <WagmiProvider
+      config={wagmiConfig}
+      initialState={cookieToInitialState(wagmiConfig, cookie)}
+    >
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
           theme={lightTheme({
