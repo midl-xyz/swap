@@ -33,15 +33,16 @@ export const SupplyLiquidityDialog = ({
   onSuccess,
   ...rest
 }: SupplyLiquidityDialogProps) => {
-  const { poolShare, estimatedLPTokenBalance, poolToken, reserves } =
-    usePoolShare({
-      tokenA,
-      tokenB,
-      formValues: {
-        tokenAAmount,
-        tokenBAmount,
-      },
-    });
+  const {
+    data: { poolShare, estimatedLPTokenBalance, poolToken, reserves },
+  } = usePoolShare({
+    tokenA,
+    tokenB,
+    formValues: {
+      tokenAAmount,
+      tokenBAmount,
+    },
+  });
 
   const { address } = useAccount();
 

@@ -36,8 +36,8 @@
     "react-hook-form": "^7.50.1",
     "react-hot-toast": "^2.4.1",
     "use-debounce": "^10.0.0",
-    "viem": "2.x",
-    "wagmi": "^2.5.5",
+    "viem": "~2.7.1",
+    "wagmi": "^2.10.9",
     "yup": "^1.4.0"
   },
   "devDependencies": {

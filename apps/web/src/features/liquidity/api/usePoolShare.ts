@@ -22,7 +22,7 @@ export const usePoolShare = ({
   const tokenAInfo = useToken(tokenA as Address, chainId);
   const tokenBInfo = useToken(tokenB as Address, chainId);
 
-  const data = useGetPairStats({
+  const { data, refetch } = useGetPairStats({
     lpTokenAddress: poolToken.data as Address,
     tokenA,
     tokenB,
@@ -72,28 +72,37 @@ export const usePoolShare = ({
 
     if (data.totalSupply === BigInt(0)) {
       return {
-        poolShare: 1,
-        estimatedLPTokenBalance: parsedPoolTokenBalance,
-        poolToken,
-        allowances: data.allowances,
-        reserves: data.reserves,
+        data: {
+          poolShare: 1,
+          estimatedLPTokenBalance: parsedPoolTokenBalance,
+          poolToken,
+          allowances: data.allowances,
+          reserves: data.reserves,
+        },
+        refetch,
       };
     }
 
     return {
-      poolShare,
-      estimatedLPTokenBalance: parsedPoolTokenBalance,
-      poolToken,
-      allowances: data.allowances,
-      reserves: data.reserves,
+      data: {
+        poolShare,
+        estimatedLPTokenBalance: parsedPoolTokenBalance,
+        poolToken,
+        allowances: data.allowances,
+        reserves: data.reserves,
+      },
+      refetch,
     };
   } catch (e) {
     return {
-      poolShare: 1,
-      estimatedLPTokenBalance: BigInt(0),
-      poolToken,
-      allowances: data.allowances,
-      reserves: data.reserves,
+      data: {
+        poolShare: 1,
+        estimatedLPTokenBalance: BigInt(0),
+        poolToken,
+        allowances: data.allowances,
+        reserves: data.reserves,
+      },
+      refetch,
     };
   }
 };

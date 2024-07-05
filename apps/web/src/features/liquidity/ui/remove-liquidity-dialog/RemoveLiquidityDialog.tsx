@@ -73,7 +73,9 @@ export const RemoveLiquidityDialog = ({
       mode: 'onChange',
       resolver: yupResolver(schema) as any,
     });
-  const { reserves, balances } = useGetPairStats({
+  const {
+    data: { reserves, balances },
+  } = useGetPairStats({
     lpTokenAddress: address,
     tokenA,
     tokenB,

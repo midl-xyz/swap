@@ -31,7 +31,9 @@ export const useMinAmount = ({
     tokenBInfo.decimals,
   );
 
-  const { reserves } = usePoolShare({
+  const {
+    data: { reserves },
+  } = usePoolShare({
     tokenA,
     tokenB,
     formValues: {

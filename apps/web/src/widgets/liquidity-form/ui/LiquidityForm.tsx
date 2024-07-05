@@ -40,7 +40,6 @@ const schema = yup.object().shape({
   tokenAAmount: yup
     .number()
     .transform((value) => (isNaN(value) ? undefined : value))
-
     .when(['$minAmountA'], ([minAmount], schema) => {
       const rules = schema.min(
         minAmount || 0,
@@ -129,6 +128,40 @@ export const LiquidityForm = () => {
     0,
   );
 
+  const {
+    write: approveERC20,
+    isPending,
+    isConfirming,
+    isConfirmed,
+  } = useERC20ApproveAllowance();
+
+  const parsedTokenAAmount = parseUnits(
+    parseNumberInput(tokenAAmount),
+    tokenAInfo.decimals,
+  );
+  const parsedTokenBAmount = parseUnits(
+    parseNumberInput(tokenBAmount),
+    tokenBInfo.decimals,
+  );
+
+  const {
+    data: { poolShare, allowances, reserves },
+    refetch,
+  } = usePoolShare({
+    tokenA,
+    tokenB,
+    formValues: {
+      tokenAAmount: parsedTokenAAmount,
+      tokenBAmount: parsedTokenBAmount,
+    },
+  });
+
+  useEffect(() => {
+    if (isConfirmed) {
+      refetch();
+    }
+  }, [isConfirmed]);
+
   useEffect(() => {
     form.trigger();
   }, [tokenA, tokenB, form]);
@@ -146,31 +179,7 @@ export const LiquidityForm = () => {
     update(balanceA, balanceB, minAmountA, minAmountB);
   }, [update, balanceA, balanceB, minAmountA, minAmountB, minValues]);
 
-  const parsedTokenAAmount = parseUnits(
-    parseNumberInput(tokenAAmount),
-    tokenAInfo.decimals,
-  );
-  const parsedTokenBAmount = parseUnits(
-    parseNumberInput(tokenBAmount),
-    tokenBInfo.decimals,
-  );
-
-  const { poolShare, allowances, reserves } = usePoolShare({
-    tokenA,
-    tokenB,
-    formValues: {
-      tokenAAmount: parsedTokenAAmount,
-      tokenBAmount: parsedTokenBAmount,
-    },
-  });
-
   const lpToken = useGetLPTokenAddress({ tokenA, tokenB });
-
-  const {
-    write: approveERC20,
-    isPending,
-    isConfirming,
-  } = useERC20ApproveAllowance();
 
   const { UniswapV2Router02 } = deployments[chainId];
 
@@ -228,6 +237,16 @@ export const LiquidityForm = () => {
       }
     }
   }, []);
+
+  const isTokenANeedApprove =
+    formState.isValid &&
+    allowances.tokenA < parsedTokenAAmount &&
+    tokenA !== zeroAddress;
+
+  const isTokenBNeedApprove =
+    formState.isValid &&
+    allowances.tokenB < parsedTokenBAmount &&
+    tokenB !== zeroAddress;
 
   return (
     <FormProvider {...form}>
@@ -343,9 +362,7 @@ export const LiquidityForm = () => {
             </div>
           </div>
         )}
-        {formState.isValid &&
-        allowances.tokenA < parsedTokenAAmount &&
-        tokenA !== zeroAddress ? (
+        {isTokenANeedApprove && (
           <Button
             onClick={() =>
               approveERC20(
@@ -358,9 +375,8 @@ export const LiquidityForm = () => {
           >
             Approve {tokenAInfo.symbol}
           </Button>
-        ) : formState.isValid &&
-          allowances.tokenB < parsedTokenBAmount &&
-          tokenB !== zeroAddress ? (
+        )}
+        {isTokenBNeedApprove && !isTokenANeedApprove && (
           <Button
             onClick={() =>
               approveERC20(
@@ -373,10 +389,17 @@ export const LiquidityForm = () => {
           >
             Approve {tokenBInfo.symbol}
           </Button>
-        ) : (
+        )}
+        {!isTokenANeedApprove && !isTokenBNeedApprove && (
           <Button
             type="submit"
-            disabled={!formState.isValid || isPending || isConfirming}
+            disabled={
+              !formState.isValid ||
+              isPending ||
+              isConfirming ||
+              !tokenAAmount ||
+              !tokenBAmount
+            }
           >
             {!tokenA || !tokenB ? 'Select token' : 'Supply'}
           </Button>
