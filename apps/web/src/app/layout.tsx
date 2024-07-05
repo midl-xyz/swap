@@ -26,6 +26,14 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'V60 Swap',
   description: 'Web3 app for swapping ERC20 tokens on the Prom blockchain',
+  metadataBase: new URL('https://testnet.v60.io'),
+  alternates: {
+    canonical: '/',
+    languages: {
+      'en-US': '/en-US',
+      'de-DE': '/de-DE',
+    },
+  },
   openGraph: {
     title: 'V60 Swap',
     description: 'Web3 app for swapping ERC20 tokens on the Prom blockchain',
