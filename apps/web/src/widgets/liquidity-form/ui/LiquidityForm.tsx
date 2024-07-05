@@ -253,7 +253,6 @@ export const LiquidityForm = () => {
 
   const isBalanceBigEnough = isBalanceABigEnough && isBalanceBBigEnough;
 
-  console.log(isBalanceBigEnough, 'isBalanceBigEnough');
   return (
     <FormProvider {...form}>
       <form
