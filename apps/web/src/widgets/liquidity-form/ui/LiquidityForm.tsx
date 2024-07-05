@@ -248,8 +248,8 @@ export const LiquidityForm = () => {
     allowances.tokenB < parsedTokenBAmount &&
     tokenB !== zeroAddress;
 
-  const isBalanceABigEnough = balanceA.formattedBalance >= tokenAAmount;
-  const isBalanceBBigEnough = balanceB.formattedBalance >= tokenBAmount;
+  const isBalanceABigEnough = balanceA?.formattedBalance! >= tokenAAmount;
+  const isBalanceBBigEnough = balanceB?.formattedBalance! >= tokenBAmount;
 
   const isBalanceBigEnough = isBalanceABigEnough && isBalanceBBigEnough;
 
