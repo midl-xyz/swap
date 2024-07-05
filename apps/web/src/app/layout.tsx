@@ -8,6 +8,7 @@ import {
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { headers } from 'next/headers';
+import { ReactNode } from 'react';
 import { Toaster } from 'react-hot-toast';
 
 import { ErrorBoundary } from '@/global/providers/ErrorBoundary';
@@ -55,7 +56,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   const cookie = headers().get('cookie') || '';
 
