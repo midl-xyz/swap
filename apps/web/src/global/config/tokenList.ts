@@ -15,7 +15,7 @@ export const tokenList: Token[] = [
   {
     symbol: 'WstETH',
     name: 'Wrapped stETH',
-    address: '0xD7be32A18f2d5F281708228FE01b34d8039Ef35E',
+    address: '0x68328F45Ca73f26666520b8027aaA30c014D17c6',
     chainId: sepolia.id,
     decimals: 18,
     logoURI: '',
@@ -23,7 +23,7 @@ export const tokenList: Token[] = [
   {
     symbol: 'BFEE',
     name: 'Base Fee LMA Token',
-    address: '0x57121897Fa55b3649A3A8789cC68D6F5e3825AD9',
+    address: '0x1230985617140956E750B9F0B223219f9738FfAf',
     chainId: sepolia.id,
     decimals: 18,
     logoURI: '',
