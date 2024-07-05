@@ -25,6 +25,31 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'V60 Swap',
   description: 'Web3 app for swapping ERC20 tokens on the Prom blockchain',
+  openGraph: {
+    title: 'V60 Swap',
+    description: 'Web3 app for swapping ERC20 tokens on the Prom blockchain',
+    url: 'https://testnet.v60.io',
+    type: 'website',
+    images: [
+      {
+        url: '/opengraph-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'V60 Swap',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'V60 Swap',
+    description: 'Web3 app for swapping ERC20 tokens on the Prom blockchain',
+    images: [
+      {
+        url: '/twitter-image.png',
+        alt: 'V60 Swap',
+      },
+    ],
+  },
 };
 
 export default function RootLayout({

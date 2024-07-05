@@ -1,6 +1,7 @@
 import { Token } from '@/entities';
 import { zeroAddress } from 'viem';
 import { sepolia } from 'viem/chains';
+import BFEE from './assets/bfee.jpg';
 
 export const tokenList: Token[] = [
   {
@@ -26,6 +27,6 @@ export const tokenList: Token[] = [
     address: '0x1230985617140956E750B9F0B223219f9738FfAf',
     chainId: sepolia.id,
     decimals: 18,
-    logoURI: '',
+    logoURI: BFEE.src,
   },
 ];
