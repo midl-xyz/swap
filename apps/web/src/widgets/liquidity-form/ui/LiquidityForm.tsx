@@ -248,6 +248,12 @@ export const LiquidityForm = () => {
     allowances.tokenB < parsedTokenBAmount &&
     tokenB !== zeroAddress;
 
+  const isBalanceABigEnough = balanceA.formattedBalance >= tokenAAmount;
+  const isBalanceBBigEnough = balanceB.formattedBalance >= tokenBAmount;
+
+  const isBalanceBigEnough = isBalanceABigEnough && isBalanceBBigEnough;
+
+  console.log(isBalanceBigEnough, 'isBalanceBigEnough');
   return (
     <FormProvider {...form}>
       <form
@@ -371,9 +377,11 @@ export const LiquidityForm = () => {
                 parsedTokenAAmount,
               )
             }
-            disabled={isPending || isConfirming}
+            disabled={isPending || isConfirming || !isBalanceABigEnough}
           >
-            Approve {tokenAInfo.symbol}
+            {isBalanceABigEnough
+              ? `Approve ${tokenAInfo.symbol}`
+              : 'Insufficient Balance'}
           </Button>
         )}
         {isTokenBNeedApprove && !isTokenANeedApprove && (
@@ -385,9 +393,11 @@ export const LiquidityForm = () => {
                 parsedTokenBAmount,
               )
             }
-            disabled={isPending || isConfirming}
+            disabled={isPending || isConfirming || !isBalanceBBigEnough}
           >
-            Approve {tokenBInfo.symbol}
+            {isBalanceBBigEnough
+              ? `Approve ${tokenBInfo.symbol}`
+              : 'Insufficient Balance'}
           </Button>
         )}
         {!isTokenANeedApprove && !isTokenBNeedApprove && (
@@ -398,10 +408,13 @@ export const LiquidityForm = () => {
               isPending ||
               isConfirming ||
               !tokenAAmount ||
-              !tokenBAmount
+              !tokenBAmount ||
+              !isBalanceBigEnough
             }
           >
-            {!tokenA || !tokenB ? 'Select token' : 'Supply'}
+            {isBalanceBigEnough &&
+              (!tokenA || !tokenB ? 'Select token' : 'Supply')}
+            {!isBalanceBigEnough && 'Insufficient Balance'}
           </Button>
         )}
         <SupplyLiquidityDialog
