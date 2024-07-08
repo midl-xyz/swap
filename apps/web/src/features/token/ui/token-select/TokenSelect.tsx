@@ -115,8 +115,9 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
           alignItems: 'flex-start',
         })}
       >
-        {(searchQuery ? filteredTokens : popularTokens).map(
-          ({ address, chainId, symbol }) => (
+        {(searchQuery ? filteredTokens : popularTokens)
+          .slice(0, 2)
+          .map(({ address, chainId, symbol }) => (
             <Button
               key={`${address}_${symbol}_${chainId}`}
               onClick={() => onSubmit(address, chainId)}
@@ -129,8 +130,7 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
             >
               <TokenName address={address} chainId={chainId} showName />
             </Button>
-          ),
-        )}
+          ))}
       </div>
 
       {searchQuery && filteredTokens.length === 0 && (

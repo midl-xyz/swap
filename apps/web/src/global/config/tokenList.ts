@@ -5,15 +5,6 @@ import BFEE from './assets/bfee.jpg';
 
 export const tokenList: Token[] = [
   {
-    symbol: 'ETH',
-    name: 'Sepolia ETH',
-    address: zeroAddress,
-    chainId: sepolia.id,
-    decimals: 18,
-    logoURI:
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png',
-  },
-  {
     symbol: 'WstETH',
     name: 'Wrapped stETH',
     address: '0x68328F45Ca73f26666520b8027aaA30c014D17c6',
@@ -29,5 +20,14 @@ export const tokenList: Token[] = [
     chainId: sepolia.id,
     decimals: 18,
     logoURI: BFEE.src,
+  },
+  {
+    symbol: 'ETH',
+    name: 'Sepolia ETH',
+    address: zeroAddress,
+    chainId: sepolia.id,
+    decimals: 18,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png',
   },
 ];
