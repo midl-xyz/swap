@@ -11,7 +11,7 @@ export const tokenList: Token[] = [
     chainId: sepolia.id,
     decimals: 18,
     logoURI:
-      'https://github.com/trustwallet/assets/blob/master/blockchains/ethereum/info/logo.png',
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png',
   },
   {
     symbol: 'WstETH',
@@ -19,7 +19,8 @@ export const tokenList: Token[] = [
     address: '0x68328F45Ca73f26666520b8027aaA30c014D17c6',
     chainId: sepolia.id,
     decimals: 18,
-    logoURI: '',
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/f82a103c62148ab6ec3ee7bf74774324fcc8fbd6/blockchains/optimism/assets/0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb/logo.png',
   },
   {
     symbol: 'BFEE',
