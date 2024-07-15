@@ -177,7 +177,7 @@ export const SwapForm = () => {
       onInputTokenAmountChange({
         target: { value: inputTokenAmount },
       } as any);
-
+      form.reset();
       toast.success('Swap successful');
     }
   }, [isSwapSuccess, queryClient, inputTokenAmount]);
@@ -254,7 +254,6 @@ export const SwapForm = () => {
         target: { value: inputTokenAmount },
       } as any);
     }
-
     if (outputToken && outputTokenAmount) {
       onOutputTokenAmountChange({
         target: { value: outputTokenAmount },

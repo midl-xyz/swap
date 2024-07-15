@@ -40,10 +40,20 @@ export const Liquidity = () => {
     );
   }
 
+  const positionList = positions?.liquidityPositions?.filter(
+    ({ liquidityTokenBalance, pair }) => {
+      return (
+        (parseFloat(liquidityTokenBalance.toString()) /
+          parseFloat(pair.totalSupply.toString())) *
+          100 >
+        0.001
+      );
+    },
+  );
+
   return (
     <div>
-      {!positions?.liquidityPositions ||
-      positions?.liquidityPositions.length === 0 ? (
+      {!positionList || positionList.length === 0 ? (
         <p
           className={css({
             px: 4,
@@ -59,7 +69,7 @@ export const Liquidity = () => {
       ) : (
         <div>
           <div className={vstack({ gap: 4, alignItems: 'stretch' })}>
-            {positions?.liquidityPositions.map((liquidity) => (
+            {positionList.map((liquidity) => (
               <div key={liquidity.id}>
                 <LiquidityItem
                   liquidityToken={getAddress(liquidity.pair.id)}
