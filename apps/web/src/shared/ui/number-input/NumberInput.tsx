@@ -37,7 +37,15 @@ export const NumberInput = forwardRef<
 });
 
 export const parseNumberInput = (value: string = '', dot: string = '.') => {
-  const parsedNumber = maskitoParseNumber(value, dot);
+  const trimmedValue = value.replaceAll(/\s+/g, '');
+
+  const decimals = trimmedValue.split('.')[1];
+
+  if (decimals?.length >= 6) {
+    return trimmedValue.toString();
+  }
+
+  const parsedNumber = maskitoParseNumber(trimmedValue, dot);
 
   if (isNaN(parsedNumber)) {
     return '0';

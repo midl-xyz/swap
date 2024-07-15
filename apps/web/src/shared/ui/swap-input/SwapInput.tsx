@@ -3,6 +3,7 @@ import { TokenButton, useTokenBalance } from '@/features';
 import { Button, InputGroup, NumberInput } from '@/shared/ui';
 import { InputHTMLAttributes } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import { useDebouncedCallback } from 'use-debounce';
 import { formatUnits } from 'viem';
 import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
@@ -46,17 +47,25 @@ export const SwapInput = ({
   label,
   ...rest
 }: SwapInputProps) => {
-  const { control, watch, setValue } = useFormContext();
+  const { control, watch, setValue, trigger, setFocus } = useFormContext();
   const chainId = useChainId();
   const token = watch(tokenName);
   const tokenInfo = useToken(token, chainId);
   const balance = useTokenBalance(token);
 
+  const triggerValidation = useDebouncedCallback(trigger, 0);
+
   const applyMax = () => {
     setValue(
       amountName,
       formatUnits(balance.data?.balance ?? BigInt(0), tokenInfo.decimals),
+      {
+        shouldValidate: true,
+        shouldTouch: true,
+        shouldDirty: true,
+      },
     );
+    triggerValidation();
   };
 
   const { error } = control.getFieldState(amountName);

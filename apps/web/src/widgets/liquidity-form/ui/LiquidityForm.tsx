@@ -87,7 +87,7 @@ export const LiquidityForm = () => {
     resolver: yupResolver(schema as any),
     context: minValues,
     reValidateMode: 'onChange',
-    mode: 'onChange',
+    mode: 'all',
   });
 
   const { watch, handleSubmit, formState } = form;
@@ -201,6 +201,7 @@ export const LiquidityForm = () => {
   }, [form, queryClient]);
 
   const onClose = useCallback(() => {
+    form.reset();
     setIsDialogOpen(false);
   }, []);
 
@@ -248,8 +249,13 @@ export const LiquidityForm = () => {
     allowances.tokenB < parsedTokenBAmount &&
     tokenB !== zeroAddress;
 
-  const isBalanceABigEnough = balanceA?.formattedBalance! >= tokenAAmount;
-  const isBalanceBBigEnough = balanceB?.formattedBalance! >= tokenBAmount;
+  const isBalanceABigEnough =
+    parsedTokenAAmount <=
+    parseUnits(balanceA?.formattedBalance!, tokenAInfo.decimals);
+
+  const isBalanceBBigEnough =
+    parsedTokenBAmount <=
+    parseUnits(balanceB?.formattedBalance!, tokenBInfo.decimals);
 
   const isBalanceBigEnough = isBalanceABigEnough && isBalanceBBigEnough;
 
@@ -411,9 +417,11 @@ export const LiquidityForm = () => {
               !isBalanceBigEnough
             }
           >
-            {isBalanceBigEnough &&
-              (!tokenA || !tokenB ? 'Select token' : 'Supply')}
-            {!isBalanceBigEnough && 'Insufficient Balance'}
+            {tokenAAmount && tokenBAmount && !isBalanceBigEnough
+              ? 'Insufficient Balance'
+              : !tokenA || !tokenB
+                ? 'Select token'
+                : 'Supply'}
           </Button>
         )}
         <SupplyLiquidityDialog
