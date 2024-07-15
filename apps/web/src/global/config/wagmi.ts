@@ -45,7 +45,7 @@ export const wagmiConfig = createConfig({
   connectors: connectors,
   chains: [sepolia],
   transports: {
-    [sepolia.id]: http('https://ethereum-sepolia-rpc.publicnode.com'),
+    [sepolia.id]: http('/api/rpc'),
   },
   storage: createStorage({
     storage: typeof localStorage === 'undefined' ? undefined : localStorage,
