@@ -1,5 +1,5 @@
 import { Token, useToken } from '@/entities';
-import { TokenName, useLastUsedTokens } from '@/features';
+import { LastUsedToken, TokenName, useLastUsedTokens } from '@/features';
 import { tokenList } from '@/global';
 import { Button, Input } from '@/shared';
 import { SearchIcon } from 'lucide-react';
@@ -11,7 +11,6 @@ import { hstack, vstack } from '~/styled-system/patterns';
 
 type TokenSelectProps = {
   onSelect: (address: string, chainId: number) => void;
-  inputName: string;
 };
 
 export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
@@ -78,7 +77,7 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
         return true;
       }
       return !selectedTokens.find(
-        (selectedToken: Token) =>
+        (selectedToken: LastUsedToken) =>
           selectedToken.token && selectedToken.token === it.address,
       );
     },
@@ -90,7 +89,7 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
         return true;
       }
       return !selectedTokens.find(
-        (selectedToken: Token) =>
+        (selectedToken: LastUsedToken) =>
           selectedToken.token && selectedToken.token === tokenAddress,
       );
     },

@@ -11,7 +11,7 @@ import {
 } from 'react';
 import { Address } from 'viem';
 
-interface Token {
+export interface LastUsedToken {
   chain: number;
   token: Address;
   inputName: string;
@@ -40,7 +40,7 @@ export const LastUsedTokensProvider = ({
     new Map(initialTokens),
   );
 
-  const [selectedTokens, setSelectedTokens] = useState<Token[]>([]);
+  const [selectedTokens, setSelectedTokens] = useState<LastUsedToken[]>([]);
 
   const addToken = (chain: number, token: Address) => {
     const chainTokens = tokens.get(chain) || [];
@@ -53,7 +53,7 @@ export const LastUsedTokensProvider = ({
     );
   };
 
-  const selectTokens = (tokens: Token[]) => {
+  const selectTokens = (tokens: LastUsedToken[]) => {
     setSelectedTokens(tokens);
   };
 
@@ -78,9 +78,9 @@ export const LastUsedTokensProvider = ({
 const LastUsedTokensContext = createContext<
   | {
       tokens: Map<number, Address[]>;
-      selectedTokens: Token[];
+      selectedTokens: LastUsedToken[];
       addToken: (chain: number, token: Address) => void;
-      selectTokens: (token: Token[]) => void;
+      selectTokens: (token: LastUsedToken[]) => void;
     }
   | undefined
 >(undefined);
