@@ -14,12 +14,19 @@ type TokenSelectProps = {
 };
 
 export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
-  const { tokens: lastUsedTokens, addToken } = useLastUsedTokens();
+  const {
+    tokens: lastUsedTokens,
+    addToken,
+    selectToken,
+    selectedToken,
+  } = useLastUsedTokens();
+
   const chainId = useChainId();
 
   const onSubmit = (address: Address, chainId: number) => {
     addToken(chainId, address);
     onSelect(address, chainId);
+    selectToken({ chain: chainId, token: address });
   };
 
   const [filteredTokens, setFilteredTokens] = useState<Token[]>([]);
@@ -63,7 +70,28 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
     onSearch();
   }, [searchQuery, onSearch]);
 
-  const popularTokens = tokenList.filter((it) => it.chainId === chainId) || [];
+  const popularTokens =
+    tokenList.filter((it: Token) => it.chainId === chainId) || [];
+
+  const tokens = (searchQuery ? filteredTokens : popularTokens).filter(
+    (it: Token) => {
+      if (!selectedToken) {
+        return true;
+      }
+      return it.address !== selectedToken.token;
+    },
+  );
+
+  console.log(selectedToken, 'selectedToken');
+
+  const popularTokenList = Array.from(lastUsedTokens.get(chainId) || []).filter(
+    (tokenAddress) => {
+      if (!selectedToken) {
+        return true;
+      }
+      return (tokenAddress as string) !== selectedToken.token;
+    },
+  );
 
   return (
     <div className={vstack({ gap: 4, alignItems: 'stretch', width: 'full' })}>
@@ -92,7 +120,7 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
 
       {!searchQuery && (
         <div className={hstack({ gap: 1, flexWrap: 'wrap' })}>
-          {Array.from(lastUsedTokens.get(chainId) || []).map((address) => (
+          {popularTokenList.map((address) => (
             <Button
               key={address}
               appearance="secondary"
@@ -115,22 +143,20 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
           alignItems: 'flex-start',
         })}
       >
-        {(searchQuery ? filteredTokens : popularTokens)
-          .slice(0, 2)
-          .map(({ address, chainId, symbol }) => (
-            <Button
-              key={`${address}_${symbol}_${chainId}`}
-              onClick={() => onSubmit(address, chainId)}
-              appearance="ghost"
-              className={css({
-                width: '100%',
-                justifyContent: 'flex-start',
-                textAlign: 'left',
-              })}
-            >
-              <TokenName address={address} chainId={chainId} showName />
-            </Button>
-          ))}
+        {tokens.slice(0, 2).map(({ address, chainId, symbol }) => (
+          <Button
+            key={`${address}_${symbol}_${chainId}`}
+            onClick={() => onSubmit(address, chainId)}
+            appearance="ghost"
+            className={css({
+              width: '100%',
+              justifyContent: 'flex-start',
+              textAlign: 'left',
+            })}
+          >
+            <TokenName address={address} chainId={chainId} showName />
+          </Button>
+        ))}
       </div>
 
       {searchQuery && filteredTokens.length === 0 && (
