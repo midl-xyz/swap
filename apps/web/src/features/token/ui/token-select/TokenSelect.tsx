@@ -11,14 +11,14 @@ import { hstack, vstack } from '~/styled-system/patterns';
 
 type TokenSelectProps = {
   onSelect: (address: string, chainId: number) => void;
+  inputName: string;
 };
 
 export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
   const {
     tokens: lastUsedTokens,
     addToken,
-    selectToken,
-    selectedToken,
+    selectedTokens,
   } = useLastUsedTokens();
 
   const chainId = useChainId();
@@ -26,7 +26,6 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
   const onSubmit = (address: Address, chainId: number) => {
     addToken(chainId, address);
     onSelect(address, chainId);
-    selectToken({ chain: chainId, token: address });
   };
 
   const [filteredTokens, setFilteredTokens] = useState<Token[]>([]);
@@ -75,21 +74,25 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
 
   const tokens = (searchQuery ? filteredTokens : popularTokens).filter(
     (it: Token) => {
-      if (!selectedToken) {
+      if (!selectedTokens?.length) {
         return true;
       }
-      return it.address !== selectedToken.token;
+      return !selectedTokens.find(
+        (selectedToken: Token) =>
+          selectedToken.token && selectedToken.token === it.address,
+      );
     },
   );
 
-  console.log(selectedToken, 'selectedToken');
-
   const popularTokenList = Array.from(lastUsedTokens.get(chainId) || []).filter(
     (tokenAddress) => {
-      if (!selectedToken) {
+      if (!selectedTokens?.length) {
         return true;
       }
-      return (tokenAddress as string) !== selectedToken.token;
+      return !selectedTokens.find(
+        (selectedToken: Token) =>
+          selectedToken.token && selectedToken.token === tokenAddress,
+      );
     },
   );
 

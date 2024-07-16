@@ -4,6 +4,7 @@ import { useToken } from '@/entities';
 import {
   useERC20Allowance,
   useERC20ApproveAllowance,
+  useLastUsedTokens,
   useSlippage,
   useSwap,
   useTokenBalance,
@@ -38,6 +39,7 @@ type FormData = {
 };
 
 export const SwapForm = () => {
+  const { selectTokens } = useLastUsedTokens();
   const searchParams = useSearchParams();
   const form = useForm<FormData>({
     defaultValues: {
@@ -259,6 +261,11 @@ export const SwapForm = () => {
         target: { value: outputTokenAmount },
       } as any);
     }
+
+    selectTokens([
+      { chain: chainId, inputName: 'inputToken', token: inputToken },
+      { chain: chainId, inputName: 'outputToken', token: outputToken },
+    ]);
   }, [inputToken, outputToken]);
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useToken } from '@/entities';
+import { Token, useToken } from '@/entities';
 import { useLastUsedTokens, useTokenBalance } from '@/features';
 import {
   SupplyLiquidityDialog,
@@ -20,6 +20,7 @@ import { SlippageControl } from '@/widgets';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useDebouncedCallback } from 'use-debounce';
@@ -80,8 +81,10 @@ export const LiquidityForm = () => {
     balanceB: 0,
   });
 
-  const { tokens } = useLastUsedTokens();
+  const { tokens, selectTokens, selectedTokens } = useLastUsedTokens();
+
   const chainId = useChainId();
+  const router = useRouter();
 
   const form = useForm<FormData>({
     resolver: yupResolver(schema as any),
@@ -95,8 +98,13 @@ export const LiquidityForm = () => {
   const { tokenA, tokenB, tokenAAmount, tokenBAmount } = watch();
 
   useEffect(() => {
-    if (!tokenA && !tokenB && tokens.get(chainId)?.[0]) {
-      form.setValue('tokenA', tokens.get(chainId)?.[0] as Address);
+    const popularTokenA = tokens.get(chainId)?.[0];
+    if (!tokenA && !tokenB && popularTokenA) {
+      form.setValue('tokenA', popularTokenA);
+      selectTokens([
+        ...selectedTokens.filter((it: Token) => it.inputName !== 'tokenA'),
+        { chain: chainId, token: popularTokenA, inputName: 'tokenA' },
+      ]);
     }
   }, [tokens, tokenA, chainId, form, tokenB]);
 
@@ -164,6 +172,18 @@ export const LiquidityForm = () => {
 
   useEffect(() => {
     form.trigger();
+    selectTokens([
+      {
+        chain: chainId,
+        token: tokenA,
+        inputName: 'tokenA',
+      },
+      {
+        chain: chainId,
+        token: tokenB,
+        inputName: 'tokenB',
+      },
+    ]);
   }, [tokenA, tokenB, form]);
 
   useEffect(() => {
@@ -202,6 +222,7 @@ export const LiquidityForm = () => {
 
   const onClose = useCallback(() => {
     form.reset();
+    router?.push('/liquidity');
     setIsDialogOpen(false);
   }, []);
 
