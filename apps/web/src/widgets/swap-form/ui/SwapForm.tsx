@@ -65,62 +65,58 @@ export const SwapForm = () => {
     isFetching: isSwapRatesFetching,
   } = useSwapRates();
 
-  const onInputTokenAmountChange: ChangeEventHandler<HTMLInputElement> =
-    useDebouncedCallback(async (e) => {
-      if (!e.target) {
-        return;
-      }
+  const onInputTokenAmountChange = useDebouncedCallback(async (e) => {
+    if (!e.target) {
+      return;
+    }
 
-      lastChangedInput.current = true;
+    lastChangedInput.current = true;
+    const value = parseUnits(
+      parseNumberInput(e.target.value),
+      inputTokenInfo.decimals,
+    );
 
-      const value = parseUnits(
-        parseNumberInput(e.target.value),
-        inputTokenInfo.decimals,
-      );
+    const swapRates = await readSwapRates({
+      value,
+      pair: [inputToken, outputToken],
+    });
+    if (!swapRates) {
+      return;
+    }
 
-      const swapRates = await readSwapRates({
-        value,
-        pair: [inputToken, outputToken],
-      });
+    const [, outputAmount] = swapRates;
 
-      if (!swapRates) {
-        return;
-      }
+    setValue(
+      'outputTokenAmount',
+      formatUnits(outputAmount, outputTokenInfo.decimals),
+    );
+  }, 0);
 
-      const [, outputAmount] = swapRates;
+  const onOutputTokenAmountChange = useDebouncedCallback(async (e) => {
+    const value = parseUnits(
+      parseNumberInput(e.target.value),
+      outputTokenInfo.decimals,
+    );
 
-      setValue(
-        'outputTokenAmount',
-        formatUnits(outputAmount, outputTokenInfo.decimals),
-      );
-    }, 0);
+    lastChangedInput.current = false;
 
-  const onOutputTokenAmountChange: ChangeEventHandler<HTMLInputElement> =
-    useDebouncedCallback(async (e) => {
-      const value = parseUnits(
-        parseNumberInput(e.target.value),
-        outputTokenInfo.decimals,
-      );
+    const swapRates = await readSwapRates({
+      value,
+      pair: [inputToken, outputToken],
+      reverse: true,
+    });
 
-      lastChangedInput.current = false;
+    if (!swapRates) {
+      return;
+    }
 
-      const swapRates = await readSwapRates({
-        value,
-        pair: [inputToken, outputToken],
-        reverse: true,
-      });
+    const [inputAmount] = swapRates;
 
-      if (!swapRates) {
-        return;
-      }
-
-      const [inputAmount] = swapRates;
-
-      setValue(
-        'inputTokenAmount',
-        formatUnits(inputAmount, inputTokenInfo.decimals),
-      );
-    }, 0);
+    setValue(
+      'inputTokenAmount',
+      formatUnits(inputAmount, inputTokenInfo.decimals),
+    );
+  }, 0);
 
   const {
     swap,
@@ -256,6 +252,7 @@ export const SwapForm = () => {
         target: { value: inputTokenAmount },
       } as any);
     }
+
     if (outputToken && outputTokenAmount) {
       onOutputTokenAmountChange({
         target: { value: outputTokenAmount },
@@ -266,6 +263,8 @@ export const SwapForm = () => {
       { chain: chainId, inputName: 'inputToken', token: inputToken },
       { chain: chainId, inputName: 'outputToken', token: outputToken },
     ]);
+
+    form.trigger();
   }, [inputToken, outputToken]);
 
   useEffect(() => {
@@ -338,6 +337,7 @@ export const SwapForm = () => {
             tokenName="inputToken"
             amountName="inputTokenAmount"
             onChange={onInputTokenAmountChange}
+            onMax={onInputTokenAmountChange}
           />
 
           <Button
@@ -361,6 +361,7 @@ export const SwapForm = () => {
             tokenName="outputToken"
             amountName="outputTokenAmount"
             onChange={onOutputTokenAmountChange}
+            onMax={onOutputTokenAmountChange}
           />
         </div>
         <SlippageControl />
