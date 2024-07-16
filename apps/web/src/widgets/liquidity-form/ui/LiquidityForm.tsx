@@ -1,7 +1,7 @@
 'use client';
 
-import { Token, useToken } from '@/entities';
-import { useLastUsedTokens, useTokenBalance } from '@/features';
+import { useToken } from '@/entities';
+import { LastUsedToken, useLastUsedTokens, useTokenBalance } from '@/features';
 import {
   SupplyLiquidityDialog,
   useGetLPTokenAddress,
@@ -102,7 +102,9 @@ export const LiquidityForm = () => {
     if (!tokenA && !tokenB && popularTokenA) {
       form.setValue('tokenA', popularTokenA);
       selectTokens([
-        ...selectedTokens.filter((it: Token) => it.inputName !== 'tokenA'),
+        ...selectedTokens.filter(
+          (it: LastUsedToken) => it.inputName !== 'tokenA',
+        ),
         { chain: chainId, token: popularTokenA, inputName: 'tokenA' },
       ]);
     }
