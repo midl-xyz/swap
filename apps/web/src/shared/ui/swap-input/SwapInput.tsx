@@ -1,7 +1,7 @@
 import { useToken } from '@/entities';
 import { TokenButton, useTokenBalance } from '@/features';
 import { Button, InputGroup, NumberInput } from '@/shared/ui';
-import { InputHTMLAttributes } from 'react';
+import { ChangeEvent, ChangeEventHandler, InputHTMLAttributes } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useDebouncedCallback } from 'use-debounce';
 import { formatUnits } from 'viem';
@@ -35,6 +35,7 @@ type SwapInputProps = {
   amountName: string;
   tokenName: string;
   label?: React.ReactNode;
+  onMax?: (e: ChangeEventHandler<HTMLInputElement>) => void;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 /**
@@ -45,6 +46,7 @@ export const SwapInput = ({
   amountName,
   tokenName,
   label,
+  onMax,
   ...rest
 }: SwapInputProps) => {
   const { control, watch, setValue, trigger, setFocus } = useFormContext();
@@ -65,6 +67,17 @@ export const SwapInput = ({
         shouldDirty: true,
       },
     );
+
+    if (onMax) {
+      onMax({
+        target: {
+          value: formatUnits(
+            balance.data?.balance ?? BigInt(0),
+            tokenInfo.decimals,
+          ),
+        },
+      } as unknown as ChangeEventHandler);
+    }
     triggerValidation();
   };
 
