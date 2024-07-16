@@ -1,13 +1,18 @@
 'use client';
 
 import { wagmiConfig } from '@/global';
-import { createContext, useContext, useState } from 'react';
+import { createContext, ReactNode, useContext, useState } from 'react';
 import { Address } from 'viem';
+
+interface Token {
+  chain: number;
+  token: Address;
+}
 
 export const LastUsedTokensProvider = ({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) => {
   const localTokens =
     typeof window !== 'undefined' && localStorage.getItem('tokens');
@@ -26,6 +31,8 @@ export const LastUsedTokensProvider = ({
     new Map(initialTokens),
   );
 
+  const [selectedToken, setSelectedToken] = useState<Token>();
+
   const addToken = (chain: number, token: Address) => {
     const chainTokens = tokens.get(chain) || [];
     const newChainTokens = new Set([token, ...chainTokens]);
@@ -37,11 +44,17 @@ export const LastUsedTokensProvider = ({
     );
   };
 
+  const selectToken = (token?: Token) => {
+    setSelectedToken(token);
+  };
+
   return (
     <LastUsedTokensContext.Provider
       value={{
         tokens,
+        selectedToken,
         addToken,
+        selectToken,
       }}
     >
       {children}
@@ -52,7 +65,9 @@ export const LastUsedTokensProvider = ({
 const LastUsedTokensContext = createContext<
   | {
       tokens: Map<number, Address[]>;
+      selectedToken: Token | undefined;
       addToken: (chain: number, token: Address) => void;
+      selectToken: (token: Token) => void;
     }
   | undefined
 >(undefined);
