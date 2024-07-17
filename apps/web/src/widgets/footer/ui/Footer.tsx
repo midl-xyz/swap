@@ -40,7 +40,7 @@ export const Footer = () => {
           <TelegramPlane />
         </a> */}
         <a
-          href="https://twitter.com/v60"
+          href="https://twitter.com/v60dex"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -54,7 +54,7 @@ export const Footer = () => {
           <CoinMarketcap />
         </a> */}
         <a
-          href="https://medium.com/v60"
+          href="https://medium.com/v60dex"
           target="_blank"
           rel="noopener noreferrer"
         >
