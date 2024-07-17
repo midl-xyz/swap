@@ -36,9 +36,9 @@ export const Footer = () => {
       </div>
 
       <div className={hstack({ gap: 4, fontSize: '2xl' })}>
-        <a href="https://t.me/v60" target="_blank" rel="noopener noreferrer">
+        {/* <a href="https://t.me/v60" target="_blank" rel="noopener noreferrer">
           <TelegramPlane />
-        </a>
+        </a> */}
         <a
           href="https://twitter.com/v60"
           target="_blank"
@@ -46,13 +46,13 @@ export const Footer = () => {
         >
           <Twitter />
         </a>
-        <a
+        {/* <a
           href="https://coinmarketcap.com/currencies/v60"
           target="_blank"
           rel="noopener noreferrer"
         >
           <CoinMarketcap />
-        </a>
+        </a> */}
         <a
           href="https://medium.com/v60"
           target="_blank"
