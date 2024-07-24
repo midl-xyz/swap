@@ -19,10 +19,11 @@ import {
 } from '@/shared';
 import { AiOutlineSwapVertical } from '@/shared/assets';
 import { SlippageControl } from '@/widgets';
+import { SwapDetails } from '@/widgets/swap-form/ui/SwapDetails';
 import { useQueryClient } from '@tanstack/react-query';
 import { Loader2Icon } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
-import { ChangeEventHandler, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDebouncedCallback } from 'use-debounce';
@@ -409,6 +410,14 @@ export const SwapForm = () => {
             isFormFilled &&
             'Insufficient liquidity'}
         </Button>
+        {inputToken && outputToken && inputTokenAmount && outputTokenAmount ? (
+          <SwapDetails
+            inputTokenSymbol={inputTokenInfo.symbol}
+            outputTokenSymbol={outputTokenInfo.symbol}
+            inputTokenAmount={inputTokenAmount}
+            outputTokenAmount={outputTokenAmount}
+          />
+        ) : null}
       </form>
     </FormProvider>
   );
