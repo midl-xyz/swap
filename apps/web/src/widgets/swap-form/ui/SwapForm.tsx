@@ -19,10 +19,11 @@ import {
 } from '@/shared';
 import { AiOutlineSwapVertical } from '@/shared/assets';
 import { SlippageControl } from '@/widgets';
+import { SwapDetails } from '@/widgets/swap-form/ui/SwapDetails';
 import { useQueryClient } from '@tanstack/react-query';
 import { Loader2Icon } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
-import { ChangeEventHandler, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDebouncedCallback } from 'use-debounce';
@@ -188,6 +189,13 @@ export const SwapForm = () => {
   const lastChangedInput = useRef(true);
   const [slippage] = useSlippage();
 
+  const amountOutMin =
+    parseUnits(parseNumberInput(outputTokenAmount), outputTokenInfo.decimals) -
+    parseUnits(
+      (parseFloat(parseNumberInput(outputTokenAmount)) * slippage).toString(),
+      outputTokenInfo.decimals,
+    );
+
   const onSubmit = () => {
     if (
       (tokenAllowance as bigint) < parsedInputTokenAmount &&
@@ -204,17 +212,7 @@ export const SwapForm = () => {
       tokenIn: inputToken,
       tokenOut: outputToken,
       amountIn: parsedInputTokenAmount,
-      amountOutMin:
-        parseUnits(
-          parseNumberInput(outputTokenAmount),
-          outputTokenInfo.decimals,
-        ) -
-        parseUnits(
-          (
-            parseFloat(parseNumberInput(outputTokenAmount)) * slippage
-          ).toString(),
-          outputTokenInfo.decimals,
-        ),
+      amountOutMin,
       to: address!,
       deadline: BigInt(Math.floor(Date.now() / 1000) + 60 * 20),
     });
@@ -409,6 +407,17 @@ export const SwapForm = () => {
             isFormFilled &&
             'Insufficient liquidity'}
         </Button>
+        {inputToken && outputToken && inputTokenAmount && outputTokenAmount ? (
+          <SwapDetails
+            amountOutMin={Number.parseFloat(
+              formatUnits(amountOutMin, outputTokenInfo.decimals),
+            ).toFixed(2)}
+            inputTokenInfo={inputTokenInfo}
+            outputTokenInfo={outputTokenInfo}
+            inputTokenAmount={inputTokenAmount}
+            outputTokenAmount={outputTokenAmount}
+          />
+        ) : null}
       </form>
     </FormProvider>
   );

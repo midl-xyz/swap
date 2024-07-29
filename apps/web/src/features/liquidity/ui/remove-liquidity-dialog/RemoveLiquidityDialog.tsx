@@ -84,7 +84,6 @@ export const RemoveLiquidityDialog = ({
 
   const {
     removeLiquidity,
-    hash,
     error,
     isConfirming: isRemoving,
     isPending: isRemovalPending,
@@ -160,7 +159,7 @@ export const RemoveLiquidityDialog = ({
     (parseFloat(formatUnits(tokenBAmount ?? BigInt(0), tokenBInfo.decimals)) ??
       0) * (1 - slippage ?? 0);
 
-  const onSubmit = (formData: FormData) => {
+  const onSubmit = () => {
     if (shouldApprove) {
       approve(
         address as Address,
@@ -190,7 +189,7 @@ export const RemoveLiquidityDialog = ({
     if (isConfirmed) {
       toast.success('Approved LP Token');
       queryClient.invalidateQueries({
-        predicate: scopeKeyPredicate(['allowance']),
+        predicate: scopeKeyPredicate(['allowance', 'GetLiquidityPositions']),
       });
     }
   }, [isConfirmed, queryClient]);
