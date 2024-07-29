@@ -1,47 +1,83 @@
-// import { useGetPools } from '@/features/liquidity';
-import { useState } from 'react';
+import { useGetPools } from '@/features/liquidity';
 import { AiOutlineSwapVertical } from '@/shared/assets';
+import { calculatePriceImpact } from '@/widgets/swap-form/ui/utils';
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
+import { useState } from 'react';
 import { css } from '~/styled-system/css';
 import { Box, HStack, VStack } from '~/styled-system/jsx';
 
-interface Props {
-  inputTokenSymbol: string;
-  outputTokenSymbol: string;
-  currencyInUsd?: number;
-  inputTokenAmount: number | string;
-  outputTokenAmount: number | string;
-  priceImpact?: number;
+interface TokenInfo {
+  address: string;
+  chainId: number;
+  decimals: number;
+  logoURI: string;
+  name: string;
+  symbol: string;
 }
 
-const SwapDetailsItem = ({
-  name,
-  value,
-}: {
-  name: string;
-  value?: string | number;
-}) => {
-  return (
-    <HStack width="100%" justifyContent="space-between" color="#9498A2">
-      <span>{name}</span>
-      <span>~{value}</span>
-    </HStack>
-  );
-};
+interface Props {
+  inputTokenInfo: TokenInfo;
+  outputTokenInfo: TokenInfo;
+  inputTokenAmount: string;
+  outputTokenAmount: string;
+  priceImpact?: number;
+  amountOutMin: string;
+}
 
 export const SwapDetails = ({
-  inputTokenSymbol,
-  outputTokenSymbol,
+  inputTokenInfo,
+  outputTokenInfo,
   inputTokenAmount,
   outputTokenAmount,
-  currencyInUsd,
-  priceImpact,
+  amountOutMin,
 }: Props) => {
-  // const { data: pools } = useGetPools();
+  const { data: pools } = useGetPools();
+
+  const pool = pools?.pairs?.find(({ token0, token1 }) => {
+    const token0Address = token0.id.toLowerCase();
+    const token1Address = token1.id.toLowerCase();
+    const inputTokenAddress = inputTokenInfo.address.toLowerCase();
+    const outputTokenAddress = outputTokenInfo.address.toLowerCase();
+
+    return (
+      (token0Address === inputTokenAddress &&
+        token1Address === outputTokenAddress) ||
+      (token1Address === inputTokenAddress &&
+        token0Address === outputTokenAddress)
+    );
+  });
+
+  const isBuyingToken0 =
+    pool?.token0.id.toLowerCase() === outputTokenInfo.address.toLowerCase();
+
+  const priceImpact = pool
+    ? calculatePriceImpact(
+        isBuyingToken0
+          ? {
+              amountIn: parseFloat(inputTokenAmount),
+              reserveIn: parseFloat(pool?.reserve1 || 0),
+              reserveOut: parseFloat(pool?.reserve0 || 0),
+            }
+          : {
+              amountIn: parseFloat(inputTokenAmount),
+              reserveIn: parseFloat(pool?.reserve0 || 0),
+              reserveOut: parseFloat(pool?.reserve1 || 0),
+            },
+      )
+    : 0;
 
   const [open, setOpen] = useState(false);
 
   const handleToggle = () => setOpen((prev) => !prev);
+
+  const details = [
+    { name: 'Price impact', value: priceImpact },
+    {
+      name: 'Receive at least',
+      value: `${amountOutMin} ${outputTokenInfo.symbol}`,
+    },
+    3,
+  ];
 
   return (
     <Box
@@ -59,9 +95,9 @@ export const SwapDetails = ({
       {' '}
       <HStack width="100%" justifyContent="space-between">
         <span>
-          1 {outputTokenSymbol} ={' '}
+          1 {outputTokenInfo.symbol} ={' '}
           {Number(inputTokenAmount) / Number(outputTokenAmount)}{' '}
-          {inputTokenSymbol}(${currencyInUsd})
+          {inputTokenInfo.symbol}
         </span>
         <HStack gap={2.5}>
           <AiOutlineSwapVertical
@@ -80,10 +116,17 @@ export const SwapDetails = ({
       </HStack>
       {open ? (
         <VStack alignItems="baseline" gap={3}>
-          <SwapDetailsItem name="Price impact" value={priceImpact} />
-          <SwapDetailsItem name="Receive at least" value="33.0125 USDT" />
-          <SwapDetailsItem name="Fee" value="0.16$" />
-          <SwapDetailsItem name="Network cost" value="$5.68" />
+          {details.map(({ name, value }) => (
+            <HStack
+              key={name}
+              width="100%"
+              justifyContent="space-between"
+              color="#9498A2"
+            >
+              <span>{name}</span>
+              <span>{value}</span>
+            </HStack>
+          ))}
         </VStack>
       ) : null}
     </Box>

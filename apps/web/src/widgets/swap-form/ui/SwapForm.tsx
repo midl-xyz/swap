@@ -189,6 +189,13 @@ export const SwapForm = () => {
   const lastChangedInput = useRef(true);
   const [slippage] = useSlippage();
 
+  const amountOutMin =
+    parseUnits(parseNumberInput(outputTokenAmount), outputTokenInfo.decimals) -
+    parseUnits(
+      (parseFloat(parseNumberInput(outputTokenAmount)) * slippage).toString(),
+      outputTokenInfo.decimals,
+    );
+
   const onSubmit = () => {
     if (
       (tokenAllowance as bigint) < parsedInputTokenAmount &&
@@ -205,17 +212,7 @@ export const SwapForm = () => {
       tokenIn: inputToken,
       tokenOut: outputToken,
       amountIn: parsedInputTokenAmount,
-      amountOutMin:
-        parseUnits(
-          parseNumberInput(outputTokenAmount),
-          outputTokenInfo.decimals,
-        ) -
-        parseUnits(
-          (
-            parseFloat(parseNumberInput(outputTokenAmount)) * slippage
-          ).toString(),
-          outputTokenInfo.decimals,
-        ),
+      amountOutMin,
       to: address!,
       deadline: BigInt(Math.floor(Date.now() / 1000) + 60 * 20),
     });
@@ -412,8 +409,11 @@ export const SwapForm = () => {
         </Button>
         {inputToken && outputToken && inputTokenAmount && outputTokenAmount ? (
           <SwapDetails
-            inputTokenSymbol={inputTokenInfo.symbol}
-            outputTokenSymbol={outputTokenInfo.symbol}
+            amountOutMin={Number.parseFloat(
+              formatUnits(amountOutMin, outputTokenInfo.decimals),
+            ).toFixed(2)}
+            inputTokenInfo={inputTokenInfo}
+            outputTokenInfo={outputTokenInfo}
             inputTokenAmount={inputTokenAmount}
             outputTokenAmount={outputTokenAmount}
           />
