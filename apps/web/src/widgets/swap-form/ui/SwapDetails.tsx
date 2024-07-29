@@ -76,7 +76,6 @@ export const SwapDetails = ({
       name: 'Receive at least',
       value: `${amountOutMin} ${outputTokenInfo.symbol}`,
     },
-    3,
   ];
 
   return (
