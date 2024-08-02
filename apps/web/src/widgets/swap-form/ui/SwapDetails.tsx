@@ -1,4 +1,5 @@
 import { useGetPools } from '@/features/liquidity';
+import { parseNumberInput } from '@/shared';
 import { AiOutlineSwapVertical } from '@/shared/assets';
 import { calculatePriceImpact } from '@/widgets/swap-form/ui/utils';
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
@@ -95,7 +96,8 @@ export const SwapDetails = ({
       <HStack width="100%" justifyContent="space-between">
         <span>
           1 {outputTokenInfo.symbol} ={' '}
-          {Number(inputTokenAmount) / Number(outputTokenAmount)}{' '}
+          {parseFloat(parseNumberInput(inputTokenAmount)) /
+            parseFloat(parseNumberInput(outputTokenAmount))}{' '}
           {inputTokenInfo.symbol}
         </span>
         <HStack gap={2.5}>
