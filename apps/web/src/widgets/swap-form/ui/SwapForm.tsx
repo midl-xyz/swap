@@ -192,7 +192,9 @@ export const SwapForm = () => {
   const amountOutMin =
     parseUnits(parseNumberInput(outputTokenAmount), outputTokenInfo.decimals) -
     parseUnits(
-      (parseFloat(parseNumberInput(outputTokenAmount)) * slippage).toString(),
+      (parseFloat(parseNumberInput(outputTokenAmount)) * slippage).toFixed(
+        outputTokenInfo.decimals,
+      ),
       outputTokenInfo.decimals,
     );
 
