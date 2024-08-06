@@ -21,14 +21,6 @@ const appMenuLinks: AppMenuLink[] = [
     label: 'My Liquidity',
     href: '/liquidity',
   },
-  {
-    label: 'All Pairs',
-    href: '/pairs',
-  },
-  {
-    label: 'About',
-    href: '/about',
-  },
 ];
 
 export const AppMenu = () => {

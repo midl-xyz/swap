@@ -1,8 +1,9 @@
 import { useToken } from '@/entities';
 import { TokenButton, useTokenBalance } from '@/features';
 import { Button, InputGroup, NumberInput } from '@/shared/ui';
-import { InputHTMLAttributes } from 'react';
+import { ChangeEvent, ChangeEventHandler, InputHTMLAttributes } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import { useDebouncedCallback } from 'use-debounce';
 import { formatUnits } from 'viem';
 import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
@@ -34,6 +35,7 @@ type SwapInputProps = {
   amountName: string;
   tokenName: string;
   label?: React.ReactNode;
+  onMax?: (e: ChangeEventHandler<HTMLInputElement>) => void;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 /**
@@ -44,19 +46,39 @@ export const SwapInput = ({
   amountName,
   tokenName,
   label,
+  onMax,
   ...rest
 }: SwapInputProps) => {
-  const { control, watch, setValue } = useFormContext();
+  const { control, watch, setValue, trigger, setFocus } = useFormContext();
   const chainId = useChainId();
   const token = watch(tokenName);
   const tokenInfo = useToken(token, chainId);
   const balance = useTokenBalance(token);
 
+  const triggerValidation = useDebouncedCallback(trigger, 0);
+
   const applyMax = () => {
     setValue(
       amountName,
       formatUnits(balance.data?.balance ?? BigInt(0), tokenInfo.decimals),
+      {
+        shouldValidate: true,
+        shouldTouch: true,
+        shouldDirty: true,
+      },
     );
+
+    if (onMax) {
+      onMax({
+        target: {
+          value: formatUnits(
+            balance.data?.balance ?? BigInt(0),
+            tokenInfo.decimals,
+          ),
+        },
+      } as unknown as ChangeEventHandler);
+    }
+    triggerValidation();
   };
 
   const { error } = control.getFieldState(amountName);

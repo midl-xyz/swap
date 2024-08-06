@@ -4,11 +4,13 @@ import { useToken } from '@/entities';
 import {
   useERC20Allowance,
   useERC20ApproveAllowance,
+  useLastUsedTokens,
   useSlippage,
   useSwap,
+  useTokenBalance,
 } from '@/features';
 import { useSwapRates } from '@/features/swap/api/useSwapRates';
-import { deployments } from '@/global';
+import { deployments, tokenList } from '@/global';
 import {
   Button,
   SwapInput,
@@ -17,9 +19,11 @@ import {
 } from '@/shared';
 import { AiOutlineSwapVertical } from '@/shared/assets';
 import { SlippageControl } from '@/widgets';
+import { SwapDetails } from '@/widgets/swap-form/ui/SwapDetails';
 import { useQueryClient } from '@tanstack/react-query';
 import { Loader2Icon } from 'lucide-react';
-import { ChangeEventHandler, useEffect, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDebouncedCallback } from 'use-debounce';
@@ -36,6 +40,8 @@ type FormData = {
 };
 
 export const SwapForm = () => {
+  const { selectTokens } = useLastUsedTokens();
+  const searchParams = useSearchParams();
   const form = useForm<FormData>({
     defaultValues: {
       inputToken: '' as Address,
@@ -60,62 +66,58 @@ export const SwapForm = () => {
     isFetching: isSwapRatesFetching,
   } = useSwapRates();
 
-  const onInputTokenAmountChange: ChangeEventHandler<HTMLInputElement> =
-    useDebouncedCallback(async (e) => {
-      if (!e.target) {
-        return;
-      }
+  const onInputTokenAmountChange = useDebouncedCallback(async (e) => {
+    if (!e.target) {
+      return;
+    }
 
-      lastChangedInput.current = true;
+    lastChangedInput.current = true;
+    const value = parseUnits(
+      parseNumberInput(e.target.value),
+      inputTokenInfo.decimals,
+    );
 
-      const value = parseUnits(
-        parseNumberInput(e.target.value),
-        inputTokenInfo.decimals,
-      );
+    const swapRates = await readSwapRates({
+      value,
+      pair: [inputToken, outputToken],
+    });
+    if (!swapRates) {
+      return;
+    }
 
-      const swapRates = await readSwapRates({
-        value,
-        pair: [inputToken, outputToken],
-      });
+    const [, outputAmount] = swapRates;
 
-      if (!swapRates) {
-        return;
-      }
+    setValue(
+      'outputTokenAmount',
+      formatUnits(outputAmount, outputTokenInfo.decimals),
+    );
+  }, 0);
 
-      const [, outputAmount] = swapRates;
+  const onOutputTokenAmountChange = useDebouncedCallback(async (e) => {
+    const value = parseUnits(
+      parseNumberInput(e.target.value),
+      outputTokenInfo.decimals,
+    );
 
-      setValue(
-        'outputTokenAmount',
-        formatUnits(outputAmount, outputTokenInfo.decimals),
-      );
-    }, 0);
+    lastChangedInput.current = false;
 
-  const onOutputTokenAmountChange: ChangeEventHandler<HTMLInputElement> =
-    useDebouncedCallback(async (e) => {
-      const value = parseUnits(
-        parseNumberInput(e.target.value),
-        outputTokenInfo.decimals,
-      );
+    const swapRates = await readSwapRates({
+      value,
+      pair: [inputToken, outputToken],
+      reverse: true,
+    });
 
-      lastChangedInput.current = false;
+    if (!swapRates) {
+      return;
+    }
 
-      const swapRates = await readSwapRates({
-        value,
-        pair: [inputToken, outputToken],
-        reverse: true,
-      });
+    const [inputAmount] = swapRates;
 
-      if (!swapRates) {
-        return;
-      }
-
-      const [inputAmount] = swapRates;
-
-      setValue(
-        'inputTokenAmount',
-        formatUnits(inputAmount, inputTokenInfo.decimals),
-      );
-    }, 0);
+    setValue(
+      'inputTokenAmount',
+      formatUnits(inputAmount, inputTokenInfo.decimals),
+    );
+  }, 0);
 
   const {
     swap,
@@ -174,7 +176,7 @@ export const SwapForm = () => {
       onInputTokenAmountChange({
         target: { value: inputTokenAmount },
       } as any);
-
+      form.reset();
       toast.success('Swap successful');
     }
   }, [isSwapSuccess, queryClient, inputTokenAmount]);
@@ -186,6 +188,15 @@ export const SwapForm = () => {
 
   const lastChangedInput = useRef(true);
   const [slippage] = useSlippage();
+
+  const amountOutMin =
+    parseUnits(parseNumberInput(outputTokenAmount), outputTokenInfo.decimals) -
+    parseUnits(
+      (parseFloat(parseNumberInput(outputTokenAmount)) * slippage).toFixed(
+        outputTokenInfo.decimals,
+      ),
+      outputTokenInfo.decimals,
+    );
 
   const onSubmit = () => {
     if (
@@ -203,17 +214,7 @@ export const SwapForm = () => {
       tokenIn: inputToken,
       tokenOut: outputToken,
       amountIn: parsedInputTokenAmount,
-      amountOutMin:
-        parseUnits(
-          parseNumberInput(outputTokenAmount),
-          outputTokenInfo.decimals,
-        ) -
-        parseUnits(
-          (
-            parseFloat(parseNumberInput(outputTokenAmount)) * slippage
-          ).toString(),
-          outputTokenInfo.decimals,
-        ),
+      amountOutMin,
       to: address!,
       deadline: BigInt(Math.floor(Date.now() / 1000) + 60 * 20),
     });
@@ -257,11 +258,47 @@ export const SwapForm = () => {
         target: { value: outputTokenAmount },
       } as any);
     }
+
+    selectTokens([
+      { chain: chainId, inputName: 'inputToken', token: inputToken },
+      { chain: chainId, inputName: 'outputToken', token: outputToken },
+    ]);
+
+    form.trigger();
   }, [inputToken, outputToken]);
+
+  useEffect(() => {
+    const inputTokenSymbol = searchParams.get('inputToken');
+    const outputTokenSymbol = searchParams.get('outputToken');
+    if (inputTokenSymbol && outputTokenSymbol) {
+      const inputTokenFound = tokenList.find(
+        ({ symbol }) => symbol === inputTokenSymbol,
+      );
+      const outputTokenFound = tokenList.find(
+        ({ symbol }) => outputTokenSymbol === symbol,
+      );
+
+      if (inputTokenFound && outputTokenFound) {
+        form.reset({
+          inputToken: inputTokenFound.address,
+          outputToken: outputTokenFound.address,
+        });
+      }
+    }
+  }, []);
+
+  const {
+    data: { balance: inputTokenBalance },
+  } = useTokenBalance(inputToken, { chainId, address });
 
   const isApproving = isPending || isConfirming;
   const shouldApprove = (tokenAllowance as bigint) < parsedInputTokenAmount;
+  const isBalanceBigEnough =
+    parsedInputTokenAmount <= (inputTokenBalance ?? Infinity);
+
   const isSwapping = (isSwapPending || isSwapConfirming) && !shouldApprove;
+  const isFormFilled =
+    !!inputTokenAmount && !!outputTokenAmount && !!inputToken && !!outputToken;
 
   return (
     <FormProvider {...form}>
@@ -300,6 +337,7 @@ export const SwapForm = () => {
             tokenName="inputToken"
             amountName="inputTokenAmount"
             onChange={onInputTokenAmountChange}
+            onMax={onInputTokenAmountChange}
           />
 
           <Button
@@ -323,6 +361,7 @@ export const SwapForm = () => {
             tokenName="outputToken"
             amountName="outputTokenAmount"
             onChange={onOutputTokenAmountChange}
+            onMax={onOutputTokenAmountChange}
           />
         </div>
         <SlippageControl />
@@ -335,13 +374,17 @@ export const SwapForm = () => {
             Boolean(swapRatesError) ||
             isApproving ||
             isPending ||
-            isSwapping
+            isSwapping ||
+            !isFormFilled ||
+            !isBalanceBigEnough
           }
         >
           {isSwapRatesFetching && <>Getting the best rate...</>}
+          {!isBalanceBigEnough && <>Insufficient Balance</>}
 
           {!isSwapRatesFetching &&
             !swapRatesError &&
+            isBalanceBigEnough &&
             (shouldApprove ? (
               isApproving ? (
                 <>
@@ -363,8 +406,20 @@ export const SwapForm = () => {
 
           {!isSwapRatesFetching &&
             Boolean(swapRatesError) &&
+            isFormFilled &&
             'Insufficient liquidity'}
         </Button>
+        {inputToken && outputToken && inputTokenAmount && outputTokenAmount ? (
+          <SwapDetails
+            amountOutMin={Number.parseFloat(
+              formatUnits(amountOutMin, outputTokenInfo.decimals),
+            ).toFixed(2)}
+            inputTokenInfo={inputTokenInfo}
+            outputTokenInfo={outputTokenInfo}
+            inputTokenAmount={inputTokenAmount}
+            outputTokenAmount={outputTokenAmount}
+          />
+        ) : null}
       </form>
     </FormProvider>
   );

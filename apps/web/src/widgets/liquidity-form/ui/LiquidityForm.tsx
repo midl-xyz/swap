@@ -1,7 +1,7 @@
 'use client';
 
 import { useToken } from '@/entities';
-import { useLastUsedTokens, useTokenBalance } from '@/features';
+import { LastUsedToken, useLastUsedTokens, useTokenBalance } from '@/features';
 import {
   SupplyLiquidityDialog,
   useGetLPTokenAddress,
@@ -9,7 +9,7 @@ import {
 } from '@/features/liquidity';
 import { useMinAmount } from '@/features/liquidity/api/useMinAmount';
 import { useERC20ApproveAllowance } from '@/features/token/api/useERC20ApprovaAllowance';
-import { deployments } from '@/global';
+import { deployments, tokenList } from '@/global';
 import {
   Button,
   SwapInput,
@@ -19,6 +19,8 @@ import {
 import { SlippageControl } from '@/widgets';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useQueryClient } from '@tanstack/react-query';
+import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useDebouncedCallback } from 'use-debounce';
@@ -39,7 +41,6 @@ const schema = yup.object().shape({
   tokenAAmount: yup
     .number()
     .transform((value) => (isNaN(value) ? undefined : value))
-
     .when(['$minAmountA'], ([minAmount], schema) => {
       const rules = schema.min(
         minAmount || 0,
@@ -72,6 +73,7 @@ const schema = yup.object().shape({
 });
 
 export const LiquidityForm = () => {
+  const searchParams = useSearchParams();
   const [minValues, setValues] = useState({
     minAmountA: 0,
     minAmountB: 0,
@@ -79,14 +81,16 @@ export const LiquidityForm = () => {
     balanceB: 0,
   });
 
-  const { tokens } = useLastUsedTokens();
+  const { tokens, selectTokens, selectedTokens } = useLastUsedTokens();
+
   const chainId = useChainId();
+  const router = useRouter();
 
   const form = useForm<FormData>({
     resolver: yupResolver(schema as any),
     context: minValues,
     reValidateMode: 'onChange',
-    mode: 'onChange',
+    mode: 'all',
   });
 
   const { watch, handleSubmit, formState } = form;
@@ -94,8 +98,15 @@ export const LiquidityForm = () => {
   const { tokenA, tokenB, tokenAAmount, tokenBAmount } = watch();
 
   useEffect(() => {
-    if (!tokenA && !tokenB && tokens.get(chainId)?.[0]) {
-      form.setValue('tokenA', tokens.get(chainId)?.[0] as Address);
+    const popularTokenA = tokens.get(chainId)?.[0];
+    if (!tokenA && !tokenB && popularTokenA) {
+      form.setValue('tokenA', popularTokenA);
+      selectTokens([
+        ...selectedTokens.filter(
+          (it: LastUsedToken) => it.inputName !== 'tokenA',
+        ),
+        { chain: chainId, token: popularTokenA, inputName: 'tokenA' },
+      ]);
     }
   }, [tokens, tokenA, chainId, form, tokenB]);
 
@@ -127,8 +138,54 @@ export const LiquidityForm = () => {
     0,
   );
 
+  const {
+    write: approveERC20,
+    isPending,
+    isConfirming,
+    isConfirmed,
+  } = useERC20ApproveAllowance();
+
+  const parsedTokenAAmount = parseUnits(
+    parseNumberInput(tokenAAmount),
+    tokenAInfo.decimals,
+  );
+  const parsedTokenBAmount = parseUnits(
+    parseNumberInput(tokenBAmount),
+    tokenBInfo.decimals,
+  );
+
+  const {
+    data: { poolShare, allowances, reserves },
+    refetch,
+  } = usePoolShare({
+    tokenA,
+    tokenB,
+    formValues: {
+      tokenAAmount: parsedTokenAAmount,
+      tokenBAmount: parsedTokenBAmount,
+    },
+  });
+
+  useEffect(() => {
+    if (isConfirmed) {
+      refetch();
+    }
+  }, [isConfirmed]);
+
   useEffect(() => {
     form.trigger();
+    selectTokens([
+      {
+        chain: chainId,
+        token: tokenA,
+        inputName: 'tokenA',
+      },
+      {
+        chain: chainId,
+        token: tokenB,
+        inputName: 'tokenB',
+      },
+    ]);
   }, [tokenA, tokenB, form]);
 
   useEffect(() => {
@@ -144,31 +201,7 @@ export const LiquidityForm = () => {
     update(balanceA, balanceB, minAmountA, minAmountB);
   }, [update, balanceA, balanceB, minAmountA, minAmountB, minValues]);
 
-  const parsedTokenAAmount = parseUnits(
-    parseNumberInput(tokenAAmount),
-    tokenAInfo.decimals,
-  );
-  const parsedTokenBAmount = parseUnits(
-    parseNumberInput(tokenBAmount),
-    tokenBInfo.decimals,
-  );
-
-  const { poolShare, allowances, reserves } = usePoolShare({
-    tokenA,
-    tokenB,
-    formValues: {
-      tokenAAmount: parsedTokenAAmount,
-      tokenBAmount: parsedTokenBAmount,
-    },
-  });
-
   const lpToken = useGetLPTokenAddress({ tokenA, tokenB });
-
-  const {
-    write: approveERC20,
-    isPending,
-    isConfirming,
-  } = useERC20ApproveAllowance();
 
   const { UniswapV2Router02 } = deployments[chainId];
 
@@ -190,6 +223,8 @@ export const LiquidityForm = () => {
   }, [form, queryClient]);
 
   const onClose = useCallback(() => {
+    form.reset();
+    router?.push('/liquidity');
     setIsDialogOpen(false);
   }, []);
 
@@ -206,6 +241,46 @@ export const LiquidityForm = () => {
     priceAtoB = a / b;
     priceBtoA = b / a;
   } catch {}
+
+  useEffect(() => {
+    const inputTokenSymbol = searchParams.get('inputToken');
+    const outputTokenSymbol = searchParams.get('outputToken');
+    if (inputTokenSymbol && outputTokenSymbol) {
+      const inputTokenFound = tokenList.find(
+        ({ symbol }) => symbol === inputTokenSymbol,
+      );
+      const outputTokenFound = tokenList.find(
+        ({ symbol }) => outputTokenSymbol === symbol,
+      );
+
+      if (inputTokenFound && outputTokenFound) {
+        form.reset({
+          tokenA: inputTokenFound.address,
+          tokenB: outputTokenFound.address,
+        });
+      }
+    }
+  }, []);
+
+  const isTokenANeedApprove =
+    formState.isValid &&
+    allowances.tokenA < parsedTokenAAmount &&
+    tokenA !== zeroAddress;
+
+  const isTokenBNeedApprove =
+    formState.isValid &&
+    allowances.tokenB < parsedTokenBAmount &&
+    tokenB !== zeroAddress;
+
+  const isBalanceABigEnough =
+    parsedTokenAAmount <=
+    parseUnits(balanceA?.formattedBalance!, tokenAInfo.decimals);
+
+  const isBalanceBBigEnough =
+    parsedTokenBAmount <=
+    parseUnits(balanceB?.formattedBalance!, tokenBInfo.decimals);
+
+  const isBalanceBigEnough = isBalanceABigEnough && isBalanceBBigEnough;
 
   return (
     <FormProvider {...form}>
@@ -321,9 +396,7 @@ export const LiquidityForm = () => {
             </div>
           </div>
         )}
-        {formState.isValid &&
-        allowances.tokenA < parsedTokenAAmount &&
-        tokenA !== zeroAddress ? (
+        {isTokenANeedApprove && (
           <Button
             onClick={() =>
               approveERC20(
@@ -332,13 +405,14 @@ export const LiquidityForm = () => {
                 parsedTokenAAmount,
               )
             }
-            disabled={isPending || isConfirming}
+            disabled={isPending || isConfirming || !isBalanceABigEnough}
           >
-            Approve {tokenAInfo.symbol}
+            {isBalanceABigEnough
+              ? `Approve ${tokenAInfo.symbol}`
+              : 'Insufficient Balance'}
           </Button>
-        ) : formState.isValid &&
-          allowances.tokenB < parsedTokenBAmount &&
-          tokenB !== zeroAddress ? (
+        )}
+        {isTokenBNeedApprove && !isTokenANeedApprove && (
           <Button
             onClick={() =>
               approveERC20(
@@ -347,16 +421,30 @@ export const LiquidityForm = () => {
                 parsedTokenBAmount,
               )
             }
-            disabled={isPending || isConfirming}
+            disabled={isPending || isConfirming || !isBalanceBBigEnough}
           >
-            Approve {tokenBInfo.symbol}
+            {isBalanceBBigEnough
+              ? `Approve ${tokenBInfo.symbol}`
+              : 'Insufficient Balance'}
           </Button>
-        ) : (
+        )}
+        {!isTokenANeedApprove && !isTokenBNeedApprove && (
           <Button
             type="submit"
-            disabled={!formState.isValid || isPending || isConfirming}
+            disabled={
+              !formState.isValid ||
+              isPending ||
+              isConfirming ||
+              !tokenAAmount ||
+              !tokenBAmount ||
+              !isBalanceBigEnough
+            }
           >
-            {!tokenA || !tokenB ? 'Select token' : 'Supply'}
+            {tokenAAmount && tokenBAmount && !isBalanceBigEnough
+              ? 'Insufficient Balance'
+              : !tokenA || !tokenB
+                ? 'Select token'
+                : 'Supply'}
           </Button>
         )}
         <SupplyLiquidityDialog

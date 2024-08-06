@@ -1,6 +1,5 @@
 import { atom } from 'jotai';
 
-export const isWalletDialogOpenAtom = atom(false);
 export const tokenDialogAtom = atom<{
   open: boolean;
   onSelected: (address: string, chainId: number) => void;

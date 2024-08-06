@@ -17,6 +17,7 @@
     "@maskito/react": "^2.2.0",
     "@radix-ui/react-collapsible": "^1.0.3",
     "@radix-ui/react-dialog": "^1.0.5",
+    "@rainbow-me/rainbowkit": "^2.1.2",
     "@sentry/react": "^7.109.0",
     "@tanstack/react-query": "^5.18.0",
     "@v60swap/core": "workspace:^",

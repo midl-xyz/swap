@@ -1,46 +1,83 @@
 'use client';
 
-import { isWalletDialogOpenAtom } from '@/features';
 import { Button, shortenAddress } from '@/shared';
-import { useAtom } from 'jotai';
-import { useAccount, useDisconnect, useSwitchChain } from 'wagmi';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { Address } from 'viem';
+import { vstack } from '~/styled-system/patterns';
 
-export const AccountButton = () => {
-  const { isConnected, address, chainId } = useAccount();
-  const { disconnect } = useDisconnect();
-  const [, setDialogOpen] = useAtom(isWalletDialogOpenAtom);
+export const AccountButton = () => (
+  <ConnectButton.Custom>
+    {({
+      account,
+      chain,
+      openAccountModal,
+      openChainModal,
+      openConnectModal,
+      authenticationStatus,
+      mounted,
+    }) => {
+      const ready = mounted && authenticationStatus !== 'loading';
+      const connected =
+        ready &&
+        account &&
+        chain &&
+        (!authenticationStatus || authenticationStatus === 'authenticated');
 
-  const { chains, switchChain } = useSwitchChain();
+      return (
+        <div
+          {...(!ready && {
+            'aria-hidden': true,
+            style: {
+              opacity: 0,
+              pointerEvents: 'none',
+              userSelect: 'none',
+            },
+          })}
+        >
+          {(() => {
+            if (!connected) {
+              return (
+                <Button onClick={openConnectModal} appearance="tertiary">
+                  Connect wallet
+                </Button>
+              );
+            }
 
-  return (
-    <div>
-      {isConnected && address ? (
-        chains.find((it) => it.id === chainId) ? (
-          <Button
-            appearance="tertiary"
-            onClick={() => {
-              disconnect();
-            }}
-          >
-            {shortenAddress(address)}
-          </Button>
-        ) : (
-          <Button
-            appearance="tertiary"
-            onClick={() => {
-              switchChain({
-                chainId: chains[0].id,
-              });
-            }}
-          >
-            Unsupported Network
-          </Button>
-        )
-      ) : (
-        <Button appearance="tertiary" onClick={() => setDialogOpen(true)}>
-          Connect wallet
-        </Button>
-      )}
-    </div>
-  );
-};
+            if (chain.unsupported) {
+              return (
+                <Button onClick={openChainModal} appearance="tertiary">
+                  Wrong Network
+                </Button>
+              );
+            }
+
+            return (
+              <div
+                className={vstack({
+                  gap: 4,
+                })}
+              >
+                <div
+                  className={vstack({
+                    gap: 4,
+                    alignItems: 'center',
+                  })}
+                >
+                  <div>
+                    <Button
+                      appearance="tertiary"
+                      aria-label="account menu"
+                      onClick={openAccountModal}
+                    >
+                      {shortenAddress(account.address as Address)}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+        </div>
+      );
+    }}
+  </ConnectButton.Custom>
+);
