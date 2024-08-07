@@ -37,21 +37,18 @@ export const NumberInput = forwardRef<
 });
 
 export const parseNumberInput = (value: string = '', dot: string = '.') => {
-  const trimmedValue = value.replaceAll(/\s+/g, '');
+  const trimmedValue = value.trim();
+  const [integerPart, decimalPart] = trimmedValue.split(dot);
 
-  const decimals = trimmedValue.split('.')[1];
+  const decimals = decimalPart ?? '0';
 
-  if (decimals?.length >= 6) {
-    return trimmedValue.toString();
-  }
-
-  const parsedNumber = maskitoParseNumber(trimmedValue, dot);
+  const parsedNumber = maskitoParseNumber(integerPart, dot);
 
   if (isNaN(parsedNumber)) {
     return '0';
   }
 
-  return parsedNumber.toString();
+  return BigInt(parsedNumber).toString() + '.' + decimals;
 };
 
 NumberInput.displayName = 'NumberInput';
