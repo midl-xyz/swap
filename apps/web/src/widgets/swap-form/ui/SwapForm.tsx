@@ -18,6 +18,7 @@ import {
   scopeKeyPredicate,
 } from '@/shared';
 import { AiOutlineSwapVertical } from '@/shared/assets';
+import { removePercentage } from '@/shared/lib/removePercentage';
 import { SlippageControl } from '@/widgets';
 import { SwapDetails } from '@/widgets/swap-form/ui/SwapDetails';
 import { useQueryClient } from '@tanstack/react-query';
@@ -189,14 +190,10 @@ export const SwapForm = () => {
   const lastChangedInput = useRef(true);
   const [slippage] = useSlippage();
 
-  const amountOutMin =
-    parseUnits(parseNumberInput(outputTokenAmount), outputTokenInfo.decimals) -
-    parseUnits(
-      (parseFloat(parseNumberInput(outputTokenAmount)) * slippage).toFixed(
-        outputTokenInfo.decimals,
-      ),
-      outputTokenInfo.decimals,
-    );
+  const amountOutMin = removePercentage(
+    parseUnits(parseNumberInput(outputTokenAmount), outputTokenInfo.decimals),
+    slippage,
+  );
 
   const onSubmit = () => {
     if (
@@ -300,6 +297,44 @@ export const SwapForm = () => {
   const isFormFilled =
     !!inputTokenAmount && !!outputTokenAmount && !!inputToken && !!outputToken;
 
+  const getButtonText = () => {
+    if (isSwapRatesFetching) {
+      return <>Getting the best rate...</>;
+    }
+    if (!isBalanceBigEnough) {
+      return <>Insufficient Balance</>;
+    }
+    if (!isSwapRatesFetching && !swapRatesError && isBalanceBigEnough) {
+      if (shouldApprove) {
+        if (isApproving) {
+          return (
+            <>
+              <Loader2Icon
+                className={css({
+                  animation: 'spin 1s linear infinite',
+                })}
+              />
+              Approving...
+            </>
+          );
+        } else {
+          return 'Approve';
+        }
+      } else {
+        if (isSwapping) {
+          return <>Swapping...</>;
+        } else {
+          return 'Swap';
+        }
+      }
+    }
+    if (!isSwapRatesFetching && Boolean(swapRatesError) && isFormFilled) {
+      return 'Insufficient liquidity';
+    }
+
+    return 'Swap';
+  };
+
   return (
     <FormProvider {...form}>
       <form
@@ -379,35 +414,7 @@ export const SwapForm = () => {
             !isBalanceBigEnough
           }
         >
-          {isSwapRatesFetching && <>Getting the best rate...</>}
-          {!isBalanceBigEnough && <>Insufficient Balance</>}
-
-          {!isSwapRatesFetching &&
-            !swapRatesError &&
-            isBalanceBigEnough &&
-            (shouldApprove ? (
-              isApproving ? (
-                <>
-                  <Loader2Icon
-                    className={css({
-                      animation: 'spin 1s linear infinite',
-                    })}
-                  />
-                  Approving...
-                </>
-              ) : (
-                'Approve'
-              )
-            ) : isSwapping ? (
-              <>Swapping...</>
-            ) : (
-              'Swap'
-            ))}
-
-          {!isSwapRatesFetching &&
-            Boolean(swapRatesError) &&
-            isFormFilled &&
-            'Insufficient liquidity'}
+          {getButtonText()}
         </Button>
         {inputToken && outputToken && inputTokenAmount && outputTokenAmount ? (
           <SwapDetails
