@@ -45,7 +45,7 @@ export const wagmiConfig = createConfig({
   connectors: connectors,
   chains: [sepolia],
   transports: {
-    [sepolia.id]: http('/rpc'),
+    [sepolia.id]: http(process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL),
   },
   storage: createStorage({
     storage: typeof localStorage === 'undefined' ? undefined : localStorage,
