@@ -27,5 +27,8 @@
     "*.{json,css,md}": [
       "prettier --write"
     ]
+  },
+  "resolutions": {
+    "chai": "4.3.7"
   }
 }
