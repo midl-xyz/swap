@@ -1,8 +1,5 @@
 import { Input, InputProps, mergeRefs } from '@/shared';
-import {
-  maskitoNumberOptionsGenerator,
-  maskitoParseNumber,
-} from '@maskito/kit';
+import { maskitoNumberOptionsGenerator } from '@maskito/kit';
 import { useMaskito } from '@maskito/react';
 import { forwardRef, useRef } from 'react';
 
@@ -35,20 +32,5 @@ export const NumberInput = forwardRef<
     />
   );
 });
-
-export const parseNumberInput = (value: string = '', dot: string = '.') => {
-  const trimmedValue = value.trim();
-  const [integerPart, decimalPart] = trimmedValue.split(dot);
-
-  const decimals = decimalPart ?? '0';
-
-  const parsedNumber = maskitoParseNumber(integerPart, dot);
-
-  if (isNaN(parsedNumber)) {
-    return '0';
-  }
-
-  return BigInt(parsedNumber).toString() + '.' + decimals;
-};
 
 NumberInput.displayName = 'NumberInput';

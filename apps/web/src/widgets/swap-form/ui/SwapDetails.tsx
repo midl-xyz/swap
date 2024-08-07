@@ -3,7 +3,8 @@ import { parseNumberInput } from '@/shared';
 import { AiOutlineSwapVertical } from '@/shared/assets';
 import { calculatePriceImpact } from '@/widgets/swap-form/ui/utils';
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { parseUnits } from 'viem';
 import { css } from '~/styled-system/css';
 import { Box, HStack, VStack } from '~/styled-system/jsx';
 
@@ -79,6 +80,17 @@ export const SwapDetails = ({
     },
   ];
 
+  const rate = useMemo(() => {
+    try {
+      return (
+        parseFloat(parseNumberInput(inputTokenAmount)) /
+        parseFloat(parseNumberInput(outputTokenAmount))
+      );
+    } catch {
+      return 0;
+    }
+  }, [inputTokenAmount, outputTokenAmount]);
+
   return (
     <Box
       display="flex"
@@ -95,10 +107,7 @@ export const SwapDetails = ({
       {' '}
       <HStack width="100%" justifyContent="space-between">
         <span>
-          1 {outputTokenInfo.symbol} ={' '}
-          {parseFloat(parseNumberInput(inputTokenAmount)) /
-            parseFloat(parseNumberInput(outputTokenAmount))}{' '}
-          {inputTokenInfo.symbol}
+          1 {outputTokenInfo.symbol} = {rate} {inputTokenInfo.symbol}
         </span>
         <HStack gap={2.5}>
           <AiOutlineSwapVertical
