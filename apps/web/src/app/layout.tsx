@@ -24,8 +24,8 @@ import { Footer } from '@/widgets/footer/ui';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'V60 Swap',
-  description: 'Web3 app for swapping ERC20 tokens on the Prom blockchain',
+  title: 'MIDL Swap',
+  description: 'Web3 app for swapping tokens on the MIDL',
   metadataBase: new URL('https://testnet.v60.io'),
   alternates: {
     canonical: '/',
@@ -35,8 +35,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'V60 Swap',
-    description: 'Web3 app for swapping ERC20 tokens on the Prom blockchain',
+    title: 'MIDL Swap',
+    description: 'Web3 app for swapping tokens on the MIDL',
     url: 'https://testnet.v60.io',
     type: 'website',
     images: [
@@ -44,18 +44,18 @@ export const metadata: Metadata = {
         url: '/opengraph-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'V60 Swap',
+        alt: 'MIDL Swap',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'V60 Swap',
+    title: 'MIDL Swap',
     description: 'Web3 app for swapping ERC20 tokens on the Prom blockchain',
     images: [
       {
         url: '/twitter-image.png',
-        alt: 'V60 Swap',
+        alt: 'MIDL Swap',
       },
     ],
   },
