@@ -343,7 +343,7 @@ export const SwapForm = () => {
           gap: 8,
           alignItems: 'stretch',
           bg: 'neutral.100',
-          borderRadius: '2xl',
+          borderRadius: 'sm',
           px: 16,
           py: 8,
           width: 'full',

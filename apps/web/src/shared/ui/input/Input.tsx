@@ -21,7 +21,7 @@ const inputStyle = cva({
       },
       tertiary: {
         borderColor: 'neutral.100',
-        borderRadius: 'md',
+        borderRadius: '0',
         borderWidth: 1,
         borderStyle: 'solid',
         px: 2,
