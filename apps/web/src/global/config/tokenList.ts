@@ -1,4 +1,5 @@
 import { Token } from '@/entities';
+import { promTestnet } from '@/global';
 import { zeroAddress } from 'viem';
 import { sepolia } from 'viem/chains';
 import BFEE from './assets/bfee.jpg';
@@ -29,5 +30,14 @@ export const tokenList: Token[] = [
     decimals: 18,
     logoURI:
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png',
+  },
+  {
+    symbol: 'PROM',
+    name: 'Prometeus',
+    address: zeroAddress,
+    chainId: promTestnet.id,
+    decimals: 18,
+    logoURI:
+      'https://assets.coingecko.com/coins/images/8825/standard/Ticker.png?1696508978',
   },
 ];
