@@ -7,7 +7,7 @@ const inputStyle = cva({
       primary: {},
       secondary: {
         bg: 'white',
-        borderRadius: 'xl',
+        borderRadius: 0,
         border: '2px solid',
         borderColor: 'neutral.100',
         px: 4,

@@ -7,6 +7,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Address, getAddress } from 'viem';
 import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
+import { VStack } from '~/styled-system/jsx';
 import { hstack, vstack } from '~/styled-system/patterns';
 
 type TokenSelectProps = {
@@ -97,77 +98,75 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
 
   return (
     <div className={vstack({ gap: 4, alignItems: 'stretch', width: 'full' })}>
-      <div
+      <VStack
+        gap={4}
+        alignItems="stretch"
         className={css({
-          position: 'relative',
+          bg: 'white',
+          padding: 4,
         })}
       >
-        <SearchIcon
+        <div
           className={css({
-            position: 'absolute',
-            top: '50%',
-            left: 3,
-            transform: 'translateY(-50%)',
-            color: 'neutral.400',
+            position: 'relative',
           })}
-        />
-        <Input
-          placeholder="Search name or paste address"
-          appearance="secondary"
-          onChange={onSearchInput}
-          maxLength={42}
-          css={{ ps: 11 }}
-        />
-      </div>
-
-      {!searchQuery && (
-        <div className={hstack({ gap: 1, flexWrap: 'wrap' })}>
-          {popularTokenList.map((address) => (
-            <Button
-              key={address}
-              appearance="secondary"
-              onClick={() => {
-                onSubmit(address, chainId);
-              }}
-            >
-              <TokenName address={address} chainId={chainId} />
-            </Button>
-          ))}
+        >
+          <SearchIcon
+            className={css({
+              position: 'absolute',
+              top: '50%',
+              left: 3,
+              transform: 'translateY(-50%)',
+              color: 'neutral.400',
+            })}
+          />
+          <Input
+            placeholder="Search name or paste address"
+            appearance="secondary"
+            onChange={onSearchInput}
+            maxLength={42}
+            css={{ ps: 11 }}
+          />
         </div>
-      )}
 
-      <h3>{searchQuery ? 'Search results' : 'Popular tokens'}</h3>
+        {!searchQuery && (
+          <div className={hstack({ gap: 1, flexWrap: 'wrap' })}>
+            {popularTokenList.map((address) => (
+              <Button
+                key={address}
+                appearance="outline"
+                onClick={() => {
+                  onSubmit(address, chainId);
+                }}
+              >
+                <TokenName address={address} chainId={chainId} />
+              </Button>
+            ))}
+          </div>
+        )}
+      </VStack>
 
-      <div
-        className={vstack({
-          gap: 1,
-          justifyContent: 'flex-start',
-          alignItems: 'flex-start',
+      <VStack
+        gap={4}
+        alignItems="stretch"
+        className={css({
+          bg: 'white',
+          padding: 4,
         })}
       >
-        {tokens.slice(0, 2).map(({ address, chainId, symbol }) => (
-          <Button
-            key={`${address}_${symbol}_${chainId}`}
-            onClick={() => onSubmit(address, chainId)}
-            appearance="ghost"
-            className={css({
-              width: '100%',
-              justifyContent: 'flex-start',
-              textAlign: 'left',
-            })}
-          >
-            <TokenName address={address} chainId={chainId} showName />
-          </Button>
-        ))}
-      </div>
+        <h3>{searchQuery ? 'Search results' : 'Popular runes'}</h3>
 
-      {searchQuery && filteredTokens.length === 0 && (
-        <div>
-          {customToken.symbol !== 'N/A' ? (
+        <div
+          className={vstack({
+            gap: 1,
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+          })}
+        >
+          {tokens.slice(0, 2).map(({ address, chainId, symbol }) => (
             <Button
-              onClick={() => {
-                onSubmit(customToken.address, chainId);
-              }}
+              key={`${address}_${symbol}_${chainId}`}
+              onClick={() => onSubmit(address, chainId)}
               appearance="ghost"
               className={css({
                 width: '100%',
@@ -175,23 +174,43 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
                 textAlign: 'left',
               })}
             >
-              <TokenName
-                address={customToken.address}
-                chainId={chainId}
-                showName
-              />
+              <TokenName address={address} chainId={chainId} showName />
             </Button>
-          ) : (
-            <div
-              className={css({
-                color: 'neutral.400',
-              })}
-            >
-              No results
-            </div>
-          )}
+          ))}
         </div>
-      )}
+
+        {searchQuery && filteredTokens.length === 0 && (
+          <div>
+            {customToken.symbol !== 'N/A' ? (
+              <Button
+                onClick={() => {
+                  onSubmit(customToken.address, chainId);
+                }}
+                appearance="ghost"
+                className={css({
+                  width: '100%',
+                  justifyContent: 'flex-start',
+                  textAlign: 'left',
+                })}
+              >
+                <TokenName
+                  address={customToken.address}
+                  chainId={chainId}
+                  showName
+                />
+              </Button>
+            ) : (
+              <div
+                className={css({
+                  color: 'neutral.400',
+                })}
+              >
+                No results
+              </div>
+            )}
+          </div>
+        )}
+      </VStack>
     </div>
   );
 };

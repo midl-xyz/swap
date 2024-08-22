@@ -4,14 +4,14 @@ import { AppMenuLink } from '@/widgets/app-menu/ui/AppMenuLink';
 import { hstack } from '~/styled-system/patterns';
 
 const appMenuLinks: AppMenuLink[] = [
-  {
-    label: 'Devnet Portal',
-    href: 'https://devnet.midl.xyz',
-  },
-  {
-    label: 'Midlscan',
-    href: 'https://midlscan.io',
-  },
+  // {
+  //   label: 'Devnet Portal',
+  //   href: 'https://devnet.midl.xyz',
+  // },
+  // {
+  //   label: 'Midlscan',
+  //   href: 'https://midlscan.io',
+  // },
   {
     label: 'Swap',
     href: '/',
@@ -25,14 +25,14 @@ const appMenuLinks: AppMenuLink[] = [
     label: 'Pairs',
     href: '/pairs',
   },
-  {
-    label: 'Stable',
-    href: '/stable',
-  },
-  {
-    label: 'Lending',
-    href: '/lending',
-  },
+  // {
+  //   label: 'Stable',
+  //   href: '/stable',
+  // },
+  // {
+  //   label: 'Lending',
+  //   href: '/lending',
+  // },
 ];
 
 export const AppMenu = () => (

@@ -443,7 +443,7 @@ export const LiquidityForm = () => {
             {tokenAAmount && tokenBAmount && !isBalanceBigEnough
               ? 'Insufficient Balance'
               : !tokenA || !tokenB
-                ? 'Select token'
+                ? 'Select rune'
                 : 'Supply'}
           </Button>
         )}

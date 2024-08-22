@@ -6,7 +6,6 @@ import {
   Web3Provider,
 } from '@/global';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import { headers } from 'next/headers';
 import { ReactNode } from 'react';
 import { Toaster } from 'react-hot-toast';
@@ -20,8 +19,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 import './globals.css';
 import { renderErrorMessage } from '@/widgets/error-message';
 import { Footer } from '@/widgets/footer/ui';
-
-const inter = Inter({ subsets: ['latin'] });
+import { euclidFonts } from '@/shared/assets/fonts/euclid/euclid';
 
 export const metadata: Metadata = {
   title: 'MIDL Swap',
@@ -79,7 +77,7 @@ export default function RootLayout({
     >
       <body
         className={cx(
-          inter.className,
+          euclidFonts.className,
           css({
             display: 'flex',
             flexDirection: 'column',
@@ -103,9 +101,9 @@ export default function RootLayout({
                   <Link href="/">
                     <Logo />
                   </Link>
-                  <AppMenu />
                 </div>
               }
+              centerSlot={<AppMenu />}
               rightSlot={
                 <div className={hstack({ gap: 4 })}>
                   <AccountButton />
