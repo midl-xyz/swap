@@ -100,6 +100,7 @@ export const SwapDetails = ({
       gap={3}
       border="1px solid"
       borderColor="#E2E2E2"
+      background="white"
       borderRadius="xl"
       onClick={handleToggle}
       cursor="pointer"

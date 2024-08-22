@@ -2,10 +2,11 @@ import { hstack } from '~/styled-system/patterns';
 
 type HeaderProps = {
   leftSlot?: React.ReactNode;
+  centerSlot?: React.ReactNode;
   rightSlot?: React.ReactNode;
 };
 
-export const Header = ({ leftSlot, rightSlot }: HeaderProps) => {
+export const Header = ({ leftSlot, rightSlot, centerSlot }: HeaderProps) => {
   return (
     <header
       className={hstack({
@@ -18,6 +19,7 @@ export const Header = ({ leftSlot, rightSlot }: HeaderProps) => {
       })}
     >
       {leftSlot}
+      {centerSlot}
       {rightSlot}
     </header>
   );

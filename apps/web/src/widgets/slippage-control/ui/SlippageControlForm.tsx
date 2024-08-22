@@ -54,13 +54,13 @@ export const SlippageControlForm = ({
       })}
     >
       <div className={hstack({ gap: 4 })}>
-        <Button onClick={() => updateSlippage(0.001)} appearance="secondary">
+        <Button onClick={() => updateSlippage(0.001)} appearance="outline">
           0.1%
         </Button>
-        <Button onClick={() => updateSlippage(0.005)} appearance="secondary">
+        <Button onClick={() => updateSlippage(0.005)} appearance="outline">
           0.5%
         </Button>
-        <Button onClick={() => updateSlippage(0.01)} appearance="secondary">
+        <Button onClick={() => updateSlippage(0.01)} appearance="outline">
           1%
         </Button>
         <div
@@ -91,13 +91,7 @@ export const SlippageControlForm = ({
         </div>
       </div>
       {!autoCommit && (
-        <Button
-          type="submit"
-          appearance="tertiary"
-          className={css({
-            alignSelf: 'flex-end',
-          })}
-        >
+        <Button type="submit" appearance="primary" width="full">
           Save
         </Button>
       )}

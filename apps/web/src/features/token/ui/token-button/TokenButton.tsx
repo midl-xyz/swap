@@ -40,7 +40,7 @@ export const TokenButton = forwardRef<HTMLInputElement, TokenButtonProps>(
               })
             }
           >
-            Select a token
+            Select rune
             <ChevronDownIcon />
           </Button>
           <input type="hidden" ref={refs} {...rest} />

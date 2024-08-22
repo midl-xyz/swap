@@ -1,8 +1,9 @@
 'use client';
 
-import { Dialog, DialogContent, DialogOverlay } from '@/shared';
+import { Button, Dialog, DialogContent, DialogOverlay } from '@/shared';
 import { SlippageControlForm } from '@/widgets/slippage-control/ui/SlippageControlForm';
 import { DialogPortal, DialogProps } from '@radix-ui/react-dialog';
+import { XIcon } from 'lucide-react';
 import { css } from '~/styled-system/css';
 import { vstack } from '~/styled-system/patterns';
 
@@ -31,13 +32,25 @@ export const SlippageControlDialog = ({
               justifyContent: 'stretch',
             })}
           >
-            <h1
+            <div
               className={css({
-                textStyle: 'h3',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: 'full',
               })}
             >
-              Settings
-            </h1>
+              <h1
+                className={css({
+                  textStyle: 'h3',
+                })}
+              >
+                Maximum slippage
+              </h1>
+              <Button onClick={onClose} appearance="ghost">
+                <XIcon width={16} height={16} />
+              </Button>
+            </div>
 
             <SlippageControlForm onClose={onClose} />
           </div>
