@@ -15,7 +15,6 @@ import { AccountButton, AppMenu, Header, Logo, RPCStatus } from '@/widgets';
 import Link from 'next/link';
 import { css, cx } from '~/styled-system/css';
 import { hstack } from '~/styled-system/patterns';
-import '@rainbow-me/rainbowkit/styles.css';
 import './globals.css';
 import { renderErrorMessage } from '@/widgets/error-message';
 import { Footer } from '@/widgets/footer/ui';

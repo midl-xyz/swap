@@ -2,12 +2,23 @@
 
 import { cookieToInitialState, WagmiProvider } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit';
 import { wagmiConfig } from '@/global';
 import { LastUsedTokensProvider } from '@/features';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { createConfig, testnet, satsConnect } from '@midl-xyz/midl-js-core';
+import { MidlProvider } from '@midl-xyz/midl-js-react';
 
 export const queryClient = new QueryClient({});
+
+const config = createConfig({
+  networks: [testnet],
+  chain: {
+    rpcUrls: ['https://rpc-dev.midl.xyz'],
+    chainId: 0x309,
+  },
+  connectors: [satsConnect()],
+  persist: true,
+});
 
 export const Web3Provider = ({
   children,
@@ -18,20 +29,13 @@ export const Web3Provider = ({
       config={wagmiConfig}
       initialState={cookieToInitialState(wagmiConfig, cookie)}
     >
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider
-          theme={lightTheme({
-            accentColor: '#212122',
-            accentColorForeground: 'white',
-            borderRadius: 'medium',
-            fontStack: 'system',
-          })}
-        >
+      <MidlProvider config={config}>
+        <QueryClientProvider client={queryClient}>
           <ReactQueryDevtools initialIsOpen={false} />
 
           <LastUsedTokensProvider>{children}</LastUsedTokensProvider>
-        </RainbowKitProvider>
-      </QueryClientProvider>
+        </QueryClientProvider>
+      </MidlProvider>
     </WagmiProvider>
   );
 };
