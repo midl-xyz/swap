@@ -81,7 +81,10 @@ export const SwapForm = () => {
 
     const swapRates = await readSwapRates({
       value,
-      pair: [inputToken, outputToken],
+      pair: [
+        getCorrectToken({ token: inputToken, chainId }) as Address,
+        getCorrectToken({ token: outputToken, chainId }) as Address,
+      ],
     });
     if (!swapRates) {
       return;
