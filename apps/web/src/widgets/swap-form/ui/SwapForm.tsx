@@ -21,6 +21,7 @@ import { AiOutlineSwapVertical } from '@/shared/assets';
 import { removePercentage } from '@/shared/lib/removePercentage';
 import { SlippageControl } from '@/widgets';
 import { SwapDetails } from '@/widgets/swap-form/ui/SwapDetails';
+import { getCorrectToken } from '@/widgets/swap-form/ui/utils';
 import { useQueryClient } from '@tanstack/react-query';
 import { Loader2Icon } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
@@ -104,7 +105,10 @@ export const SwapForm = () => {
 
     const swapRates = await readSwapRates({
       value,
-      pair: [inputToken, outputToken],
+      pair: [
+        getCorrectToken({ token: inputToken, chainId }) as Address,
+        getCorrectToken({ token: outputToken, chainId }) as Address,
+      ],
       reverse: true,
     });
 

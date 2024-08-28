@@ -1,4 +1,5 @@
 import { deployments, uniswapV2FactoryAbi } from '@/global';
+import { getCorrectToken } from '@/widgets/swap-form/ui/utils';
 import { useChainId, useReadContract } from 'wagmi';
 
 type GetPairArgs = SmartContractReadFunctionArgs<
@@ -18,11 +19,14 @@ export const useGetLPTokenAddress = (
   const globalChainId = useChainId();
   const chainId = wagmiOverrides?.chainId || globalChainId;
 
+  const correctTokenA = getCorrectToken({ token: tokenA, chainId });
+  const correctTokenB = getCorrectToken({ token: tokenB, chainId });
+
   return useReadContract({
     abi: uniswapV2FactoryAbi,
     address: deployments[chainId].UniswapV2Factory.address,
     functionName: 'getPair',
-    args: [tokenA, tokenB],
+    args: [correctTokenA, correctTokenB],
     query: {
       enabled: !!tokenA && !!tokenB,
     },
