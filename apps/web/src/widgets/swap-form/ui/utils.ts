@@ -1,3 +1,6 @@
+import { WETHByChain } from '@/global';
+import { Address, zeroAddress } from 'viem';
+
 export const calculatePriceImpact = ({
   amountIn,
   reserveIn,
@@ -21,3 +24,11 @@ export const calculatePriceImpact = ({
   const priceImpact = ((newPrice - initialPrice) / initialPrice) * 100;
   return priceImpact.toFixed(2) + '%';
 };
+
+export const getCorrectToken = ({
+  token,
+  chainId,
+}: {
+  token?: Address;
+  chainId: keyof typeof WETHByChain;
+}) => (token === zeroAddress ? WETHByChain[chainId] : token);
