@@ -3,7 +3,7 @@ import { DeployFunction } from "hardhat-deploy/types";
 
 const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployer } = await hre.getNamedAccounts();
-  await hre.deployments.deploy("WETH9", {
+  await hre.deployments.deploy("WPROM9", {
     from: deployer,
     args: [],
     log: true,

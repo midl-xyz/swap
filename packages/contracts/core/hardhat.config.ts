@@ -15,6 +15,11 @@ const config: HardhatUserConfig = {
       url: "https://eth-sepolia.g.alchemy.com/v2/MLItZDJKDvcgpwPFsc2V_FTKGyawnnWq",
       accounts,
     },
+    testnetErigon: {
+      url: "https://prom-testnet-rpc.eu-north-2.gateway.fm",
+      accounts,
+      chainId: 584548796,
+    },
   },
   etherscan: {
     enabled: true,

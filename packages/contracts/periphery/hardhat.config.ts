@@ -24,6 +24,12 @@ const config: HardhatUserConfig = {
       accounts,
       tags: ["weth", "core"],
     },
+    testnetErigon: {
+      url: "https://prom-testnet-rpc.eu-north-2.gateway.fm",
+      accounts,
+      chainId: 584548796,
+      tags: ["weth", "core"],
+    },
   },
   etherscan: {
     enabled: true,
