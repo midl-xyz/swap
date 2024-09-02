@@ -14,7 +14,7 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployer } = await hre.getNamedAccounts();
   let wethAddress = process.env.WETH_ADDRESS;
   if (!hre.ethers.isAddress(wethAddress)) {
-    const weth = await hre.deployments.get("WETH9");
+    const weth = await hre.deployments.get("WPROM9");
     wethAddress = weth.address;
   }
   await hre.deployments.deploy("UniswapV2Router02", {
