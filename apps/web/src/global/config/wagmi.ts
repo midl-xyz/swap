@@ -47,7 +47,7 @@ export const wagmiConfig = createConfig({
   chains: [promTestnet, sepolia],
   transports: {
     [sepolia.id]: http(process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL),
-    [promTestnet.id]: http('https://prom-testnet-rpc.eu-north-2.gateway.fm'),
+    [promTestnet.id]: http(promTestnet.rpcUrls.default.http[0]),
   },
   storage: createStorage({
     storage: typeof localStorage === 'undefined' ? undefined : localStorage,
