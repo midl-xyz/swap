@@ -12,7 +12,7 @@ export const promTestnet: Chain = {
   blockExplorers: {
     default: {
       name: 'Prom Testnet Explorer',
-      url: 'https://testnet.promscan.io',
+      url: 'prom-testnet-blockscout.eu-north-2.gateway.fm',
     },
   },
   rpcUrls: {

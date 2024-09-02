@@ -5,17 +5,9 @@ import {
   removeLiquidityDialogAtom,
 } from '@/features/liquidity';
 import { useAtom } from 'jotai';
-import { useMemo } from 'react';
-import { useChainId } from 'wagmi';
 
 export const RemoveLiquidityProvider = () => {
-  const chainId = useChainId();
-  const dialogStateAtom = useMemo(
-    () => removeLiquidityDialogAtom(chainId),
-    [chainId],
-  );
-
-  const [dialogState, setDialogState] = useAtom(dialogStateAtom);
+  const [dialogState, setDialogState] = useAtom(removeLiquidityDialogAtom);
 
   if (!dialogState.open) {
     return null;

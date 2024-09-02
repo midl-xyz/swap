@@ -22,10 +22,10 @@ type Deployments = Record<
 export const deployments: Deployments = {
   [promTestnet.id]: {
     UniswapV2Router02: {
-      address: '0x433574eB330525Ed97C600402BCF963376a323C9',
+      address: require('@v60swap/periphery/deployments/1.0.3/testnetErigon/UniswapV2Router02.json'),
     },
     UniswapV2Factory: {
-      address: '0x9B7eAbe24C6f4FD93B52BA27510aaFa484B28D3A',
+      address: require('@v60swap/core/deployments/1.0.3/testnetErigon/UniswapV2Factory.json'),
     },
     UV2Library: require('@v60swap/periphery/deployments/1.0.3/testnetErigon/UV2Library.json'),
   },

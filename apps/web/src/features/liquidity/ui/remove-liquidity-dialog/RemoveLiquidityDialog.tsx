@@ -63,7 +63,7 @@ export const RemoveLiquidityDialog = ({
     {
       lpToken: { address, tokenA, tokenB },
     },
-  ] = useAtom(removeLiquidityDialogAtom(chainId));
+  ] = useAtom(removeLiquidityDialogAtom);
   const { address: userAddress } = useAccount();
   const { handleSubmit, control, setValue, watch, formState, trigger } =
     useForm<FormData>({
