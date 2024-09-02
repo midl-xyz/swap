@@ -1,5 +1,7 @@
+'use client';
+
 import { Token } from '@/entities';
-import { promTestnet } from '@/global';
+import { promTestnet } from '@/global/customChainsConfig';
 import { zeroAddress } from 'viem';
 import { sepolia } from 'viem/chains';
 import BFEE from './assets/bfee.jpg';
@@ -38,6 +40,6 @@ export const tokenList: Token[] = [
     chainId: promTestnet.id,
     decimals: 18,
     logoURI:
-      'https://assets.coingecko.com/coins/images/8825/standard/Ticker.png?1696508978',
+      'https://assets-cdn.trustwallet.com/blockchains/ethereum/assets/0xfc82bb4ba86045Af6F327323a46E80412b91b27d/logo.png',
   },
 ];

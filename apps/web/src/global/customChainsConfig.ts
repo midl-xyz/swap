@@ -2,7 +2,7 @@ import { Chain } from 'wagmi/chains';
 
 export const promTestnet: Chain = {
   testnet: true,
-  id: 97072271,
+  id: 584548796,
   name: 'Prom Testnet',
   nativeCurrency: {
     name: 'Prom',
@@ -17,7 +17,7 @@ export const promTestnet: Chain = {
   },
   rpcUrls: {
     default: {
-      http: ['https://testnet-rpc.prom.io/'],
+      http: ['https://prom-testnet-rpc.eu-north-2.gateway.fm'],
     },
   },
   contracts: {

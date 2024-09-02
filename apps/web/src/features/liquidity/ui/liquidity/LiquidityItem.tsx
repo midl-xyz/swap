@@ -31,7 +31,7 @@ export const LiquidityItem = ({
   const chainId = useChainId();
   const tokenAInfo = useToken(tokenA, chainId);
   const tokenBInfo = useToken(tokenB, chainId);
-  const [, setDialogState] = useAtom(removeLiquidityDialogAtom);
+  const [, setDialogState] = useAtom(removeLiquidityDialogAtom(chainId));
 
   return (
     <Collapsible.Root
