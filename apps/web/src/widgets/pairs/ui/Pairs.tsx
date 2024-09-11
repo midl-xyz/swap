@@ -55,9 +55,9 @@ export const Pairs = () => {
       >
         <div className={css({ width: '5%', display: 'table-cell' })}>#</div>
         <div className={css({ display: 'table-cell' })}>Pair</div>
-        <div className={css({ display: 'table-cell' })}>Tx Count</div>
         <div className={css({ display: 'table-cell' })}>Volume (24h)</div>
         <div className={css({ display: 'table-cell' })}>Liquidity</div>
+        <div className={css({ display: 'table-cell' })}>Fees(24h)</div>
       </div>
 
       {pools?.pairs.map((pair, index) => (
