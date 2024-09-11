@@ -33,6 +33,7 @@ import * as yup from 'yup';
 import { useEstimateLiquidityPair } from '@/features/liquidity';
 import { useSlippage } from '@/features/slippage';
 import { Loader2Icon } from 'lucide-react';
+import { League_Gothic } from 'next/font/google';
 
 type RemoveLiquidityDialogProps = {
   onClose?: () => void;
@@ -122,10 +123,13 @@ export const RemoveLiquidityDialog = ({
     parseFloat(parsedLPTokenBalance) *
     (parseFloat(parseNumberInput(value)) / 100); // 1* 0.25 = 0.25
 
-  const parsedLPToken = parseUnits(
+  let parsedLPToken = parseUnits(
     removeLPAmount.toString(),
     lpTokenInfo.decimals,
   ); // 250000000000
+
+  parsedLPToken =
+    parsedLPToken > balances.lpToken ? balances.lpToken : parsedLPToken;
 
   const { tokenAAmount, tokenBAmount } = useEstimateLiquidityPair({
     tokenA,
