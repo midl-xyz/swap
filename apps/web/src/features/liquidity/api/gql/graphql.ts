@@ -96,12 +96,12 @@ export enum LiquidityPositionOrderByInput {
   PairReserve1Desc = 'pair_reserve1_DESC',
   PairReserve1DescNullsFirst = 'pair_reserve1_DESC_NULLS_FIRST',
   PairReserve1DescNullsLast = 'pair_reserve1_DESC_NULLS_LAST',
-  PairReservePromAsc = 'pair_reserveProm_ASC',
-  PairReservePromAscNullsFirst = 'pair_reserveProm_ASC_NULLS_FIRST',
-  PairReservePromAscNullsLast = 'pair_reserveProm_ASC_NULLS_LAST',
-  PairReservePromDesc = 'pair_reserveProm_DESC',
-  PairReservePromDescNullsFirst = 'pair_reserveProm_DESC_NULLS_FIRST',
-  PairReservePromDescNullsLast = 'pair_reserveProm_DESC_NULLS_LAST',
+  PairReserveEthAsc = 'pair_reserveETH_ASC',
+  PairReserveEthAscNullsFirst = 'pair_reserveETH_ASC_NULLS_FIRST',
+  PairReserveEthAscNullsLast = 'pair_reserveETH_ASC_NULLS_LAST',
+  PairReserveEthDesc = 'pair_reserveETH_DESC',
+  PairReserveEthDescNullsFirst = 'pair_reserveETH_DESC_NULLS_FIRST',
+  PairReserveEthDescNullsLast = 'pair_reserveETH_DESC_NULLS_LAST',
   PairReserveUsdAsc = 'pair_reserveUSD_ASC',
   PairReserveUsdAscNullsFirst = 'pair_reserveUSD_ASC_NULLS_FIRST',
   PairReserveUsdAscNullsLast = 'pair_reserveUSD_ASC_NULLS_LAST',
@@ -126,12 +126,12 @@ export enum LiquidityPositionOrderByInput {
   PairTotalSupplyDesc = 'pair_totalSupply_DESC',
   PairTotalSupplyDescNullsFirst = 'pair_totalSupply_DESC_NULLS_FIRST',
   PairTotalSupplyDescNullsLast = 'pair_totalSupply_DESC_NULLS_LAST',
-  PairTrackedReservePromAsc = 'pair_trackedReserveProm_ASC',
-  PairTrackedReservePromAscNullsFirst = 'pair_trackedReserveProm_ASC_NULLS_FIRST',
-  PairTrackedReservePromAscNullsLast = 'pair_trackedReserveProm_ASC_NULLS_LAST',
-  PairTrackedReservePromDesc = 'pair_trackedReserveProm_DESC',
-  PairTrackedReservePromDescNullsFirst = 'pair_trackedReserveProm_DESC_NULLS_FIRST',
-  PairTrackedReservePromDescNullsLast = 'pair_trackedReserveProm_DESC_NULLS_LAST',
+  PairTrackedReserveEthAsc = 'pair_trackedReserveETH_ASC',
+  PairTrackedReserveEthAscNullsFirst = 'pair_trackedReserveETH_ASC_NULLS_FIRST',
+  PairTrackedReserveEthAscNullsLast = 'pair_trackedReserveETH_ASC_NULLS_LAST',
+  PairTrackedReserveEthDesc = 'pair_trackedReserveETH_DESC',
+  PairTrackedReserveEthDescNullsFirst = 'pair_trackedReserveETH_DESC_NULLS_FIRST',
+  PairTrackedReserveEthDescNullsLast = 'pair_trackedReserveETH_DESC_NULLS_LAST',
   PairTxCountAsc = 'pair_txCount_ASC',
   PairTxCountAscNullsFirst = 'pair_txCount_ASC_NULLS_FIRST',
   PairTxCountAscNullsLast = 'pair_txCount_ASC_NULLS_LAST',
@@ -272,12 +272,12 @@ export enum LiquidityPositionSnapshotOrderByInput {
   PairReserve1Desc = 'pair_reserve1_DESC',
   PairReserve1DescNullsFirst = 'pair_reserve1_DESC_NULLS_FIRST',
   PairReserve1DescNullsLast = 'pair_reserve1_DESC_NULLS_LAST',
-  PairReservePromAsc = 'pair_reserveProm_ASC',
-  PairReservePromAscNullsFirst = 'pair_reserveProm_ASC_NULLS_FIRST',
-  PairReservePromAscNullsLast = 'pair_reserveProm_ASC_NULLS_LAST',
-  PairReservePromDesc = 'pair_reserveProm_DESC',
-  PairReservePromDescNullsFirst = 'pair_reserveProm_DESC_NULLS_FIRST',
-  PairReservePromDescNullsLast = 'pair_reserveProm_DESC_NULLS_LAST',
+  PairReserveEthAsc = 'pair_reserveETH_ASC',
+  PairReserveEthAscNullsFirst = 'pair_reserveETH_ASC_NULLS_FIRST',
+  PairReserveEthAscNullsLast = 'pair_reserveETH_ASC_NULLS_LAST',
+  PairReserveEthDesc = 'pair_reserveETH_DESC',
+  PairReserveEthDescNullsFirst = 'pair_reserveETH_DESC_NULLS_FIRST',
+  PairReserveEthDescNullsLast = 'pair_reserveETH_DESC_NULLS_LAST',
   PairReserveUsdAsc = 'pair_reserveUSD_ASC',
   PairReserveUsdAscNullsFirst = 'pair_reserveUSD_ASC_NULLS_FIRST',
   PairReserveUsdAscNullsLast = 'pair_reserveUSD_ASC_NULLS_LAST',
@@ -302,12 +302,12 @@ export enum LiquidityPositionSnapshotOrderByInput {
   PairTotalSupplyDesc = 'pair_totalSupply_DESC',
   PairTotalSupplyDescNullsFirst = 'pair_totalSupply_DESC_NULLS_FIRST',
   PairTotalSupplyDescNullsLast = 'pair_totalSupply_DESC_NULLS_LAST',
-  PairTrackedReservePromAsc = 'pair_trackedReserveProm_ASC',
-  PairTrackedReservePromAscNullsFirst = 'pair_trackedReserveProm_ASC_NULLS_FIRST',
-  PairTrackedReservePromAscNullsLast = 'pair_trackedReserveProm_ASC_NULLS_LAST',
-  PairTrackedReservePromDesc = 'pair_trackedReserveProm_DESC',
-  PairTrackedReservePromDescNullsFirst = 'pair_trackedReserveProm_DESC_NULLS_FIRST',
-  PairTrackedReservePromDescNullsLast = 'pair_trackedReserveProm_DESC_NULLS_LAST',
+  PairTrackedReserveEthAsc = 'pair_trackedReserveETH_ASC',
+  PairTrackedReserveEthAscNullsFirst = 'pair_trackedReserveETH_ASC_NULLS_FIRST',
+  PairTrackedReserveEthAscNullsLast = 'pair_trackedReserveETH_ASC_NULLS_LAST',
+  PairTrackedReserveEthDesc = 'pair_trackedReserveETH_DESC',
+  PairTrackedReserveEthDescNullsFirst = 'pair_trackedReserveETH_DESC_NULLS_FIRST',
+  PairTrackedReserveEthDescNullsLast = 'pair_trackedReserveETH_DESC_NULLS_LAST',
   PairTxCountAsc = 'pair_txCount_ASC',
   PairTxCountAscNullsFirst = 'pair_txCount_ASC_NULLS_FIRST',
   PairTxCountAscNullsLast = 'pair_txCount_ASC_NULLS_LAST',
@@ -819,14 +819,14 @@ export type Pair = {
   liquidityProviderCount: Scalars['BigInt']['output'];
   reserve0: Scalars['BigDecimal']['output'];
   reserve1: Scalars['BigDecimal']['output'];
-  reserveProm: Scalars['BigDecimal']['output'];
+  reserveETH: Scalars['BigDecimal']['output'];
   reserveUSD: Scalars['BigDecimal']['output'];
   token0: Token;
   token0Price: Scalars['BigDecimal']['output'];
   token1: Token;
   token1Price: Scalars['BigDecimal']['output'];
   totalSupply: Scalars['BigDecimal']['output'];
-  trackedReserveProm: Scalars['BigDecimal']['output'];
+  trackedReserveETH: Scalars['BigDecimal']['output'];
   txCount: Scalars['BigInt']['output'];
   untrackedVolumeUSD: Scalars['BigDecimal']['output'];
   volumeToken0: Scalars['BigDecimal']['output'];
@@ -931,12 +931,12 @@ export enum PairDayDataOrderByInput {
   Token0DecimalsDesc = 'token0_decimals_DESC',
   Token0DecimalsDescNullsFirst = 'token0_decimals_DESC_NULLS_FIRST',
   Token0DecimalsDescNullsLast = 'token0_decimals_DESC_NULLS_LAST',
-  Token0DerivedPromAsc = 'token0_derivedProm_ASC',
-  Token0DerivedPromAscNullsFirst = 'token0_derivedProm_ASC_NULLS_FIRST',
-  Token0DerivedPromAscNullsLast = 'token0_derivedProm_ASC_NULLS_LAST',
-  Token0DerivedPromDesc = 'token0_derivedProm_DESC',
-  Token0DerivedPromDescNullsFirst = 'token0_derivedProm_DESC_NULLS_FIRST',
-  Token0DerivedPromDescNullsLast = 'token0_derivedProm_DESC_NULLS_LAST',
+  Token0DerivedEthAsc = 'token0_derivedETH_ASC',
+  Token0DerivedEthAscNullsFirst = 'token0_derivedETH_ASC_NULLS_FIRST',
+  Token0DerivedEthAscNullsLast = 'token0_derivedETH_ASC_NULLS_LAST',
+  Token0DerivedEthDesc = 'token0_derivedETH_DESC',
+  Token0DerivedEthDescNullsFirst = 'token0_derivedETH_DESC_NULLS_FIRST',
+  Token0DerivedEthDescNullsLast = 'token0_derivedETH_DESC_NULLS_LAST',
   Token0IdAsc = 'token0_id_ASC',
   Token0IdAscNullsFirst = 'token0_id_ASC_NULLS_FIRST',
   Token0IdAscNullsLast = 'token0_id_ASC_NULLS_LAST',
@@ -997,12 +997,12 @@ export enum PairDayDataOrderByInput {
   Token1DecimalsDesc = 'token1_decimals_DESC',
   Token1DecimalsDescNullsFirst = 'token1_decimals_DESC_NULLS_FIRST',
   Token1DecimalsDescNullsLast = 'token1_decimals_DESC_NULLS_LAST',
-  Token1DerivedPromAsc = 'token1_derivedProm_ASC',
-  Token1DerivedPromAscNullsFirst = 'token1_derivedProm_ASC_NULLS_FIRST',
-  Token1DerivedPromAscNullsLast = 'token1_derivedProm_ASC_NULLS_LAST',
-  Token1DerivedPromDesc = 'token1_derivedProm_DESC',
-  Token1DerivedPromDescNullsFirst = 'token1_derivedProm_DESC_NULLS_FIRST',
-  Token1DerivedPromDescNullsLast = 'token1_derivedProm_DESC_NULLS_LAST',
+  Token1DerivedEthAsc = 'token1_derivedETH_ASC',
+  Token1DerivedEthAscNullsFirst = 'token1_derivedETH_ASC_NULLS_FIRST',
+  Token1DerivedEthAscNullsLast = 'token1_derivedETH_ASC_NULLS_LAST',
+  Token1DerivedEthDesc = 'token1_derivedETH_DESC',
+  Token1DerivedEthDescNullsFirst = 'token1_derivedETH_DESC_NULLS_FIRST',
+  Token1DerivedEthDescNullsLast = 'token1_derivedETH_DESC_NULLS_LAST',
   Token1IdAsc = 'token1_id_ASC',
   Token1IdAscNullsFirst = 'token1_id_ASC_NULLS_FIRST',
   Token1IdAscNullsLast = 'token1_id_ASC_NULLS_LAST',
@@ -1232,12 +1232,12 @@ export enum PairOrderByInput {
   Reserve1Desc = 'reserve1_DESC',
   Reserve1DescNullsFirst = 'reserve1_DESC_NULLS_FIRST',
   Reserve1DescNullsLast = 'reserve1_DESC_NULLS_LAST',
-  ReservePromAsc = 'reserveProm_ASC',
-  ReservePromAscNullsFirst = 'reserveProm_ASC_NULLS_FIRST',
-  ReservePromAscNullsLast = 'reserveProm_ASC_NULLS_LAST',
-  ReservePromDesc = 'reserveProm_DESC',
-  ReservePromDescNullsFirst = 'reserveProm_DESC_NULLS_FIRST',
-  ReservePromDescNullsLast = 'reserveProm_DESC_NULLS_LAST',
+  ReserveEthAsc = 'reserveETH_ASC',
+  ReserveEthAscNullsFirst = 'reserveETH_ASC_NULLS_FIRST',
+  ReserveEthAscNullsLast = 'reserveETH_ASC_NULLS_LAST',
+  ReserveEthDesc = 'reserveETH_DESC',
+  ReserveEthDescNullsFirst = 'reserveETH_DESC_NULLS_FIRST',
+  ReserveEthDescNullsLast = 'reserveETH_DESC_NULLS_LAST',
   ReserveUsdAsc = 'reserveUSD_ASC',
   ReserveUsdAscNullsFirst = 'reserveUSD_ASC_NULLS_FIRST',
   ReserveUsdAscNullsLast = 'reserveUSD_ASC_NULLS_LAST',
@@ -1256,12 +1256,12 @@ export enum PairOrderByInput {
   Token0DecimalsDesc = 'token0_decimals_DESC',
   Token0DecimalsDescNullsFirst = 'token0_decimals_DESC_NULLS_FIRST',
   Token0DecimalsDescNullsLast = 'token0_decimals_DESC_NULLS_LAST',
-  Token0DerivedPromAsc = 'token0_derivedProm_ASC',
-  Token0DerivedPromAscNullsFirst = 'token0_derivedProm_ASC_NULLS_FIRST',
-  Token0DerivedPromAscNullsLast = 'token0_derivedProm_ASC_NULLS_LAST',
-  Token0DerivedPromDesc = 'token0_derivedProm_DESC',
-  Token0DerivedPromDescNullsFirst = 'token0_derivedProm_DESC_NULLS_FIRST',
-  Token0DerivedPromDescNullsLast = 'token0_derivedProm_DESC_NULLS_LAST',
+  Token0DerivedEthAsc = 'token0_derivedETH_ASC',
+  Token0DerivedEthAscNullsFirst = 'token0_derivedETH_ASC_NULLS_FIRST',
+  Token0DerivedEthAscNullsLast = 'token0_derivedETH_ASC_NULLS_LAST',
+  Token0DerivedEthDesc = 'token0_derivedETH_DESC',
+  Token0DerivedEthDescNullsFirst = 'token0_derivedETH_DESC_NULLS_FIRST',
+  Token0DerivedEthDescNullsLast = 'token0_derivedETH_DESC_NULLS_LAST',
   Token0IdAsc = 'token0_id_ASC',
   Token0IdAscNullsFirst = 'token0_id_ASC_NULLS_FIRST',
   Token0IdAscNullsLast = 'token0_id_ASC_NULLS_LAST',
@@ -1328,12 +1328,12 @@ export enum PairOrderByInput {
   Token1DecimalsDesc = 'token1_decimals_DESC',
   Token1DecimalsDescNullsFirst = 'token1_decimals_DESC_NULLS_FIRST',
   Token1DecimalsDescNullsLast = 'token1_decimals_DESC_NULLS_LAST',
-  Token1DerivedPromAsc = 'token1_derivedProm_ASC',
-  Token1DerivedPromAscNullsFirst = 'token1_derivedProm_ASC_NULLS_FIRST',
-  Token1DerivedPromAscNullsLast = 'token1_derivedProm_ASC_NULLS_LAST',
-  Token1DerivedPromDesc = 'token1_derivedProm_DESC',
-  Token1DerivedPromDescNullsFirst = 'token1_derivedProm_DESC_NULLS_FIRST',
-  Token1DerivedPromDescNullsLast = 'token1_derivedProm_DESC_NULLS_LAST',
+  Token1DerivedEthAsc = 'token1_derivedETH_ASC',
+  Token1DerivedEthAscNullsFirst = 'token1_derivedETH_ASC_NULLS_FIRST',
+  Token1DerivedEthAscNullsLast = 'token1_derivedETH_ASC_NULLS_LAST',
+  Token1DerivedEthDesc = 'token1_derivedETH_DESC',
+  Token1DerivedEthDescNullsFirst = 'token1_derivedETH_DESC_NULLS_FIRST',
+  Token1DerivedEthDescNullsLast = 'token1_derivedETH_DESC_NULLS_LAST',
   Token1IdAsc = 'token1_id_ASC',
   Token1IdAscNullsFirst = 'token1_id_ASC_NULLS_FIRST',
   Token1IdAscNullsLast = 'token1_id_ASC_NULLS_LAST',
@@ -1394,12 +1394,12 @@ export enum PairOrderByInput {
   TotalSupplyDesc = 'totalSupply_DESC',
   TotalSupplyDescNullsFirst = 'totalSupply_DESC_NULLS_FIRST',
   TotalSupplyDescNullsLast = 'totalSupply_DESC_NULLS_LAST',
-  TrackedReservePromAsc = 'trackedReserveProm_ASC',
-  TrackedReservePromAscNullsFirst = 'trackedReserveProm_ASC_NULLS_FIRST',
-  TrackedReservePromAscNullsLast = 'trackedReserveProm_ASC_NULLS_LAST',
-  TrackedReservePromDesc = 'trackedReserveProm_DESC',
-  TrackedReservePromDescNullsFirst = 'trackedReserveProm_DESC_NULLS_FIRST',
-  TrackedReservePromDescNullsLast = 'trackedReserveProm_DESC_NULLS_LAST',
+  TrackedReserveEthAsc = 'trackedReserveETH_ASC',
+  TrackedReserveEthAscNullsFirst = 'trackedReserveETH_ASC_NULLS_FIRST',
+  TrackedReserveEthAscNullsLast = 'trackedReserveETH_ASC_NULLS_LAST',
+  TrackedReserveEthDesc = 'trackedReserveETH_DESC',
+  TrackedReserveEthDescNullsFirst = 'trackedReserveETH_DESC_NULLS_FIRST',
+  TrackedReserveEthDescNullsLast = 'trackedReserveETH_DESC_NULLS_LAST',
   TxCountAsc = 'txCount_ASC',
   TxCountAscNullsFirst = 'txCount_ASC_NULLS_FIRST',
   TxCountAscNullsLast = 'txCount_ASC_NULLS_LAST',
@@ -1497,15 +1497,15 @@ export type PairWhereInput = {
   reserve1_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   reserve1_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   reserve1_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  reserveProm_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveProm_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveProm_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveProm_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  reserveProm_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  reserveProm_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveProm_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveProm_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveProm_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  reserveETH_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  reserveETH_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  reserveETH_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  reserveETH_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  reserveETH_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  reserveETH_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  reserveETH_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  reserveETH_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  reserveETH_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   reserveUSD_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   reserveUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   reserveUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -1546,15 +1546,15 @@ export type PairWhereInput = {
   totalSupply_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   totalSupply_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   totalSupply_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  trackedReserveProm_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  trackedReserveProm_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  trackedReserveProm_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  trackedReserveProm_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  trackedReserveProm_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  trackedReserveProm_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  trackedReserveProm_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  trackedReserveProm_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  trackedReserveProm_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  trackedReserveETH_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  trackedReserveETH_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  trackedReserveETH_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  trackedReserveETH_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  trackedReserveETH_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  trackedReserveETH_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  trackedReserveETH_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  trackedReserveETH_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  trackedReserveETH_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   txCount_eq?: InputMaybe<Scalars['BigInt']['input']>;
   txCount_gt?: InputMaybe<Scalars['BigInt']['input']>;
   txCount_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -1791,7 +1791,7 @@ export type SquidStatus = {
 export type Token = {
   __typename?: 'Token';
   decimals: Scalars['BigInt']['output'];
-  derivedProm: Scalars['BigDecimal']['output'];
+  derivedETH: Scalars['BigDecimal']['output'];
   id: Scalars['String']['output'];
   memeToken?: Maybe<MemeToken>;
   name: Scalars['String']['output'];
@@ -1807,14 +1807,14 @@ export type Token = {
 export type TokenDayData = {
   __typename?: 'TokenDayData';
   dailyTxns: Scalars['BigInt']['output'];
-  dailyVolumeProm: Scalars['BigDecimal']['output'];
+  dailyVolumeETH: Scalars['BigDecimal']['output'];
   dailyVolumeToken: Scalars['BigDecimal']['output'];
   dailyVolumeUSD: Scalars['BigDecimal']['output'];
   date: Scalars['Int']['output'];
   id: Scalars['String']['output'];
   priceUSD: Scalars['BigDecimal']['output'];
   token: Token;
-  totalLiquidityProm: Scalars['BigDecimal']['output'];
+  totalLiquidityETH: Scalars['BigDecimal']['output'];
   totalLiquidityToken: Scalars['BigDecimal']['output'];
   totalLiquidityUSD: Scalars['BigDecimal']['output'];
 };
@@ -1839,12 +1839,12 @@ export enum TokenDayDataOrderByInput {
   DailyTxnsDesc = 'dailyTxns_DESC',
   DailyTxnsDescNullsFirst = 'dailyTxns_DESC_NULLS_FIRST',
   DailyTxnsDescNullsLast = 'dailyTxns_DESC_NULLS_LAST',
-  DailyVolumePromAsc = 'dailyVolumeProm_ASC',
-  DailyVolumePromAscNullsFirst = 'dailyVolumeProm_ASC_NULLS_FIRST',
-  DailyVolumePromAscNullsLast = 'dailyVolumeProm_ASC_NULLS_LAST',
-  DailyVolumePromDesc = 'dailyVolumeProm_DESC',
-  DailyVolumePromDescNullsFirst = 'dailyVolumeProm_DESC_NULLS_FIRST',
-  DailyVolumePromDescNullsLast = 'dailyVolumeProm_DESC_NULLS_LAST',
+  DailyVolumeEthAsc = 'dailyVolumeETH_ASC',
+  DailyVolumeEthAscNullsFirst = 'dailyVolumeETH_ASC_NULLS_FIRST',
+  DailyVolumeEthAscNullsLast = 'dailyVolumeETH_ASC_NULLS_LAST',
+  DailyVolumeEthDesc = 'dailyVolumeETH_DESC',
+  DailyVolumeEthDescNullsFirst = 'dailyVolumeETH_DESC_NULLS_FIRST',
+  DailyVolumeEthDescNullsLast = 'dailyVolumeETH_DESC_NULLS_LAST',
   DailyVolumeTokenAsc = 'dailyVolumeToken_ASC',
   DailyVolumeTokenAscNullsFirst = 'dailyVolumeToken_ASC_NULLS_FIRST',
   DailyVolumeTokenAscNullsLast = 'dailyVolumeToken_ASC_NULLS_LAST',
@@ -1881,12 +1881,12 @@ export enum TokenDayDataOrderByInput {
   TokenDecimalsDesc = 'token_decimals_DESC',
   TokenDecimalsDescNullsFirst = 'token_decimals_DESC_NULLS_FIRST',
   TokenDecimalsDescNullsLast = 'token_decimals_DESC_NULLS_LAST',
-  TokenDerivedPromAsc = 'token_derivedProm_ASC',
-  TokenDerivedPromAscNullsFirst = 'token_derivedProm_ASC_NULLS_FIRST',
-  TokenDerivedPromAscNullsLast = 'token_derivedProm_ASC_NULLS_LAST',
-  TokenDerivedPromDesc = 'token_derivedProm_DESC',
-  TokenDerivedPromDescNullsFirst = 'token_derivedProm_DESC_NULLS_FIRST',
-  TokenDerivedPromDescNullsLast = 'token_derivedProm_DESC_NULLS_LAST',
+  TokenDerivedEthAsc = 'token_derivedETH_ASC',
+  TokenDerivedEthAscNullsFirst = 'token_derivedETH_ASC_NULLS_FIRST',
+  TokenDerivedEthAscNullsLast = 'token_derivedETH_ASC_NULLS_LAST',
+  TokenDerivedEthDesc = 'token_derivedETH_DESC',
+  TokenDerivedEthDescNullsFirst = 'token_derivedETH_DESC_NULLS_FIRST',
+  TokenDerivedEthDescNullsLast = 'token_derivedETH_DESC_NULLS_LAST',
   TokenIdAsc = 'token_id_ASC',
   TokenIdAscNullsFirst = 'token_id_ASC_NULLS_FIRST',
   TokenIdAscNullsLast = 'token_id_ASC_NULLS_LAST',
@@ -1941,12 +1941,12 @@ export enum TokenDayDataOrderByInput {
   TokenUntrackedVolumeUsdDesc = 'token_untrackedVolumeUSD_DESC',
   TokenUntrackedVolumeUsdDescNullsFirst = 'token_untrackedVolumeUSD_DESC_NULLS_FIRST',
   TokenUntrackedVolumeUsdDescNullsLast = 'token_untrackedVolumeUSD_DESC_NULLS_LAST',
-  TotalLiquidityPromAsc = 'totalLiquidityProm_ASC',
-  TotalLiquidityPromAscNullsFirst = 'totalLiquidityProm_ASC_NULLS_FIRST',
-  TotalLiquidityPromAscNullsLast = 'totalLiquidityProm_ASC_NULLS_LAST',
-  TotalLiquidityPromDesc = 'totalLiquidityProm_DESC',
-  TotalLiquidityPromDescNullsFirst = 'totalLiquidityProm_DESC_NULLS_FIRST',
-  TotalLiquidityPromDescNullsLast = 'totalLiquidityProm_DESC_NULLS_LAST',
+  TotalLiquidityEthAsc = 'totalLiquidityETH_ASC',
+  TotalLiquidityEthAscNullsFirst = 'totalLiquidityETH_ASC_NULLS_FIRST',
+  TotalLiquidityEthAscNullsLast = 'totalLiquidityETH_ASC_NULLS_LAST',
+  TotalLiquidityEthDesc = 'totalLiquidityETH_DESC',
+  TotalLiquidityEthDescNullsFirst = 'totalLiquidityETH_DESC_NULLS_FIRST',
+  TotalLiquidityEthDescNullsLast = 'totalLiquidityETH_DESC_NULLS_LAST',
   TotalLiquidityTokenAsc = 'totalLiquidityToken_ASC',
   TotalLiquidityTokenAscNullsFirst = 'totalLiquidityToken_ASC_NULLS_FIRST',
   TotalLiquidityTokenAscNullsLast = 'totalLiquidityToken_ASC_NULLS_LAST',
@@ -1973,15 +1973,15 @@ export type TokenDayDataWhereInput = {
   dailyTxns_lte?: InputMaybe<Scalars['BigInt']['input']>;
   dailyTxns_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
   dailyTxns_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  dailyVolumeProm_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeProm_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeProm_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeProm_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  dailyVolumeProm_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  dailyVolumeProm_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeProm_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeProm_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeProm_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  dailyVolumeETH_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  dailyVolumeETH_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  dailyVolumeETH_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  dailyVolumeETH_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  dailyVolumeETH_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  dailyVolumeETH_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  dailyVolumeETH_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  dailyVolumeETH_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  dailyVolumeETH_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   dailyVolumeToken_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   dailyVolumeToken_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   dailyVolumeToken_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -2037,15 +2037,15 @@ export type TokenDayDataWhereInput = {
   priceUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   token?: InputMaybe<TokenWhereInput>;
   token_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  totalLiquidityProm_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityProm_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityProm_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityProm_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  totalLiquidityProm_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  totalLiquidityProm_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityProm_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityProm_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityProm_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  totalLiquidityETH_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityETH_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityETH_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityETH_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  totalLiquidityETH_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  totalLiquidityETH_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityETH_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityETH_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityETH_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   totalLiquidityToken_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   totalLiquidityToken_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   totalLiquidityToken_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -2081,12 +2081,12 @@ export enum TokenOrderByInput {
   DecimalsDesc = 'decimals_DESC',
   DecimalsDescNullsFirst = 'decimals_DESC_NULLS_FIRST',
   DecimalsDescNullsLast = 'decimals_DESC_NULLS_LAST',
-  DerivedPromAsc = 'derivedProm_ASC',
-  DerivedPromAscNullsFirst = 'derivedProm_ASC_NULLS_FIRST',
-  DerivedPromAscNullsLast = 'derivedProm_ASC_NULLS_LAST',
-  DerivedPromDesc = 'derivedProm_DESC',
-  DerivedPromDescNullsFirst = 'derivedProm_DESC_NULLS_FIRST',
-  DerivedPromDescNullsLast = 'derivedProm_DESC_NULLS_LAST',
+  DerivedEthAsc = 'derivedETH_ASC',
+  DerivedEthAscNullsFirst = 'derivedETH_ASC_NULLS_FIRST',
+  DerivedEthAscNullsLast = 'derivedETH_ASC_NULLS_LAST',
+  DerivedEthDesc = 'derivedETH_DESC',
+  DerivedEthDescNullsFirst = 'derivedETH_DESC_NULLS_FIRST',
+  DerivedEthDescNullsLast = 'derivedETH_DESC_NULLS_LAST',
   IdAsc = 'id_ASC',
   IdAscNullsFirst = 'id_ASC_NULLS_FIRST',
   IdAscNullsLast = 'id_ASC_NULLS_LAST',
@@ -2221,15 +2221,15 @@ export type TokenWhereInput = {
   decimals_lte?: InputMaybe<Scalars['BigInt']['input']>;
   decimals_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
   decimals_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  derivedProm_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  derivedProm_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  derivedProm_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  derivedProm_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  derivedProm_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  derivedProm_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  derivedProm_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  derivedProm_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  derivedProm_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  derivedETH_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  derivedETH_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  derivedETH_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  derivedETH_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  derivedETH_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  derivedETH_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  derivedETH_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  derivedETH_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  derivedETH_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   id_contains?: InputMaybe<Scalars['String']['input']>;
   id_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
   id_endsWith?: InputMaybe<Scalars['String']['input']>;
@@ -2434,9 +2434,9 @@ export type PairByIdQuery = {
     reserve0: any;
     reserve1: any;
     totalSupply: any;
-    reserveProm: any;
+    reserveETH: any;
     reserveUSD: any;
-    trackedReserveProm: any;
+    trackedReserveETH: any;
     token0Price: any;
     token1Price: any;
     volumeToken0: any;
@@ -2459,7 +2459,7 @@ export type PairByIdQuery = {
       untrackedVolumeUSD: any;
       txCount: any;
       totalLiquidity: any;
-      derivedProm: any;
+      derivedETH: any;
       memeToken?: {
         __typename?: 'MemeToken';
         id: string;
@@ -2487,7 +2487,7 @@ export type PairByIdQuery = {
       untrackedVolumeUSD: any;
       txCount: any;
       totalLiquidity: any;
-      derivedProm: any;
+      derivedETH: any;
       memeToken?: {
         __typename?: 'MemeToken';
         id: string;
@@ -2506,14 +2506,14 @@ export type PairByIdQuery = {
   } | null;
 };
 
-export type QueryQueryVariables = Exact<{
-  orderBy?: InputMaybe<Array<PairOrderByInput> | PairOrderByInput>;
+export type PairsQueryVariables = Exact<{
   where?: InputMaybe<PairWhereInput>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PairOrderByInput> | PairOrderByInput>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
-export type QueryQuery = {
+export type PairsQuery = {
   __typename?: 'Query';
   pairs: Array<{
     __typename?: 'Pair';
@@ -2521,9 +2521,9 @@ export type QueryQuery = {
     reserve0: any;
     reserve1: any;
     totalSupply: any;
-    reserveProm: any;
+    reserveETH: any;
     reserveUSD: any;
-    trackedReserveProm: any;
+    trackedReserveETH: any;
     token0Price: any;
     token1Price: any;
     volumeToken0: any;
@@ -2546,7 +2546,7 @@ export type QueryQuery = {
       untrackedVolumeUSD: any;
       txCount: any;
       totalLiquidity: any;
-      derivedProm: any;
+      derivedETH: any;
       memeToken?: {
         __typename?: 'MemeToken';
         id: string;
@@ -2574,7 +2574,7 @@ export type QueryQuery = {
       untrackedVolumeUSD: any;
       txCount: any;
       totalLiquidity: any;
-      derivedProm: any;
+      derivedETH: any;
       memeToken?: {
         __typename?: 'MemeToken';
         id: string;
@@ -2600,12 +2600,6 @@ export type LiquidityPositionsQueryVariables = Exact<{
   >;
   offset?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
-  liquidityPositionsWhere2?: InputMaybe<LiquidityPositionWhereInput>;
-  liquidityPositionsOrderBy2?: InputMaybe<
-    Array<LiquidityPositionOrderByInput> | LiquidityPositionOrderByInput
-  >;
-  liquidityPositionsOffset2?: InputMaybe<Scalars['Int']['input']>;
-  liquidityPositionsLimit2?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 export type LiquidityPositionsQuery = {
@@ -2614,25 +2608,16 @@ export type LiquidityPositionsQuery = {
     __typename?: 'LiquidityPosition';
     id: string;
     liquidityTokenBalance: any;
-    user: {
-      __typename?: 'User';
-      id: string;
-      usdSwapped: any;
-      liquidityPositions: Array<{
-        __typename?: 'LiquidityPosition';
-        id: string;
-        liquidityTokenBalance: any;
-      }>;
-    };
+    user: { __typename?: 'User'; id: string; usdSwapped: any };
     pair: {
       __typename?: 'Pair';
       id: string;
       reserve0: any;
       reserve1: any;
       totalSupply: any;
-      reserveProm: any;
+      reserveETH: any;
       reserveUSD: any;
-      trackedReserveProm: any;
+      trackedReserveETH: any;
       token0Price: any;
       token1Price: any;
       volumeToken0: any;
@@ -2655,7 +2640,7 @@ export type LiquidityPositionsQuery = {
         untrackedVolumeUSD: any;
         txCount: any;
         totalLiquidity: any;
-        derivedProm: any;
+        derivedETH: any;
         memeToken?: {
           __typename?: 'MemeToken';
           id: string;
@@ -2683,7 +2668,7 @@ export type LiquidityPositionsQuery = {
         untrackedVolumeUSD: any;
         txCount: any;
         totalLiquidity: any;
-        derivedProm: any;
+        derivedETH: any;
         memeToken?: {
           __typename?: 'MemeToken';
           id: string;
@@ -2788,7 +2773,7 @@ export const PairByIdDocument = {
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'derivedProm' },
+                        name: { kind: 'Name', value: 'derivedETH' },
                       },
                       {
                         kind: 'Field',
@@ -2897,7 +2882,7 @@ export const PairByIdDocument = {
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'derivedProm' },
+                        name: { kind: 'Name', value: 'derivedETH' },
                       },
                       {
                         kind: 'Field',
@@ -2967,11 +2952,11 @@ export const PairByIdDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'reserve0' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'reserve1' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'totalSupply' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'reserveProm' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'reserveETH' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'reserveUSD' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'trackedReserveProm' },
+                  name: { kind: 'Name', value: 'trackedReserveETH' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'token0Price' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'token1Price' } },
@@ -3009,14 +2994,25 @@ export const PairByIdDocument = {
     },
   ],
 } as unknown as DocumentNode<PairByIdQuery, PairByIdQueryVariables>;
-export const QueryDocument = {
+export const PairsDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'Query' },
+      name: { kind: 'Name', value: 'Pairs' },
       variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'PairWhereInput' },
+          },
+        },
         {
           kind: 'VariableDefinition',
           variable: {
@@ -3038,18 +3034,7 @@ export const QueryDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'where' },
-          },
-          type: {
-            kind: 'NamedType',
-            name: { kind: 'Name', value: 'PairWhereInput' },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'limit' },
+            name: { kind: 'Name', value: 'offset' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
         },
@@ -3057,7 +3042,7 @@ export const QueryDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'offset' },
+            name: { kind: 'Name', value: 'limit' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
         },
@@ -3071,14 +3056,6 @@ export const QueryDocument = {
             arguments: [
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'orderBy' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'orderBy' },
-                },
-              },
-              {
-                kind: 'Argument',
                 name: { kind: 'Name', value: 'where' },
                 value: {
                   kind: 'Variable',
@@ -3087,10 +3064,10 @@ export const QueryDocument = {
               },
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'limit' },
+                name: { kind: 'Name', value: 'orderBy' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'limit' },
+                  name: { kind: 'Name', value: 'orderBy' },
                 },
               },
               {
@@ -3099,6 +3076,14 @@ export const QueryDocument = {
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'offset' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
                 },
               },
             ],
@@ -3148,7 +3133,7 @@ export const QueryDocument = {
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'derivedProm' },
+                        name: { kind: 'Name', value: 'derivedETH' },
                       },
                       {
                         kind: 'Field',
@@ -3257,7 +3242,7 @@ export const QueryDocument = {
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'derivedProm' },
+                        name: { kind: 'Name', value: 'derivedETH' },
                       },
                       {
                         kind: 'Field',
@@ -3327,11 +3312,11 @@ export const QueryDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'reserve0' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'reserve1' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'totalSupply' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'reserveProm' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'reserveETH' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'reserveUSD' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'trackedReserveProm' },
+                  name: { kind: 'Name', value: 'trackedReserveETH' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'token0Price' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'token1Price' } },
@@ -3368,7 +3353,7 @@ export const QueryDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<QueryQuery, QueryQueryVariables>;
+} as unknown as DocumentNode<PairsQuery, PairsQueryVariables>;
 export const LiquidityPositionsDocument = {
   kind: 'Document',
   definitions: [
@@ -3418,50 +3403,6 @@ export const LiquidityPositionsDocument = {
           variable: {
             kind: 'Variable',
             name: { kind: 'Name', value: 'limit' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'liquidityPositionsWhere2' },
-          },
-          type: {
-            kind: 'NamedType',
-            name: { kind: 'Name', value: 'LiquidityPositionWhereInput' },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'liquidityPositionsOrderBy2' },
-          },
-          type: {
-            kind: 'ListType',
-            type: {
-              kind: 'NonNullType',
-              type: {
-                kind: 'NamedType',
-                name: { kind: 'Name', value: 'LiquidityPositionOrderByInput' },
-              },
-            },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'liquidityPositionsOffset2' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'liquidityPositionsLimit2' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
         },
@@ -3517,72 +3458,6 @@ export const LiquidityPositionsDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'liquidityPositions' },
-                        arguments: [
-                          {
-                            kind: 'Argument',
-                            name: { kind: 'Name', value: 'where' },
-                            value: {
-                              kind: 'Variable',
-                              name: {
-                                kind: 'Name',
-                                value: 'liquidityPositionsWhere2',
-                              },
-                            },
-                          },
-                          {
-                            kind: 'Argument',
-                            name: { kind: 'Name', value: 'orderBy' },
-                            value: {
-                              kind: 'Variable',
-                              name: {
-                                kind: 'Name',
-                                value: 'liquidityPositionsOrderBy2',
-                              },
-                            },
-                          },
-                          {
-                            kind: 'Argument',
-                            name: { kind: 'Name', value: 'offset' },
-                            value: {
-                              kind: 'Variable',
-                              name: {
-                                kind: 'Name',
-                                value: 'liquidityPositionsOffset2',
-                              },
-                            },
-                          },
-                          {
-                            kind: 'Argument',
-                            name: { kind: 'Name', value: 'limit' },
-                            value: {
-                              kind: 'Variable',
-                              name: {
-                                kind: 'Name',
-                                value: 'liquidityPositionsLimit2',
-                              },
-                            },
-                          },
-                        ],
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'liquidityTokenBalance',
-                              },
-                            },
-                          ],
-                        },
-                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'usdSwapped' },
@@ -3648,7 +3523,7 @@ export const LiquidityPositionsDocument = {
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'derivedProm' },
+                              name: { kind: 'Name', value: 'derivedETH' },
                             },
                             {
                               kind: 'Field',
@@ -3781,7 +3656,7 @@ export const LiquidityPositionsDocument = {
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'derivedProm' },
+                              name: { kind: 'Name', value: 'derivedETH' },
                             },
                             {
                               kind: 'Field',
@@ -3877,7 +3752,7 @@ export const LiquidityPositionsDocument = {
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'reserveProm' },
+                        name: { kind: 'Name', value: 'reserveETH' },
                       },
                       {
                         kind: 'Field',
@@ -3885,7 +3760,7 @@ export const LiquidityPositionsDocument = {
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'trackedReserveProm' },
+                        name: { kind: 'Name', value: 'trackedReserveETH' },
                       },
                       {
                         kind: 'Field',
