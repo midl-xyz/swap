@@ -1,5 +1,6 @@
 'use client';
 
+import { promTestnet } from '@/global/customChainsConfig';
 import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 import {
   frameWallet,
@@ -43,13 +44,14 @@ const connectors = connectorsForWallets(
 
 export const wagmiConfig = createConfig({
   connectors: connectors,
-  chains: [sepolia],
+  chains: [promTestnet],
   transports: {
     [sepolia.id]: http(process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL),
+    [promTestnet.id]: http(promTestnet.rpcUrls.default.http[0]),
   },
   storage: createStorage({
     storage: typeof localStorage === 'undefined' ? undefined : localStorage,
-    key: 'v60-1.0.0',
+    key: 'v60-1.0.1',
   }),
   ssr: true,
 });

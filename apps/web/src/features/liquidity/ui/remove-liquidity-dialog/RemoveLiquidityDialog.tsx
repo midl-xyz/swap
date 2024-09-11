@@ -25,7 +25,7 @@ import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Address, formatUnits, parseUnits } from 'viem';
-import { useAccount } from 'wagmi';
+import { useAccount, useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -58,9 +58,10 @@ export const RemoveLiquidityDialog = ({
   onClose,
   ...rest
 }: RemoveLiquidityDialogProps) => {
+  const chainId = useChainId();
   const [
     {
-      lpToken: { address, tokenA, tokenB, chainId },
+      lpToken: { address, tokenA, tokenB },
     },
   ] = useAtom(removeLiquidityDialogAtom);
   const { address: userAddress } = useAccount();
