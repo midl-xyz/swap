@@ -21,6 +21,10 @@ const appMenuLinks: AppMenuLink[] = [
     label: 'My Liquidity',
     href: '/liquidity',
   },
+  {
+    label: 'All pair',
+    href: '/pairs',
+  },
 ];
 
 export const AppMenu = () => {

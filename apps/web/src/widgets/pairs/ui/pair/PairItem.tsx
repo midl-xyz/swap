@@ -1,6 +1,6 @@
 import { useToken } from '@/entities';
 import { TokenLogo } from '@/features';
-import { GetPoolsQuery } from '@/features/liquidity/api/gql/graphql';
+import { QueryQuery } from '@/features/liquidity/api/gql/graphql';
 import Link from 'next/link';
 import { Address } from 'viem';
 import { useChainId } from 'wagmi';
@@ -11,7 +11,7 @@ type PairItemProps = {
   tokenA: Address;
   tokenB: Address;
   id: Address;
-  pair: GetPoolsQuery['pairs'][number];
+  pair: QueryQuery['pairs'][number];
   index: number;
 };
 
