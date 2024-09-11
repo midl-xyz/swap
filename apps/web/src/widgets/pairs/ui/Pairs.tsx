@@ -8,7 +8,7 @@ import { css } from '~/styled-system/css';
 
 export const Pairs = () => {
   const { data: pools, isFetching } = useGetPools();
-
+  console.log(pools, 'pools');
   if (isFetching) {
     return (
       <div

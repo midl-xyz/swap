@@ -1,13 +1,13 @@
 import { useToken } from '@/entities';
 import { TokenLogo } from '@/features';
-import { GetPairQuery } from '@/features/liquidity/api/gql/graphql';
+import { Pair } from '@/features/liquidity/api/gql/graphql';
 import { getAddress } from 'viem';
 import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
 
 type PairFullInfoProps = {
-  pair: NonNullable<Required<GetPairQuery>['pair']>;
+  pair: NonNullable<Pair>;
 };
 
 export const PairFullInfo = ({ pair }: PairFullInfoProps) => {
