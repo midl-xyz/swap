@@ -35,10 +35,10 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
   };
 
   const onSearch = useCallback(() => {
-    // if (!searchQuery) {
-    //   setFilteredTokens([]);
-    //   return;
-    // }
+    if (!searchQuery) {
+      setFilteredTokens([]);
+      return;
+    }
 
     setFilteredTokens(
       tokenList.filter((it) => {
