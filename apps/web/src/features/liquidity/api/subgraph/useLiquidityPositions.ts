@@ -10,10 +10,6 @@ const GetLiquidityPositions = graphql(`
     $orderBy: [LiquidityPositionOrderByInput!]
     $offset: Int
     $limit: Int
-    $liquidityPositionsWhere2: LiquidityPositionWhereInput
-    $liquidityPositionsOrderBy2: [LiquidityPositionOrderByInput!]
-    $liquidityPositionsOffset2: Int
-    $liquidityPositionsLimit2: Int
   ) {
     liquidityPositions(
       where: $where
@@ -24,15 +20,6 @@ const GetLiquidityPositions = graphql(`
       id
       user {
         id
-        liquidityPositions(
-          where: $liquidityPositionsWhere2
-          orderBy: $liquidityPositionsOrderBy2
-          offset: $liquidityPositionsOffset2
-          limit: $liquidityPositionsLimit2
-        ) {
-          id
-          liquidityTokenBalance
-        }
         usdSwapped
       }
       pair {
@@ -48,7 +35,7 @@ const GetLiquidityPositions = graphql(`
           untrackedVolumeUSD
           txCount
           totalLiquidity
-          derivedProm
+          derivedETH
           memeToken {
             id
             userAddress
@@ -74,7 +61,7 @@ const GetLiquidityPositions = graphql(`
           untrackedVolumeUSD
           txCount
           totalLiquidity
-          derivedProm
+          derivedETH
           memeToken {
             id
             userAddress
@@ -92,9 +79,9 @@ const GetLiquidityPositions = graphql(`
         reserve0
         reserve1
         totalSupply
-        reserveProm
+        reserveETH
         reserveUSD
-        trackedReserveProm
+        trackedReserveETH
         token0Price
         token1Price
         volumeToken0
