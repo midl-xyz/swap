@@ -24,8 +24,8 @@ export const promTestnet: Chain = {
   },
   contracts: {
     multicall3: {
-      address: '0x56968A553f3d883bc54f96976Edf782684791F90',
-      blockCreated: 55613,
+      address: '0x4312B2F4834f1b1c47B8114aC31a599747a5d445',
+      blockCreated: 78303,
     },
   },
 };

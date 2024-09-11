@@ -46,8 +46,8 @@ export const useTokenBalance = (
   }
 
   const { data, ...rest } = useReadContracts({
-    allowFailure: true,
-    scopeKey: 'balance',
+    // allowFailure: true,
+    // scopeKey: 'balance',
     contracts,
     query: {
       enabled: Boolean(contract),

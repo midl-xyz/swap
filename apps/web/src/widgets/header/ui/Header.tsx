@@ -1,3 +1,4 @@
+import { BugReportBar } from '@/widgets/header/ui/BugReportBar';
 import { hstack } from '~/styled-system/patterns';
 
 type HeaderProps = {

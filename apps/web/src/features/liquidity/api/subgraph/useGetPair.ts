@@ -18,7 +18,7 @@ const GetPair = graphql(`
         untrackedVolumeUSD
         txCount
         totalLiquidity
-        derivedProm
+        derivedETH
         memeToken {
           id
           userAddress
@@ -44,7 +44,7 @@ const GetPair = graphql(`
         untrackedVolumeUSD
         txCount
         totalLiquidity
-        derivedProm
+        derivedETH
         memeToken {
           id
           userAddress
@@ -62,9 +62,9 @@ const GetPair = graphql(`
       reserve0
       reserve1
       totalSupply
-      reserveProm
+      reserveETH
       reserveUSD
-      trackedReserveProm
+      trackedReserveETH
       token0Price
       token1Price
       volumeToken0

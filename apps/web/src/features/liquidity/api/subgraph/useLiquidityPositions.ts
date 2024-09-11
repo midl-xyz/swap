@@ -48,7 +48,7 @@ const GetLiquidityPositions = graphql(`
           untrackedVolumeUSD
           txCount
           totalLiquidity
-          derivedProm
+          derivedETH
           memeToken {
             id
             userAddress
@@ -74,7 +74,7 @@ const GetLiquidityPositions = graphql(`
           untrackedVolumeUSD
           txCount
           totalLiquidity
-          derivedProm
+          derivedETH
           memeToken {
             id
             userAddress
@@ -92,9 +92,9 @@ const GetLiquidityPositions = graphql(`
         reserve0
         reserve1
         totalSupply
-        reserveProm
+        reserveETH
         reserveUSD
-        trackedReserveProm
+        trackedReserveETH
         token0Price
         token1Price
         volumeToken0
