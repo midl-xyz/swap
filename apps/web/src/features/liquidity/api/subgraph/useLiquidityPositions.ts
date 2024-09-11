@@ -10,10 +10,6 @@ const GetLiquidityPositions = graphql(`
     $orderBy: [LiquidityPositionOrderByInput!]
     $offset: Int
     $limit: Int
-    $liquidityPositionsWhere2: LiquidityPositionWhereInput
-    $liquidityPositionsOrderBy2: [LiquidityPositionOrderByInput!]
-    $liquidityPositionsOffset2: Int
-    $liquidityPositionsLimit2: Int
   ) {
     liquidityPositions(
       where: $where
@@ -24,15 +20,6 @@ const GetLiquidityPositions = graphql(`
       id
       user {
         id
-        liquidityPositions(
-          where: $liquidityPositionsWhere2
-          orderBy: $liquidityPositionsOrderBy2
-          offset: $liquidityPositionsOffset2
-          limit: $liquidityPositionsLimit2
-        ) {
-          id
-          liquidityTokenBalance
-        }
         usdSwapped
       }
       pair {

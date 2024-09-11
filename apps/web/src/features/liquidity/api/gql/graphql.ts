@@ -2506,14 +2506,14 @@ export type PairByIdQuery = {
   } | null;
 };
 
-export type QueryQueryVariables = Exact<{
-  orderBy?: InputMaybe<Array<PairOrderByInput> | PairOrderByInput>;
+export type PairsQueryVariables = Exact<{
   where?: InputMaybe<PairWhereInput>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PairOrderByInput> | PairOrderByInput>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
-export type QueryQuery = {
+export type PairsQuery = {
   __typename?: 'Query';
   pairs: Array<{
     __typename?: 'Pair';
@@ -2600,12 +2600,6 @@ export type LiquidityPositionsQueryVariables = Exact<{
   >;
   offset?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
-  liquidityPositionsWhere2?: InputMaybe<LiquidityPositionWhereInput>;
-  liquidityPositionsOrderBy2?: InputMaybe<
-    Array<LiquidityPositionOrderByInput> | LiquidityPositionOrderByInput
-  >;
-  liquidityPositionsOffset2?: InputMaybe<Scalars['Int']['input']>;
-  liquidityPositionsLimit2?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 export type LiquidityPositionsQuery = {
@@ -2614,16 +2608,7 @@ export type LiquidityPositionsQuery = {
     __typename?: 'LiquidityPosition';
     id: string;
     liquidityTokenBalance: any;
-    user: {
-      __typename?: 'User';
-      id: string;
-      usdSwapped: any;
-      liquidityPositions: Array<{
-        __typename?: 'LiquidityPosition';
-        id: string;
-        liquidityTokenBalance: any;
-      }>;
-    };
+    user: { __typename?: 'User'; id: string; usdSwapped: any };
     pair: {
       __typename?: 'Pair';
       id: string;
@@ -3009,14 +2994,25 @@ export const PairByIdDocument = {
     },
   ],
 } as unknown as DocumentNode<PairByIdQuery, PairByIdQueryVariables>;
-export const QueryDocument = {
+export const PairsDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'Query' },
+      name: { kind: 'Name', value: 'Pairs' },
       variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'PairWhereInput' },
+          },
+        },
         {
           kind: 'VariableDefinition',
           variable: {
@@ -3038,18 +3034,7 @@ export const QueryDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'where' },
-          },
-          type: {
-            kind: 'NamedType',
-            name: { kind: 'Name', value: 'PairWhereInput' },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'limit' },
+            name: { kind: 'Name', value: 'offset' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
         },
@@ -3057,7 +3042,7 @@ export const QueryDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'offset' },
+            name: { kind: 'Name', value: 'limit' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
         },
@@ -3071,14 +3056,6 @@ export const QueryDocument = {
             arguments: [
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'orderBy' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'orderBy' },
-                },
-              },
-              {
-                kind: 'Argument',
                 name: { kind: 'Name', value: 'where' },
                 value: {
                   kind: 'Variable',
@@ -3087,10 +3064,10 @@ export const QueryDocument = {
               },
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'limit' },
+                name: { kind: 'Name', value: 'orderBy' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'limit' },
+                  name: { kind: 'Name', value: 'orderBy' },
                 },
               },
               {
@@ -3099,6 +3076,14 @@ export const QueryDocument = {
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'offset' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
                 },
               },
             ],
@@ -3368,7 +3353,7 @@ export const QueryDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<QueryQuery, QueryQueryVariables>;
+} as unknown as DocumentNode<PairsQuery, PairsQueryVariables>;
 export const LiquidityPositionsDocument = {
   kind: 'Document',
   definitions: [
@@ -3418,50 +3403,6 @@ export const LiquidityPositionsDocument = {
           variable: {
             kind: 'Variable',
             name: { kind: 'Name', value: 'limit' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'liquidityPositionsWhere2' },
-          },
-          type: {
-            kind: 'NamedType',
-            name: { kind: 'Name', value: 'LiquidityPositionWhereInput' },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'liquidityPositionsOrderBy2' },
-          },
-          type: {
-            kind: 'ListType',
-            type: {
-              kind: 'NonNullType',
-              type: {
-                kind: 'NamedType',
-                name: { kind: 'Name', value: 'LiquidityPositionOrderByInput' },
-              },
-            },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'liquidityPositionsOffset2' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'liquidityPositionsLimit2' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
         },
@@ -3517,72 +3458,6 @@ export const LiquidityPositionsDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'liquidityPositions' },
-                        arguments: [
-                          {
-                            kind: 'Argument',
-                            name: { kind: 'Name', value: 'where' },
-                            value: {
-                              kind: 'Variable',
-                              name: {
-                                kind: 'Name',
-                                value: 'liquidityPositionsWhere2',
-                              },
-                            },
-                          },
-                          {
-                            kind: 'Argument',
-                            name: { kind: 'Name', value: 'orderBy' },
-                            value: {
-                              kind: 'Variable',
-                              name: {
-                                kind: 'Name',
-                                value: 'liquidityPositionsOrderBy2',
-                              },
-                            },
-                          },
-                          {
-                            kind: 'Argument',
-                            name: { kind: 'Name', value: 'offset' },
-                            value: {
-                              kind: 'Variable',
-                              name: {
-                                kind: 'Name',
-                                value: 'liquidityPositionsOffset2',
-                              },
-                            },
-                          },
-                          {
-                            kind: 'Argument',
-                            name: { kind: 'Name', value: 'limit' },
-                            value: {
-                              kind: 'Variable',
-                              name: {
-                                kind: 'Name',
-                                value: 'liquidityPositionsLimit2',
-                              },
-                            },
-                          },
-                        ],
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'liquidityTokenBalance',
-                              },
-                            },
-                          ],
-                        },
-                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'usdSwapped' },

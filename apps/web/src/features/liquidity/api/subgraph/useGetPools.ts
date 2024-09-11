@@ -1,16 +1,16 @@
 import { graphqlClient } from '@/features/liquidity';
 import { graphql } from '@/features/liquidity/api/gql';
-import { QueryQuery } from '@/features/liquidity/api/gql/graphql';
+import { PairsQuery } from '@/features/liquidity/api/gql/graphql';
 import { useQuery } from '@tanstack/react-query';
 
 const GetPools = graphql(`
-  query Query(
-    $orderBy: [PairOrderByInput!]
+  query Pairs(
     $where: PairWhereInput
-    $limit: Int
+    $orderBy: [PairOrderByInput!]
     $offset: Int
+    $limit: Int
   ) {
-    pairs(orderBy: $orderBy, where: $where, limit: $limit, offset: $offset) {
+    pairs(where: $where, orderBy: $orderBy, offset: $offset, limit: $limit) {
       id
       token0 {
         id
@@ -85,7 +85,7 @@ const GetPools = graphql(`
 `);
 
 export const useGetPools = () => {
-  return useQuery<QueryQuery>({
+  return useQuery<PairsQuery>({
     queryKey: ['GetPools'],
     refetchOnWindowFocus: false,
     queryFn: () => {
