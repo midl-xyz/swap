@@ -25,7 +25,7 @@ export const calculatePriceImpact = ({
   return priceImpact.toFixed(2) + '%';
 };
 
-export const getToken = ({
+export const getCorrectToken = ({
   token,
   chainId,
 }: {
