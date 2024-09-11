@@ -20,6 +20,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 import './globals.css';
 import { renderErrorMessage } from '@/widgets/error-message';
 import { Footer } from '@/widgets/footer/ui';
+import { BugReportBar } from '@/widgets/header/ui/BugReportBar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -112,6 +113,7 @@ export default function RootLayout({
                 </div>
               }
             />
+            <BugReportBar />
             <Toaster position="bottom-right" />
             <ErrorBoundary fallback={renderErrorMessage}>
               <div
