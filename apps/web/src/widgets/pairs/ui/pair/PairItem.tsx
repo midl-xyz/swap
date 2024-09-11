@@ -71,14 +71,13 @@ export const PairItem = ({
           </div>
         </div>
 
-        <div className={css({ display: 'table-cell' })}>{pair.txCount}</div>
-
         <div className={css({ display: 'table-cell' })}>
           {parseFloat(pair.volumeUSD) || '☕'}
         </div>
         <div className={css({ display: 'table-cell' })}>
           {parseFloat(pair.reserveUSD) || '☕'}
         </div>
+        <div className={css({ display: 'table-cell' })}>{'☕'}</div>
       </a>
     </Link>
   );

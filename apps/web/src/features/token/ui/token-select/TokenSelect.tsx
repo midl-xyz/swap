@@ -63,6 +63,7 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
   } catch {}
 
   const customToken = useToken(customTokenAddress as Address, chainId);
+
   useEffect(() => {
     onSearch();
   }, [searchQuery, onSearch]);
