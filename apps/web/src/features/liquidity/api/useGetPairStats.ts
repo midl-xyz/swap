@@ -1,5 +1,5 @@
 import { deployments, uniswapV2PairAbi } from '@/global';
-import { getToken } from '@/widgets/swap-form/ui/utils';
+import { getCorrectToken } from '@/widgets/swap-form/ui/utils';
 import { Address, erc20Abi } from 'viem';
 import { useChainId, useReadContracts } from 'wagmi';
 
@@ -97,11 +97,11 @@ export const useGetPairStats = (
   });
 
   const isTokenAEqToken0 =
-    getToken({
+    getCorrectToken({
       token: tokenA,
       chainId,
     }) ===
-    getToken({
+    getCorrectToken({
       token: callResults?.[0].result as Address,
       chainId,
     });
