@@ -21,6 +21,7 @@ import './globals.css';
 import { renderErrorMessage } from '@/widgets/error-message';
 import { Footer } from '@/widgets/footer/ui';
 import { BugReportBar } from '@/widgets/header/ui/BugReportBar';
+import { TimeBar } from '@/widgets/header/ui/TimerBar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -94,6 +95,7 @@ export default function RootLayout({
             <SettingsDialogProvider />
             <RemoveLiquidityProvider />
             <RPCStatus />
+            <TimeBar />
             <Header
               leftSlot={
                 <div
