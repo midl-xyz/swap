@@ -46,7 +46,10 @@ export const TimeBar = () => {
     >
       <HStack gap={2}>
         <p className={css({})}>Stress test is coming to V60</p>
-        <Link target="_blank" href="https://form.jotform.com/242532370066047">
+        <Link
+          target="_blank"
+          href="https://prom-io.medium.com/prom-stress-test-full-guide-365649771c2c"
+        >
           <InfoIcon />
         </Link>
       </HStack>

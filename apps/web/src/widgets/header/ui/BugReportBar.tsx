@@ -20,10 +20,7 @@ export const BugReportBar = () => (
     <p>
       Welcome to the testnet launch. If you find any issues please report them
     </p>
-    <Link
-      target="_blank"
-      href="https://prom-io.medium.com/prom-stress-test-full-guide-365649771c2c"
-    >
+    <Link target="_blank" href="https://form.jotform.com/242532370066047">
       <p
         className={css({
           display: 'inline',
