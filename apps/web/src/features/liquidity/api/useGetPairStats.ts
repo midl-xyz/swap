@@ -1,4 +1,5 @@
 import { deployments, uniswapV2PairAbi } from '@/global';
+import { getToken } from '@/widgets/swap-form/ui/utils';
 import { Address, erc20Abi } from 'viem';
 import { useChainId, useReadContracts } from 'wagmi';
 
@@ -95,7 +96,15 @@ export const useGetPairStats = (
     ],
   });
 
-  const isTokenAEqToken0 = tokenA === callResults?.[0].result;
+  const isTokenAEqToken0 =
+    getToken({
+      token: tokenA,
+      chainId,
+    }) ===
+    getToken({
+      token: callResults?.[0].result as Address,
+      chainId,
+    });
 
   const tokenAReserve = isTokenAEqToken0
     ? callResults?.[1].result?.[0] || BigInt(0)
