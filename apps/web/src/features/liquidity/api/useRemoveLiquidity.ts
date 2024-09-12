@@ -1,4 +1,5 @@
-import { deployments, uniswapV2Router02Abi } from '@/global';
+import { WETHByChain, deployments, uniswapV2Router02Abi } from '@/global';
+import { getCorrectToken } from '@/widgets/swap-form/ui/utils';
 import { Address, zeroAddress } from 'viem';
 import {
   useChainId,
@@ -39,10 +40,12 @@ export const useRemoveLiquidity = () => {
     to,
     deadline,
   }: RemoveLiquidityArgs) => {
+    const WETHAddr = WETHByChain[globalChainId];
+
     const ethValue =
-      tokenA === zeroAddress
+      tokenA === WETHAddr
         ? amountAMin
-        : tokenB === zeroAddress
+        : tokenB === WETHAddr
           ? amountBMin
           : undefined;
 
@@ -59,10 +62,10 @@ export const useRemoveLiquidity = () => {
         >;
 
     if (isETH) {
-      const erc20TokenAddress = tokenA === zeroAddress ? tokenB : tokenA;
+      const erc20TokenAddress = tokenA === WETHAddr ? tokenB : tokenA;
 
-      const erc20Min = tokenA === zeroAddress ? amountBMin : amountAMin;
-      const ethMin = tokenA === zeroAddress ? amountAMin : amountBMin;
+      const erc20Min = tokenA === WETHAddr ? amountBMin : amountAMin;
+      const ethMin = tokenA === WETHAddr ? amountAMin : amountBMin;
 
       args = [erc20TokenAddress, liquidity, erc20Min, ethMin, to, deadline];
     } else {
@@ -76,7 +79,6 @@ export const useRemoveLiquidity = () => {
       abi: uniswapV2Router02Abi,
       functionName,
       args: args as any,
-      value: ethValue as any,
     });
   };
 

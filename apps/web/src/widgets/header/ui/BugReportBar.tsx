@@ -4,13 +4,17 @@ import { HStack } from '~/styled-system/jsx';
 
 export const BugReportBar = () => (
   <HStack
-    background="grey"
+    background="#D5ED9F"
+    marginTop={1}
+    borderRadius="30px"
+    maxWidth="695px"
+    alignSelf="center"
     textAlign="center"
-    padding={1}
+    paddingBlock={3}
+    paddingInline={12}
     display="flex"
     alignItems="center"
     justifyContent="center"
-    color="white"
     gap={'4px'}
   >
     <p>
@@ -20,6 +24,7 @@ export const BugReportBar = () => (
       <p
         className={css({
           display: 'inline',
+          fontWeight: 600,
           color: 'black',
         })}
       >

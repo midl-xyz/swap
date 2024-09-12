@@ -22,7 +22,7 @@ const appMenuLinks: AppMenuLink[] = [
     href: '/liquidity',
   },
   {
-    label: 'All pair',
+    label: 'All Pairs',
     href: '/pairs',
   },
 ];
