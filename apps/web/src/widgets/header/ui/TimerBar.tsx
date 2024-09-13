@@ -6,21 +6,35 @@ import { css } from '~/styled-system/css';
 import { HStack } from '~/styled-system/jsx';
 import { InfoIcon } from 'lucide-react';
 
-const initialReleaseTime = 1726221600; // This is the initial release time (in UNIX timestamp)
+const initialReleaseTime = 1726221600; // Your specific release time in UNIX timestamp
 
 export const TimeBar = () => {
-  const [timeLeft, setTimeLeft] = useState(
-    initialReleaseTime - Math.floor(+new Date() / 1000),
-  );
   const [releaseState, setReleaseState] = useState('pre-release'); // 'pre-release', 'live', 'post-release'
+  const [timeLeft, setTimeLeft] = useState(0); // Will be calculated in the useEffect below
 
+  // Calculate and set the initial time left correctly
+  useEffect(() => {
+    const currentTime = Math.floor(+new Date() / 1000);
+    const remainingTime = initialReleaseTime - currentTime;
+
+    if (remainingTime > 0) {
+      setTimeLeft(remainingTime);
+      setReleaseState('pre-release');
+    } else if (remainingTime <= 0) {
+      const timeSinceRelease = currentTime - initialReleaseTime;
+      const timeLeftForLive = 30 * 60 - timeSinceRelease; // 30 minutes minus time already passed
+      setTimeLeft(timeLeftForLive > 0 ? timeLeftForLive : 0);
+      setReleaseState('live');
+    }
+  }, []);
+
+  // Interval to update the time every second
   useEffect(() => {
     const intervalId = setInterval(() => {
       const currentTime = Math.floor(+new Date() / 1000);
       const remainingTime = initialReleaseTime - currentTime;
 
       if (releaseState === 'pre-release') {
-        // Pre-release state logic
         if (remainingTime <= 0) {
           // When the release time is reached, start the next 30 minutes countdown
           setReleaseState('live');
@@ -28,18 +42,15 @@ export const TimeBar = () => {
           const timeLeftForLive = 30 * 60 - timeSinceRelease; // 30 minutes minus time already passed
           setTimeLeft(timeLeftForLive > 0 ? timeLeftForLive : 0); // Ensure non-negative time
         } else {
-          // Continue showing pre-release countdown
           setTimeLeft(remainingTime);
         }
       } else if (releaseState === 'live') {
-        // Live state logic
         if (timeLeft <= 0) {
           // After 30 minutes, switch to post-release state
           setReleaseState('post-release');
           setTimeLeft(0);
           clearInterval(intervalId); // Stop the timer
         } else {
-          // Decrease the time left for the live state
           setTimeLeft((prevTimeLeft) => prevTimeLeft - 1);
         }
       }
