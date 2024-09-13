@@ -33,6 +33,9 @@ export const LiquidityItem = ({
   const tokenBInfo = useToken(tokenB, chainId);
   const [, setDialogState] = useAtom(removeLiquidityDialogAtom);
 
+  const tokenASymbol = tokenAInfo.symbol;
+  const tokenBSymbol = tokenBInfo.symbol;
+
   return (
     <Collapsible.Root
       defaultOpen={true}
@@ -64,21 +67,21 @@ export const LiquidityItem = ({
               })}
             />
           </div>
-          {tokenAInfo.symbol} — {tokenBInfo.symbol}
+          {tokenASymbol} — {tokenBSymbol}
         </div>
       </Collapsible.Trigger>
       <Collapsible.Content>
         <div className={vstack({ gap: 2, alignItems: 'stretch', pt: 4 })}>
           <div className={hstack({ gap: 2, justifyContent: 'space-between' })}>
-            <span>Pooled {tokenAInfo.symbol}</span>
+            <span>Pooled {tokenASymbol}</span>
             <span>
-              {reserveA.toString()} {tokenAInfo.symbol}
+              {reserveA.toString()} {tokenASymbol}
             </span>
           </div>
           <div className={hstack({ gap: 2, justifyContent: 'space-between' })}>
-            <span>Pooled {tokenBInfo.symbol}</span>
+            <span>Pooled {tokenBSymbol}</span>
             <span>
-              {reserveB.toString()} {tokenBInfo.symbol}
+              {reserveB.toString()} {tokenBSymbol}
             </span>
           </div>
           <div className={hstack({ gap: 2, justifyContent: 'space-between' })}>

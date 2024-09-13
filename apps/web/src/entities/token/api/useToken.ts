@@ -1,6 +1,7 @@
 import { Token } from '@/entities';
 import { useTokenBalance } from '@/features';
 import { tokenList } from '@/global';
+import { getTokenSymbol } from '@/widgets/swap-form/ui/utils';
 import { useMemo } from 'react';
 import { Address } from 'viem';
 
@@ -14,7 +15,7 @@ export const useToken = (address: Address, chainId: number): Token => {
 
     if (!token) {
       return {
-        symbol: data.symbol ?? 'N/A',
+        symbol: getTokenSymbol(address) || (data.symbol ?? 'N/A'),
         name: data.name ?? 'N/A',
         address,
         chainId,

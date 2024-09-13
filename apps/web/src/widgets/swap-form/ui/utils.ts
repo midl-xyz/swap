@@ -32,3 +32,12 @@ export const getCorrectToken = ({
   token?: Address;
   chainId: keyof typeof WETHByChain;
 }) => (token === zeroAddress ? WETHByChain[chainId] : token);
+
+export const getTokenSymbol = (address: Address) => {
+  const symbols = {
+    [zeroAddress as Address]: 'PROM',
+    '0x426A4d924C60fC0f6546b8ee2Ac0aECB9fbcaEF5': 'PROM',
+  };
+
+  return symbols[address];
+};
