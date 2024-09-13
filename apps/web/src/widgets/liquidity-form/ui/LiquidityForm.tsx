@@ -17,6 +17,7 @@ import {
   scopeKeyPredicate,
 } from '@/shared';
 import { SlippageControl } from '@/widgets';
+import { correctNumber } from '@/widgets/swap-form/ui/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
@@ -95,7 +96,10 @@ export const LiquidityForm = () => {
 
   const { watch, handleSubmit, formState } = form;
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { tokenA, tokenB, tokenAAmount, tokenBAmount } = watch();
+  const { tokenA, tokenB, ...formValues } = watch();
+
+  const tokenAAmount = correctNumber(formValues.tokenAAmount);
+  const tokenBAmount = correctNumber(formValues.tokenBAmount);
 
   useEffect(() => {
     const popularTokenA = tokens.get(chainId)?.[0];
