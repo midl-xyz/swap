@@ -249,11 +249,11 @@ export const SupplyLiquidityDialog = ({
                   })}
                 >
                   <span>
-                    1 {tokenAInfo.symbol} = {parseFloat(priceAtoB.toFixed(4))}{' '}
+                    1 {tokenAInfo.symbol} = {parseFloat(priceBtoA.toFixed(4))}{' '}
                     {tokenBInfo.symbol}
                   </span>
                   <span>
-                    1 {tokenBInfo.symbol} = {parseFloat(priceBtoA.toFixed(4))}{' '}
+                    1 {tokenBInfo.symbol} = {parseFloat(priceAtoB.toFixed(4))}{' '}
                     {tokenAInfo.symbol}
                   </span>
                 </div>
