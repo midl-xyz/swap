@@ -1,4 +1,5 @@
 import { WETHByChain } from '@/global';
+import { promTestnet } from '@/global/customChainsConfig';
 import { Address, zeroAddress } from 'viem';
 
 export const calculatePriceImpact = ({
@@ -36,7 +37,7 @@ export const getCorrectToken = ({
 export const getTokenSymbol = (address: Address) => {
   const symbols = {
     [zeroAddress as Address]: 'PROM',
-    '0x426A4d924C60fC0f6546b8ee2Ac0aECB9fbcaEF5': 'PROM',
+    [WETHByChain[promTestnet.id]]: 'PROM',
   };
 
   return symbols[address];

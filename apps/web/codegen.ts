@@ -1,10 +1,7 @@
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
-  schema: [
-    // 'https://api.thegraph.com/subgraphs/name/prom-io/uniswap-sepolia',
-    'https://api.rekt.me/graphql', // Вторая схема
-  ],
+  schema: ['https://api.rekt.me/graphql'],
   documents: 'src/features/liquidity/api/**/*.ts',
   ignoreNoDocuments: true,
   generates: {
