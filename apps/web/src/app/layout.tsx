@@ -5,6 +5,7 @@ import {
   TokenDialogProvider,
   Web3Provider,
 } from '@/global';
+import { MobileAppMenu } from '@/widgets/app-menu/ui/MobileAppMenu';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { headers } from 'next/headers';
@@ -12,9 +13,10 @@ import { ReactNode } from 'react';
 import { Toaster } from 'react-hot-toast';
 
 import { ErrorBoundary } from '@/global/providers/ErrorBoundary';
-import { AccountButton, AppMenu, Header, Logo, RPCStatus } from '@/widgets';
+import { AccountButton, AppMenuList, Header, Logo, RPCStatus } from '@/widgets';
 import Link from 'next/link';
 import { css, cx } from '~/styled-system/css';
+import { HStack, Stack } from '~/styled-system/jsx';
 import { hstack } from '~/styled-system/patterns';
 import '@rainbow-me/rainbowkit/styles.css';
 import './globals.css';
@@ -99,18 +101,33 @@ export default function RootLayout({
                 <div
                   className={hstack({
                     gap: 24,
+                    flexShrink: 0,
+                    width: {
+                      base: '100%',
+                      md: 'fit-content',
+                    },
+                    justifyContent: 'space-between',
                   })}
                 >
                   <Link href="/">
                     <Logo />
                   </Link>
-                  <AppMenu />
+                  <HStack
+                    display={{ base: 'none', md: 'flex' }}
+                    gap={8}
+                    h="full"
+                  >
+                    <AppMenuList />
+                  </HStack>
+                  <Stack display={{ base: 'flex', md: 'none' }}>
+                    <MobileAppMenu />
+                  </Stack>
                 </div>
               }
               rightSlot={
-                <div className={hstack({ gap: 4 })}>
+                <HStack gap={4} display={{ base: 'none', md: 'flex' }}>
                   <AccountButton />
-                </div>
+                </HStack>
               }
             />
             <BugReportBar />
