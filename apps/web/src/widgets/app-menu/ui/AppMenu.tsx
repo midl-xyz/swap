@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { css } from '~/styled-system/css';
-import { hstack } from '~/styled-system/patterns';
 
 type AppMenuLink = {
   label: string;
@@ -27,16 +26,10 @@ const appMenuLinks: AppMenuLink[] = [
   },
 ];
 
-export const AppMenu = () => {
+export const AppMenuList = () => {
   const pathname = usePathname();
-
   return (
-    <div
-      className={hstack({
-        gap: 8,
-        h: 'full',
-      })}
-    >
+    <>
       {appMenuLinks.map((link) => (
         <Link
           href={link.href}
@@ -61,6 +54,6 @@ export const AppMenu = () => {
           {link.label}
         </Link>
       ))}
-    </div>
+    </>
   );
 };
