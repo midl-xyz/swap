@@ -42,3 +42,7 @@ export const getTokenSymbol = (address: Address) => {
 
   return symbols[address];
 };
+
+export const correctNumber = (value: string = '') => {
+  return value.replaceAll(/\s/g, '');
+};
