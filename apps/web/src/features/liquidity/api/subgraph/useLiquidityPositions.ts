@@ -1,17 +1,17 @@
 import { graphqlClient } from '@/features/liquidity';
 import { graphql } from '@/features/liquidity/api/gql';
-import { LiquidityPositionsQuery } from '@/features/liquidity/api/gql/graphql';
+import { CurrentLiquidityPositionsQuery } from '@/features/liquidity/api/gql/graphql';
 import { useQuery } from '@tanstack/react-query';
 import { Address } from 'viem';
 
 const GetLiquidityPositions = graphql(`
-  query LiquidityPositions(
-    $where: LiquidityPositionWhereInput
-    $orderBy: [LiquidityPositionOrderByInput!]
+  query CurrentLiquidityPositions(
+    $where: CurrentLiquidityPositionWhereInput
+    $orderBy: [CurrentLiquidityPositionOrderByInput!]
     $offset: Int
     $limit: Int
   ) {
-    liquidityPositions(
+    currentLiquidityPositions(
       where: $where
       orderBy: $orderBy
       offset: $offset
@@ -19,8 +19,8 @@ const GetLiquidityPositions = graphql(`
     ) {
       id
       user {
-        id
         usdSwapped
+        id
       }
       pair {
         id
@@ -29,77 +29,101 @@ const GetLiquidityPositions = graphql(`
           symbol
           name
           decimals
+          priceUSD
+          priceETH
           totalSupply
-          tradeVolume
-          tradeVolumeUSD
-          untrackedVolumeUSD
-          txCount
-          totalLiquidity
-          derivedETH
+          circulationSupply
+          marketCapUSD
+          tradeVolume24h
+          tradeVolumeUSD24h
+          tradeVolumeETH24h
+          txCount24h
+          totalLiquidityAllPairs
+          totalLiquidityAllPairsUSD
+          holders
           memeToken {
             id
-            userAddress
+            ownerAddress
             tokenAddress
             tokenName
             tokenSymbol
-            tokenPrice
             tokenV60Initiated
             v60LpTokenAddress
             ownerAllocation
             activityVaultAllocation
             memeCreatedAt
+            memePicUrl
+            lockedLpTokens
+            lpTokensUnlockTime
+            lastUpdatedAt
           }
+          lastUpdatedAt
         }
         token1 {
           id
           symbol
           name
           decimals
+          priceUSD
+          priceETH
           totalSupply
-          tradeVolume
-          tradeVolumeUSD
-          untrackedVolumeUSD
-          txCount
-          totalLiquidity
-          derivedETH
+          circulationSupply
+          marketCapUSD
+          tradeVolume24h
+          tradeVolumeUSD24h
+          tradeVolumeETH24h
+          txCount24h
+          totalLiquidityAllPairs
+          totalLiquidityAllPairsUSD
+          holders
           memeToken {
             id
-            userAddress
+            ownerAddress
             tokenAddress
             tokenName
             tokenSymbol
-            tokenPrice
             tokenV60Initiated
             v60LpTokenAddress
             ownerAllocation
             activityVaultAllocation
             memeCreatedAt
+            memePicUrl
+            lockedLpTokens
+            lpTokensUnlockTime
+            lastUpdatedAt
           }
+          lastUpdatedAt
         }
         reserve0
         reserve1
-        totalSupply
-        reserveETH
-        reserveUSD
-        trackedReserveETH
+        liquidityUSD
+        liquidity24hDelta
+        lpTotalSupply
+        lpTotalLocked
         token0Price
         token1Price
-        volumeToken0
-        volumeToken1
-        volumeUSD
-        untrackedVolumeUSD
-        txCount
+        txCount24h
+        tradeVolume24h
+        tradeVolumeUSD24h
+        tradeVolumeETH24h
+        tradeVolume24hDelta
+        fees24h
+        feesUSD24h
+        feesETH24h
+        fees24hDelta
         createdAtTimestamp
         createdAtBlockNumber
         liquidityProviderCount
+        lastUpdatedAt
       }
       liquidityTokenBalance
+      lastUpdatedAt
     }
   }
 `);
 
 export const useLiquidityPositions = (account: Address) => {
-  return useQuery<LiquidityPositionsQuery>({
+  return useQuery<CurrentLiquidityPositionsQuery>({
     queryKey: ['GetLiquidityPositions', account],
     refetchOnWindowFocus: false,
     queryFn: () => {

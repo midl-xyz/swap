@@ -33,27 +33,34 @@ export type Scalars = {
   BigInt: { input: any; output: any };
 };
 
-export type LiquidityPosition = {
-  __typename?: 'LiquidityPosition';
+export type CurrentLiquidityPosition = {
+  __typename?: 'CurrentLiquidityPosition';
   id: Scalars['String']['output'];
+  lastUpdatedAt: Scalars['BigInt']['output'];
   liquidityTokenBalance: Scalars['BigDecimal']['output'];
   pair: Pair;
   user: User;
 };
 
-export type LiquidityPositionEdge = {
-  __typename?: 'LiquidityPositionEdge';
+export type CurrentLiquidityPositionEdge = {
+  __typename?: 'CurrentLiquidityPositionEdge';
   cursor: Scalars['String']['output'];
-  node: LiquidityPosition;
+  node: CurrentLiquidityPosition;
 };
 
-export enum LiquidityPositionOrderByInput {
+export enum CurrentLiquidityPositionOrderByInput {
   IdAsc = 'id_ASC',
   IdAscNullsFirst = 'id_ASC_NULLS_FIRST',
   IdAscNullsLast = 'id_ASC_NULLS_LAST',
   IdDesc = 'id_DESC',
   IdDescNullsFirst = 'id_DESC_NULLS_FIRST',
   IdDescNullsLast = 'id_DESC_NULLS_LAST',
+  LastUpdatedAtAsc = 'lastUpdatedAt_ASC',
+  LastUpdatedAtAscNullsFirst = 'lastUpdatedAt_ASC_NULLS_FIRST',
+  LastUpdatedAtAscNullsLast = 'lastUpdatedAt_ASC_NULLS_LAST',
+  LastUpdatedAtDesc = 'lastUpdatedAt_DESC',
+  LastUpdatedAtDescNullsFirst = 'lastUpdatedAt_DESC_NULLS_FIRST',
+  LastUpdatedAtDescNullsLast = 'lastUpdatedAt_DESC_NULLS_LAST',
   LiquidityTokenBalanceAsc = 'liquidityTokenBalance_ASC',
   LiquidityTokenBalanceAscNullsFirst = 'liquidityTokenBalance_ASC_NULLS_FIRST',
   LiquidityTokenBalanceAscNullsLast = 'liquidityTokenBalance_ASC_NULLS_LAST',
@@ -72,18 +79,72 @@ export enum LiquidityPositionOrderByInput {
   PairCreatedAtTimestampDesc = 'pair_createdAtTimestamp_DESC',
   PairCreatedAtTimestampDescNullsFirst = 'pair_createdAtTimestamp_DESC_NULLS_FIRST',
   PairCreatedAtTimestampDescNullsLast = 'pair_createdAtTimestamp_DESC_NULLS_LAST',
+  PairFees24hDeltaAsc = 'pair_fees24hDelta_ASC',
+  PairFees24hDeltaAscNullsFirst = 'pair_fees24hDelta_ASC_NULLS_FIRST',
+  PairFees24hDeltaAscNullsLast = 'pair_fees24hDelta_ASC_NULLS_LAST',
+  PairFees24hDeltaDesc = 'pair_fees24hDelta_DESC',
+  PairFees24hDeltaDescNullsFirst = 'pair_fees24hDelta_DESC_NULLS_FIRST',
+  PairFees24hDeltaDescNullsLast = 'pair_fees24hDelta_DESC_NULLS_LAST',
+  PairFees24hAsc = 'pair_fees24h_ASC',
+  PairFees24hAscNullsFirst = 'pair_fees24h_ASC_NULLS_FIRST',
+  PairFees24hAscNullsLast = 'pair_fees24h_ASC_NULLS_LAST',
+  PairFees24hDesc = 'pair_fees24h_DESC',
+  PairFees24hDescNullsFirst = 'pair_fees24h_DESC_NULLS_FIRST',
+  PairFees24hDescNullsLast = 'pair_fees24h_DESC_NULLS_LAST',
+  PairFeesEth24hAsc = 'pair_feesETH24h_ASC',
+  PairFeesEth24hAscNullsFirst = 'pair_feesETH24h_ASC_NULLS_FIRST',
+  PairFeesEth24hAscNullsLast = 'pair_feesETH24h_ASC_NULLS_LAST',
+  PairFeesEth24hDesc = 'pair_feesETH24h_DESC',
+  PairFeesEth24hDescNullsFirst = 'pair_feesETH24h_DESC_NULLS_FIRST',
+  PairFeesEth24hDescNullsLast = 'pair_feesETH24h_DESC_NULLS_LAST',
+  PairFeesUsd24hAsc = 'pair_feesUSD24h_ASC',
+  PairFeesUsd24hAscNullsFirst = 'pair_feesUSD24h_ASC_NULLS_FIRST',
+  PairFeesUsd24hAscNullsLast = 'pair_feesUSD24h_ASC_NULLS_LAST',
+  PairFeesUsd24hDesc = 'pair_feesUSD24h_DESC',
+  PairFeesUsd24hDescNullsFirst = 'pair_feesUSD24h_DESC_NULLS_FIRST',
+  PairFeesUsd24hDescNullsLast = 'pair_feesUSD24h_DESC_NULLS_LAST',
   PairIdAsc = 'pair_id_ASC',
   PairIdAscNullsFirst = 'pair_id_ASC_NULLS_FIRST',
   PairIdAscNullsLast = 'pair_id_ASC_NULLS_LAST',
   PairIdDesc = 'pair_id_DESC',
   PairIdDescNullsFirst = 'pair_id_DESC_NULLS_FIRST',
   PairIdDescNullsLast = 'pair_id_DESC_NULLS_LAST',
+  PairLastUpdatedAtAsc = 'pair_lastUpdatedAt_ASC',
+  PairLastUpdatedAtAscNullsFirst = 'pair_lastUpdatedAt_ASC_NULLS_FIRST',
+  PairLastUpdatedAtAscNullsLast = 'pair_lastUpdatedAt_ASC_NULLS_LAST',
+  PairLastUpdatedAtDesc = 'pair_lastUpdatedAt_DESC',
+  PairLastUpdatedAtDescNullsFirst = 'pair_lastUpdatedAt_DESC_NULLS_FIRST',
+  PairLastUpdatedAtDescNullsLast = 'pair_lastUpdatedAt_DESC_NULLS_LAST',
+  PairLiquidity24hDeltaAsc = 'pair_liquidity24hDelta_ASC',
+  PairLiquidity24hDeltaAscNullsFirst = 'pair_liquidity24hDelta_ASC_NULLS_FIRST',
+  PairLiquidity24hDeltaAscNullsLast = 'pair_liquidity24hDelta_ASC_NULLS_LAST',
+  PairLiquidity24hDeltaDesc = 'pair_liquidity24hDelta_DESC',
+  PairLiquidity24hDeltaDescNullsFirst = 'pair_liquidity24hDelta_DESC_NULLS_FIRST',
+  PairLiquidity24hDeltaDescNullsLast = 'pair_liquidity24hDelta_DESC_NULLS_LAST',
   PairLiquidityProviderCountAsc = 'pair_liquidityProviderCount_ASC',
   PairLiquidityProviderCountAscNullsFirst = 'pair_liquidityProviderCount_ASC_NULLS_FIRST',
   PairLiquidityProviderCountAscNullsLast = 'pair_liquidityProviderCount_ASC_NULLS_LAST',
   PairLiquidityProviderCountDesc = 'pair_liquidityProviderCount_DESC',
   PairLiquidityProviderCountDescNullsFirst = 'pair_liquidityProviderCount_DESC_NULLS_FIRST',
   PairLiquidityProviderCountDescNullsLast = 'pair_liquidityProviderCount_DESC_NULLS_LAST',
+  PairLiquidityUsdAsc = 'pair_liquidityUSD_ASC',
+  PairLiquidityUsdAscNullsFirst = 'pair_liquidityUSD_ASC_NULLS_FIRST',
+  PairLiquidityUsdAscNullsLast = 'pair_liquidityUSD_ASC_NULLS_LAST',
+  PairLiquidityUsdDesc = 'pair_liquidityUSD_DESC',
+  PairLiquidityUsdDescNullsFirst = 'pair_liquidityUSD_DESC_NULLS_FIRST',
+  PairLiquidityUsdDescNullsLast = 'pair_liquidityUSD_DESC_NULLS_LAST',
+  PairLpTotalLockedAsc = 'pair_lpTotalLocked_ASC',
+  PairLpTotalLockedAscNullsFirst = 'pair_lpTotalLocked_ASC_NULLS_FIRST',
+  PairLpTotalLockedAscNullsLast = 'pair_lpTotalLocked_ASC_NULLS_LAST',
+  PairLpTotalLockedDesc = 'pair_lpTotalLocked_DESC',
+  PairLpTotalLockedDescNullsFirst = 'pair_lpTotalLocked_DESC_NULLS_FIRST',
+  PairLpTotalLockedDescNullsLast = 'pair_lpTotalLocked_DESC_NULLS_LAST',
+  PairLpTotalSupplyAsc = 'pair_lpTotalSupply_ASC',
+  PairLpTotalSupplyAscNullsFirst = 'pair_lpTotalSupply_ASC_NULLS_FIRST',
+  PairLpTotalSupplyAscNullsLast = 'pair_lpTotalSupply_ASC_NULLS_LAST',
+  PairLpTotalSupplyDesc = 'pair_lpTotalSupply_DESC',
+  PairLpTotalSupplyDescNullsFirst = 'pair_lpTotalSupply_DESC_NULLS_FIRST',
+  PairLpTotalSupplyDescNullsLast = 'pair_lpTotalSupply_DESC_NULLS_LAST',
   PairReserve0Asc = 'pair_reserve0_ASC',
   PairReserve0AscNullsFirst = 'pair_reserve0_ASC_NULLS_FIRST',
   PairReserve0AscNullsLast = 'pair_reserve0_ASC_NULLS_LAST',
@@ -96,18 +157,6 @@ export enum LiquidityPositionOrderByInput {
   PairReserve1Desc = 'pair_reserve1_DESC',
   PairReserve1DescNullsFirst = 'pair_reserve1_DESC_NULLS_FIRST',
   PairReserve1DescNullsLast = 'pair_reserve1_DESC_NULLS_LAST',
-  PairReserveEthAsc = 'pair_reserveETH_ASC',
-  PairReserveEthAscNullsFirst = 'pair_reserveETH_ASC_NULLS_FIRST',
-  PairReserveEthAscNullsLast = 'pair_reserveETH_ASC_NULLS_LAST',
-  PairReserveEthDesc = 'pair_reserveETH_DESC',
-  PairReserveEthDescNullsFirst = 'pair_reserveETH_DESC_NULLS_FIRST',
-  PairReserveEthDescNullsLast = 'pair_reserveETH_DESC_NULLS_LAST',
-  PairReserveUsdAsc = 'pair_reserveUSD_ASC',
-  PairReserveUsdAscNullsFirst = 'pair_reserveUSD_ASC_NULLS_FIRST',
-  PairReserveUsdAscNullsLast = 'pair_reserveUSD_ASC_NULLS_LAST',
-  PairReserveUsdDesc = 'pair_reserveUSD_DESC',
-  PairReserveUsdDescNullsFirst = 'pair_reserveUSD_DESC_NULLS_FIRST',
-  PairReserveUsdDescNullsLast = 'pair_reserveUSD_DESC_NULLS_LAST',
   PairToken0PriceAsc = 'pair_token0Price_ASC',
   PairToken0PriceAscNullsFirst = 'pair_token0Price_ASC_NULLS_FIRST',
   PairToken0PriceAscNullsLast = 'pair_token0Price_ASC_NULLS_LAST',
@@ -120,48 +169,36 @@ export enum LiquidityPositionOrderByInput {
   PairToken1PriceDesc = 'pair_token1Price_DESC',
   PairToken1PriceDescNullsFirst = 'pair_token1Price_DESC_NULLS_FIRST',
   PairToken1PriceDescNullsLast = 'pair_token1Price_DESC_NULLS_LAST',
-  PairTotalSupplyAsc = 'pair_totalSupply_ASC',
-  PairTotalSupplyAscNullsFirst = 'pair_totalSupply_ASC_NULLS_FIRST',
-  PairTotalSupplyAscNullsLast = 'pair_totalSupply_ASC_NULLS_LAST',
-  PairTotalSupplyDesc = 'pair_totalSupply_DESC',
-  PairTotalSupplyDescNullsFirst = 'pair_totalSupply_DESC_NULLS_FIRST',
-  PairTotalSupplyDescNullsLast = 'pair_totalSupply_DESC_NULLS_LAST',
-  PairTrackedReserveEthAsc = 'pair_trackedReserveETH_ASC',
-  PairTrackedReserveEthAscNullsFirst = 'pair_trackedReserveETH_ASC_NULLS_FIRST',
-  PairTrackedReserveEthAscNullsLast = 'pair_trackedReserveETH_ASC_NULLS_LAST',
-  PairTrackedReserveEthDesc = 'pair_trackedReserveETH_DESC',
-  PairTrackedReserveEthDescNullsFirst = 'pair_trackedReserveETH_DESC_NULLS_FIRST',
-  PairTrackedReserveEthDescNullsLast = 'pair_trackedReserveETH_DESC_NULLS_LAST',
-  PairTxCountAsc = 'pair_txCount_ASC',
-  PairTxCountAscNullsFirst = 'pair_txCount_ASC_NULLS_FIRST',
-  PairTxCountAscNullsLast = 'pair_txCount_ASC_NULLS_LAST',
-  PairTxCountDesc = 'pair_txCount_DESC',
-  PairTxCountDescNullsFirst = 'pair_txCount_DESC_NULLS_FIRST',
-  PairTxCountDescNullsLast = 'pair_txCount_DESC_NULLS_LAST',
-  PairUntrackedVolumeUsdAsc = 'pair_untrackedVolumeUSD_ASC',
-  PairUntrackedVolumeUsdAscNullsFirst = 'pair_untrackedVolumeUSD_ASC_NULLS_FIRST',
-  PairUntrackedVolumeUsdAscNullsLast = 'pair_untrackedVolumeUSD_ASC_NULLS_LAST',
-  PairUntrackedVolumeUsdDesc = 'pair_untrackedVolumeUSD_DESC',
-  PairUntrackedVolumeUsdDescNullsFirst = 'pair_untrackedVolumeUSD_DESC_NULLS_FIRST',
-  PairUntrackedVolumeUsdDescNullsLast = 'pair_untrackedVolumeUSD_DESC_NULLS_LAST',
-  PairVolumeToken0Asc = 'pair_volumeToken0_ASC',
-  PairVolumeToken0AscNullsFirst = 'pair_volumeToken0_ASC_NULLS_FIRST',
-  PairVolumeToken0AscNullsLast = 'pair_volumeToken0_ASC_NULLS_LAST',
-  PairVolumeToken0Desc = 'pair_volumeToken0_DESC',
-  PairVolumeToken0DescNullsFirst = 'pair_volumeToken0_DESC_NULLS_FIRST',
-  PairVolumeToken0DescNullsLast = 'pair_volumeToken0_DESC_NULLS_LAST',
-  PairVolumeToken1Asc = 'pair_volumeToken1_ASC',
-  PairVolumeToken1AscNullsFirst = 'pair_volumeToken1_ASC_NULLS_FIRST',
-  PairVolumeToken1AscNullsLast = 'pair_volumeToken1_ASC_NULLS_LAST',
-  PairVolumeToken1Desc = 'pair_volumeToken1_DESC',
-  PairVolumeToken1DescNullsFirst = 'pair_volumeToken1_DESC_NULLS_FIRST',
-  PairVolumeToken1DescNullsLast = 'pair_volumeToken1_DESC_NULLS_LAST',
-  PairVolumeUsdAsc = 'pair_volumeUSD_ASC',
-  PairVolumeUsdAscNullsFirst = 'pair_volumeUSD_ASC_NULLS_FIRST',
-  PairVolumeUsdAscNullsLast = 'pair_volumeUSD_ASC_NULLS_LAST',
-  PairVolumeUsdDesc = 'pair_volumeUSD_DESC',
-  PairVolumeUsdDescNullsFirst = 'pair_volumeUSD_DESC_NULLS_FIRST',
-  PairVolumeUsdDescNullsLast = 'pair_volumeUSD_DESC_NULLS_LAST',
+  PairTradeVolume24hDeltaAsc = 'pair_tradeVolume24hDelta_ASC',
+  PairTradeVolume24hDeltaAscNullsFirst = 'pair_tradeVolume24hDelta_ASC_NULLS_FIRST',
+  PairTradeVolume24hDeltaAscNullsLast = 'pair_tradeVolume24hDelta_ASC_NULLS_LAST',
+  PairTradeVolume24hDeltaDesc = 'pair_tradeVolume24hDelta_DESC',
+  PairTradeVolume24hDeltaDescNullsFirst = 'pair_tradeVolume24hDelta_DESC_NULLS_FIRST',
+  PairTradeVolume24hDeltaDescNullsLast = 'pair_tradeVolume24hDelta_DESC_NULLS_LAST',
+  PairTradeVolume24hAsc = 'pair_tradeVolume24h_ASC',
+  PairTradeVolume24hAscNullsFirst = 'pair_tradeVolume24h_ASC_NULLS_FIRST',
+  PairTradeVolume24hAscNullsLast = 'pair_tradeVolume24h_ASC_NULLS_LAST',
+  PairTradeVolume24hDesc = 'pair_tradeVolume24h_DESC',
+  PairTradeVolume24hDescNullsFirst = 'pair_tradeVolume24h_DESC_NULLS_FIRST',
+  PairTradeVolume24hDescNullsLast = 'pair_tradeVolume24h_DESC_NULLS_LAST',
+  PairTradeVolumeEth24hAsc = 'pair_tradeVolumeETH24h_ASC',
+  PairTradeVolumeEth24hAscNullsFirst = 'pair_tradeVolumeETH24h_ASC_NULLS_FIRST',
+  PairTradeVolumeEth24hAscNullsLast = 'pair_tradeVolumeETH24h_ASC_NULLS_LAST',
+  PairTradeVolumeEth24hDesc = 'pair_tradeVolumeETH24h_DESC',
+  PairTradeVolumeEth24hDescNullsFirst = 'pair_tradeVolumeETH24h_DESC_NULLS_FIRST',
+  PairTradeVolumeEth24hDescNullsLast = 'pair_tradeVolumeETH24h_DESC_NULLS_LAST',
+  PairTradeVolumeUsd24hAsc = 'pair_tradeVolumeUSD24h_ASC',
+  PairTradeVolumeUsd24hAscNullsFirst = 'pair_tradeVolumeUSD24h_ASC_NULLS_FIRST',
+  PairTradeVolumeUsd24hAscNullsLast = 'pair_tradeVolumeUSD24h_ASC_NULLS_LAST',
+  PairTradeVolumeUsd24hDesc = 'pair_tradeVolumeUSD24h_DESC',
+  PairTradeVolumeUsd24hDescNullsFirst = 'pair_tradeVolumeUSD24h_DESC_NULLS_FIRST',
+  PairTradeVolumeUsd24hDescNullsLast = 'pair_tradeVolumeUSD24h_DESC_NULLS_LAST',
+  PairTxCount24hAsc = 'pair_txCount24h_ASC',
+  PairTxCount24hAscNullsFirst = 'pair_txCount24h_ASC_NULLS_FIRST',
+  PairTxCount24hAscNullsLast = 'pair_txCount24h_ASC_NULLS_LAST',
+  PairTxCount24hDesc = 'pair_txCount24h_DESC',
+  PairTxCount24hDescNullsFirst = 'pair_txCount24h_DESC_NULLS_FIRST',
+  PairTxCount24hDescNullsLast = 'pair_txCount24h_DESC_NULLS_LAST',
   UserIdAsc = 'user_id_ASC',
   UserIdAscNullsFirst = 'user_id_ASC_NULLS_FIRST',
   UserIdAscNullsLast = 'user_id_ASC_NULLS_LAST',
@@ -176,30 +213,91 @@ export enum LiquidityPositionOrderByInput {
   UserUsdSwappedDescNullsLast = 'user_usdSwapped_DESC_NULLS_LAST',
 }
 
-export type LiquidityPositionSnapshot = {
-  __typename?: 'LiquidityPositionSnapshot';
+export type CurrentLiquidityPositionWhereInput = {
+  AND?: InputMaybe<Array<CurrentLiquidityPositionWhereInput>>;
+  OR?: InputMaybe<Array<CurrentLiquidityPositionWhereInput>>;
+  id_contains?: InputMaybe<Scalars['String']['input']>;
+  id_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  id_endsWith?: InputMaybe<Scalars['String']['input']>;
+  id_eq?: InputMaybe<Scalars['String']['input']>;
+  id_gt?: InputMaybe<Scalars['String']['input']>;
+  id_gte?: InputMaybe<Scalars['String']['input']>;
+  id_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  id_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  id_lt?: InputMaybe<Scalars['String']['input']>;
+  id_lte?: InputMaybe<Scalars['String']['input']>;
+  id_not_contains?: InputMaybe<Scalars['String']['input']>;
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  id_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  id_not_eq?: InputMaybe<Scalars['String']['input']>;
+  id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  id_startsWith?: InputMaybe<Scalars['String']['input']>;
+  lastUpdatedAt_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lastUpdatedAt_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lastUpdatedAt_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  liquidityTokenBalance_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityTokenBalance_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityTokenBalance_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityTokenBalance_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  liquidityTokenBalance_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  liquidityTokenBalance_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityTokenBalance_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityTokenBalance_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityTokenBalance_not_in?: InputMaybe<
+    Array<Scalars['BigDecimal']['input']>
+  >;
+  pair?: InputMaybe<PairWhereInput>;
+  pair_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  user?: InputMaybe<UserWhereInput>;
+  user_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type CurrentLiquidityPositionsConnection = {
+  __typename?: 'CurrentLiquidityPositionsConnection';
+  edges: Array<CurrentLiquidityPositionEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type LiquidityPositionHistoriesConnection = {
+  __typename?: 'LiquidityPositionHistoriesConnection';
+  edges: Array<LiquidityPositionHistoryEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type LiquidityPositionHistory = {
+  __typename?: 'LiquidityPositionHistory';
   block: Scalars['Int']['output'];
   id: Scalars['String']['output'];
-  liquidityPosition: LiquidityPosition;
+  lastUpdatedAt: Scalars['BigInt']['output'];
+  liquidityPosition: CurrentLiquidityPosition;
   liquidityTokenBalance: Scalars['BigDecimal']['output'];
   liquidityTokenTotalSupply: Scalars['BigDecimal']['output'];
+  liquidityUSD?: Maybe<Scalars['BigDecimal']['output']>;
   pair: Pair;
   reserve0: Scalars['BigDecimal']['output'];
   reserve1: Scalars['BigDecimal']['output'];
-  reserveUSD: Scalars['BigDecimal']['output'];
-  timestamp: Scalars['Int']['output'];
-  token0PriceUSD: Scalars['BigDecimal']['output'];
-  token1PriceUSD: Scalars['BigDecimal']['output'];
+  timestamp: Scalars['BigInt']['output'];
+  token0PriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
+  token1PriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   user: User;
 };
 
-export type LiquidityPositionSnapshotEdge = {
-  __typename?: 'LiquidityPositionSnapshotEdge';
+export type LiquidityPositionHistoryEdge = {
+  __typename?: 'LiquidityPositionHistoryEdge';
   cursor: Scalars['String']['output'];
-  node: LiquidityPositionSnapshot;
+  node: LiquidityPositionHistory;
 };
 
-export enum LiquidityPositionSnapshotOrderByInput {
+export enum LiquidityPositionHistoryOrderByInput {
   BlockAsc = 'block_ASC',
   BlockAscNullsFirst = 'block_ASC_NULLS_FIRST',
   BlockAscNullsLast = 'block_ASC_NULLS_LAST',
@@ -212,12 +310,24 @@ export enum LiquidityPositionSnapshotOrderByInput {
   IdDesc = 'id_DESC',
   IdDescNullsFirst = 'id_DESC_NULLS_FIRST',
   IdDescNullsLast = 'id_DESC_NULLS_LAST',
+  LastUpdatedAtAsc = 'lastUpdatedAt_ASC',
+  LastUpdatedAtAscNullsFirst = 'lastUpdatedAt_ASC_NULLS_FIRST',
+  LastUpdatedAtAscNullsLast = 'lastUpdatedAt_ASC_NULLS_LAST',
+  LastUpdatedAtDesc = 'lastUpdatedAt_DESC',
+  LastUpdatedAtDescNullsFirst = 'lastUpdatedAt_DESC_NULLS_FIRST',
+  LastUpdatedAtDescNullsLast = 'lastUpdatedAt_DESC_NULLS_LAST',
   LiquidityPositionIdAsc = 'liquidityPosition_id_ASC',
   LiquidityPositionIdAscNullsFirst = 'liquidityPosition_id_ASC_NULLS_FIRST',
   LiquidityPositionIdAscNullsLast = 'liquidityPosition_id_ASC_NULLS_LAST',
   LiquidityPositionIdDesc = 'liquidityPosition_id_DESC',
   LiquidityPositionIdDescNullsFirst = 'liquidityPosition_id_DESC_NULLS_FIRST',
   LiquidityPositionIdDescNullsLast = 'liquidityPosition_id_DESC_NULLS_LAST',
+  LiquidityPositionLastUpdatedAtAsc = 'liquidityPosition_lastUpdatedAt_ASC',
+  LiquidityPositionLastUpdatedAtAscNullsFirst = 'liquidityPosition_lastUpdatedAt_ASC_NULLS_FIRST',
+  LiquidityPositionLastUpdatedAtAscNullsLast = 'liquidityPosition_lastUpdatedAt_ASC_NULLS_LAST',
+  LiquidityPositionLastUpdatedAtDesc = 'liquidityPosition_lastUpdatedAt_DESC',
+  LiquidityPositionLastUpdatedAtDescNullsFirst = 'liquidityPosition_lastUpdatedAt_DESC_NULLS_FIRST',
+  LiquidityPositionLastUpdatedAtDescNullsLast = 'liquidityPosition_lastUpdatedAt_DESC_NULLS_LAST',
   LiquidityPositionLiquidityTokenBalanceAsc = 'liquidityPosition_liquidityTokenBalance_ASC',
   LiquidityPositionLiquidityTokenBalanceAscNullsFirst = 'liquidityPosition_liquidityTokenBalance_ASC_NULLS_FIRST',
   LiquidityPositionLiquidityTokenBalanceAscNullsLast = 'liquidityPosition_liquidityTokenBalance_ASC_NULLS_LAST',
@@ -236,6 +346,12 @@ export enum LiquidityPositionSnapshotOrderByInput {
   LiquidityTokenTotalSupplyDesc = 'liquidityTokenTotalSupply_DESC',
   LiquidityTokenTotalSupplyDescNullsFirst = 'liquidityTokenTotalSupply_DESC_NULLS_FIRST',
   LiquidityTokenTotalSupplyDescNullsLast = 'liquidityTokenTotalSupply_DESC_NULLS_LAST',
+  LiquidityUsdAsc = 'liquidityUSD_ASC',
+  LiquidityUsdAscNullsFirst = 'liquidityUSD_ASC_NULLS_FIRST',
+  LiquidityUsdAscNullsLast = 'liquidityUSD_ASC_NULLS_LAST',
+  LiquidityUsdDesc = 'liquidityUSD_DESC',
+  LiquidityUsdDescNullsFirst = 'liquidityUSD_DESC_NULLS_FIRST',
+  LiquidityUsdDescNullsLast = 'liquidityUSD_DESC_NULLS_LAST',
   PairCreatedAtBlockNumberAsc = 'pair_createdAtBlockNumber_ASC',
   PairCreatedAtBlockNumberAscNullsFirst = 'pair_createdAtBlockNumber_ASC_NULLS_FIRST',
   PairCreatedAtBlockNumberAscNullsLast = 'pair_createdAtBlockNumber_ASC_NULLS_LAST',
@@ -248,18 +364,72 @@ export enum LiquidityPositionSnapshotOrderByInput {
   PairCreatedAtTimestampDesc = 'pair_createdAtTimestamp_DESC',
   PairCreatedAtTimestampDescNullsFirst = 'pair_createdAtTimestamp_DESC_NULLS_FIRST',
   PairCreatedAtTimestampDescNullsLast = 'pair_createdAtTimestamp_DESC_NULLS_LAST',
+  PairFees24hDeltaAsc = 'pair_fees24hDelta_ASC',
+  PairFees24hDeltaAscNullsFirst = 'pair_fees24hDelta_ASC_NULLS_FIRST',
+  PairFees24hDeltaAscNullsLast = 'pair_fees24hDelta_ASC_NULLS_LAST',
+  PairFees24hDeltaDesc = 'pair_fees24hDelta_DESC',
+  PairFees24hDeltaDescNullsFirst = 'pair_fees24hDelta_DESC_NULLS_FIRST',
+  PairFees24hDeltaDescNullsLast = 'pair_fees24hDelta_DESC_NULLS_LAST',
+  PairFees24hAsc = 'pair_fees24h_ASC',
+  PairFees24hAscNullsFirst = 'pair_fees24h_ASC_NULLS_FIRST',
+  PairFees24hAscNullsLast = 'pair_fees24h_ASC_NULLS_LAST',
+  PairFees24hDesc = 'pair_fees24h_DESC',
+  PairFees24hDescNullsFirst = 'pair_fees24h_DESC_NULLS_FIRST',
+  PairFees24hDescNullsLast = 'pair_fees24h_DESC_NULLS_LAST',
+  PairFeesEth24hAsc = 'pair_feesETH24h_ASC',
+  PairFeesEth24hAscNullsFirst = 'pair_feesETH24h_ASC_NULLS_FIRST',
+  PairFeesEth24hAscNullsLast = 'pair_feesETH24h_ASC_NULLS_LAST',
+  PairFeesEth24hDesc = 'pair_feesETH24h_DESC',
+  PairFeesEth24hDescNullsFirst = 'pair_feesETH24h_DESC_NULLS_FIRST',
+  PairFeesEth24hDescNullsLast = 'pair_feesETH24h_DESC_NULLS_LAST',
+  PairFeesUsd24hAsc = 'pair_feesUSD24h_ASC',
+  PairFeesUsd24hAscNullsFirst = 'pair_feesUSD24h_ASC_NULLS_FIRST',
+  PairFeesUsd24hAscNullsLast = 'pair_feesUSD24h_ASC_NULLS_LAST',
+  PairFeesUsd24hDesc = 'pair_feesUSD24h_DESC',
+  PairFeesUsd24hDescNullsFirst = 'pair_feesUSD24h_DESC_NULLS_FIRST',
+  PairFeesUsd24hDescNullsLast = 'pair_feesUSD24h_DESC_NULLS_LAST',
   PairIdAsc = 'pair_id_ASC',
   PairIdAscNullsFirst = 'pair_id_ASC_NULLS_FIRST',
   PairIdAscNullsLast = 'pair_id_ASC_NULLS_LAST',
   PairIdDesc = 'pair_id_DESC',
   PairIdDescNullsFirst = 'pair_id_DESC_NULLS_FIRST',
   PairIdDescNullsLast = 'pair_id_DESC_NULLS_LAST',
+  PairLastUpdatedAtAsc = 'pair_lastUpdatedAt_ASC',
+  PairLastUpdatedAtAscNullsFirst = 'pair_lastUpdatedAt_ASC_NULLS_FIRST',
+  PairLastUpdatedAtAscNullsLast = 'pair_lastUpdatedAt_ASC_NULLS_LAST',
+  PairLastUpdatedAtDesc = 'pair_lastUpdatedAt_DESC',
+  PairLastUpdatedAtDescNullsFirst = 'pair_lastUpdatedAt_DESC_NULLS_FIRST',
+  PairLastUpdatedAtDescNullsLast = 'pair_lastUpdatedAt_DESC_NULLS_LAST',
+  PairLiquidity24hDeltaAsc = 'pair_liquidity24hDelta_ASC',
+  PairLiquidity24hDeltaAscNullsFirst = 'pair_liquidity24hDelta_ASC_NULLS_FIRST',
+  PairLiquidity24hDeltaAscNullsLast = 'pair_liquidity24hDelta_ASC_NULLS_LAST',
+  PairLiquidity24hDeltaDesc = 'pair_liquidity24hDelta_DESC',
+  PairLiquidity24hDeltaDescNullsFirst = 'pair_liquidity24hDelta_DESC_NULLS_FIRST',
+  PairLiquidity24hDeltaDescNullsLast = 'pair_liquidity24hDelta_DESC_NULLS_LAST',
   PairLiquidityProviderCountAsc = 'pair_liquidityProviderCount_ASC',
   PairLiquidityProviderCountAscNullsFirst = 'pair_liquidityProviderCount_ASC_NULLS_FIRST',
   PairLiquidityProviderCountAscNullsLast = 'pair_liquidityProviderCount_ASC_NULLS_LAST',
   PairLiquidityProviderCountDesc = 'pair_liquidityProviderCount_DESC',
   PairLiquidityProviderCountDescNullsFirst = 'pair_liquidityProviderCount_DESC_NULLS_FIRST',
   PairLiquidityProviderCountDescNullsLast = 'pair_liquidityProviderCount_DESC_NULLS_LAST',
+  PairLiquidityUsdAsc = 'pair_liquidityUSD_ASC',
+  PairLiquidityUsdAscNullsFirst = 'pair_liquidityUSD_ASC_NULLS_FIRST',
+  PairLiquidityUsdAscNullsLast = 'pair_liquidityUSD_ASC_NULLS_LAST',
+  PairLiquidityUsdDesc = 'pair_liquidityUSD_DESC',
+  PairLiquidityUsdDescNullsFirst = 'pair_liquidityUSD_DESC_NULLS_FIRST',
+  PairLiquidityUsdDescNullsLast = 'pair_liquidityUSD_DESC_NULLS_LAST',
+  PairLpTotalLockedAsc = 'pair_lpTotalLocked_ASC',
+  PairLpTotalLockedAscNullsFirst = 'pair_lpTotalLocked_ASC_NULLS_FIRST',
+  PairLpTotalLockedAscNullsLast = 'pair_lpTotalLocked_ASC_NULLS_LAST',
+  PairLpTotalLockedDesc = 'pair_lpTotalLocked_DESC',
+  PairLpTotalLockedDescNullsFirst = 'pair_lpTotalLocked_DESC_NULLS_FIRST',
+  PairLpTotalLockedDescNullsLast = 'pair_lpTotalLocked_DESC_NULLS_LAST',
+  PairLpTotalSupplyAsc = 'pair_lpTotalSupply_ASC',
+  PairLpTotalSupplyAscNullsFirst = 'pair_lpTotalSupply_ASC_NULLS_FIRST',
+  PairLpTotalSupplyAscNullsLast = 'pair_lpTotalSupply_ASC_NULLS_LAST',
+  PairLpTotalSupplyDesc = 'pair_lpTotalSupply_DESC',
+  PairLpTotalSupplyDescNullsFirst = 'pair_lpTotalSupply_DESC_NULLS_FIRST',
+  PairLpTotalSupplyDescNullsLast = 'pair_lpTotalSupply_DESC_NULLS_LAST',
   PairReserve0Asc = 'pair_reserve0_ASC',
   PairReserve0AscNullsFirst = 'pair_reserve0_ASC_NULLS_FIRST',
   PairReserve0AscNullsLast = 'pair_reserve0_ASC_NULLS_LAST',
@@ -272,18 +442,6 @@ export enum LiquidityPositionSnapshotOrderByInput {
   PairReserve1Desc = 'pair_reserve1_DESC',
   PairReserve1DescNullsFirst = 'pair_reserve1_DESC_NULLS_FIRST',
   PairReserve1DescNullsLast = 'pair_reserve1_DESC_NULLS_LAST',
-  PairReserveEthAsc = 'pair_reserveETH_ASC',
-  PairReserveEthAscNullsFirst = 'pair_reserveETH_ASC_NULLS_FIRST',
-  PairReserveEthAscNullsLast = 'pair_reserveETH_ASC_NULLS_LAST',
-  PairReserveEthDesc = 'pair_reserveETH_DESC',
-  PairReserveEthDescNullsFirst = 'pair_reserveETH_DESC_NULLS_FIRST',
-  PairReserveEthDescNullsLast = 'pair_reserveETH_DESC_NULLS_LAST',
-  PairReserveUsdAsc = 'pair_reserveUSD_ASC',
-  PairReserveUsdAscNullsFirst = 'pair_reserveUSD_ASC_NULLS_FIRST',
-  PairReserveUsdAscNullsLast = 'pair_reserveUSD_ASC_NULLS_LAST',
-  PairReserveUsdDesc = 'pair_reserveUSD_DESC',
-  PairReserveUsdDescNullsFirst = 'pair_reserveUSD_DESC_NULLS_FIRST',
-  PairReserveUsdDescNullsLast = 'pair_reserveUSD_DESC_NULLS_LAST',
   PairToken0PriceAsc = 'pair_token0Price_ASC',
   PairToken0PriceAscNullsFirst = 'pair_token0Price_ASC_NULLS_FIRST',
   PairToken0PriceAscNullsLast = 'pair_token0Price_ASC_NULLS_LAST',
@@ -296,48 +454,36 @@ export enum LiquidityPositionSnapshotOrderByInput {
   PairToken1PriceDesc = 'pair_token1Price_DESC',
   PairToken1PriceDescNullsFirst = 'pair_token1Price_DESC_NULLS_FIRST',
   PairToken1PriceDescNullsLast = 'pair_token1Price_DESC_NULLS_LAST',
-  PairTotalSupplyAsc = 'pair_totalSupply_ASC',
-  PairTotalSupplyAscNullsFirst = 'pair_totalSupply_ASC_NULLS_FIRST',
-  PairTotalSupplyAscNullsLast = 'pair_totalSupply_ASC_NULLS_LAST',
-  PairTotalSupplyDesc = 'pair_totalSupply_DESC',
-  PairTotalSupplyDescNullsFirst = 'pair_totalSupply_DESC_NULLS_FIRST',
-  PairTotalSupplyDescNullsLast = 'pair_totalSupply_DESC_NULLS_LAST',
-  PairTrackedReserveEthAsc = 'pair_trackedReserveETH_ASC',
-  PairTrackedReserveEthAscNullsFirst = 'pair_trackedReserveETH_ASC_NULLS_FIRST',
-  PairTrackedReserveEthAscNullsLast = 'pair_trackedReserveETH_ASC_NULLS_LAST',
-  PairTrackedReserveEthDesc = 'pair_trackedReserveETH_DESC',
-  PairTrackedReserveEthDescNullsFirst = 'pair_trackedReserveETH_DESC_NULLS_FIRST',
-  PairTrackedReserveEthDescNullsLast = 'pair_trackedReserveETH_DESC_NULLS_LAST',
-  PairTxCountAsc = 'pair_txCount_ASC',
-  PairTxCountAscNullsFirst = 'pair_txCount_ASC_NULLS_FIRST',
-  PairTxCountAscNullsLast = 'pair_txCount_ASC_NULLS_LAST',
-  PairTxCountDesc = 'pair_txCount_DESC',
-  PairTxCountDescNullsFirst = 'pair_txCount_DESC_NULLS_FIRST',
-  PairTxCountDescNullsLast = 'pair_txCount_DESC_NULLS_LAST',
-  PairUntrackedVolumeUsdAsc = 'pair_untrackedVolumeUSD_ASC',
-  PairUntrackedVolumeUsdAscNullsFirst = 'pair_untrackedVolumeUSD_ASC_NULLS_FIRST',
-  PairUntrackedVolumeUsdAscNullsLast = 'pair_untrackedVolumeUSD_ASC_NULLS_LAST',
-  PairUntrackedVolumeUsdDesc = 'pair_untrackedVolumeUSD_DESC',
-  PairUntrackedVolumeUsdDescNullsFirst = 'pair_untrackedVolumeUSD_DESC_NULLS_FIRST',
-  PairUntrackedVolumeUsdDescNullsLast = 'pair_untrackedVolumeUSD_DESC_NULLS_LAST',
-  PairVolumeToken0Asc = 'pair_volumeToken0_ASC',
-  PairVolumeToken0AscNullsFirst = 'pair_volumeToken0_ASC_NULLS_FIRST',
-  PairVolumeToken0AscNullsLast = 'pair_volumeToken0_ASC_NULLS_LAST',
-  PairVolumeToken0Desc = 'pair_volumeToken0_DESC',
-  PairVolumeToken0DescNullsFirst = 'pair_volumeToken0_DESC_NULLS_FIRST',
-  PairVolumeToken0DescNullsLast = 'pair_volumeToken0_DESC_NULLS_LAST',
-  PairVolumeToken1Asc = 'pair_volumeToken1_ASC',
-  PairVolumeToken1AscNullsFirst = 'pair_volumeToken1_ASC_NULLS_FIRST',
-  PairVolumeToken1AscNullsLast = 'pair_volumeToken1_ASC_NULLS_LAST',
-  PairVolumeToken1Desc = 'pair_volumeToken1_DESC',
-  PairVolumeToken1DescNullsFirst = 'pair_volumeToken1_DESC_NULLS_FIRST',
-  PairVolumeToken1DescNullsLast = 'pair_volumeToken1_DESC_NULLS_LAST',
-  PairVolumeUsdAsc = 'pair_volumeUSD_ASC',
-  PairVolumeUsdAscNullsFirst = 'pair_volumeUSD_ASC_NULLS_FIRST',
-  PairVolumeUsdAscNullsLast = 'pair_volumeUSD_ASC_NULLS_LAST',
-  PairVolumeUsdDesc = 'pair_volumeUSD_DESC',
-  PairVolumeUsdDescNullsFirst = 'pair_volumeUSD_DESC_NULLS_FIRST',
-  PairVolumeUsdDescNullsLast = 'pair_volumeUSD_DESC_NULLS_LAST',
+  PairTradeVolume24hDeltaAsc = 'pair_tradeVolume24hDelta_ASC',
+  PairTradeVolume24hDeltaAscNullsFirst = 'pair_tradeVolume24hDelta_ASC_NULLS_FIRST',
+  PairTradeVolume24hDeltaAscNullsLast = 'pair_tradeVolume24hDelta_ASC_NULLS_LAST',
+  PairTradeVolume24hDeltaDesc = 'pair_tradeVolume24hDelta_DESC',
+  PairTradeVolume24hDeltaDescNullsFirst = 'pair_tradeVolume24hDelta_DESC_NULLS_FIRST',
+  PairTradeVolume24hDeltaDescNullsLast = 'pair_tradeVolume24hDelta_DESC_NULLS_LAST',
+  PairTradeVolume24hAsc = 'pair_tradeVolume24h_ASC',
+  PairTradeVolume24hAscNullsFirst = 'pair_tradeVolume24h_ASC_NULLS_FIRST',
+  PairTradeVolume24hAscNullsLast = 'pair_tradeVolume24h_ASC_NULLS_LAST',
+  PairTradeVolume24hDesc = 'pair_tradeVolume24h_DESC',
+  PairTradeVolume24hDescNullsFirst = 'pair_tradeVolume24h_DESC_NULLS_FIRST',
+  PairTradeVolume24hDescNullsLast = 'pair_tradeVolume24h_DESC_NULLS_LAST',
+  PairTradeVolumeEth24hAsc = 'pair_tradeVolumeETH24h_ASC',
+  PairTradeVolumeEth24hAscNullsFirst = 'pair_tradeVolumeETH24h_ASC_NULLS_FIRST',
+  PairTradeVolumeEth24hAscNullsLast = 'pair_tradeVolumeETH24h_ASC_NULLS_LAST',
+  PairTradeVolumeEth24hDesc = 'pair_tradeVolumeETH24h_DESC',
+  PairTradeVolumeEth24hDescNullsFirst = 'pair_tradeVolumeETH24h_DESC_NULLS_FIRST',
+  PairTradeVolumeEth24hDescNullsLast = 'pair_tradeVolumeETH24h_DESC_NULLS_LAST',
+  PairTradeVolumeUsd24hAsc = 'pair_tradeVolumeUSD24h_ASC',
+  PairTradeVolumeUsd24hAscNullsFirst = 'pair_tradeVolumeUSD24h_ASC_NULLS_FIRST',
+  PairTradeVolumeUsd24hAscNullsLast = 'pair_tradeVolumeUSD24h_ASC_NULLS_LAST',
+  PairTradeVolumeUsd24hDesc = 'pair_tradeVolumeUSD24h_DESC',
+  PairTradeVolumeUsd24hDescNullsFirst = 'pair_tradeVolumeUSD24h_DESC_NULLS_FIRST',
+  PairTradeVolumeUsd24hDescNullsLast = 'pair_tradeVolumeUSD24h_DESC_NULLS_LAST',
+  PairTxCount24hAsc = 'pair_txCount24h_ASC',
+  PairTxCount24hAscNullsFirst = 'pair_txCount24h_ASC_NULLS_FIRST',
+  PairTxCount24hAscNullsLast = 'pair_txCount24h_ASC_NULLS_LAST',
+  PairTxCount24hDesc = 'pair_txCount24h_DESC',
+  PairTxCount24hDescNullsFirst = 'pair_txCount24h_DESC_NULLS_FIRST',
+  PairTxCount24hDescNullsLast = 'pair_txCount24h_DESC_NULLS_LAST',
   Reserve0Asc = 'reserve0_ASC',
   Reserve0AscNullsFirst = 'reserve0_ASC_NULLS_FIRST',
   Reserve0AscNullsLast = 'reserve0_ASC_NULLS_LAST',
@@ -350,12 +496,6 @@ export enum LiquidityPositionSnapshotOrderByInput {
   Reserve1Desc = 'reserve1_DESC',
   Reserve1DescNullsFirst = 'reserve1_DESC_NULLS_FIRST',
   Reserve1DescNullsLast = 'reserve1_DESC_NULLS_LAST',
-  ReserveUsdAsc = 'reserveUSD_ASC',
-  ReserveUsdAscNullsFirst = 'reserveUSD_ASC_NULLS_FIRST',
-  ReserveUsdAscNullsLast = 'reserveUSD_ASC_NULLS_LAST',
-  ReserveUsdDesc = 'reserveUSD_DESC',
-  ReserveUsdDescNullsFirst = 'reserveUSD_DESC_NULLS_FIRST',
-  ReserveUsdDescNullsLast = 'reserveUSD_DESC_NULLS_LAST',
   TimestampAsc = 'timestamp_ASC',
   TimestampAscNullsFirst = 'timestamp_ASC_NULLS_FIRST',
   TimestampAscNullsLast = 'timestamp_ASC_NULLS_LAST',
@@ -388,9 +528,9 @@ export enum LiquidityPositionSnapshotOrderByInput {
   UserUsdSwappedDescNullsLast = 'user_usdSwapped_DESC_NULLS_LAST',
 }
 
-export type LiquidityPositionSnapshotWhereInput = {
-  AND?: InputMaybe<Array<LiquidityPositionSnapshotWhereInput>>;
-  OR?: InputMaybe<Array<LiquidityPositionSnapshotWhereInput>>;
+export type LiquidityPositionHistoryWhereInput = {
+  AND?: InputMaybe<Array<LiquidityPositionHistoryWhereInput>>;
+  OR?: InputMaybe<Array<LiquidityPositionHistoryWhereInput>>;
   block_eq?: InputMaybe<Scalars['Int']['input']>;
   block_gt?: InputMaybe<Scalars['Int']['input']>;
   block_gte?: InputMaybe<Scalars['Int']['input']>;
@@ -417,7 +557,16 @@ export type LiquidityPositionSnapshotWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
   id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
   id_startsWith?: InputMaybe<Scalars['String']['input']>;
-  liquidityPosition?: InputMaybe<LiquidityPositionWhereInput>;
+  lastUpdatedAt_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lastUpdatedAt_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lastUpdatedAt_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  liquidityPosition?: InputMaybe<CurrentLiquidityPositionWhereInput>;
   liquidityPosition_isNull?: InputMaybe<Scalars['Boolean']['input']>;
   liquidityTokenBalance_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   liquidityTokenBalance_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -443,6 +592,15 @@ export type LiquidityPositionSnapshotWhereInput = {
   liquidityTokenTotalSupply_not_in?: InputMaybe<
     Array<Scalars['BigDecimal']['input']>
   >;
+  liquidityUSD_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  liquidityUSD_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  liquidityUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityUSD_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   pair?: InputMaybe<PairWhereInput>;
   pair_isNull?: InputMaybe<Scalars['Boolean']['input']>;
   reserve0_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -463,24 +621,15 @@ export type LiquidityPositionSnapshotWhereInput = {
   reserve1_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   reserve1_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   reserve1_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  reserveUSD_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  reserveUSD_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  reserveUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveUSD_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  timestamp_eq?: InputMaybe<Scalars['Int']['input']>;
-  timestamp_gt?: InputMaybe<Scalars['Int']['input']>;
-  timestamp_gte?: InputMaybe<Scalars['Int']['input']>;
-  timestamp_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  timestamp_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   timestamp_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  timestamp_lt?: InputMaybe<Scalars['Int']['input']>;
-  timestamp_lte?: InputMaybe<Scalars['Int']['input']>;
-  timestamp_not_eq?: InputMaybe<Scalars['Int']['input']>;
-  timestamp_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  timestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   token0PriceUSD_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   token0PriceUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   token0PriceUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -503,69 +652,21 @@ export type LiquidityPositionSnapshotWhereInput = {
   user_isNull?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-export type LiquidityPositionSnapshotsConnection = {
-  __typename?: 'LiquidityPositionSnapshotsConnection';
-  edges: Array<LiquidityPositionSnapshotEdge>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type LiquidityPositionWhereInput = {
-  AND?: InputMaybe<Array<LiquidityPositionWhereInput>>;
-  OR?: InputMaybe<Array<LiquidityPositionWhereInput>>;
-  id_contains?: InputMaybe<Scalars['String']['input']>;
-  id_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  id_endsWith?: InputMaybe<Scalars['String']['input']>;
-  id_eq?: InputMaybe<Scalars['String']['input']>;
-  id_gt?: InputMaybe<Scalars['String']['input']>;
-  id_gte?: InputMaybe<Scalars['String']['input']>;
-  id_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  id_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  id_lt?: InputMaybe<Scalars['String']['input']>;
-  id_lte?: InputMaybe<Scalars['String']['input']>;
-  id_not_contains?: InputMaybe<Scalars['String']['input']>;
-  id_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  id_not_endsWith?: InputMaybe<Scalars['String']['input']>;
-  id_not_eq?: InputMaybe<Scalars['String']['input']>;
-  id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
-  id_startsWith?: InputMaybe<Scalars['String']['input']>;
-  liquidityTokenBalance_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  liquidityTokenBalance_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  liquidityTokenBalance_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  liquidityTokenBalance_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  liquidityTokenBalance_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  liquidityTokenBalance_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  liquidityTokenBalance_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  liquidityTokenBalance_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  liquidityTokenBalance_not_in?: InputMaybe<
-    Array<Scalars['BigDecimal']['input']>
-  >;
-  pair?: InputMaybe<PairWhereInput>;
-  pair_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  user?: InputMaybe<UserWhereInput>;
-  user_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type LiquidityPositionsConnection = {
-  __typename?: 'LiquidityPositionsConnection';
-  edges: Array<LiquidityPositionEdge>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
 export type MemeToken = {
   __typename?: 'MemeToken';
   activityVaultAllocation?: Maybe<Scalars['BigInt']['output']>;
   id: Scalars['String']['output'];
+  lastUpdatedAt: Scalars['BigInt']['output'];
+  lockedLpTokens?: Maybe<Scalars['BigInt']['output']>;
+  lpTokensUnlockTime?: Maybe<Scalars['BigInt']['output']>;
   memeCreatedAt?: Maybe<Scalars['BigInt']['output']>;
+  memePicUrl?: Maybe<Scalars['String']['output']>;
+  ownerAddress: Scalars['String']['output'];
   ownerAllocation?: Maybe<Scalars['BigInt']['output']>;
   tokenAddress: Scalars['String']['output'];
   tokenName: Scalars['String']['output'];
-  tokenPrice?: Maybe<Scalars['BigInt']['output']>;
   tokenSymbol: Scalars['String']['output'];
   tokenV60Initiated?: Maybe<Scalars['Boolean']['output']>;
-  userAddress: Scalars['String']['output'];
   v60LpTokenAddress?: Maybe<Scalars['String']['output']>;
 };
 
@@ -588,12 +689,42 @@ export enum MemeTokenOrderByInput {
   IdDesc = 'id_DESC',
   IdDescNullsFirst = 'id_DESC_NULLS_FIRST',
   IdDescNullsLast = 'id_DESC_NULLS_LAST',
+  LastUpdatedAtAsc = 'lastUpdatedAt_ASC',
+  LastUpdatedAtAscNullsFirst = 'lastUpdatedAt_ASC_NULLS_FIRST',
+  LastUpdatedAtAscNullsLast = 'lastUpdatedAt_ASC_NULLS_LAST',
+  LastUpdatedAtDesc = 'lastUpdatedAt_DESC',
+  LastUpdatedAtDescNullsFirst = 'lastUpdatedAt_DESC_NULLS_FIRST',
+  LastUpdatedAtDescNullsLast = 'lastUpdatedAt_DESC_NULLS_LAST',
+  LockedLpTokensAsc = 'lockedLpTokens_ASC',
+  LockedLpTokensAscNullsFirst = 'lockedLpTokens_ASC_NULLS_FIRST',
+  LockedLpTokensAscNullsLast = 'lockedLpTokens_ASC_NULLS_LAST',
+  LockedLpTokensDesc = 'lockedLpTokens_DESC',
+  LockedLpTokensDescNullsFirst = 'lockedLpTokens_DESC_NULLS_FIRST',
+  LockedLpTokensDescNullsLast = 'lockedLpTokens_DESC_NULLS_LAST',
+  LpTokensUnlockTimeAsc = 'lpTokensUnlockTime_ASC',
+  LpTokensUnlockTimeAscNullsFirst = 'lpTokensUnlockTime_ASC_NULLS_FIRST',
+  LpTokensUnlockTimeAscNullsLast = 'lpTokensUnlockTime_ASC_NULLS_LAST',
+  LpTokensUnlockTimeDesc = 'lpTokensUnlockTime_DESC',
+  LpTokensUnlockTimeDescNullsFirst = 'lpTokensUnlockTime_DESC_NULLS_FIRST',
+  LpTokensUnlockTimeDescNullsLast = 'lpTokensUnlockTime_DESC_NULLS_LAST',
   MemeCreatedAtAsc = 'memeCreatedAt_ASC',
   MemeCreatedAtAscNullsFirst = 'memeCreatedAt_ASC_NULLS_FIRST',
   MemeCreatedAtAscNullsLast = 'memeCreatedAt_ASC_NULLS_LAST',
   MemeCreatedAtDesc = 'memeCreatedAt_DESC',
   MemeCreatedAtDescNullsFirst = 'memeCreatedAt_DESC_NULLS_FIRST',
   MemeCreatedAtDescNullsLast = 'memeCreatedAt_DESC_NULLS_LAST',
+  MemePicUrlAsc = 'memePicUrl_ASC',
+  MemePicUrlAscNullsFirst = 'memePicUrl_ASC_NULLS_FIRST',
+  MemePicUrlAscNullsLast = 'memePicUrl_ASC_NULLS_LAST',
+  MemePicUrlDesc = 'memePicUrl_DESC',
+  MemePicUrlDescNullsFirst = 'memePicUrl_DESC_NULLS_FIRST',
+  MemePicUrlDescNullsLast = 'memePicUrl_DESC_NULLS_LAST',
+  OwnerAddressAsc = 'ownerAddress_ASC',
+  OwnerAddressAscNullsFirst = 'ownerAddress_ASC_NULLS_FIRST',
+  OwnerAddressAscNullsLast = 'ownerAddress_ASC_NULLS_LAST',
+  OwnerAddressDesc = 'ownerAddress_DESC',
+  OwnerAddressDescNullsFirst = 'ownerAddress_DESC_NULLS_FIRST',
+  OwnerAddressDescNullsLast = 'ownerAddress_DESC_NULLS_LAST',
   OwnerAllocationAsc = 'ownerAllocation_ASC',
   OwnerAllocationAscNullsFirst = 'ownerAllocation_ASC_NULLS_FIRST',
   OwnerAllocationAscNullsLast = 'ownerAllocation_ASC_NULLS_LAST',
@@ -612,12 +743,6 @@ export enum MemeTokenOrderByInput {
   TokenNameDesc = 'tokenName_DESC',
   TokenNameDescNullsFirst = 'tokenName_DESC_NULLS_FIRST',
   TokenNameDescNullsLast = 'tokenName_DESC_NULLS_LAST',
-  TokenPriceAsc = 'tokenPrice_ASC',
-  TokenPriceAscNullsFirst = 'tokenPrice_ASC_NULLS_FIRST',
-  TokenPriceAscNullsLast = 'tokenPrice_ASC_NULLS_LAST',
-  TokenPriceDesc = 'tokenPrice_DESC',
-  TokenPriceDescNullsFirst = 'tokenPrice_DESC_NULLS_FIRST',
-  TokenPriceDescNullsLast = 'tokenPrice_DESC_NULLS_LAST',
   TokenSymbolAsc = 'tokenSymbol_ASC',
   TokenSymbolAscNullsFirst = 'tokenSymbol_ASC_NULLS_FIRST',
   TokenSymbolAscNullsLast = 'tokenSymbol_ASC_NULLS_LAST',
@@ -630,12 +755,6 @@ export enum MemeTokenOrderByInput {
   TokenV60InitiatedDesc = 'tokenV60Initiated_DESC',
   TokenV60InitiatedDescNullsFirst = 'tokenV60Initiated_DESC_NULLS_FIRST',
   TokenV60InitiatedDescNullsLast = 'tokenV60Initiated_DESC_NULLS_LAST',
-  UserAddressAsc = 'userAddress_ASC',
-  UserAddressAscNullsFirst = 'userAddress_ASC_NULLS_FIRST',
-  UserAddressAscNullsLast = 'userAddress_ASC_NULLS_LAST',
-  UserAddressDesc = 'userAddress_DESC',
-  UserAddressDescNullsFirst = 'userAddress_DESC_NULLS_FIRST',
-  UserAddressDescNullsLast = 'userAddress_DESC_NULLS_LAST',
   V60LpTokenAddressAsc = 'v60LpTokenAddress_ASC',
   V60LpTokenAddressAscNullsFirst = 'v60LpTokenAddress_ASC_NULLS_FIRST',
   V60LpTokenAddressAscNullsLast = 'v60LpTokenAddress_ASC_NULLS_LAST',
@@ -675,6 +794,33 @@ export type MemeTokenWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
   id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
   id_startsWith?: InputMaybe<Scalars['String']['input']>;
+  lastUpdatedAt_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lastUpdatedAt_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lastUpdatedAt_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lockedLpTokens_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lockedLpTokens_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lockedLpTokens_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lockedLpTokens_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lockedLpTokens_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lockedLpTokens_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lockedLpTokens_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lockedLpTokens_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lockedLpTokens_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lpTokensUnlockTime_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lpTokensUnlockTime_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lpTokensUnlockTime_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lpTokensUnlockTime_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lpTokensUnlockTime_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lpTokensUnlockTime_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lpTokensUnlockTime_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lpTokensUnlockTime_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lpTokensUnlockTime_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   memeCreatedAt_eq?: InputMaybe<Scalars['BigInt']['input']>;
   memeCreatedAt_gt?: InputMaybe<Scalars['BigInt']['input']>;
   memeCreatedAt_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -684,6 +830,40 @@ export type MemeTokenWhereInput = {
   memeCreatedAt_lte?: InputMaybe<Scalars['BigInt']['input']>;
   memeCreatedAt_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
   memeCreatedAt_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  memePicUrl_contains?: InputMaybe<Scalars['String']['input']>;
+  memePicUrl_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  memePicUrl_endsWith?: InputMaybe<Scalars['String']['input']>;
+  memePicUrl_eq?: InputMaybe<Scalars['String']['input']>;
+  memePicUrl_gt?: InputMaybe<Scalars['String']['input']>;
+  memePicUrl_gte?: InputMaybe<Scalars['String']['input']>;
+  memePicUrl_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  memePicUrl_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  memePicUrl_lt?: InputMaybe<Scalars['String']['input']>;
+  memePicUrl_lte?: InputMaybe<Scalars['String']['input']>;
+  memePicUrl_not_contains?: InputMaybe<Scalars['String']['input']>;
+  memePicUrl_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  memePicUrl_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  memePicUrl_not_eq?: InputMaybe<Scalars['String']['input']>;
+  memePicUrl_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  memePicUrl_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  memePicUrl_startsWith?: InputMaybe<Scalars['String']['input']>;
+  ownerAddress_contains?: InputMaybe<Scalars['String']['input']>;
+  ownerAddress_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  ownerAddress_endsWith?: InputMaybe<Scalars['String']['input']>;
+  ownerAddress_eq?: InputMaybe<Scalars['String']['input']>;
+  ownerAddress_gt?: InputMaybe<Scalars['String']['input']>;
+  ownerAddress_gte?: InputMaybe<Scalars['String']['input']>;
+  ownerAddress_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  ownerAddress_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  ownerAddress_lt?: InputMaybe<Scalars['String']['input']>;
+  ownerAddress_lte?: InputMaybe<Scalars['String']['input']>;
+  ownerAddress_not_contains?: InputMaybe<Scalars['String']['input']>;
+  ownerAddress_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  ownerAddress_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  ownerAddress_not_eq?: InputMaybe<Scalars['String']['input']>;
+  ownerAddress_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  ownerAddress_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  ownerAddress_startsWith?: InputMaybe<Scalars['String']['input']>;
   ownerAllocation_eq?: InputMaybe<Scalars['BigInt']['input']>;
   ownerAllocation_gt?: InputMaybe<Scalars['BigInt']['input']>;
   ownerAllocation_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -727,15 +907,6 @@ export type MemeTokenWhereInput = {
   tokenName_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
   tokenName_not_startsWith?: InputMaybe<Scalars['String']['input']>;
   tokenName_startsWith?: InputMaybe<Scalars['String']['input']>;
-  tokenPrice_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  tokenPrice_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  tokenPrice_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  tokenPrice_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  tokenPrice_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  tokenPrice_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  tokenPrice_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  tokenPrice_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  tokenPrice_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   tokenSymbol_contains?: InputMaybe<Scalars['String']['input']>;
   tokenSymbol_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
   tokenSymbol_endsWith?: InputMaybe<Scalars['String']['input']>;
@@ -756,23 +927,6 @@ export type MemeTokenWhereInput = {
   tokenV60Initiated_eq?: InputMaybe<Scalars['Boolean']['input']>;
   tokenV60Initiated_isNull?: InputMaybe<Scalars['Boolean']['input']>;
   tokenV60Initiated_not_eq?: InputMaybe<Scalars['Boolean']['input']>;
-  userAddress_contains?: InputMaybe<Scalars['String']['input']>;
-  userAddress_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  userAddress_endsWith?: InputMaybe<Scalars['String']['input']>;
-  userAddress_eq?: InputMaybe<Scalars['String']['input']>;
-  userAddress_gt?: InputMaybe<Scalars['String']['input']>;
-  userAddress_gte?: InputMaybe<Scalars['String']['input']>;
-  userAddress_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  userAddress_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  userAddress_lt?: InputMaybe<Scalars['String']['input']>;
-  userAddress_lte?: InputMaybe<Scalars['String']['input']>;
-  userAddress_not_contains?: InputMaybe<Scalars['String']['input']>;
-  userAddress_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  userAddress_not_endsWith?: InputMaybe<Scalars['String']['input']>;
-  userAddress_not_eq?: InputMaybe<Scalars['String']['input']>;
-  userAddress_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  userAddress_not_startsWith?: InputMaybe<Scalars['String']['input']>;
-  userAddress_startsWith?: InputMaybe<Scalars['String']['input']>;
   v60LpTokenAddress_contains?: InputMaybe<Scalars['String']['input']>;
   v60LpTokenAddress_containsInsensitive?: InputMaybe<
     Scalars['String']['input']
@@ -815,40 +969,47 @@ export type Pair = {
   __typename?: 'Pair';
   createdAtBlockNumber: Scalars['BigInt']['output'];
   createdAtTimestamp: Scalars['BigInt']['output'];
+  fees24h?: Maybe<Scalars['BigDecimal']['output']>;
+  fees24hDelta?: Maybe<Scalars['BigDecimal']['output']>;
+  feesETH24h?: Maybe<Scalars['BigDecimal']['output']>;
+  feesUSD24h?: Maybe<Scalars['BigDecimal']['output']>;
   id: Scalars['String']['output'];
+  lastUpdatedAt: Scalars['BigInt']['output'];
+  liquidity24hDelta?: Maybe<Scalars['BigDecimal']['output']>;
   liquidityProviderCount: Scalars['BigInt']['output'];
+  liquidityUSD?: Maybe<Scalars['BigDecimal']['output']>;
+  lpTotalLocked: Scalars['BigDecimal']['output'];
+  lpTotalSupply: Scalars['BigDecimal']['output'];
   reserve0: Scalars['BigDecimal']['output'];
   reserve1: Scalars['BigDecimal']['output'];
-  reserveETH: Scalars['BigDecimal']['output'];
-  reserveUSD: Scalars['BigDecimal']['output'];
   token0: Token;
   token0Price: Scalars['BigDecimal']['output'];
   token1: Token;
   token1Price: Scalars['BigDecimal']['output'];
-  totalSupply: Scalars['BigDecimal']['output'];
-  trackedReserveETH: Scalars['BigDecimal']['output'];
-  txCount: Scalars['BigInt']['output'];
-  untrackedVolumeUSD: Scalars['BigDecimal']['output'];
-  volumeToken0: Scalars['BigDecimal']['output'];
-  volumeToken1: Scalars['BigDecimal']['output'];
-  volumeUSD: Scalars['BigDecimal']['output'];
+  tradeVolume24h?: Maybe<Scalars['BigDecimal']['output']>;
+  tradeVolume24hDelta?: Maybe<Scalars['BigDecimal']['output']>;
+  tradeVolumeETH24h?: Maybe<Scalars['BigDecimal']['output']>;
+  tradeVolumeUSD24h?: Maybe<Scalars['BigDecimal']['output']>;
+  txCount24h: Scalars['BigInt']['output'];
 };
 
 export type PairDayData = {
   __typename?: 'PairDayData';
-  dailyTxns: Scalars['BigInt']['output'];
-  dailyVolumeToken0: Scalars['BigDecimal']['output'];
-  dailyVolumeToken1: Scalars['BigDecimal']['output'];
-  dailyVolumeUSD: Scalars['BigDecimal']['output'];
   date: Scalars['Int']['output'];
   id: Scalars['String']['output'];
+  lastUpdatedAt: Scalars['BigInt']['output'];
+  liquidityProviderCount: Scalars['BigInt']['output'];
+  liquidityUSD?: Maybe<Scalars['BigDecimal']['output']>;
+  lpTotalLocked: Scalars['BigDecimal']['output'];
+  lpTotalSupply: Scalars['BigDecimal']['output'];
   pairAddress: Scalars['String']['output'];
   reserve0: Scalars['BigDecimal']['output'];
   reserve1: Scalars['BigDecimal']['output'];
-  reserveUSD: Scalars['BigDecimal']['output'];
-  token0: Token;
-  token1: Token;
-  totalSupply?: Maybe<Scalars['BigDecimal']['output']>;
+  token0: TokenDayData;
+  token0Price: Scalars['BigDecimal']['output'];
+  token1: TokenDayData;
+  token1Price: Scalars['BigDecimal']['output'];
+  txCount: Scalars['BigInt']['output'];
 };
 
 export type PairDayDataConnection = {
@@ -865,30 +1026,6 @@ export type PairDayDataEdge = {
 };
 
 export enum PairDayDataOrderByInput {
-  DailyTxnsAsc = 'dailyTxns_ASC',
-  DailyTxnsAscNullsFirst = 'dailyTxns_ASC_NULLS_FIRST',
-  DailyTxnsAscNullsLast = 'dailyTxns_ASC_NULLS_LAST',
-  DailyTxnsDesc = 'dailyTxns_DESC',
-  DailyTxnsDescNullsFirst = 'dailyTxns_DESC_NULLS_FIRST',
-  DailyTxnsDescNullsLast = 'dailyTxns_DESC_NULLS_LAST',
-  DailyVolumeToken0Asc = 'dailyVolumeToken0_ASC',
-  DailyVolumeToken0AscNullsFirst = 'dailyVolumeToken0_ASC_NULLS_FIRST',
-  DailyVolumeToken0AscNullsLast = 'dailyVolumeToken0_ASC_NULLS_LAST',
-  DailyVolumeToken0Desc = 'dailyVolumeToken0_DESC',
-  DailyVolumeToken0DescNullsFirst = 'dailyVolumeToken0_DESC_NULLS_FIRST',
-  DailyVolumeToken0DescNullsLast = 'dailyVolumeToken0_DESC_NULLS_LAST',
-  DailyVolumeToken1Asc = 'dailyVolumeToken1_ASC',
-  DailyVolumeToken1AscNullsFirst = 'dailyVolumeToken1_ASC_NULLS_FIRST',
-  DailyVolumeToken1AscNullsLast = 'dailyVolumeToken1_ASC_NULLS_LAST',
-  DailyVolumeToken1Desc = 'dailyVolumeToken1_DESC',
-  DailyVolumeToken1DescNullsFirst = 'dailyVolumeToken1_DESC_NULLS_FIRST',
-  DailyVolumeToken1DescNullsLast = 'dailyVolumeToken1_DESC_NULLS_LAST',
-  DailyVolumeUsdAsc = 'dailyVolumeUSD_ASC',
-  DailyVolumeUsdAscNullsFirst = 'dailyVolumeUSD_ASC_NULLS_FIRST',
-  DailyVolumeUsdAscNullsLast = 'dailyVolumeUSD_ASC_NULLS_LAST',
-  DailyVolumeUsdDesc = 'dailyVolumeUSD_DESC',
-  DailyVolumeUsdDescNullsFirst = 'dailyVolumeUSD_DESC_NULLS_FIRST',
-  DailyVolumeUsdDescNullsLast = 'dailyVolumeUSD_DESC_NULLS_LAST',
   DateAsc = 'date_ASC',
   DateAscNullsFirst = 'date_ASC_NULLS_FIRST',
   DateAscNullsLast = 'date_ASC_NULLS_LAST',
@@ -901,6 +1038,36 @@ export enum PairDayDataOrderByInput {
   IdDesc = 'id_DESC',
   IdDescNullsFirst = 'id_DESC_NULLS_FIRST',
   IdDescNullsLast = 'id_DESC_NULLS_LAST',
+  LastUpdatedAtAsc = 'lastUpdatedAt_ASC',
+  LastUpdatedAtAscNullsFirst = 'lastUpdatedAt_ASC_NULLS_FIRST',
+  LastUpdatedAtAscNullsLast = 'lastUpdatedAt_ASC_NULLS_LAST',
+  LastUpdatedAtDesc = 'lastUpdatedAt_DESC',
+  LastUpdatedAtDescNullsFirst = 'lastUpdatedAt_DESC_NULLS_FIRST',
+  LastUpdatedAtDescNullsLast = 'lastUpdatedAt_DESC_NULLS_LAST',
+  LiquidityProviderCountAsc = 'liquidityProviderCount_ASC',
+  LiquidityProviderCountAscNullsFirst = 'liquidityProviderCount_ASC_NULLS_FIRST',
+  LiquidityProviderCountAscNullsLast = 'liquidityProviderCount_ASC_NULLS_LAST',
+  LiquidityProviderCountDesc = 'liquidityProviderCount_DESC',
+  LiquidityProviderCountDescNullsFirst = 'liquidityProviderCount_DESC_NULLS_FIRST',
+  LiquidityProviderCountDescNullsLast = 'liquidityProviderCount_DESC_NULLS_LAST',
+  LiquidityUsdAsc = 'liquidityUSD_ASC',
+  LiquidityUsdAscNullsFirst = 'liquidityUSD_ASC_NULLS_FIRST',
+  LiquidityUsdAscNullsLast = 'liquidityUSD_ASC_NULLS_LAST',
+  LiquidityUsdDesc = 'liquidityUSD_DESC',
+  LiquidityUsdDescNullsFirst = 'liquidityUSD_DESC_NULLS_FIRST',
+  LiquidityUsdDescNullsLast = 'liquidityUSD_DESC_NULLS_LAST',
+  LpTotalLockedAsc = 'lpTotalLocked_ASC',
+  LpTotalLockedAscNullsFirst = 'lpTotalLocked_ASC_NULLS_FIRST',
+  LpTotalLockedAscNullsLast = 'lpTotalLocked_ASC_NULLS_LAST',
+  LpTotalLockedDesc = 'lpTotalLocked_DESC',
+  LpTotalLockedDescNullsFirst = 'lpTotalLocked_DESC_NULLS_FIRST',
+  LpTotalLockedDescNullsLast = 'lpTotalLocked_DESC_NULLS_LAST',
+  LpTotalSupplyAsc = 'lpTotalSupply_ASC',
+  LpTotalSupplyAscNullsFirst = 'lpTotalSupply_ASC_NULLS_FIRST',
+  LpTotalSupplyAscNullsLast = 'lpTotalSupply_ASC_NULLS_LAST',
+  LpTotalSupplyDesc = 'lpTotalSupply_DESC',
+  LpTotalSupplyDescNullsFirst = 'lpTotalSupply_DESC_NULLS_FIRST',
+  LpTotalSupplyDescNullsLast = 'lpTotalSupply_DESC_NULLS_LAST',
   PairAddressAsc = 'pairAddress_ASC',
   PairAddressAscNullsFirst = 'pairAddress_ASC_NULLS_FIRST',
   PairAddressAscNullsLast = 'pairAddress_ASC_NULLS_LAST',
@@ -919,191 +1086,209 @@ export enum PairDayDataOrderByInput {
   Reserve1Desc = 'reserve1_DESC',
   Reserve1DescNullsFirst = 'reserve1_DESC_NULLS_FIRST',
   Reserve1DescNullsLast = 'reserve1_DESC_NULLS_LAST',
-  ReserveUsdAsc = 'reserveUSD_ASC',
-  ReserveUsdAscNullsFirst = 'reserveUSD_ASC_NULLS_FIRST',
-  ReserveUsdAscNullsLast = 'reserveUSD_ASC_NULLS_LAST',
-  ReserveUsdDesc = 'reserveUSD_DESC',
-  ReserveUsdDescNullsFirst = 'reserveUSD_DESC_NULLS_FIRST',
-  ReserveUsdDescNullsLast = 'reserveUSD_DESC_NULLS_LAST',
-  Token0DecimalsAsc = 'token0_decimals_ASC',
-  Token0DecimalsAscNullsFirst = 'token0_decimals_ASC_NULLS_FIRST',
-  Token0DecimalsAscNullsLast = 'token0_decimals_ASC_NULLS_LAST',
-  Token0DecimalsDesc = 'token0_decimals_DESC',
-  Token0DecimalsDescNullsFirst = 'token0_decimals_DESC_NULLS_FIRST',
-  Token0DecimalsDescNullsLast = 'token0_decimals_DESC_NULLS_LAST',
-  Token0DerivedEthAsc = 'token0_derivedETH_ASC',
-  Token0DerivedEthAscNullsFirst = 'token0_derivedETH_ASC_NULLS_FIRST',
-  Token0DerivedEthAscNullsLast = 'token0_derivedETH_ASC_NULLS_LAST',
-  Token0DerivedEthDesc = 'token0_derivedETH_DESC',
-  Token0DerivedEthDescNullsFirst = 'token0_derivedETH_DESC_NULLS_FIRST',
-  Token0DerivedEthDescNullsLast = 'token0_derivedETH_DESC_NULLS_LAST',
+  Token0PriceAsc = 'token0Price_ASC',
+  Token0PriceAscNullsFirst = 'token0Price_ASC_NULLS_FIRST',
+  Token0PriceAscNullsLast = 'token0Price_ASC_NULLS_LAST',
+  Token0PriceDesc = 'token0Price_DESC',
+  Token0PriceDescNullsFirst = 'token0Price_DESC_NULLS_FIRST',
+  Token0PriceDescNullsLast = 'token0Price_DESC_NULLS_LAST',
+  Token0CirculationSupplyAsc = 'token0_circulationSupply_ASC',
+  Token0CirculationSupplyAscNullsFirst = 'token0_circulationSupply_ASC_NULLS_FIRST',
+  Token0CirculationSupplyAscNullsLast = 'token0_circulationSupply_ASC_NULLS_LAST',
+  Token0CirculationSupplyDesc = 'token0_circulationSupply_DESC',
+  Token0CirculationSupplyDescNullsFirst = 'token0_circulationSupply_DESC_NULLS_FIRST',
+  Token0CirculationSupplyDescNullsLast = 'token0_circulationSupply_DESC_NULLS_LAST',
+  Token0DateAsc = 'token0_date_ASC',
+  Token0DateAscNullsFirst = 'token0_date_ASC_NULLS_FIRST',
+  Token0DateAscNullsLast = 'token0_date_ASC_NULLS_LAST',
+  Token0DateDesc = 'token0_date_DESC',
+  Token0DateDescNullsFirst = 'token0_date_DESC_NULLS_FIRST',
+  Token0DateDescNullsLast = 'token0_date_DESC_NULLS_LAST',
+  Token0HoldersAsc = 'token0_holders_ASC',
+  Token0HoldersAscNullsFirst = 'token0_holders_ASC_NULLS_FIRST',
+  Token0HoldersAscNullsLast = 'token0_holders_ASC_NULLS_LAST',
+  Token0HoldersDesc = 'token0_holders_DESC',
+  Token0HoldersDescNullsFirst = 'token0_holders_DESC_NULLS_FIRST',
+  Token0HoldersDescNullsLast = 'token0_holders_DESC_NULLS_LAST',
   Token0IdAsc = 'token0_id_ASC',
   Token0IdAscNullsFirst = 'token0_id_ASC_NULLS_FIRST',
   Token0IdAscNullsLast = 'token0_id_ASC_NULLS_LAST',
   Token0IdDesc = 'token0_id_DESC',
   Token0IdDescNullsFirst = 'token0_id_DESC_NULLS_FIRST',
   Token0IdDescNullsLast = 'token0_id_DESC_NULLS_LAST',
-  Token0NameAsc = 'token0_name_ASC',
-  Token0NameAscNullsFirst = 'token0_name_ASC_NULLS_FIRST',
-  Token0NameAscNullsLast = 'token0_name_ASC_NULLS_LAST',
-  Token0NameDesc = 'token0_name_DESC',
-  Token0NameDescNullsFirst = 'token0_name_DESC_NULLS_FIRST',
-  Token0NameDescNullsLast = 'token0_name_DESC_NULLS_LAST',
-  Token0SymbolAsc = 'token0_symbol_ASC',
-  Token0SymbolAscNullsFirst = 'token0_symbol_ASC_NULLS_FIRST',
-  Token0SymbolAscNullsLast = 'token0_symbol_ASC_NULLS_LAST',
-  Token0SymbolDesc = 'token0_symbol_DESC',
-  Token0SymbolDescNullsFirst = 'token0_symbol_DESC_NULLS_FIRST',
-  Token0SymbolDescNullsLast = 'token0_symbol_DESC_NULLS_LAST',
-  Token0TotalLiquidityAsc = 'token0_totalLiquidity_ASC',
-  Token0TotalLiquidityAscNullsFirst = 'token0_totalLiquidity_ASC_NULLS_FIRST',
-  Token0TotalLiquidityAscNullsLast = 'token0_totalLiquidity_ASC_NULLS_LAST',
-  Token0TotalLiquidityDesc = 'token0_totalLiquidity_DESC',
-  Token0TotalLiquidityDescNullsFirst = 'token0_totalLiquidity_DESC_NULLS_FIRST',
-  Token0TotalLiquidityDescNullsLast = 'token0_totalLiquidity_DESC_NULLS_LAST',
+  Token0LastUpdatedAtAsc = 'token0_lastUpdatedAt_ASC',
+  Token0LastUpdatedAtAscNullsFirst = 'token0_lastUpdatedAt_ASC_NULLS_FIRST',
+  Token0LastUpdatedAtAscNullsLast = 'token0_lastUpdatedAt_ASC_NULLS_LAST',
+  Token0LastUpdatedAtDesc = 'token0_lastUpdatedAt_DESC',
+  Token0LastUpdatedAtDescNullsFirst = 'token0_lastUpdatedAt_DESC_NULLS_FIRST',
+  Token0LastUpdatedAtDescNullsLast = 'token0_lastUpdatedAt_DESC_NULLS_LAST',
+  Token0MarketCapUsdAsc = 'token0_marketCapUSD_ASC',
+  Token0MarketCapUsdAscNullsFirst = 'token0_marketCapUSD_ASC_NULLS_FIRST',
+  Token0MarketCapUsdAscNullsLast = 'token0_marketCapUSD_ASC_NULLS_LAST',
+  Token0MarketCapUsdDesc = 'token0_marketCapUSD_DESC',
+  Token0MarketCapUsdDescNullsFirst = 'token0_marketCapUSD_DESC_NULLS_FIRST',
+  Token0MarketCapUsdDescNullsLast = 'token0_marketCapUSD_DESC_NULLS_LAST',
+  Token0PriceEthAsc = 'token0_priceETH_ASC',
+  Token0PriceEthAscNullsFirst = 'token0_priceETH_ASC_NULLS_FIRST',
+  Token0PriceEthAscNullsLast = 'token0_priceETH_ASC_NULLS_LAST',
+  Token0PriceEthDesc = 'token0_priceETH_DESC',
+  Token0PriceEthDescNullsFirst = 'token0_priceETH_DESC_NULLS_FIRST',
+  Token0PriceEthDescNullsLast = 'token0_priceETH_DESC_NULLS_LAST',
+  Token0PriceUsdAsc = 'token0_priceUSD_ASC',
+  Token0PriceUsdAscNullsFirst = 'token0_priceUSD_ASC_NULLS_FIRST',
+  Token0PriceUsdAscNullsLast = 'token0_priceUSD_ASC_NULLS_LAST',
+  Token0PriceUsdDesc = 'token0_priceUSD_DESC',
+  Token0PriceUsdDescNullsFirst = 'token0_priceUSD_DESC_NULLS_FIRST',
+  Token0PriceUsdDescNullsLast = 'token0_priceUSD_DESC_NULLS_LAST',
+  Token0TotalLiquidityAllPairsUsdAsc = 'token0_totalLiquidityAllPairsUSD_ASC',
+  Token0TotalLiquidityAllPairsUsdAscNullsFirst = 'token0_totalLiquidityAllPairsUSD_ASC_NULLS_FIRST',
+  Token0TotalLiquidityAllPairsUsdAscNullsLast = 'token0_totalLiquidityAllPairsUSD_ASC_NULLS_LAST',
+  Token0TotalLiquidityAllPairsUsdDesc = 'token0_totalLiquidityAllPairsUSD_DESC',
+  Token0TotalLiquidityAllPairsUsdDescNullsFirst = 'token0_totalLiquidityAllPairsUSD_DESC_NULLS_FIRST',
+  Token0TotalLiquidityAllPairsUsdDescNullsLast = 'token0_totalLiquidityAllPairsUSD_DESC_NULLS_LAST',
+  Token0TotalLiquidityAllPairsAsc = 'token0_totalLiquidityAllPairs_ASC',
+  Token0TotalLiquidityAllPairsAscNullsFirst = 'token0_totalLiquidityAllPairs_ASC_NULLS_FIRST',
+  Token0TotalLiquidityAllPairsAscNullsLast = 'token0_totalLiquidityAllPairs_ASC_NULLS_LAST',
+  Token0TotalLiquidityAllPairsDesc = 'token0_totalLiquidityAllPairs_DESC',
+  Token0TotalLiquidityAllPairsDescNullsFirst = 'token0_totalLiquidityAllPairs_DESC_NULLS_FIRST',
+  Token0TotalLiquidityAllPairsDescNullsLast = 'token0_totalLiquidityAllPairs_DESC_NULLS_LAST',
   Token0TotalSupplyAsc = 'token0_totalSupply_ASC',
   Token0TotalSupplyAscNullsFirst = 'token0_totalSupply_ASC_NULLS_FIRST',
   Token0TotalSupplyAscNullsLast = 'token0_totalSupply_ASC_NULLS_LAST',
   Token0TotalSupplyDesc = 'token0_totalSupply_DESC',
   Token0TotalSupplyDescNullsFirst = 'token0_totalSupply_DESC_NULLS_FIRST',
   Token0TotalSupplyDescNullsLast = 'token0_totalSupply_DESC_NULLS_LAST',
-  Token0TradeVolumeUsdAsc = 'token0_tradeVolumeUSD_ASC',
-  Token0TradeVolumeUsdAscNullsFirst = 'token0_tradeVolumeUSD_ASC_NULLS_FIRST',
-  Token0TradeVolumeUsdAscNullsLast = 'token0_tradeVolumeUSD_ASC_NULLS_LAST',
-  Token0TradeVolumeUsdDesc = 'token0_tradeVolumeUSD_DESC',
-  Token0TradeVolumeUsdDescNullsFirst = 'token0_tradeVolumeUSD_DESC_NULLS_FIRST',
-  Token0TradeVolumeUsdDescNullsLast = 'token0_tradeVolumeUSD_DESC_NULLS_LAST',
-  Token0TradeVolumeAsc = 'token0_tradeVolume_ASC',
-  Token0TradeVolumeAscNullsFirst = 'token0_tradeVolume_ASC_NULLS_FIRST',
-  Token0TradeVolumeAscNullsLast = 'token0_tradeVolume_ASC_NULLS_LAST',
-  Token0TradeVolumeDesc = 'token0_tradeVolume_DESC',
-  Token0TradeVolumeDescNullsFirst = 'token0_tradeVolume_DESC_NULLS_FIRST',
-  Token0TradeVolumeDescNullsLast = 'token0_tradeVolume_DESC_NULLS_LAST',
+  Token0TradeVolume24hAsc = 'token0_tradeVolume24h_ASC',
+  Token0TradeVolume24hAscNullsFirst = 'token0_tradeVolume24h_ASC_NULLS_FIRST',
+  Token0TradeVolume24hAscNullsLast = 'token0_tradeVolume24h_ASC_NULLS_LAST',
+  Token0TradeVolume24hDesc = 'token0_tradeVolume24h_DESC',
+  Token0TradeVolume24hDescNullsFirst = 'token0_tradeVolume24h_DESC_NULLS_FIRST',
+  Token0TradeVolume24hDescNullsLast = 'token0_tradeVolume24h_DESC_NULLS_LAST',
+  Token0TradeVolumeEth24hAsc = 'token0_tradeVolumeETH24h_ASC',
+  Token0TradeVolumeEth24hAscNullsFirst = 'token0_tradeVolumeETH24h_ASC_NULLS_FIRST',
+  Token0TradeVolumeEth24hAscNullsLast = 'token0_tradeVolumeETH24h_ASC_NULLS_LAST',
+  Token0TradeVolumeEth24hDesc = 'token0_tradeVolumeETH24h_DESC',
+  Token0TradeVolumeEth24hDescNullsFirst = 'token0_tradeVolumeETH24h_DESC_NULLS_FIRST',
+  Token0TradeVolumeEth24hDescNullsLast = 'token0_tradeVolumeETH24h_DESC_NULLS_LAST',
+  Token0TradeVolumeUsd24hAsc = 'token0_tradeVolumeUSD24h_ASC',
+  Token0TradeVolumeUsd24hAscNullsFirst = 'token0_tradeVolumeUSD24h_ASC_NULLS_FIRST',
+  Token0TradeVolumeUsd24hAscNullsLast = 'token0_tradeVolumeUSD24h_ASC_NULLS_LAST',
+  Token0TradeVolumeUsd24hDesc = 'token0_tradeVolumeUSD24h_DESC',
+  Token0TradeVolumeUsd24hDescNullsFirst = 'token0_tradeVolumeUSD24h_DESC_NULLS_FIRST',
+  Token0TradeVolumeUsd24hDescNullsLast = 'token0_tradeVolumeUSD24h_DESC_NULLS_LAST',
   Token0TxCountAsc = 'token0_txCount_ASC',
   Token0TxCountAscNullsFirst = 'token0_txCount_ASC_NULLS_FIRST',
   Token0TxCountAscNullsLast = 'token0_txCount_ASC_NULLS_LAST',
   Token0TxCountDesc = 'token0_txCount_DESC',
   Token0TxCountDescNullsFirst = 'token0_txCount_DESC_NULLS_FIRST',
   Token0TxCountDescNullsLast = 'token0_txCount_DESC_NULLS_LAST',
-  Token0UntrackedVolumeUsdAsc = 'token0_untrackedVolumeUSD_ASC',
-  Token0UntrackedVolumeUsdAscNullsFirst = 'token0_untrackedVolumeUSD_ASC_NULLS_FIRST',
-  Token0UntrackedVolumeUsdAscNullsLast = 'token0_untrackedVolumeUSD_ASC_NULLS_LAST',
-  Token0UntrackedVolumeUsdDesc = 'token0_untrackedVolumeUSD_DESC',
-  Token0UntrackedVolumeUsdDescNullsFirst = 'token0_untrackedVolumeUSD_DESC_NULLS_FIRST',
-  Token0UntrackedVolumeUsdDescNullsLast = 'token0_untrackedVolumeUSD_DESC_NULLS_LAST',
-  Token1DecimalsAsc = 'token1_decimals_ASC',
-  Token1DecimalsAscNullsFirst = 'token1_decimals_ASC_NULLS_FIRST',
-  Token1DecimalsAscNullsLast = 'token1_decimals_ASC_NULLS_LAST',
-  Token1DecimalsDesc = 'token1_decimals_DESC',
-  Token1DecimalsDescNullsFirst = 'token1_decimals_DESC_NULLS_FIRST',
-  Token1DecimalsDescNullsLast = 'token1_decimals_DESC_NULLS_LAST',
-  Token1DerivedEthAsc = 'token1_derivedETH_ASC',
-  Token1DerivedEthAscNullsFirst = 'token1_derivedETH_ASC_NULLS_FIRST',
-  Token1DerivedEthAscNullsLast = 'token1_derivedETH_ASC_NULLS_LAST',
-  Token1DerivedEthDesc = 'token1_derivedETH_DESC',
-  Token1DerivedEthDescNullsFirst = 'token1_derivedETH_DESC_NULLS_FIRST',
-  Token1DerivedEthDescNullsLast = 'token1_derivedETH_DESC_NULLS_LAST',
+  Token1PriceAsc = 'token1Price_ASC',
+  Token1PriceAscNullsFirst = 'token1Price_ASC_NULLS_FIRST',
+  Token1PriceAscNullsLast = 'token1Price_ASC_NULLS_LAST',
+  Token1PriceDesc = 'token1Price_DESC',
+  Token1PriceDescNullsFirst = 'token1Price_DESC_NULLS_FIRST',
+  Token1PriceDescNullsLast = 'token1Price_DESC_NULLS_LAST',
+  Token1CirculationSupplyAsc = 'token1_circulationSupply_ASC',
+  Token1CirculationSupplyAscNullsFirst = 'token1_circulationSupply_ASC_NULLS_FIRST',
+  Token1CirculationSupplyAscNullsLast = 'token1_circulationSupply_ASC_NULLS_LAST',
+  Token1CirculationSupplyDesc = 'token1_circulationSupply_DESC',
+  Token1CirculationSupplyDescNullsFirst = 'token1_circulationSupply_DESC_NULLS_FIRST',
+  Token1CirculationSupplyDescNullsLast = 'token1_circulationSupply_DESC_NULLS_LAST',
+  Token1DateAsc = 'token1_date_ASC',
+  Token1DateAscNullsFirst = 'token1_date_ASC_NULLS_FIRST',
+  Token1DateAscNullsLast = 'token1_date_ASC_NULLS_LAST',
+  Token1DateDesc = 'token1_date_DESC',
+  Token1DateDescNullsFirst = 'token1_date_DESC_NULLS_FIRST',
+  Token1DateDescNullsLast = 'token1_date_DESC_NULLS_LAST',
+  Token1HoldersAsc = 'token1_holders_ASC',
+  Token1HoldersAscNullsFirst = 'token1_holders_ASC_NULLS_FIRST',
+  Token1HoldersAscNullsLast = 'token1_holders_ASC_NULLS_LAST',
+  Token1HoldersDesc = 'token1_holders_DESC',
+  Token1HoldersDescNullsFirst = 'token1_holders_DESC_NULLS_FIRST',
+  Token1HoldersDescNullsLast = 'token1_holders_DESC_NULLS_LAST',
   Token1IdAsc = 'token1_id_ASC',
   Token1IdAscNullsFirst = 'token1_id_ASC_NULLS_FIRST',
   Token1IdAscNullsLast = 'token1_id_ASC_NULLS_LAST',
   Token1IdDesc = 'token1_id_DESC',
   Token1IdDescNullsFirst = 'token1_id_DESC_NULLS_FIRST',
   Token1IdDescNullsLast = 'token1_id_DESC_NULLS_LAST',
-  Token1NameAsc = 'token1_name_ASC',
-  Token1NameAscNullsFirst = 'token1_name_ASC_NULLS_FIRST',
-  Token1NameAscNullsLast = 'token1_name_ASC_NULLS_LAST',
-  Token1NameDesc = 'token1_name_DESC',
-  Token1NameDescNullsFirst = 'token1_name_DESC_NULLS_FIRST',
-  Token1NameDescNullsLast = 'token1_name_DESC_NULLS_LAST',
-  Token1SymbolAsc = 'token1_symbol_ASC',
-  Token1SymbolAscNullsFirst = 'token1_symbol_ASC_NULLS_FIRST',
-  Token1SymbolAscNullsLast = 'token1_symbol_ASC_NULLS_LAST',
-  Token1SymbolDesc = 'token1_symbol_DESC',
-  Token1SymbolDescNullsFirst = 'token1_symbol_DESC_NULLS_FIRST',
-  Token1SymbolDescNullsLast = 'token1_symbol_DESC_NULLS_LAST',
-  Token1TotalLiquidityAsc = 'token1_totalLiquidity_ASC',
-  Token1TotalLiquidityAscNullsFirst = 'token1_totalLiquidity_ASC_NULLS_FIRST',
-  Token1TotalLiquidityAscNullsLast = 'token1_totalLiquidity_ASC_NULLS_LAST',
-  Token1TotalLiquidityDesc = 'token1_totalLiquidity_DESC',
-  Token1TotalLiquidityDescNullsFirst = 'token1_totalLiquidity_DESC_NULLS_FIRST',
-  Token1TotalLiquidityDescNullsLast = 'token1_totalLiquidity_DESC_NULLS_LAST',
+  Token1LastUpdatedAtAsc = 'token1_lastUpdatedAt_ASC',
+  Token1LastUpdatedAtAscNullsFirst = 'token1_lastUpdatedAt_ASC_NULLS_FIRST',
+  Token1LastUpdatedAtAscNullsLast = 'token1_lastUpdatedAt_ASC_NULLS_LAST',
+  Token1LastUpdatedAtDesc = 'token1_lastUpdatedAt_DESC',
+  Token1LastUpdatedAtDescNullsFirst = 'token1_lastUpdatedAt_DESC_NULLS_FIRST',
+  Token1LastUpdatedAtDescNullsLast = 'token1_lastUpdatedAt_DESC_NULLS_LAST',
+  Token1MarketCapUsdAsc = 'token1_marketCapUSD_ASC',
+  Token1MarketCapUsdAscNullsFirst = 'token1_marketCapUSD_ASC_NULLS_FIRST',
+  Token1MarketCapUsdAscNullsLast = 'token1_marketCapUSD_ASC_NULLS_LAST',
+  Token1MarketCapUsdDesc = 'token1_marketCapUSD_DESC',
+  Token1MarketCapUsdDescNullsFirst = 'token1_marketCapUSD_DESC_NULLS_FIRST',
+  Token1MarketCapUsdDescNullsLast = 'token1_marketCapUSD_DESC_NULLS_LAST',
+  Token1PriceEthAsc = 'token1_priceETH_ASC',
+  Token1PriceEthAscNullsFirst = 'token1_priceETH_ASC_NULLS_FIRST',
+  Token1PriceEthAscNullsLast = 'token1_priceETH_ASC_NULLS_LAST',
+  Token1PriceEthDesc = 'token1_priceETH_DESC',
+  Token1PriceEthDescNullsFirst = 'token1_priceETH_DESC_NULLS_FIRST',
+  Token1PriceEthDescNullsLast = 'token1_priceETH_DESC_NULLS_LAST',
+  Token1PriceUsdAsc = 'token1_priceUSD_ASC',
+  Token1PriceUsdAscNullsFirst = 'token1_priceUSD_ASC_NULLS_FIRST',
+  Token1PriceUsdAscNullsLast = 'token1_priceUSD_ASC_NULLS_LAST',
+  Token1PriceUsdDesc = 'token1_priceUSD_DESC',
+  Token1PriceUsdDescNullsFirst = 'token1_priceUSD_DESC_NULLS_FIRST',
+  Token1PriceUsdDescNullsLast = 'token1_priceUSD_DESC_NULLS_LAST',
+  Token1TotalLiquidityAllPairsUsdAsc = 'token1_totalLiquidityAllPairsUSD_ASC',
+  Token1TotalLiquidityAllPairsUsdAscNullsFirst = 'token1_totalLiquidityAllPairsUSD_ASC_NULLS_FIRST',
+  Token1TotalLiquidityAllPairsUsdAscNullsLast = 'token1_totalLiquidityAllPairsUSD_ASC_NULLS_LAST',
+  Token1TotalLiquidityAllPairsUsdDesc = 'token1_totalLiquidityAllPairsUSD_DESC',
+  Token1TotalLiquidityAllPairsUsdDescNullsFirst = 'token1_totalLiquidityAllPairsUSD_DESC_NULLS_FIRST',
+  Token1TotalLiquidityAllPairsUsdDescNullsLast = 'token1_totalLiquidityAllPairsUSD_DESC_NULLS_LAST',
+  Token1TotalLiquidityAllPairsAsc = 'token1_totalLiquidityAllPairs_ASC',
+  Token1TotalLiquidityAllPairsAscNullsFirst = 'token1_totalLiquidityAllPairs_ASC_NULLS_FIRST',
+  Token1TotalLiquidityAllPairsAscNullsLast = 'token1_totalLiquidityAllPairs_ASC_NULLS_LAST',
+  Token1TotalLiquidityAllPairsDesc = 'token1_totalLiquidityAllPairs_DESC',
+  Token1TotalLiquidityAllPairsDescNullsFirst = 'token1_totalLiquidityAllPairs_DESC_NULLS_FIRST',
+  Token1TotalLiquidityAllPairsDescNullsLast = 'token1_totalLiquidityAllPairs_DESC_NULLS_LAST',
   Token1TotalSupplyAsc = 'token1_totalSupply_ASC',
   Token1TotalSupplyAscNullsFirst = 'token1_totalSupply_ASC_NULLS_FIRST',
   Token1TotalSupplyAscNullsLast = 'token1_totalSupply_ASC_NULLS_LAST',
   Token1TotalSupplyDesc = 'token1_totalSupply_DESC',
   Token1TotalSupplyDescNullsFirst = 'token1_totalSupply_DESC_NULLS_FIRST',
   Token1TotalSupplyDescNullsLast = 'token1_totalSupply_DESC_NULLS_LAST',
-  Token1TradeVolumeUsdAsc = 'token1_tradeVolumeUSD_ASC',
-  Token1TradeVolumeUsdAscNullsFirst = 'token1_tradeVolumeUSD_ASC_NULLS_FIRST',
-  Token1TradeVolumeUsdAscNullsLast = 'token1_tradeVolumeUSD_ASC_NULLS_LAST',
-  Token1TradeVolumeUsdDesc = 'token1_tradeVolumeUSD_DESC',
-  Token1TradeVolumeUsdDescNullsFirst = 'token1_tradeVolumeUSD_DESC_NULLS_FIRST',
-  Token1TradeVolumeUsdDescNullsLast = 'token1_tradeVolumeUSD_DESC_NULLS_LAST',
-  Token1TradeVolumeAsc = 'token1_tradeVolume_ASC',
-  Token1TradeVolumeAscNullsFirst = 'token1_tradeVolume_ASC_NULLS_FIRST',
-  Token1TradeVolumeAscNullsLast = 'token1_tradeVolume_ASC_NULLS_LAST',
-  Token1TradeVolumeDesc = 'token1_tradeVolume_DESC',
-  Token1TradeVolumeDescNullsFirst = 'token1_tradeVolume_DESC_NULLS_FIRST',
-  Token1TradeVolumeDescNullsLast = 'token1_tradeVolume_DESC_NULLS_LAST',
+  Token1TradeVolume24hAsc = 'token1_tradeVolume24h_ASC',
+  Token1TradeVolume24hAscNullsFirst = 'token1_tradeVolume24h_ASC_NULLS_FIRST',
+  Token1TradeVolume24hAscNullsLast = 'token1_tradeVolume24h_ASC_NULLS_LAST',
+  Token1TradeVolume24hDesc = 'token1_tradeVolume24h_DESC',
+  Token1TradeVolume24hDescNullsFirst = 'token1_tradeVolume24h_DESC_NULLS_FIRST',
+  Token1TradeVolume24hDescNullsLast = 'token1_tradeVolume24h_DESC_NULLS_LAST',
+  Token1TradeVolumeEth24hAsc = 'token1_tradeVolumeETH24h_ASC',
+  Token1TradeVolumeEth24hAscNullsFirst = 'token1_tradeVolumeETH24h_ASC_NULLS_FIRST',
+  Token1TradeVolumeEth24hAscNullsLast = 'token1_tradeVolumeETH24h_ASC_NULLS_LAST',
+  Token1TradeVolumeEth24hDesc = 'token1_tradeVolumeETH24h_DESC',
+  Token1TradeVolumeEth24hDescNullsFirst = 'token1_tradeVolumeETH24h_DESC_NULLS_FIRST',
+  Token1TradeVolumeEth24hDescNullsLast = 'token1_tradeVolumeETH24h_DESC_NULLS_LAST',
+  Token1TradeVolumeUsd24hAsc = 'token1_tradeVolumeUSD24h_ASC',
+  Token1TradeVolumeUsd24hAscNullsFirst = 'token1_tradeVolumeUSD24h_ASC_NULLS_FIRST',
+  Token1TradeVolumeUsd24hAscNullsLast = 'token1_tradeVolumeUSD24h_ASC_NULLS_LAST',
+  Token1TradeVolumeUsd24hDesc = 'token1_tradeVolumeUSD24h_DESC',
+  Token1TradeVolumeUsd24hDescNullsFirst = 'token1_tradeVolumeUSD24h_DESC_NULLS_FIRST',
+  Token1TradeVolumeUsd24hDescNullsLast = 'token1_tradeVolumeUSD24h_DESC_NULLS_LAST',
   Token1TxCountAsc = 'token1_txCount_ASC',
   Token1TxCountAscNullsFirst = 'token1_txCount_ASC_NULLS_FIRST',
   Token1TxCountAscNullsLast = 'token1_txCount_ASC_NULLS_LAST',
   Token1TxCountDesc = 'token1_txCount_DESC',
   Token1TxCountDescNullsFirst = 'token1_txCount_DESC_NULLS_FIRST',
   Token1TxCountDescNullsLast = 'token1_txCount_DESC_NULLS_LAST',
-  Token1UntrackedVolumeUsdAsc = 'token1_untrackedVolumeUSD_ASC',
-  Token1UntrackedVolumeUsdAscNullsFirst = 'token1_untrackedVolumeUSD_ASC_NULLS_FIRST',
-  Token1UntrackedVolumeUsdAscNullsLast = 'token1_untrackedVolumeUSD_ASC_NULLS_LAST',
-  Token1UntrackedVolumeUsdDesc = 'token1_untrackedVolumeUSD_DESC',
-  Token1UntrackedVolumeUsdDescNullsFirst = 'token1_untrackedVolumeUSD_DESC_NULLS_FIRST',
-  Token1UntrackedVolumeUsdDescNullsLast = 'token1_untrackedVolumeUSD_DESC_NULLS_LAST',
-  TotalSupplyAsc = 'totalSupply_ASC',
-  TotalSupplyAscNullsFirst = 'totalSupply_ASC_NULLS_FIRST',
-  TotalSupplyAscNullsLast = 'totalSupply_ASC_NULLS_LAST',
-  TotalSupplyDesc = 'totalSupply_DESC',
-  TotalSupplyDescNullsFirst = 'totalSupply_DESC_NULLS_FIRST',
-  TotalSupplyDescNullsLast = 'totalSupply_DESC_NULLS_LAST',
+  TxCountAsc = 'txCount_ASC',
+  TxCountAscNullsFirst = 'txCount_ASC_NULLS_FIRST',
+  TxCountAscNullsLast = 'txCount_ASC_NULLS_LAST',
+  TxCountDesc = 'txCount_DESC',
+  TxCountDescNullsFirst = 'txCount_DESC_NULLS_FIRST',
+  TxCountDescNullsLast = 'txCount_DESC_NULLS_LAST',
 }
 
 export type PairDayDataWhereInput = {
   AND?: InputMaybe<Array<PairDayDataWhereInput>>;
   OR?: InputMaybe<Array<PairDayDataWhereInput>>;
-  dailyTxns_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  dailyTxns_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  dailyTxns_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  dailyTxns_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  dailyTxns_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  dailyTxns_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  dailyTxns_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  dailyTxns_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  dailyTxns_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  dailyVolumeToken0_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeToken0_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeToken0_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeToken0_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  dailyVolumeToken0_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  dailyVolumeToken0_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeToken0_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeToken0_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeToken0_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  dailyVolumeToken1_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeToken1_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeToken1_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeToken1_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  dailyVolumeToken1_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  dailyVolumeToken1_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeToken1_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeToken1_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeToken1_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  dailyVolumeUSD_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  dailyVolumeUSD_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  dailyVolumeUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeUSD_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   date_eq?: InputMaybe<Scalars['Int']['input']>;
   date_gt?: InputMaybe<Scalars['Int']['input']>;
   date_gte?: InputMaybe<Scalars['Int']['input']>;
@@ -1130,6 +1315,51 @@ export type PairDayDataWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
   id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
   id_startsWith?: InputMaybe<Scalars['String']['input']>;
+  lastUpdatedAt_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lastUpdatedAt_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lastUpdatedAt_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  liquidityProviderCount_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  liquidityProviderCount_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  liquidityProviderCount_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  liquidityProviderCount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  liquidityProviderCount_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  liquidityProviderCount_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  liquidityProviderCount_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  liquidityProviderCount_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  liquidityProviderCount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  liquidityUSD_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  liquidityUSD_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  liquidityUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityUSD_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  lpTotalLocked_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalLocked_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalLocked_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalLocked_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  lpTotalLocked_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lpTotalLocked_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalLocked_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalLocked_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalLocked_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  lpTotalSupply_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalSupply_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalSupply_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalSupply_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  lpTotalSupply_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lpTotalSupply_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalSupply_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalSupply_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalSupply_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   pairAddress_contains?: InputMaybe<Scalars['String']['input']>;
   pairAddress_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
   pairAddress_endsWith?: InputMaybe<Scalars['String']['input']>;
@@ -1165,28 +1395,37 @@ export type PairDayDataWhereInput = {
   reserve1_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   reserve1_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   reserve1_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  reserveUSD_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  reserveUSD_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  reserveUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveUSD_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  token0?: InputMaybe<TokenWhereInput>;
+  token0?: InputMaybe<TokenDayDataWhereInput>;
+  token0Price_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  token0Price_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  token0Price_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  token0Price_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  token0Price_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  token0Price_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  token0Price_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  token0Price_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  token0Price_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   token0_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  token1?: InputMaybe<TokenWhereInput>;
+  token1?: InputMaybe<TokenDayDataWhereInput>;
+  token1Price_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  token1Price_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  token1Price_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  token1Price_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  token1Price_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  token1Price_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  token1Price_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  token1Price_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  token1Price_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   token1_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  totalSupply_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalSupply_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalSupply_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalSupply_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  totalSupply_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  totalSupply_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalSupply_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalSupply_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalSupply_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  txCount_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  txCount_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  txCount_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
 };
 
 export type PairEdge = {
@@ -1208,18 +1447,72 @@ export enum PairOrderByInput {
   CreatedAtTimestampDesc = 'createdAtTimestamp_DESC',
   CreatedAtTimestampDescNullsFirst = 'createdAtTimestamp_DESC_NULLS_FIRST',
   CreatedAtTimestampDescNullsLast = 'createdAtTimestamp_DESC_NULLS_LAST',
+  Fees24hDeltaAsc = 'fees24hDelta_ASC',
+  Fees24hDeltaAscNullsFirst = 'fees24hDelta_ASC_NULLS_FIRST',
+  Fees24hDeltaAscNullsLast = 'fees24hDelta_ASC_NULLS_LAST',
+  Fees24hDeltaDesc = 'fees24hDelta_DESC',
+  Fees24hDeltaDescNullsFirst = 'fees24hDelta_DESC_NULLS_FIRST',
+  Fees24hDeltaDescNullsLast = 'fees24hDelta_DESC_NULLS_LAST',
+  Fees24hAsc = 'fees24h_ASC',
+  Fees24hAscNullsFirst = 'fees24h_ASC_NULLS_FIRST',
+  Fees24hAscNullsLast = 'fees24h_ASC_NULLS_LAST',
+  Fees24hDesc = 'fees24h_DESC',
+  Fees24hDescNullsFirst = 'fees24h_DESC_NULLS_FIRST',
+  Fees24hDescNullsLast = 'fees24h_DESC_NULLS_LAST',
+  FeesEth24hAsc = 'feesETH24h_ASC',
+  FeesEth24hAscNullsFirst = 'feesETH24h_ASC_NULLS_FIRST',
+  FeesEth24hAscNullsLast = 'feesETH24h_ASC_NULLS_LAST',
+  FeesEth24hDesc = 'feesETH24h_DESC',
+  FeesEth24hDescNullsFirst = 'feesETH24h_DESC_NULLS_FIRST',
+  FeesEth24hDescNullsLast = 'feesETH24h_DESC_NULLS_LAST',
+  FeesUsd24hAsc = 'feesUSD24h_ASC',
+  FeesUsd24hAscNullsFirst = 'feesUSD24h_ASC_NULLS_FIRST',
+  FeesUsd24hAscNullsLast = 'feesUSD24h_ASC_NULLS_LAST',
+  FeesUsd24hDesc = 'feesUSD24h_DESC',
+  FeesUsd24hDescNullsFirst = 'feesUSD24h_DESC_NULLS_FIRST',
+  FeesUsd24hDescNullsLast = 'feesUSD24h_DESC_NULLS_LAST',
   IdAsc = 'id_ASC',
   IdAscNullsFirst = 'id_ASC_NULLS_FIRST',
   IdAscNullsLast = 'id_ASC_NULLS_LAST',
   IdDesc = 'id_DESC',
   IdDescNullsFirst = 'id_DESC_NULLS_FIRST',
   IdDescNullsLast = 'id_DESC_NULLS_LAST',
+  LastUpdatedAtAsc = 'lastUpdatedAt_ASC',
+  LastUpdatedAtAscNullsFirst = 'lastUpdatedAt_ASC_NULLS_FIRST',
+  LastUpdatedAtAscNullsLast = 'lastUpdatedAt_ASC_NULLS_LAST',
+  LastUpdatedAtDesc = 'lastUpdatedAt_DESC',
+  LastUpdatedAtDescNullsFirst = 'lastUpdatedAt_DESC_NULLS_FIRST',
+  LastUpdatedAtDescNullsLast = 'lastUpdatedAt_DESC_NULLS_LAST',
+  Liquidity24hDeltaAsc = 'liquidity24hDelta_ASC',
+  Liquidity24hDeltaAscNullsFirst = 'liquidity24hDelta_ASC_NULLS_FIRST',
+  Liquidity24hDeltaAscNullsLast = 'liquidity24hDelta_ASC_NULLS_LAST',
+  Liquidity24hDeltaDesc = 'liquidity24hDelta_DESC',
+  Liquidity24hDeltaDescNullsFirst = 'liquidity24hDelta_DESC_NULLS_FIRST',
+  Liquidity24hDeltaDescNullsLast = 'liquidity24hDelta_DESC_NULLS_LAST',
   LiquidityProviderCountAsc = 'liquidityProviderCount_ASC',
   LiquidityProviderCountAscNullsFirst = 'liquidityProviderCount_ASC_NULLS_FIRST',
   LiquidityProviderCountAscNullsLast = 'liquidityProviderCount_ASC_NULLS_LAST',
   LiquidityProviderCountDesc = 'liquidityProviderCount_DESC',
   LiquidityProviderCountDescNullsFirst = 'liquidityProviderCount_DESC_NULLS_FIRST',
   LiquidityProviderCountDescNullsLast = 'liquidityProviderCount_DESC_NULLS_LAST',
+  LiquidityUsdAsc = 'liquidityUSD_ASC',
+  LiquidityUsdAscNullsFirst = 'liquidityUSD_ASC_NULLS_FIRST',
+  LiquidityUsdAscNullsLast = 'liquidityUSD_ASC_NULLS_LAST',
+  LiquidityUsdDesc = 'liquidityUSD_DESC',
+  LiquidityUsdDescNullsFirst = 'liquidityUSD_DESC_NULLS_FIRST',
+  LiquidityUsdDescNullsLast = 'liquidityUSD_DESC_NULLS_LAST',
+  LpTotalLockedAsc = 'lpTotalLocked_ASC',
+  LpTotalLockedAscNullsFirst = 'lpTotalLocked_ASC_NULLS_FIRST',
+  LpTotalLockedAscNullsLast = 'lpTotalLocked_ASC_NULLS_LAST',
+  LpTotalLockedDesc = 'lpTotalLocked_DESC',
+  LpTotalLockedDescNullsFirst = 'lpTotalLocked_DESC_NULLS_FIRST',
+  LpTotalLockedDescNullsLast = 'lpTotalLocked_DESC_NULLS_LAST',
+  LpTotalSupplyAsc = 'lpTotalSupply_ASC',
+  LpTotalSupplyAscNullsFirst = 'lpTotalSupply_ASC_NULLS_FIRST',
+  LpTotalSupplyAscNullsLast = 'lpTotalSupply_ASC_NULLS_LAST',
+  LpTotalSupplyDesc = 'lpTotalSupply_DESC',
+  LpTotalSupplyDescNullsFirst = 'lpTotalSupply_DESC_NULLS_FIRST',
+  LpTotalSupplyDescNullsLast = 'lpTotalSupply_DESC_NULLS_LAST',
   Reserve0Asc = 'reserve0_ASC',
   Reserve0AscNullsFirst = 'reserve0_ASC_NULLS_FIRST',
   Reserve0AscNullsLast = 'reserve0_ASC_NULLS_LAST',
@@ -1232,204 +1525,252 @@ export enum PairOrderByInput {
   Reserve1Desc = 'reserve1_DESC',
   Reserve1DescNullsFirst = 'reserve1_DESC_NULLS_FIRST',
   Reserve1DescNullsLast = 'reserve1_DESC_NULLS_LAST',
-  ReserveEthAsc = 'reserveETH_ASC',
-  ReserveEthAscNullsFirst = 'reserveETH_ASC_NULLS_FIRST',
-  ReserveEthAscNullsLast = 'reserveETH_ASC_NULLS_LAST',
-  ReserveEthDesc = 'reserveETH_DESC',
-  ReserveEthDescNullsFirst = 'reserveETH_DESC_NULLS_FIRST',
-  ReserveEthDescNullsLast = 'reserveETH_DESC_NULLS_LAST',
-  ReserveUsdAsc = 'reserveUSD_ASC',
-  ReserveUsdAscNullsFirst = 'reserveUSD_ASC_NULLS_FIRST',
-  ReserveUsdAscNullsLast = 'reserveUSD_ASC_NULLS_LAST',
-  ReserveUsdDesc = 'reserveUSD_DESC',
-  ReserveUsdDescNullsFirst = 'reserveUSD_DESC_NULLS_FIRST',
-  ReserveUsdDescNullsLast = 'reserveUSD_DESC_NULLS_LAST',
   Token0PriceAsc = 'token0Price_ASC',
   Token0PriceAscNullsFirst = 'token0Price_ASC_NULLS_FIRST',
   Token0PriceAscNullsLast = 'token0Price_ASC_NULLS_LAST',
   Token0PriceDesc = 'token0Price_DESC',
   Token0PriceDescNullsFirst = 'token0Price_DESC_NULLS_FIRST',
   Token0PriceDescNullsLast = 'token0Price_DESC_NULLS_LAST',
+  Token0CirculationSupplyAsc = 'token0_circulationSupply_ASC',
+  Token0CirculationSupplyAscNullsFirst = 'token0_circulationSupply_ASC_NULLS_FIRST',
+  Token0CirculationSupplyAscNullsLast = 'token0_circulationSupply_ASC_NULLS_LAST',
+  Token0CirculationSupplyDesc = 'token0_circulationSupply_DESC',
+  Token0CirculationSupplyDescNullsFirst = 'token0_circulationSupply_DESC_NULLS_FIRST',
+  Token0CirculationSupplyDescNullsLast = 'token0_circulationSupply_DESC_NULLS_LAST',
   Token0DecimalsAsc = 'token0_decimals_ASC',
   Token0DecimalsAscNullsFirst = 'token0_decimals_ASC_NULLS_FIRST',
   Token0DecimalsAscNullsLast = 'token0_decimals_ASC_NULLS_LAST',
   Token0DecimalsDesc = 'token0_decimals_DESC',
   Token0DecimalsDescNullsFirst = 'token0_decimals_DESC_NULLS_FIRST',
   Token0DecimalsDescNullsLast = 'token0_decimals_DESC_NULLS_LAST',
-  Token0DerivedEthAsc = 'token0_derivedETH_ASC',
-  Token0DerivedEthAscNullsFirst = 'token0_derivedETH_ASC_NULLS_FIRST',
-  Token0DerivedEthAscNullsLast = 'token0_derivedETH_ASC_NULLS_LAST',
-  Token0DerivedEthDesc = 'token0_derivedETH_DESC',
-  Token0DerivedEthDescNullsFirst = 'token0_derivedETH_DESC_NULLS_FIRST',
-  Token0DerivedEthDescNullsLast = 'token0_derivedETH_DESC_NULLS_LAST',
+  Token0HoldersAsc = 'token0_holders_ASC',
+  Token0HoldersAscNullsFirst = 'token0_holders_ASC_NULLS_FIRST',
+  Token0HoldersAscNullsLast = 'token0_holders_ASC_NULLS_LAST',
+  Token0HoldersDesc = 'token0_holders_DESC',
+  Token0HoldersDescNullsFirst = 'token0_holders_DESC_NULLS_FIRST',
+  Token0HoldersDescNullsLast = 'token0_holders_DESC_NULLS_LAST',
   Token0IdAsc = 'token0_id_ASC',
   Token0IdAscNullsFirst = 'token0_id_ASC_NULLS_FIRST',
   Token0IdAscNullsLast = 'token0_id_ASC_NULLS_LAST',
   Token0IdDesc = 'token0_id_DESC',
   Token0IdDescNullsFirst = 'token0_id_DESC_NULLS_FIRST',
   Token0IdDescNullsLast = 'token0_id_DESC_NULLS_LAST',
+  Token0LastUpdatedAtAsc = 'token0_lastUpdatedAt_ASC',
+  Token0LastUpdatedAtAscNullsFirst = 'token0_lastUpdatedAt_ASC_NULLS_FIRST',
+  Token0LastUpdatedAtAscNullsLast = 'token0_lastUpdatedAt_ASC_NULLS_LAST',
+  Token0LastUpdatedAtDesc = 'token0_lastUpdatedAt_DESC',
+  Token0LastUpdatedAtDescNullsFirst = 'token0_lastUpdatedAt_DESC_NULLS_FIRST',
+  Token0LastUpdatedAtDescNullsLast = 'token0_lastUpdatedAt_DESC_NULLS_LAST',
+  Token0MarketCapUsdAsc = 'token0_marketCapUSD_ASC',
+  Token0MarketCapUsdAscNullsFirst = 'token0_marketCapUSD_ASC_NULLS_FIRST',
+  Token0MarketCapUsdAscNullsLast = 'token0_marketCapUSD_ASC_NULLS_LAST',
+  Token0MarketCapUsdDesc = 'token0_marketCapUSD_DESC',
+  Token0MarketCapUsdDescNullsFirst = 'token0_marketCapUSD_DESC_NULLS_FIRST',
+  Token0MarketCapUsdDescNullsLast = 'token0_marketCapUSD_DESC_NULLS_LAST',
   Token0NameAsc = 'token0_name_ASC',
   Token0NameAscNullsFirst = 'token0_name_ASC_NULLS_FIRST',
   Token0NameAscNullsLast = 'token0_name_ASC_NULLS_LAST',
   Token0NameDesc = 'token0_name_DESC',
   Token0NameDescNullsFirst = 'token0_name_DESC_NULLS_FIRST',
   Token0NameDescNullsLast = 'token0_name_DESC_NULLS_LAST',
+  Token0PriceEthAsc = 'token0_priceETH_ASC',
+  Token0PriceEthAscNullsFirst = 'token0_priceETH_ASC_NULLS_FIRST',
+  Token0PriceEthAscNullsLast = 'token0_priceETH_ASC_NULLS_LAST',
+  Token0PriceEthDesc = 'token0_priceETH_DESC',
+  Token0PriceEthDescNullsFirst = 'token0_priceETH_DESC_NULLS_FIRST',
+  Token0PriceEthDescNullsLast = 'token0_priceETH_DESC_NULLS_LAST',
+  Token0PriceUsdAsc = 'token0_priceUSD_ASC',
+  Token0PriceUsdAscNullsFirst = 'token0_priceUSD_ASC_NULLS_FIRST',
+  Token0PriceUsdAscNullsLast = 'token0_priceUSD_ASC_NULLS_LAST',
+  Token0PriceUsdDesc = 'token0_priceUSD_DESC',
+  Token0PriceUsdDescNullsFirst = 'token0_priceUSD_DESC_NULLS_FIRST',
+  Token0PriceUsdDescNullsLast = 'token0_priceUSD_DESC_NULLS_LAST',
   Token0SymbolAsc = 'token0_symbol_ASC',
   Token0SymbolAscNullsFirst = 'token0_symbol_ASC_NULLS_FIRST',
   Token0SymbolAscNullsLast = 'token0_symbol_ASC_NULLS_LAST',
   Token0SymbolDesc = 'token0_symbol_DESC',
   Token0SymbolDescNullsFirst = 'token0_symbol_DESC_NULLS_FIRST',
   Token0SymbolDescNullsLast = 'token0_symbol_DESC_NULLS_LAST',
-  Token0TotalLiquidityAsc = 'token0_totalLiquidity_ASC',
-  Token0TotalLiquidityAscNullsFirst = 'token0_totalLiquidity_ASC_NULLS_FIRST',
-  Token0TotalLiquidityAscNullsLast = 'token0_totalLiquidity_ASC_NULLS_LAST',
-  Token0TotalLiquidityDesc = 'token0_totalLiquidity_DESC',
-  Token0TotalLiquidityDescNullsFirst = 'token0_totalLiquidity_DESC_NULLS_FIRST',
-  Token0TotalLiquidityDescNullsLast = 'token0_totalLiquidity_DESC_NULLS_LAST',
+  Token0TotalLiquidityAllPairsUsdAsc = 'token0_totalLiquidityAllPairsUSD_ASC',
+  Token0TotalLiquidityAllPairsUsdAscNullsFirst = 'token0_totalLiquidityAllPairsUSD_ASC_NULLS_FIRST',
+  Token0TotalLiquidityAllPairsUsdAscNullsLast = 'token0_totalLiquidityAllPairsUSD_ASC_NULLS_LAST',
+  Token0TotalLiquidityAllPairsUsdDesc = 'token0_totalLiquidityAllPairsUSD_DESC',
+  Token0TotalLiquidityAllPairsUsdDescNullsFirst = 'token0_totalLiquidityAllPairsUSD_DESC_NULLS_FIRST',
+  Token0TotalLiquidityAllPairsUsdDescNullsLast = 'token0_totalLiquidityAllPairsUSD_DESC_NULLS_LAST',
+  Token0TotalLiquidityAllPairsAsc = 'token0_totalLiquidityAllPairs_ASC',
+  Token0TotalLiquidityAllPairsAscNullsFirst = 'token0_totalLiquidityAllPairs_ASC_NULLS_FIRST',
+  Token0TotalLiquidityAllPairsAscNullsLast = 'token0_totalLiquidityAllPairs_ASC_NULLS_LAST',
+  Token0TotalLiquidityAllPairsDesc = 'token0_totalLiquidityAllPairs_DESC',
+  Token0TotalLiquidityAllPairsDescNullsFirst = 'token0_totalLiquidityAllPairs_DESC_NULLS_FIRST',
+  Token0TotalLiquidityAllPairsDescNullsLast = 'token0_totalLiquidityAllPairs_DESC_NULLS_LAST',
   Token0TotalSupplyAsc = 'token0_totalSupply_ASC',
   Token0TotalSupplyAscNullsFirst = 'token0_totalSupply_ASC_NULLS_FIRST',
   Token0TotalSupplyAscNullsLast = 'token0_totalSupply_ASC_NULLS_LAST',
   Token0TotalSupplyDesc = 'token0_totalSupply_DESC',
   Token0TotalSupplyDescNullsFirst = 'token0_totalSupply_DESC_NULLS_FIRST',
   Token0TotalSupplyDescNullsLast = 'token0_totalSupply_DESC_NULLS_LAST',
-  Token0TradeVolumeUsdAsc = 'token0_tradeVolumeUSD_ASC',
-  Token0TradeVolumeUsdAscNullsFirst = 'token0_tradeVolumeUSD_ASC_NULLS_FIRST',
-  Token0TradeVolumeUsdAscNullsLast = 'token0_tradeVolumeUSD_ASC_NULLS_LAST',
-  Token0TradeVolumeUsdDesc = 'token0_tradeVolumeUSD_DESC',
-  Token0TradeVolumeUsdDescNullsFirst = 'token0_tradeVolumeUSD_DESC_NULLS_FIRST',
-  Token0TradeVolumeUsdDescNullsLast = 'token0_tradeVolumeUSD_DESC_NULLS_LAST',
-  Token0TradeVolumeAsc = 'token0_tradeVolume_ASC',
-  Token0TradeVolumeAscNullsFirst = 'token0_tradeVolume_ASC_NULLS_FIRST',
-  Token0TradeVolumeAscNullsLast = 'token0_tradeVolume_ASC_NULLS_LAST',
-  Token0TradeVolumeDesc = 'token0_tradeVolume_DESC',
-  Token0TradeVolumeDescNullsFirst = 'token0_tradeVolume_DESC_NULLS_FIRST',
-  Token0TradeVolumeDescNullsLast = 'token0_tradeVolume_DESC_NULLS_LAST',
-  Token0TxCountAsc = 'token0_txCount_ASC',
-  Token0TxCountAscNullsFirst = 'token0_txCount_ASC_NULLS_FIRST',
-  Token0TxCountAscNullsLast = 'token0_txCount_ASC_NULLS_LAST',
-  Token0TxCountDesc = 'token0_txCount_DESC',
-  Token0TxCountDescNullsFirst = 'token0_txCount_DESC_NULLS_FIRST',
-  Token0TxCountDescNullsLast = 'token0_txCount_DESC_NULLS_LAST',
-  Token0UntrackedVolumeUsdAsc = 'token0_untrackedVolumeUSD_ASC',
-  Token0UntrackedVolumeUsdAscNullsFirst = 'token0_untrackedVolumeUSD_ASC_NULLS_FIRST',
-  Token0UntrackedVolumeUsdAscNullsLast = 'token0_untrackedVolumeUSD_ASC_NULLS_LAST',
-  Token0UntrackedVolumeUsdDesc = 'token0_untrackedVolumeUSD_DESC',
-  Token0UntrackedVolumeUsdDescNullsFirst = 'token0_untrackedVolumeUSD_DESC_NULLS_FIRST',
-  Token0UntrackedVolumeUsdDescNullsLast = 'token0_untrackedVolumeUSD_DESC_NULLS_LAST',
+  Token0TradeVolume24hAsc = 'token0_tradeVolume24h_ASC',
+  Token0TradeVolume24hAscNullsFirst = 'token0_tradeVolume24h_ASC_NULLS_FIRST',
+  Token0TradeVolume24hAscNullsLast = 'token0_tradeVolume24h_ASC_NULLS_LAST',
+  Token0TradeVolume24hDesc = 'token0_tradeVolume24h_DESC',
+  Token0TradeVolume24hDescNullsFirst = 'token0_tradeVolume24h_DESC_NULLS_FIRST',
+  Token0TradeVolume24hDescNullsLast = 'token0_tradeVolume24h_DESC_NULLS_LAST',
+  Token0TradeVolumeEth24hAsc = 'token0_tradeVolumeETH24h_ASC',
+  Token0TradeVolumeEth24hAscNullsFirst = 'token0_tradeVolumeETH24h_ASC_NULLS_FIRST',
+  Token0TradeVolumeEth24hAscNullsLast = 'token0_tradeVolumeETH24h_ASC_NULLS_LAST',
+  Token0TradeVolumeEth24hDesc = 'token0_tradeVolumeETH24h_DESC',
+  Token0TradeVolumeEth24hDescNullsFirst = 'token0_tradeVolumeETH24h_DESC_NULLS_FIRST',
+  Token0TradeVolumeEth24hDescNullsLast = 'token0_tradeVolumeETH24h_DESC_NULLS_LAST',
+  Token0TradeVolumeUsd24hAsc = 'token0_tradeVolumeUSD24h_ASC',
+  Token0TradeVolumeUsd24hAscNullsFirst = 'token0_tradeVolumeUSD24h_ASC_NULLS_FIRST',
+  Token0TradeVolumeUsd24hAscNullsLast = 'token0_tradeVolumeUSD24h_ASC_NULLS_LAST',
+  Token0TradeVolumeUsd24hDesc = 'token0_tradeVolumeUSD24h_DESC',
+  Token0TradeVolumeUsd24hDescNullsFirst = 'token0_tradeVolumeUSD24h_DESC_NULLS_FIRST',
+  Token0TradeVolumeUsd24hDescNullsLast = 'token0_tradeVolumeUSD24h_DESC_NULLS_LAST',
+  Token0TxCount24hAsc = 'token0_txCount24h_ASC',
+  Token0TxCount24hAscNullsFirst = 'token0_txCount24h_ASC_NULLS_FIRST',
+  Token0TxCount24hAscNullsLast = 'token0_txCount24h_ASC_NULLS_LAST',
+  Token0TxCount24hDesc = 'token0_txCount24h_DESC',
+  Token0TxCount24hDescNullsFirst = 'token0_txCount24h_DESC_NULLS_FIRST',
+  Token0TxCount24hDescNullsLast = 'token0_txCount24h_DESC_NULLS_LAST',
   Token1PriceAsc = 'token1Price_ASC',
   Token1PriceAscNullsFirst = 'token1Price_ASC_NULLS_FIRST',
   Token1PriceAscNullsLast = 'token1Price_ASC_NULLS_LAST',
   Token1PriceDesc = 'token1Price_DESC',
   Token1PriceDescNullsFirst = 'token1Price_DESC_NULLS_FIRST',
   Token1PriceDescNullsLast = 'token1Price_DESC_NULLS_LAST',
+  Token1CirculationSupplyAsc = 'token1_circulationSupply_ASC',
+  Token1CirculationSupplyAscNullsFirst = 'token1_circulationSupply_ASC_NULLS_FIRST',
+  Token1CirculationSupplyAscNullsLast = 'token1_circulationSupply_ASC_NULLS_LAST',
+  Token1CirculationSupplyDesc = 'token1_circulationSupply_DESC',
+  Token1CirculationSupplyDescNullsFirst = 'token1_circulationSupply_DESC_NULLS_FIRST',
+  Token1CirculationSupplyDescNullsLast = 'token1_circulationSupply_DESC_NULLS_LAST',
   Token1DecimalsAsc = 'token1_decimals_ASC',
   Token1DecimalsAscNullsFirst = 'token1_decimals_ASC_NULLS_FIRST',
   Token1DecimalsAscNullsLast = 'token1_decimals_ASC_NULLS_LAST',
   Token1DecimalsDesc = 'token1_decimals_DESC',
   Token1DecimalsDescNullsFirst = 'token1_decimals_DESC_NULLS_FIRST',
   Token1DecimalsDescNullsLast = 'token1_decimals_DESC_NULLS_LAST',
-  Token1DerivedEthAsc = 'token1_derivedETH_ASC',
-  Token1DerivedEthAscNullsFirst = 'token1_derivedETH_ASC_NULLS_FIRST',
-  Token1DerivedEthAscNullsLast = 'token1_derivedETH_ASC_NULLS_LAST',
-  Token1DerivedEthDesc = 'token1_derivedETH_DESC',
-  Token1DerivedEthDescNullsFirst = 'token1_derivedETH_DESC_NULLS_FIRST',
-  Token1DerivedEthDescNullsLast = 'token1_derivedETH_DESC_NULLS_LAST',
+  Token1HoldersAsc = 'token1_holders_ASC',
+  Token1HoldersAscNullsFirst = 'token1_holders_ASC_NULLS_FIRST',
+  Token1HoldersAscNullsLast = 'token1_holders_ASC_NULLS_LAST',
+  Token1HoldersDesc = 'token1_holders_DESC',
+  Token1HoldersDescNullsFirst = 'token1_holders_DESC_NULLS_FIRST',
+  Token1HoldersDescNullsLast = 'token1_holders_DESC_NULLS_LAST',
   Token1IdAsc = 'token1_id_ASC',
   Token1IdAscNullsFirst = 'token1_id_ASC_NULLS_FIRST',
   Token1IdAscNullsLast = 'token1_id_ASC_NULLS_LAST',
   Token1IdDesc = 'token1_id_DESC',
   Token1IdDescNullsFirst = 'token1_id_DESC_NULLS_FIRST',
   Token1IdDescNullsLast = 'token1_id_DESC_NULLS_LAST',
+  Token1LastUpdatedAtAsc = 'token1_lastUpdatedAt_ASC',
+  Token1LastUpdatedAtAscNullsFirst = 'token1_lastUpdatedAt_ASC_NULLS_FIRST',
+  Token1LastUpdatedAtAscNullsLast = 'token1_lastUpdatedAt_ASC_NULLS_LAST',
+  Token1LastUpdatedAtDesc = 'token1_lastUpdatedAt_DESC',
+  Token1LastUpdatedAtDescNullsFirst = 'token1_lastUpdatedAt_DESC_NULLS_FIRST',
+  Token1LastUpdatedAtDescNullsLast = 'token1_lastUpdatedAt_DESC_NULLS_LAST',
+  Token1MarketCapUsdAsc = 'token1_marketCapUSD_ASC',
+  Token1MarketCapUsdAscNullsFirst = 'token1_marketCapUSD_ASC_NULLS_FIRST',
+  Token1MarketCapUsdAscNullsLast = 'token1_marketCapUSD_ASC_NULLS_LAST',
+  Token1MarketCapUsdDesc = 'token1_marketCapUSD_DESC',
+  Token1MarketCapUsdDescNullsFirst = 'token1_marketCapUSD_DESC_NULLS_FIRST',
+  Token1MarketCapUsdDescNullsLast = 'token1_marketCapUSD_DESC_NULLS_LAST',
   Token1NameAsc = 'token1_name_ASC',
   Token1NameAscNullsFirst = 'token1_name_ASC_NULLS_FIRST',
   Token1NameAscNullsLast = 'token1_name_ASC_NULLS_LAST',
   Token1NameDesc = 'token1_name_DESC',
   Token1NameDescNullsFirst = 'token1_name_DESC_NULLS_FIRST',
   Token1NameDescNullsLast = 'token1_name_DESC_NULLS_LAST',
+  Token1PriceEthAsc = 'token1_priceETH_ASC',
+  Token1PriceEthAscNullsFirst = 'token1_priceETH_ASC_NULLS_FIRST',
+  Token1PriceEthAscNullsLast = 'token1_priceETH_ASC_NULLS_LAST',
+  Token1PriceEthDesc = 'token1_priceETH_DESC',
+  Token1PriceEthDescNullsFirst = 'token1_priceETH_DESC_NULLS_FIRST',
+  Token1PriceEthDescNullsLast = 'token1_priceETH_DESC_NULLS_LAST',
+  Token1PriceUsdAsc = 'token1_priceUSD_ASC',
+  Token1PriceUsdAscNullsFirst = 'token1_priceUSD_ASC_NULLS_FIRST',
+  Token1PriceUsdAscNullsLast = 'token1_priceUSD_ASC_NULLS_LAST',
+  Token1PriceUsdDesc = 'token1_priceUSD_DESC',
+  Token1PriceUsdDescNullsFirst = 'token1_priceUSD_DESC_NULLS_FIRST',
+  Token1PriceUsdDescNullsLast = 'token1_priceUSD_DESC_NULLS_LAST',
   Token1SymbolAsc = 'token1_symbol_ASC',
   Token1SymbolAscNullsFirst = 'token1_symbol_ASC_NULLS_FIRST',
   Token1SymbolAscNullsLast = 'token1_symbol_ASC_NULLS_LAST',
   Token1SymbolDesc = 'token1_symbol_DESC',
   Token1SymbolDescNullsFirst = 'token1_symbol_DESC_NULLS_FIRST',
   Token1SymbolDescNullsLast = 'token1_symbol_DESC_NULLS_LAST',
-  Token1TotalLiquidityAsc = 'token1_totalLiquidity_ASC',
-  Token1TotalLiquidityAscNullsFirst = 'token1_totalLiquidity_ASC_NULLS_FIRST',
-  Token1TotalLiquidityAscNullsLast = 'token1_totalLiquidity_ASC_NULLS_LAST',
-  Token1TotalLiquidityDesc = 'token1_totalLiquidity_DESC',
-  Token1TotalLiquidityDescNullsFirst = 'token1_totalLiquidity_DESC_NULLS_FIRST',
-  Token1TotalLiquidityDescNullsLast = 'token1_totalLiquidity_DESC_NULLS_LAST',
+  Token1TotalLiquidityAllPairsUsdAsc = 'token1_totalLiquidityAllPairsUSD_ASC',
+  Token1TotalLiquidityAllPairsUsdAscNullsFirst = 'token1_totalLiquidityAllPairsUSD_ASC_NULLS_FIRST',
+  Token1TotalLiquidityAllPairsUsdAscNullsLast = 'token1_totalLiquidityAllPairsUSD_ASC_NULLS_LAST',
+  Token1TotalLiquidityAllPairsUsdDesc = 'token1_totalLiquidityAllPairsUSD_DESC',
+  Token1TotalLiquidityAllPairsUsdDescNullsFirst = 'token1_totalLiquidityAllPairsUSD_DESC_NULLS_FIRST',
+  Token1TotalLiquidityAllPairsUsdDescNullsLast = 'token1_totalLiquidityAllPairsUSD_DESC_NULLS_LAST',
+  Token1TotalLiquidityAllPairsAsc = 'token1_totalLiquidityAllPairs_ASC',
+  Token1TotalLiquidityAllPairsAscNullsFirst = 'token1_totalLiquidityAllPairs_ASC_NULLS_FIRST',
+  Token1TotalLiquidityAllPairsAscNullsLast = 'token1_totalLiquidityAllPairs_ASC_NULLS_LAST',
+  Token1TotalLiquidityAllPairsDesc = 'token1_totalLiquidityAllPairs_DESC',
+  Token1TotalLiquidityAllPairsDescNullsFirst = 'token1_totalLiquidityAllPairs_DESC_NULLS_FIRST',
+  Token1TotalLiquidityAllPairsDescNullsLast = 'token1_totalLiquidityAllPairs_DESC_NULLS_LAST',
   Token1TotalSupplyAsc = 'token1_totalSupply_ASC',
   Token1TotalSupplyAscNullsFirst = 'token1_totalSupply_ASC_NULLS_FIRST',
   Token1TotalSupplyAscNullsLast = 'token1_totalSupply_ASC_NULLS_LAST',
   Token1TotalSupplyDesc = 'token1_totalSupply_DESC',
   Token1TotalSupplyDescNullsFirst = 'token1_totalSupply_DESC_NULLS_FIRST',
   Token1TotalSupplyDescNullsLast = 'token1_totalSupply_DESC_NULLS_LAST',
-  Token1TradeVolumeUsdAsc = 'token1_tradeVolumeUSD_ASC',
-  Token1TradeVolumeUsdAscNullsFirst = 'token1_tradeVolumeUSD_ASC_NULLS_FIRST',
-  Token1TradeVolumeUsdAscNullsLast = 'token1_tradeVolumeUSD_ASC_NULLS_LAST',
-  Token1TradeVolumeUsdDesc = 'token1_tradeVolumeUSD_DESC',
-  Token1TradeVolumeUsdDescNullsFirst = 'token1_tradeVolumeUSD_DESC_NULLS_FIRST',
-  Token1TradeVolumeUsdDescNullsLast = 'token1_tradeVolumeUSD_DESC_NULLS_LAST',
-  Token1TradeVolumeAsc = 'token1_tradeVolume_ASC',
-  Token1TradeVolumeAscNullsFirst = 'token1_tradeVolume_ASC_NULLS_FIRST',
-  Token1TradeVolumeAscNullsLast = 'token1_tradeVolume_ASC_NULLS_LAST',
-  Token1TradeVolumeDesc = 'token1_tradeVolume_DESC',
-  Token1TradeVolumeDescNullsFirst = 'token1_tradeVolume_DESC_NULLS_FIRST',
-  Token1TradeVolumeDescNullsLast = 'token1_tradeVolume_DESC_NULLS_LAST',
-  Token1TxCountAsc = 'token1_txCount_ASC',
-  Token1TxCountAscNullsFirst = 'token1_txCount_ASC_NULLS_FIRST',
-  Token1TxCountAscNullsLast = 'token1_txCount_ASC_NULLS_LAST',
-  Token1TxCountDesc = 'token1_txCount_DESC',
-  Token1TxCountDescNullsFirst = 'token1_txCount_DESC_NULLS_FIRST',
-  Token1TxCountDescNullsLast = 'token1_txCount_DESC_NULLS_LAST',
-  Token1UntrackedVolumeUsdAsc = 'token1_untrackedVolumeUSD_ASC',
-  Token1UntrackedVolumeUsdAscNullsFirst = 'token1_untrackedVolumeUSD_ASC_NULLS_FIRST',
-  Token1UntrackedVolumeUsdAscNullsLast = 'token1_untrackedVolumeUSD_ASC_NULLS_LAST',
-  Token1UntrackedVolumeUsdDesc = 'token1_untrackedVolumeUSD_DESC',
-  Token1UntrackedVolumeUsdDescNullsFirst = 'token1_untrackedVolumeUSD_DESC_NULLS_FIRST',
-  Token1UntrackedVolumeUsdDescNullsLast = 'token1_untrackedVolumeUSD_DESC_NULLS_LAST',
-  TotalSupplyAsc = 'totalSupply_ASC',
-  TotalSupplyAscNullsFirst = 'totalSupply_ASC_NULLS_FIRST',
-  TotalSupplyAscNullsLast = 'totalSupply_ASC_NULLS_LAST',
-  TotalSupplyDesc = 'totalSupply_DESC',
-  TotalSupplyDescNullsFirst = 'totalSupply_DESC_NULLS_FIRST',
-  TotalSupplyDescNullsLast = 'totalSupply_DESC_NULLS_LAST',
-  TrackedReserveEthAsc = 'trackedReserveETH_ASC',
-  TrackedReserveEthAscNullsFirst = 'trackedReserveETH_ASC_NULLS_FIRST',
-  TrackedReserveEthAscNullsLast = 'trackedReserveETH_ASC_NULLS_LAST',
-  TrackedReserveEthDesc = 'trackedReserveETH_DESC',
-  TrackedReserveEthDescNullsFirst = 'trackedReserveETH_DESC_NULLS_FIRST',
-  TrackedReserveEthDescNullsLast = 'trackedReserveETH_DESC_NULLS_LAST',
-  TxCountAsc = 'txCount_ASC',
-  TxCountAscNullsFirst = 'txCount_ASC_NULLS_FIRST',
-  TxCountAscNullsLast = 'txCount_ASC_NULLS_LAST',
-  TxCountDesc = 'txCount_DESC',
-  TxCountDescNullsFirst = 'txCount_DESC_NULLS_FIRST',
-  TxCountDescNullsLast = 'txCount_DESC_NULLS_LAST',
-  UntrackedVolumeUsdAsc = 'untrackedVolumeUSD_ASC',
-  UntrackedVolumeUsdAscNullsFirst = 'untrackedVolumeUSD_ASC_NULLS_FIRST',
-  UntrackedVolumeUsdAscNullsLast = 'untrackedVolumeUSD_ASC_NULLS_LAST',
-  UntrackedVolumeUsdDesc = 'untrackedVolumeUSD_DESC',
-  UntrackedVolumeUsdDescNullsFirst = 'untrackedVolumeUSD_DESC_NULLS_FIRST',
-  UntrackedVolumeUsdDescNullsLast = 'untrackedVolumeUSD_DESC_NULLS_LAST',
-  VolumeToken0Asc = 'volumeToken0_ASC',
-  VolumeToken0AscNullsFirst = 'volumeToken0_ASC_NULLS_FIRST',
-  VolumeToken0AscNullsLast = 'volumeToken0_ASC_NULLS_LAST',
-  VolumeToken0Desc = 'volumeToken0_DESC',
-  VolumeToken0DescNullsFirst = 'volumeToken0_DESC_NULLS_FIRST',
-  VolumeToken0DescNullsLast = 'volumeToken0_DESC_NULLS_LAST',
-  VolumeToken1Asc = 'volumeToken1_ASC',
-  VolumeToken1AscNullsFirst = 'volumeToken1_ASC_NULLS_FIRST',
-  VolumeToken1AscNullsLast = 'volumeToken1_ASC_NULLS_LAST',
-  VolumeToken1Desc = 'volumeToken1_DESC',
-  VolumeToken1DescNullsFirst = 'volumeToken1_DESC_NULLS_FIRST',
-  VolumeToken1DescNullsLast = 'volumeToken1_DESC_NULLS_LAST',
-  VolumeUsdAsc = 'volumeUSD_ASC',
-  VolumeUsdAscNullsFirst = 'volumeUSD_ASC_NULLS_FIRST',
-  VolumeUsdAscNullsLast = 'volumeUSD_ASC_NULLS_LAST',
-  VolumeUsdDesc = 'volumeUSD_DESC',
-  VolumeUsdDescNullsFirst = 'volumeUSD_DESC_NULLS_FIRST',
-  VolumeUsdDescNullsLast = 'volumeUSD_DESC_NULLS_LAST',
+  Token1TradeVolume24hAsc = 'token1_tradeVolume24h_ASC',
+  Token1TradeVolume24hAscNullsFirst = 'token1_tradeVolume24h_ASC_NULLS_FIRST',
+  Token1TradeVolume24hAscNullsLast = 'token1_tradeVolume24h_ASC_NULLS_LAST',
+  Token1TradeVolume24hDesc = 'token1_tradeVolume24h_DESC',
+  Token1TradeVolume24hDescNullsFirst = 'token1_tradeVolume24h_DESC_NULLS_FIRST',
+  Token1TradeVolume24hDescNullsLast = 'token1_tradeVolume24h_DESC_NULLS_LAST',
+  Token1TradeVolumeEth24hAsc = 'token1_tradeVolumeETH24h_ASC',
+  Token1TradeVolumeEth24hAscNullsFirst = 'token1_tradeVolumeETH24h_ASC_NULLS_FIRST',
+  Token1TradeVolumeEth24hAscNullsLast = 'token1_tradeVolumeETH24h_ASC_NULLS_LAST',
+  Token1TradeVolumeEth24hDesc = 'token1_tradeVolumeETH24h_DESC',
+  Token1TradeVolumeEth24hDescNullsFirst = 'token1_tradeVolumeETH24h_DESC_NULLS_FIRST',
+  Token1TradeVolumeEth24hDescNullsLast = 'token1_tradeVolumeETH24h_DESC_NULLS_LAST',
+  Token1TradeVolumeUsd24hAsc = 'token1_tradeVolumeUSD24h_ASC',
+  Token1TradeVolumeUsd24hAscNullsFirst = 'token1_tradeVolumeUSD24h_ASC_NULLS_FIRST',
+  Token1TradeVolumeUsd24hAscNullsLast = 'token1_tradeVolumeUSD24h_ASC_NULLS_LAST',
+  Token1TradeVolumeUsd24hDesc = 'token1_tradeVolumeUSD24h_DESC',
+  Token1TradeVolumeUsd24hDescNullsFirst = 'token1_tradeVolumeUSD24h_DESC_NULLS_FIRST',
+  Token1TradeVolumeUsd24hDescNullsLast = 'token1_tradeVolumeUSD24h_DESC_NULLS_LAST',
+  Token1TxCount24hAsc = 'token1_txCount24h_ASC',
+  Token1TxCount24hAscNullsFirst = 'token1_txCount24h_ASC_NULLS_FIRST',
+  Token1TxCount24hAscNullsLast = 'token1_txCount24h_ASC_NULLS_LAST',
+  Token1TxCount24hDesc = 'token1_txCount24h_DESC',
+  Token1TxCount24hDescNullsFirst = 'token1_txCount24h_DESC_NULLS_FIRST',
+  Token1TxCount24hDescNullsLast = 'token1_txCount24h_DESC_NULLS_LAST',
+  TradeVolume24hDeltaAsc = 'tradeVolume24hDelta_ASC',
+  TradeVolume24hDeltaAscNullsFirst = 'tradeVolume24hDelta_ASC_NULLS_FIRST',
+  TradeVolume24hDeltaAscNullsLast = 'tradeVolume24hDelta_ASC_NULLS_LAST',
+  TradeVolume24hDeltaDesc = 'tradeVolume24hDelta_DESC',
+  TradeVolume24hDeltaDescNullsFirst = 'tradeVolume24hDelta_DESC_NULLS_FIRST',
+  TradeVolume24hDeltaDescNullsLast = 'tradeVolume24hDelta_DESC_NULLS_LAST',
+  TradeVolume24hAsc = 'tradeVolume24h_ASC',
+  TradeVolume24hAscNullsFirst = 'tradeVolume24h_ASC_NULLS_FIRST',
+  TradeVolume24hAscNullsLast = 'tradeVolume24h_ASC_NULLS_LAST',
+  TradeVolume24hDesc = 'tradeVolume24h_DESC',
+  TradeVolume24hDescNullsFirst = 'tradeVolume24h_DESC_NULLS_FIRST',
+  TradeVolume24hDescNullsLast = 'tradeVolume24h_DESC_NULLS_LAST',
+  TradeVolumeEth24hAsc = 'tradeVolumeETH24h_ASC',
+  TradeVolumeEth24hAscNullsFirst = 'tradeVolumeETH24h_ASC_NULLS_FIRST',
+  TradeVolumeEth24hAscNullsLast = 'tradeVolumeETH24h_ASC_NULLS_LAST',
+  TradeVolumeEth24hDesc = 'tradeVolumeETH24h_DESC',
+  TradeVolumeEth24hDescNullsFirst = 'tradeVolumeETH24h_DESC_NULLS_FIRST',
+  TradeVolumeEth24hDescNullsLast = 'tradeVolumeETH24h_DESC_NULLS_LAST',
+  TradeVolumeUsd24hAsc = 'tradeVolumeUSD24h_ASC',
+  TradeVolumeUsd24hAscNullsFirst = 'tradeVolumeUSD24h_ASC_NULLS_FIRST',
+  TradeVolumeUsd24hAscNullsLast = 'tradeVolumeUSD24h_ASC_NULLS_LAST',
+  TradeVolumeUsd24hDesc = 'tradeVolumeUSD24h_DESC',
+  TradeVolumeUsd24hDescNullsFirst = 'tradeVolumeUSD24h_DESC_NULLS_FIRST',
+  TradeVolumeUsd24hDescNullsLast = 'tradeVolumeUSD24h_DESC_NULLS_LAST',
+  TxCount24hAsc = 'txCount24h_ASC',
+  TxCount24hAscNullsFirst = 'txCount24h_ASC_NULLS_FIRST',
+  TxCount24hAscNullsLast = 'txCount24h_ASC_NULLS_LAST',
+  TxCount24hDesc = 'txCount24h_DESC',
+  TxCount24hDescNullsFirst = 'txCount24h_DESC_NULLS_FIRST',
+  TxCount24hDescNullsLast = 'txCount24h_DESC_NULLS_LAST',
 }
 
 export type PairWhereInput = {
@@ -1453,6 +1794,42 @@ export type PairWhereInput = {
   createdAtTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
   createdAtTimestamp_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
   createdAtTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  fees24hDelta_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  fees24hDelta_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  fees24hDelta_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  fees24hDelta_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  fees24hDelta_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  fees24hDelta_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  fees24hDelta_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  fees24hDelta_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  fees24hDelta_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  fees24h_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  fees24h_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  fees24h_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  fees24h_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  fees24h_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  fees24h_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  fees24h_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  fees24h_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  fees24h_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  feesETH24h_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  feesETH24h_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  feesETH24h_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  feesETH24h_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  feesETH24h_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  feesETH24h_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  feesETH24h_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  feesETH24h_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  feesETH24h_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  feesUSD24h_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  feesUSD24h_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  feesUSD24h_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  feesUSD24h_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  feesUSD24h_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  feesUSD24h_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  feesUSD24h_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  feesUSD24h_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  feesUSD24h_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   id_contains?: InputMaybe<Scalars['String']['input']>;
   id_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
   id_endsWith?: InputMaybe<Scalars['String']['input']>;
@@ -1470,6 +1847,24 @@ export type PairWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
   id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
   id_startsWith?: InputMaybe<Scalars['String']['input']>;
+  lastUpdatedAt_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lastUpdatedAt_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lastUpdatedAt_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  liquidity24hDelta_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidity24hDelta_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidity24hDelta_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidity24hDelta_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  liquidity24hDelta_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  liquidity24hDelta_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidity24hDelta_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidity24hDelta_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidity24hDelta_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   liquidityProviderCount_eq?: InputMaybe<Scalars['BigInt']['input']>;
   liquidityProviderCount_gt?: InputMaybe<Scalars['BigInt']['input']>;
   liquidityProviderCount_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -1479,6 +1874,33 @@ export type PairWhereInput = {
   liquidityProviderCount_lte?: InputMaybe<Scalars['BigInt']['input']>;
   liquidityProviderCount_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
   liquidityProviderCount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  liquidityUSD_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  liquidityUSD_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  liquidityUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityUSD_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  lpTotalLocked_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalLocked_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalLocked_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalLocked_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  lpTotalLocked_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lpTotalLocked_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalLocked_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalLocked_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalLocked_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  lpTotalSupply_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalSupply_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalSupply_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalSupply_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  lpTotalSupply_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lpTotalSupply_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalSupply_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalSupply_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lpTotalSupply_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   reserve0_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   reserve0_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   reserve0_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -1497,24 +1919,6 @@ export type PairWhereInput = {
   reserve1_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   reserve1_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   reserve1_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  reserveETH_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveETH_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveETH_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveETH_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  reserveETH_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  reserveETH_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveETH_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveETH_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveETH_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  reserveUSD_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  reserveUSD_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  reserveUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveUSD_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  reserveUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   token0?: InputMaybe<TokenWhereInput>;
   token0Price_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   token0Price_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -1537,69 +1941,53 @@ export type PairWhereInput = {
   token1Price_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   token1Price_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   token1_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  totalSupply_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalSupply_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalSupply_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalSupply_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  totalSupply_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  totalSupply_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalSupply_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalSupply_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalSupply_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  trackedReserveETH_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  trackedReserveETH_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  trackedReserveETH_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  trackedReserveETH_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  trackedReserveETH_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  trackedReserveETH_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  trackedReserveETH_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  trackedReserveETH_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  trackedReserveETH_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  txCount_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  txCount_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  txCount_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  txCount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  txCount_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  txCount_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  txCount_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  txCount_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  txCount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  untrackedVolumeUSD_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  untrackedVolumeUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  untrackedVolumeUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  untrackedVolumeUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  untrackedVolumeUSD_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  untrackedVolumeUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  untrackedVolumeUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  untrackedVolumeUSD_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  untrackedVolumeUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  volumeToken0_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  volumeToken0_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  volumeToken0_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  volumeToken0_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  volumeToken0_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  volumeToken0_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  volumeToken0_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  volumeToken0_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  volumeToken0_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  volumeToken1_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  volumeToken1_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  volumeToken1_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  volumeToken1_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  volumeToken1_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  volumeToken1_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  volumeToken1_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  volumeToken1_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  volumeToken1_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  volumeUSD_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  volumeUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  volumeUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  volumeUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  volumeUSD_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  volumeUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  volumeUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  volumeUSD_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  volumeUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  tradeVolume24hDelta_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24hDelta_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24hDelta_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24hDelta_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  tradeVolume24hDelta_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  tradeVolume24hDelta_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24hDelta_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24hDelta_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24hDelta_not_in?: InputMaybe<
+    Array<Scalars['BigDecimal']['input']>
+  >;
+  tradeVolume24h_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24h_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24h_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24h_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  tradeVolume24h_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  tradeVolume24h_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24h_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24h_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24h_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  tradeVolumeETH24h_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeETH24h_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeETH24h_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeETH24h_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  tradeVolumeETH24h_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  tradeVolumeETH24h_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeETH24h_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeETH24h_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeETH24h_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  tradeVolumeUSD24h_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeUSD24h_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeUSD24h_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeUSD24h_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  tradeVolumeUSD24h_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  tradeVolumeUSD24h_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeUSD24h_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeUSD24h_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeUSD24h_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  txCount24h_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount24h_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount24h_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount24h_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  txCount24h_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  txCount24h_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount24h_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount24h_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount24h_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
 };
 
 export type PairsConnection = {
@@ -1611,12 +1999,12 @@ export type PairsConnection = {
 
 export type Query = {
   __typename?: 'Query';
-  liquidityPositionById?: Maybe<LiquidityPosition>;
-  liquidityPositionSnapshotById?: Maybe<LiquidityPositionSnapshot>;
-  liquidityPositionSnapshots: Array<LiquidityPositionSnapshot>;
-  liquidityPositionSnapshotsConnection: LiquidityPositionSnapshotsConnection;
-  liquidityPositions: Array<LiquidityPosition>;
-  liquidityPositionsConnection: LiquidityPositionsConnection;
+  currentLiquidityPositionById?: Maybe<CurrentLiquidityPosition>;
+  currentLiquidityPositions: Array<CurrentLiquidityPosition>;
+  currentLiquidityPositionsConnection: CurrentLiquidityPositionsConnection;
+  liquidityPositionHistories: Array<LiquidityPositionHistory>;
+  liquidityPositionHistoriesConnection: LiquidityPositionHistoriesConnection;
+  liquidityPositionHistoryById?: Maybe<LiquidityPositionHistory>;
   memeTokenById?: Maybe<MemeToken>;
   memeTokens: Array<MemeToken>;
   memeTokensConnection: MemeTokensConnection;
@@ -1638,40 +2026,40 @@ export type Query = {
   usersConnection: UsersConnection;
 };
 
-export type QueryLiquidityPositionByIdArgs = {
+export type QueryCurrentLiquidityPositionByIdArgs = {
   id: Scalars['String']['input'];
 };
 
-export type QueryLiquidityPositionSnapshotByIdArgs = {
+export type QueryCurrentLiquidityPositionsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CurrentLiquidityPositionOrderByInput>>;
+  where?: InputMaybe<CurrentLiquidityPositionWhereInput>;
+};
+
+export type QueryCurrentLiquidityPositionsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy: Array<CurrentLiquidityPositionOrderByInput>;
+  where?: InputMaybe<CurrentLiquidityPositionWhereInput>;
+};
+
+export type QueryLiquidityPositionHistoriesArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<LiquidityPositionHistoryOrderByInput>>;
+  where?: InputMaybe<LiquidityPositionHistoryWhereInput>;
+};
+
+export type QueryLiquidityPositionHistoriesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy: Array<LiquidityPositionHistoryOrderByInput>;
+  where?: InputMaybe<LiquidityPositionHistoryWhereInput>;
+};
+
+export type QueryLiquidityPositionHistoryByIdArgs = {
   id: Scalars['String']['input'];
-};
-
-export type QueryLiquidityPositionSnapshotsArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<LiquidityPositionSnapshotOrderByInput>>;
-  where?: InputMaybe<LiquidityPositionSnapshotWhereInput>;
-};
-
-export type QueryLiquidityPositionSnapshotsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy: Array<LiquidityPositionSnapshotOrderByInput>;
-  where?: InputMaybe<LiquidityPositionSnapshotWhereInput>;
-};
-
-export type QueryLiquidityPositionsArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<LiquidityPositionOrderByInput>>;
-  where?: InputMaybe<LiquidityPositionWhereInput>;
-};
-
-export type QueryLiquidityPositionsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy: Array<LiquidityPositionOrderByInput>;
-  where?: InputMaybe<LiquidityPositionWhereInput>;
 };
 
 export type QueryMemeTokenByIdArgs = {
@@ -1790,33 +2178,44 @@ export type SquidStatus = {
 
 export type Token = {
   __typename?: 'Token';
+  circulationSupply: Scalars['BigInt']['output'];
   decimals: Scalars['BigInt']['output'];
-  derivedETH: Scalars['BigDecimal']['output'];
+  holders: Scalars['BigInt']['output'];
   id: Scalars['String']['output'];
+  lastUpdatedAt: Scalars['BigInt']['output'];
+  marketCapUSD: Scalars['BigDecimal']['output'];
   memeToken?: Maybe<MemeToken>;
   name: Scalars['String']['output'];
+  priceETH?: Maybe<Scalars['BigDecimal']['output']>;
+  priceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   symbol: Scalars['String']['output'];
-  totalLiquidity: Scalars['BigDecimal']['output'];
+  totalLiquidityAllPairs: Scalars['BigDecimal']['output'];
+  totalLiquidityAllPairsUSD: Scalars['BigDecimal']['output'];
   totalSupply: Scalars['BigInt']['output'];
-  tradeVolume: Scalars['BigDecimal']['output'];
-  tradeVolumeUSD: Scalars['BigDecimal']['output'];
-  txCount: Scalars['BigInt']['output'];
-  untrackedVolumeUSD: Scalars['BigDecimal']['output'];
+  tradeVolume24h: Scalars['BigDecimal']['output'];
+  tradeVolumeETH24h: Scalars['BigDecimal']['output'];
+  tradeVolumeUSD24h: Scalars['BigDecimal']['output'];
+  txCount24h: Scalars['BigInt']['output'];
 };
 
 export type TokenDayData = {
   __typename?: 'TokenDayData';
-  dailyTxns: Scalars['BigInt']['output'];
-  dailyVolumeETH: Scalars['BigDecimal']['output'];
-  dailyVolumeToken: Scalars['BigDecimal']['output'];
-  dailyVolumeUSD: Scalars['BigDecimal']['output'];
+  circulationSupply: Scalars['BigInt']['output'];
   date: Scalars['Int']['output'];
+  holders: Scalars['BigInt']['output'];
   id: Scalars['String']['output'];
-  priceUSD: Scalars['BigDecimal']['output'];
+  lastUpdatedAt: Scalars['BigInt']['output'];
+  marketCapUSD: Scalars['BigDecimal']['output'];
+  priceETH?: Maybe<Scalars['BigDecimal']['output']>;
+  priceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   token: Token;
-  totalLiquidityETH: Scalars['BigDecimal']['output'];
-  totalLiquidityToken: Scalars['BigDecimal']['output'];
-  totalLiquidityUSD: Scalars['BigDecimal']['output'];
+  totalLiquidityAllPairs: Scalars['BigDecimal']['output'];
+  totalLiquidityAllPairsUSD: Scalars['BigDecimal']['output'];
+  totalSupply: Scalars['BigInt']['output'];
+  tradeVolume24h: Scalars['BigDecimal']['output'];
+  tradeVolumeETH24h: Scalars['BigDecimal']['output'];
+  tradeVolumeUSD24h: Scalars['BigDecimal']['output'];
+  txCount: Scalars['BigInt']['output'];
 };
 
 export type TokenDayDataConnection = {
@@ -1833,173 +2232,212 @@ export type TokenDayDataEdge = {
 };
 
 export enum TokenDayDataOrderByInput {
-  DailyTxnsAsc = 'dailyTxns_ASC',
-  DailyTxnsAscNullsFirst = 'dailyTxns_ASC_NULLS_FIRST',
-  DailyTxnsAscNullsLast = 'dailyTxns_ASC_NULLS_LAST',
-  DailyTxnsDesc = 'dailyTxns_DESC',
-  DailyTxnsDescNullsFirst = 'dailyTxns_DESC_NULLS_FIRST',
-  DailyTxnsDescNullsLast = 'dailyTxns_DESC_NULLS_LAST',
-  DailyVolumeEthAsc = 'dailyVolumeETH_ASC',
-  DailyVolumeEthAscNullsFirst = 'dailyVolumeETH_ASC_NULLS_FIRST',
-  DailyVolumeEthAscNullsLast = 'dailyVolumeETH_ASC_NULLS_LAST',
-  DailyVolumeEthDesc = 'dailyVolumeETH_DESC',
-  DailyVolumeEthDescNullsFirst = 'dailyVolumeETH_DESC_NULLS_FIRST',
-  DailyVolumeEthDescNullsLast = 'dailyVolumeETH_DESC_NULLS_LAST',
-  DailyVolumeTokenAsc = 'dailyVolumeToken_ASC',
-  DailyVolumeTokenAscNullsFirst = 'dailyVolumeToken_ASC_NULLS_FIRST',
-  DailyVolumeTokenAscNullsLast = 'dailyVolumeToken_ASC_NULLS_LAST',
-  DailyVolumeTokenDesc = 'dailyVolumeToken_DESC',
-  DailyVolumeTokenDescNullsFirst = 'dailyVolumeToken_DESC_NULLS_FIRST',
-  DailyVolumeTokenDescNullsLast = 'dailyVolumeToken_DESC_NULLS_LAST',
-  DailyVolumeUsdAsc = 'dailyVolumeUSD_ASC',
-  DailyVolumeUsdAscNullsFirst = 'dailyVolumeUSD_ASC_NULLS_FIRST',
-  DailyVolumeUsdAscNullsLast = 'dailyVolumeUSD_ASC_NULLS_LAST',
-  DailyVolumeUsdDesc = 'dailyVolumeUSD_DESC',
-  DailyVolumeUsdDescNullsFirst = 'dailyVolumeUSD_DESC_NULLS_FIRST',
-  DailyVolumeUsdDescNullsLast = 'dailyVolumeUSD_DESC_NULLS_LAST',
+  CirculationSupplyAsc = 'circulationSupply_ASC',
+  CirculationSupplyAscNullsFirst = 'circulationSupply_ASC_NULLS_FIRST',
+  CirculationSupplyAscNullsLast = 'circulationSupply_ASC_NULLS_LAST',
+  CirculationSupplyDesc = 'circulationSupply_DESC',
+  CirculationSupplyDescNullsFirst = 'circulationSupply_DESC_NULLS_FIRST',
+  CirculationSupplyDescNullsLast = 'circulationSupply_DESC_NULLS_LAST',
   DateAsc = 'date_ASC',
   DateAscNullsFirst = 'date_ASC_NULLS_FIRST',
   DateAscNullsLast = 'date_ASC_NULLS_LAST',
   DateDesc = 'date_DESC',
   DateDescNullsFirst = 'date_DESC_NULLS_FIRST',
   DateDescNullsLast = 'date_DESC_NULLS_LAST',
+  HoldersAsc = 'holders_ASC',
+  HoldersAscNullsFirst = 'holders_ASC_NULLS_FIRST',
+  HoldersAscNullsLast = 'holders_ASC_NULLS_LAST',
+  HoldersDesc = 'holders_DESC',
+  HoldersDescNullsFirst = 'holders_DESC_NULLS_FIRST',
+  HoldersDescNullsLast = 'holders_DESC_NULLS_LAST',
   IdAsc = 'id_ASC',
   IdAscNullsFirst = 'id_ASC_NULLS_FIRST',
   IdAscNullsLast = 'id_ASC_NULLS_LAST',
   IdDesc = 'id_DESC',
   IdDescNullsFirst = 'id_DESC_NULLS_FIRST',
   IdDescNullsLast = 'id_DESC_NULLS_LAST',
+  LastUpdatedAtAsc = 'lastUpdatedAt_ASC',
+  LastUpdatedAtAscNullsFirst = 'lastUpdatedAt_ASC_NULLS_FIRST',
+  LastUpdatedAtAscNullsLast = 'lastUpdatedAt_ASC_NULLS_LAST',
+  LastUpdatedAtDesc = 'lastUpdatedAt_DESC',
+  LastUpdatedAtDescNullsFirst = 'lastUpdatedAt_DESC_NULLS_FIRST',
+  LastUpdatedAtDescNullsLast = 'lastUpdatedAt_DESC_NULLS_LAST',
+  MarketCapUsdAsc = 'marketCapUSD_ASC',
+  MarketCapUsdAscNullsFirst = 'marketCapUSD_ASC_NULLS_FIRST',
+  MarketCapUsdAscNullsLast = 'marketCapUSD_ASC_NULLS_LAST',
+  MarketCapUsdDesc = 'marketCapUSD_DESC',
+  MarketCapUsdDescNullsFirst = 'marketCapUSD_DESC_NULLS_FIRST',
+  MarketCapUsdDescNullsLast = 'marketCapUSD_DESC_NULLS_LAST',
+  PriceEthAsc = 'priceETH_ASC',
+  PriceEthAscNullsFirst = 'priceETH_ASC_NULLS_FIRST',
+  PriceEthAscNullsLast = 'priceETH_ASC_NULLS_LAST',
+  PriceEthDesc = 'priceETH_DESC',
+  PriceEthDescNullsFirst = 'priceETH_DESC_NULLS_FIRST',
+  PriceEthDescNullsLast = 'priceETH_DESC_NULLS_LAST',
   PriceUsdAsc = 'priceUSD_ASC',
   PriceUsdAscNullsFirst = 'priceUSD_ASC_NULLS_FIRST',
   PriceUsdAscNullsLast = 'priceUSD_ASC_NULLS_LAST',
   PriceUsdDesc = 'priceUSD_DESC',
   PriceUsdDescNullsFirst = 'priceUSD_DESC_NULLS_FIRST',
   PriceUsdDescNullsLast = 'priceUSD_DESC_NULLS_LAST',
+  TokenCirculationSupplyAsc = 'token_circulationSupply_ASC',
+  TokenCirculationSupplyAscNullsFirst = 'token_circulationSupply_ASC_NULLS_FIRST',
+  TokenCirculationSupplyAscNullsLast = 'token_circulationSupply_ASC_NULLS_LAST',
+  TokenCirculationSupplyDesc = 'token_circulationSupply_DESC',
+  TokenCirculationSupplyDescNullsFirst = 'token_circulationSupply_DESC_NULLS_FIRST',
+  TokenCirculationSupplyDescNullsLast = 'token_circulationSupply_DESC_NULLS_LAST',
   TokenDecimalsAsc = 'token_decimals_ASC',
   TokenDecimalsAscNullsFirst = 'token_decimals_ASC_NULLS_FIRST',
   TokenDecimalsAscNullsLast = 'token_decimals_ASC_NULLS_LAST',
   TokenDecimalsDesc = 'token_decimals_DESC',
   TokenDecimalsDescNullsFirst = 'token_decimals_DESC_NULLS_FIRST',
   TokenDecimalsDescNullsLast = 'token_decimals_DESC_NULLS_LAST',
-  TokenDerivedEthAsc = 'token_derivedETH_ASC',
-  TokenDerivedEthAscNullsFirst = 'token_derivedETH_ASC_NULLS_FIRST',
-  TokenDerivedEthAscNullsLast = 'token_derivedETH_ASC_NULLS_LAST',
-  TokenDerivedEthDesc = 'token_derivedETH_DESC',
-  TokenDerivedEthDescNullsFirst = 'token_derivedETH_DESC_NULLS_FIRST',
-  TokenDerivedEthDescNullsLast = 'token_derivedETH_DESC_NULLS_LAST',
+  TokenHoldersAsc = 'token_holders_ASC',
+  TokenHoldersAscNullsFirst = 'token_holders_ASC_NULLS_FIRST',
+  TokenHoldersAscNullsLast = 'token_holders_ASC_NULLS_LAST',
+  TokenHoldersDesc = 'token_holders_DESC',
+  TokenHoldersDescNullsFirst = 'token_holders_DESC_NULLS_FIRST',
+  TokenHoldersDescNullsLast = 'token_holders_DESC_NULLS_LAST',
   TokenIdAsc = 'token_id_ASC',
   TokenIdAscNullsFirst = 'token_id_ASC_NULLS_FIRST',
   TokenIdAscNullsLast = 'token_id_ASC_NULLS_LAST',
   TokenIdDesc = 'token_id_DESC',
   TokenIdDescNullsFirst = 'token_id_DESC_NULLS_FIRST',
   TokenIdDescNullsLast = 'token_id_DESC_NULLS_LAST',
+  TokenLastUpdatedAtAsc = 'token_lastUpdatedAt_ASC',
+  TokenLastUpdatedAtAscNullsFirst = 'token_lastUpdatedAt_ASC_NULLS_FIRST',
+  TokenLastUpdatedAtAscNullsLast = 'token_lastUpdatedAt_ASC_NULLS_LAST',
+  TokenLastUpdatedAtDesc = 'token_lastUpdatedAt_DESC',
+  TokenLastUpdatedAtDescNullsFirst = 'token_lastUpdatedAt_DESC_NULLS_FIRST',
+  TokenLastUpdatedAtDescNullsLast = 'token_lastUpdatedAt_DESC_NULLS_LAST',
+  TokenMarketCapUsdAsc = 'token_marketCapUSD_ASC',
+  TokenMarketCapUsdAscNullsFirst = 'token_marketCapUSD_ASC_NULLS_FIRST',
+  TokenMarketCapUsdAscNullsLast = 'token_marketCapUSD_ASC_NULLS_LAST',
+  TokenMarketCapUsdDesc = 'token_marketCapUSD_DESC',
+  TokenMarketCapUsdDescNullsFirst = 'token_marketCapUSD_DESC_NULLS_FIRST',
+  TokenMarketCapUsdDescNullsLast = 'token_marketCapUSD_DESC_NULLS_LAST',
   TokenNameAsc = 'token_name_ASC',
   TokenNameAscNullsFirst = 'token_name_ASC_NULLS_FIRST',
   TokenNameAscNullsLast = 'token_name_ASC_NULLS_LAST',
   TokenNameDesc = 'token_name_DESC',
   TokenNameDescNullsFirst = 'token_name_DESC_NULLS_FIRST',
   TokenNameDescNullsLast = 'token_name_DESC_NULLS_LAST',
+  TokenPriceEthAsc = 'token_priceETH_ASC',
+  TokenPriceEthAscNullsFirst = 'token_priceETH_ASC_NULLS_FIRST',
+  TokenPriceEthAscNullsLast = 'token_priceETH_ASC_NULLS_LAST',
+  TokenPriceEthDesc = 'token_priceETH_DESC',
+  TokenPriceEthDescNullsFirst = 'token_priceETH_DESC_NULLS_FIRST',
+  TokenPriceEthDescNullsLast = 'token_priceETH_DESC_NULLS_LAST',
+  TokenPriceUsdAsc = 'token_priceUSD_ASC',
+  TokenPriceUsdAscNullsFirst = 'token_priceUSD_ASC_NULLS_FIRST',
+  TokenPriceUsdAscNullsLast = 'token_priceUSD_ASC_NULLS_LAST',
+  TokenPriceUsdDesc = 'token_priceUSD_DESC',
+  TokenPriceUsdDescNullsFirst = 'token_priceUSD_DESC_NULLS_FIRST',
+  TokenPriceUsdDescNullsLast = 'token_priceUSD_DESC_NULLS_LAST',
   TokenSymbolAsc = 'token_symbol_ASC',
   TokenSymbolAscNullsFirst = 'token_symbol_ASC_NULLS_FIRST',
   TokenSymbolAscNullsLast = 'token_symbol_ASC_NULLS_LAST',
   TokenSymbolDesc = 'token_symbol_DESC',
   TokenSymbolDescNullsFirst = 'token_symbol_DESC_NULLS_FIRST',
   TokenSymbolDescNullsLast = 'token_symbol_DESC_NULLS_LAST',
-  TokenTotalLiquidityAsc = 'token_totalLiquidity_ASC',
-  TokenTotalLiquidityAscNullsFirst = 'token_totalLiquidity_ASC_NULLS_FIRST',
-  TokenTotalLiquidityAscNullsLast = 'token_totalLiquidity_ASC_NULLS_LAST',
-  TokenTotalLiquidityDesc = 'token_totalLiquidity_DESC',
-  TokenTotalLiquidityDescNullsFirst = 'token_totalLiquidity_DESC_NULLS_FIRST',
-  TokenTotalLiquidityDescNullsLast = 'token_totalLiquidity_DESC_NULLS_LAST',
+  TokenTotalLiquidityAllPairsUsdAsc = 'token_totalLiquidityAllPairsUSD_ASC',
+  TokenTotalLiquidityAllPairsUsdAscNullsFirst = 'token_totalLiquidityAllPairsUSD_ASC_NULLS_FIRST',
+  TokenTotalLiquidityAllPairsUsdAscNullsLast = 'token_totalLiquidityAllPairsUSD_ASC_NULLS_LAST',
+  TokenTotalLiquidityAllPairsUsdDesc = 'token_totalLiquidityAllPairsUSD_DESC',
+  TokenTotalLiquidityAllPairsUsdDescNullsFirst = 'token_totalLiquidityAllPairsUSD_DESC_NULLS_FIRST',
+  TokenTotalLiquidityAllPairsUsdDescNullsLast = 'token_totalLiquidityAllPairsUSD_DESC_NULLS_LAST',
+  TokenTotalLiquidityAllPairsAsc = 'token_totalLiquidityAllPairs_ASC',
+  TokenTotalLiquidityAllPairsAscNullsFirst = 'token_totalLiquidityAllPairs_ASC_NULLS_FIRST',
+  TokenTotalLiquidityAllPairsAscNullsLast = 'token_totalLiquidityAllPairs_ASC_NULLS_LAST',
+  TokenTotalLiquidityAllPairsDesc = 'token_totalLiquidityAllPairs_DESC',
+  TokenTotalLiquidityAllPairsDescNullsFirst = 'token_totalLiquidityAllPairs_DESC_NULLS_FIRST',
+  TokenTotalLiquidityAllPairsDescNullsLast = 'token_totalLiquidityAllPairs_DESC_NULLS_LAST',
   TokenTotalSupplyAsc = 'token_totalSupply_ASC',
   TokenTotalSupplyAscNullsFirst = 'token_totalSupply_ASC_NULLS_FIRST',
   TokenTotalSupplyAscNullsLast = 'token_totalSupply_ASC_NULLS_LAST',
   TokenTotalSupplyDesc = 'token_totalSupply_DESC',
   TokenTotalSupplyDescNullsFirst = 'token_totalSupply_DESC_NULLS_FIRST',
   TokenTotalSupplyDescNullsLast = 'token_totalSupply_DESC_NULLS_LAST',
-  TokenTradeVolumeUsdAsc = 'token_tradeVolumeUSD_ASC',
-  TokenTradeVolumeUsdAscNullsFirst = 'token_tradeVolumeUSD_ASC_NULLS_FIRST',
-  TokenTradeVolumeUsdAscNullsLast = 'token_tradeVolumeUSD_ASC_NULLS_LAST',
-  TokenTradeVolumeUsdDesc = 'token_tradeVolumeUSD_DESC',
-  TokenTradeVolumeUsdDescNullsFirst = 'token_tradeVolumeUSD_DESC_NULLS_FIRST',
-  TokenTradeVolumeUsdDescNullsLast = 'token_tradeVolumeUSD_DESC_NULLS_LAST',
-  TokenTradeVolumeAsc = 'token_tradeVolume_ASC',
-  TokenTradeVolumeAscNullsFirst = 'token_tradeVolume_ASC_NULLS_FIRST',
-  TokenTradeVolumeAscNullsLast = 'token_tradeVolume_ASC_NULLS_LAST',
-  TokenTradeVolumeDesc = 'token_tradeVolume_DESC',
-  TokenTradeVolumeDescNullsFirst = 'token_tradeVolume_DESC_NULLS_FIRST',
-  TokenTradeVolumeDescNullsLast = 'token_tradeVolume_DESC_NULLS_LAST',
-  TokenTxCountAsc = 'token_txCount_ASC',
-  TokenTxCountAscNullsFirst = 'token_txCount_ASC_NULLS_FIRST',
-  TokenTxCountAscNullsLast = 'token_txCount_ASC_NULLS_LAST',
-  TokenTxCountDesc = 'token_txCount_DESC',
-  TokenTxCountDescNullsFirst = 'token_txCount_DESC_NULLS_FIRST',
-  TokenTxCountDescNullsLast = 'token_txCount_DESC_NULLS_LAST',
-  TokenUntrackedVolumeUsdAsc = 'token_untrackedVolumeUSD_ASC',
-  TokenUntrackedVolumeUsdAscNullsFirst = 'token_untrackedVolumeUSD_ASC_NULLS_FIRST',
-  TokenUntrackedVolumeUsdAscNullsLast = 'token_untrackedVolumeUSD_ASC_NULLS_LAST',
-  TokenUntrackedVolumeUsdDesc = 'token_untrackedVolumeUSD_DESC',
-  TokenUntrackedVolumeUsdDescNullsFirst = 'token_untrackedVolumeUSD_DESC_NULLS_FIRST',
-  TokenUntrackedVolumeUsdDescNullsLast = 'token_untrackedVolumeUSD_DESC_NULLS_LAST',
-  TotalLiquidityEthAsc = 'totalLiquidityETH_ASC',
-  TotalLiquidityEthAscNullsFirst = 'totalLiquidityETH_ASC_NULLS_FIRST',
-  TotalLiquidityEthAscNullsLast = 'totalLiquidityETH_ASC_NULLS_LAST',
-  TotalLiquidityEthDesc = 'totalLiquidityETH_DESC',
-  TotalLiquidityEthDescNullsFirst = 'totalLiquidityETH_DESC_NULLS_FIRST',
-  TotalLiquidityEthDescNullsLast = 'totalLiquidityETH_DESC_NULLS_LAST',
-  TotalLiquidityTokenAsc = 'totalLiquidityToken_ASC',
-  TotalLiquidityTokenAscNullsFirst = 'totalLiquidityToken_ASC_NULLS_FIRST',
-  TotalLiquidityTokenAscNullsLast = 'totalLiquidityToken_ASC_NULLS_LAST',
-  TotalLiquidityTokenDesc = 'totalLiquidityToken_DESC',
-  TotalLiquidityTokenDescNullsFirst = 'totalLiquidityToken_DESC_NULLS_FIRST',
-  TotalLiquidityTokenDescNullsLast = 'totalLiquidityToken_DESC_NULLS_LAST',
-  TotalLiquidityUsdAsc = 'totalLiquidityUSD_ASC',
-  TotalLiquidityUsdAscNullsFirst = 'totalLiquidityUSD_ASC_NULLS_FIRST',
-  TotalLiquidityUsdAscNullsLast = 'totalLiquidityUSD_ASC_NULLS_LAST',
-  TotalLiquidityUsdDesc = 'totalLiquidityUSD_DESC',
-  TotalLiquidityUsdDescNullsFirst = 'totalLiquidityUSD_DESC_NULLS_FIRST',
-  TotalLiquidityUsdDescNullsLast = 'totalLiquidityUSD_DESC_NULLS_LAST',
+  TokenTradeVolume24hAsc = 'token_tradeVolume24h_ASC',
+  TokenTradeVolume24hAscNullsFirst = 'token_tradeVolume24h_ASC_NULLS_FIRST',
+  TokenTradeVolume24hAscNullsLast = 'token_tradeVolume24h_ASC_NULLS_LAST',
+  TokenTradeVolume24hDesc = 'token_tradeVolume24h_DESC',
+  TokenTradeVolume24hDescNullsFirst = 'token_tradeVolume24h_DESC_NULLS_FIRST',
+  TokenTradeVolume24hDescNullsLast = 'token_tradeVolume24h_DESC_NULLS_LAST',
+  TokenTradeVolumeEth24hAsc = 'token_tradeVolumeETH24h_ASC',
+  TokenTradeVolumeEth24hAscNullsFirst = 'token_tradeVolumeETH24h_ASC_NULLS_FIRST',
+  TokenTradeVolumeEth24hAscNullsLast = 'token_tradeVolumeETH24h_ASC_NULLS_LAST',
+  TokenTradeVolumeEth24hDesc = 'token_tradeVolumeETH24h_DESC',
+  TokenTradeVolumeEth24hDescNullsFirst = 'token_tradeVolumeETH24h_DESC_NULLS_FIRST',
+  TokenTradeVolumeEth24hDescNullsLast = 'token_tradeVolumeETH24h_DESC_NULLS_LAST',
+  TokenTradeVolumeUsd24hAsc = 'token_tradeVolumeUSD24h_ASC',
+  TokenTradeVolumeUsd24hAscNullsFirst = 'token_tradeVolumeUSD24h_ASC_NULLS_FIRST',
+  TokenTradeVolumeUsd24hAscNullsLast = 'token_tradeVolumeUSD24h_ASC_NULLS_LAST',
+  TokenTradeVolumeUsd24hDesc = 'token_tradeVolumeUSD24h_DESC',
+  TokenTradeVolumeUsd24hDescNullsFirst = 'token_tradeVolumeUSD24h_DESC_NULLS_FIRST',
+  TokenTradeVolumeUsd24hDescNullsLast = 'token_tradeVolumeUSD24h_DESC_NULLS_LAST',
+  TokenTxCount24hAsc = 'token_txCount24h_ASC',
+  TokenTxCount24hAscNullsFirst = 'token_txCount24h_ASC_NULLS_FIRST',
+  TokenTxCount24hAscNullsLast = 'token_txCount24h_ASC_NULLS_LAST',
+  TokenTxCount24hDesc = 'token_txCount24h_DESC',
+  TokenTxCount24hDescNullsFirst = 'token_txCount24h_DESC_NULLS_FIRST',
+  TokenTxCount24hDescNullsLast = 'token_txCount24h_DESC_NULLS_LAST',
+  TotalLiquidityAllPairsUsdAsc = 'totalLiquidityAllPairsUSD_ASC',
+  TotalLiquidityAllPairsUsdAscNullsFirst = 'totalLiquidityAllPairsUSD_ASC_NULLS_FIRST',
+  TotalLiquidityAllPairsUsdAscNullsLast = 'totalLiquidityAllPairsUSD_ASC_NULLS_LAST',
+  TotalLiquidityAllPairsUsdDesc = 'totalLiquidityAllPairsUSD_DESC',
+  TotalLiquidityAllPairsUsdDescNullsFirst = 'totalLiquidityAllPairsUSD_DESC_NULLS_FIRST',
+  TotalLiquidityAllPairsUsdDescNullsLast = 'totalLiquidityAllPairsUSD_DESC_NULLS_LAST',
+  TotalLiquidityAllPairsAsc = 'totalLiquidityAllPairs_ASC',
+  TotalLiquidityAllPairsAscNullsFirst = 'totalLiquidityAllPairs_ASC_NULLS_FIRST',
+  TotalLiquidityAllPairsAscNullsLast = 'totalLiquidityAllPairs_ASC_NULLS_LAST',
+  TotalLiquidityAllPairsDesc = 'totalLiquidityAllPairs_DESC',
+  TotalLiquidityAllPairsDescNullsFirst = 'totalLiquidityAllPairs_DESC_NULLS_FIRST',
+  TotalLiquidityAllPairsDescNullsLast = 'totalLiquidityAllPairs_DESC_NULLS_LAST',
+  TotalSupplyAsc = 'totalSupply_ASC',
+  TotalSupplyAscNullsFirst = 'totalSupply_ASC_NULLS_FIRST',
+  TotalSupplyAscNullsLast = 'totalSupply_ASC_NULLS_LAST',
+  TotalSupplyDesc = 'totalSupply_DESC',
+  TotalSupplyDescNullsFirst = 'totalSupply_DESC_NULLS_FIRST',
+  TotalSupplyDescNullsLast = 'totalSupply_DESC_NULLS_LAST',
+  TradeVolume24hAsc = 'tradeVolume24h_ASC',
+  TradeVolume24hAscNullsFirst = 'tradeVolume24h_ASC_NULLS_FIRST',
+  TradeVolume24hAscNullsLast = 'tradeVolume24h_ASC_NULLS_LAST',
+  TradeVolume24hDesc = 'tradeVolume24h_DESC',
+  TradeVolume24hDescNullsFirst = 'tradeVolume24h_DESC_NULLS_FIRST',
+  TradeVolume24hDescNullsLast = 'tradeVolume24h_DESC_NULLS_LAST',
+  TradeVolumeEth24hAsc = 'tradeVolumeETH24h_ASC',
+  TradeVolumeEth24hAscNullsFirst = 'tradeVolumeETH24h_ASC_NULLS_FIRST',
+  TradeVolumeEth24hAscNullsLast = 'tradeVolumeETH24h_ASC_NULLS_LAST',
+  TradeVolumeEth24hDesc = 'tradeVolumeETH24h_DESC',
+  TradeVolumeEth24hDescNullsFirst = 'tradeVolumeETH24h_DESC_NULLS_FIRST',
+  TradeVolumeEth24hDescNullsLast = 'tradeVolumeETH24h_DESC_NULLS_LAST',
+  TradeVolumeUsd24hAsc = 'tradeVolumeUSD24h_ASC',
+  TradeVolumeUsd24hAscNullsFirst = 'tradeVolumeUSD24h_ASC_NULLS_FIRST',
+  TradeVolumeUsd24hAscNullsLast = 'tradeVolumeUSD24h_ASC_NULLS_LAST',
+  TradeVolumeUsd24hDesc = 'tradeVolumeUSD24h_DESC',
+  TradeVolumeUsd24hDescNullsFirst = 'tradeVolumeUSD24h_DESC_NULLS_FIRST',
+  TradeVolumeUsd24hDescNullsLast = 'tradeVolumeUSD24h_DESC_NULLS_LAST',
+  TxCountAsc = 'txCount_ASC',
+  TxCountAscNullsFirst = 'txCount_ASC_NULLS_FIRST',
+  TxCountAscNullsLast = 'txCount_ASC_NULLS_LAST',
+  TxCountDesc = 'txCount_DESC',
+  TxCountDescNullsFirst = 'txCount_DESC_NULLS_FIRST',
+  TxCountDescNullsLast = 'txCount_DESC_NULLS_LAST',
 }
 
 export type TokenDayDataWhereInput = {
   AND?: InputMaybe<Array<TokenDayDataWhereInput>>;
   OR?: InputMaybe<Array<TokenDayDataWhereInput>>;
-  dailyTxns_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  dailyTxns_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  dailyTxns_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  dailyTxns_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  dailyTxns_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  dailyTxns_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  dailyTxns_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  dailyTxns_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  dailyTxns_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  dailyVolumeETH_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeETH_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeETH_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeETH_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  dailyVolumeETH_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  dailyVolumeETH_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeETH_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeETH_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeETH_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  dailyVolumeToken_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeToken_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeToken_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeToken_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  dailyVolumeToken_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  dailyVolumeToken_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeToken_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeToken_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeToken_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  dailyVolumeUSD_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  dailyVolumeUSD_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  dailyVolumeUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeUSD_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  dailyVolumeUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  circulationSupply_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  circulationSupply_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  circulationSupply_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  circulationSupply_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  circulationSupply_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  circulationSupply_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  circulationSupply_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  circulationSupply_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  circulationSupply_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   date_eq?: InputMaybe<Scalars['Int']['input']>;
   date_gt?: InputMaybe<Scalars['Int']['input']>;
   date_gte?: InputMaybe<Scalars['Int']['input']>;
@@ -2009,6 +2447,15 @@ export type TokenDayDataWhereInput = {
   date_lte?: InputMaybe<Scalars['Int']['input']>;
   date_not_eq?: InputMaybe<Scalars['Int']['input']>;
   date_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  holders_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  holders_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  holders_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  holders_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  holders_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  holders_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  holders_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  holders_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  holders_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   id_contains?: InputMaybe<Scalars['String']['input']>;
   id_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
   id_endsWith?: InputMaybe<Scalars['String']['input']>;
@@ -2026,6 +2473,33 @@ export type TokenDayDataWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
   id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
   id_startsWith?: InputMaybe<Scalars['String']['input']>;
+  lastUpdatedAt_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lastUpdatedAt_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lastUpdatedAt_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  marketCapUSD_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  marketCapUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  marketCapUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  marketCapUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  marketCapUSD_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  marketCapUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  marketCapUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  marketCapUSD_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  marketCapUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  priceETH_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceETH_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceETH_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceETH_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  priceETH_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  priceETH_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceETH_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceETH_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceETH_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   priceUSD_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   priceUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   priceUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -2037,35 +2511,75 @@ export type TokenDayDataWhereInput = {
   priceUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   token?: InputMaybe<TokenWhereInput>;
   token_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  totalLiquidityETH_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityETH_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityETH_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityETH_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  totalLiquidityETH_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  totalLiquidityETH_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityETH_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityETH_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityETH_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  totalLiquidityToken_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityToken_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityToken_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityToken_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  totalLiquidityToken_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  totalLiquidityToken_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityToken_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityToken_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityToken_not_in?: InputMaybe<
+  totalLiquidityAllPairsUSD_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairsUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairsUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairsUSD_in?: InputMaybe<
     Array<Scalars['BigDecimal']['input']>
   >;
-  totalLiquidityUSD_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  totalLiquidityUSD_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  totalLiquidityUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityUSD_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidityUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  totalLiquidityAllPairsUSD_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  totalLiquidityAllPairsUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairsUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairsUSD_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairsUSD_not_in?: InputMaybe<
+    Array<Scalars['BigDecimal']['input']>
+  >;
+  totalLiquidityAllPairs_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairs_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairs_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairs_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  totalLiquidityAllPairs_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  totalLiquidityAllPairs_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairs_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairs_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairs_not_in?: InputMaybe<
+    Array<Scalars['BigDecimal']['input']>
+  >;
+  totalSupply_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  totalSupply_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  totalSupply_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  totalSupply_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  totalSupply_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  totalSupply_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  totalSupply_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  totalSupply_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  totalSupply_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  tradeVolume24h_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24h_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24h_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24h_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  tradeVolume24h_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  tradeVolume24h_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24h_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24h_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24h_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  tradeVolumeETH24h_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeETH24h_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeETH24h_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeETH24h_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  tradeVolumeETH24h_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  tradeVolumeETH24h_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeETH24h_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeETH24h_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeETH24h_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  tradeVolumeUSD24h_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeUSD24h_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeUSD24h_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeUSD24h_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  tradeVolumeUSD24h_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  tradeVolumeUSD24h_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeUSD24h_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeUSD24h_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeUSD24h_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  txCount_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  txCount_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  txCount_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
 };
 
 export type TokenEdge = {
@@ -2075,24 +2589,42 @@ export type TokenEdge = {
 };
 
 export enum TokenOrderByInput {
+  CirculationSupplyAsc = 'circulationSupply_ASC',
+  CirculationSupplyAscNullsFirst = 'circulationSupply_ASC_NULLS_FIRST',
+  CirculationSupplyAscNullsLast = 'circulationSupply_ASC_NULLS_LAST',
+  CirculationSupplyDesc = 'circulationSupply_DESC',
+  CirculationSupplyDescNullsFirst = 'circulationSupply_DESC_NULLS_FIRST',
+  CirculationSupplyDescNullsLast = 'circulationSupply_DESC_NULLS_LAST',
   DecimalsAsc = 'decimals_ASC',
   DecimalsAscNullsFirst = 'decimals_ASC_NULLS_FIRST',
   DecimalsAscNullsLast = 'decimals_ASC_NULLS_LAST',
   DecimalsDesc = 'decimals_DESC',
   DecimalsDescNullsFirst = 'decimals_DESC_NULLS_FIRST',
   DecimalsDescNullsLast = 'decimals_DESC_NULLS_LAST',
-  DerivedEthAsc = 'derivedETH_ASC',
-  DerivedEthAscNullsFirst = 'derivedETH_ASC_NULLS_FIRST',
-  DerivedEthAscNullsLast = 'derivedETH_ASC_NULLS_LAST',
-  DerivedEthDesc = 'derivedETH_DESC',
-  DerivedEthDescNullsFirst = 'derivedETH_DESC_NULLS_FIRST',
-  DerivedEthDescNullsLast = 'derivedETH_DESC_NULLS_LAST',
+  HoldersAsc = 'holders_ASC',
+  HoldersAscNullsFirst = 'holders_ASC_NULLS_FIRST',
+  HoldersAscNullsLast = 'holders_ASC_NULLS_LAST',
+  HoldersDesc = 'holders_DESC',
+  HoldersDescNullsFirst = 'holders_DESC_NULLS_FIRST',
+  HoldersDescNullsLast = 'holders_DESC_NULLS_LAST',
   IdAsc = 'id_ASC',
   IdAscNullsFirst = 'id_ASC_NULLS_FIRST',
   IdAscNullsLast = 'id_ASC_NULLS_LAST',
   IdDesc = 'id_DESC',
   IdDescNullsFirst = 'id_DESC_NULLS_FIRST',
   IdDescNullsLast = 'id_DESC_NULLS_LAST',
+  LastUpdatedAtAsc = 'lastUpdatedAt_ASC',
+  LastUpdatedAtAscNullsFirst = 'lastUpdatedAt_ASC_NULLS_FIRST',
+  LastUpdatedAtAscNullsLast = 'lastUpdatedAt_ASC_NULLS_LAST',
+  LastUpdatedAtDesc = 'lastUpdatedAt_DESC',
+  LastUpdatedAtDescNullsFirst = 'lastUpdatedAt_DESC_NULLS_FIRST',
+  LastUpdatedAtDescNullsLast = 'lastUpdatedAt_DESC_NULLS_LAST',
+  MarketCapUsdAsc = 'marketCapUSD_ASC',
+  MarketCapUsdAscNullsFirst = 'marketCapUSD_ASC_NULLS_FIRST',
+  MarketCapUsdAscNullsLast = 'marketCapUSD_ASC_NULLS_LAST',
+  MarketCapUsdDesc = 'marketCapUSD_DESC',
+  MarketCapUsdDescNullsFirst = 'marketCapUSD_DESC_NULLS_FIRST',
+  MarketCapUsdDescNullsLast = 'marketCapUSD_DESC_NULLS_LAST',
   MemeTokenActivityVaultAllocationAsc = 'memeToken_activityVaultAllocation_ASC',
   MemeTokenActivityVaultAllocationAscNullsFirst = 'memeToken_activityVaultAllocation_ASC_NULLS_FIRST',
   MemeTokenActivityVaultAllocationAscNullsLast = 'memeToken_activityVaultAllocation_ASC_NULLS_LAST',
@@ -2105,12 +2637,42 @@ export enum TokenOrderByInput {
   MemeTokenIdDesc = 'memeToken_id_DESC',
   MemeTokenIdDescNullsFirst = 'memeToken_id_DESC_NULLS_FIRST',
   MemeTokenIdDescNullsLast = 'memeToken_id_DESC_NULLS_LAST',
+  MemeTokenLastUpdatedAtAsc = 'memeToken_lastUpdatedAt_ASC',
+  MemeTokenLastUpdatedAtAscNullsFirst = 'memeToken_lastUpdatedAt_ASC_NULLS_FIRST',
+  MemeTokenLastUpdatedAtAscNullsLast = 'memeToken_lastUpdatedAt_ASC_NULLS_LAST',
+  MemeTokenLastUpdatedAtDesc = 'memeToken_lastUpdatedAt_DESC',
+  MemeTokenLastUpdatedAtDescNullsFirst = 'memeToken_lastUpdatedAt_DESC_NULLS_FIRST',
+  MemeTokenLastUpdatedAtDescNullsLast = 'memeToken_lastUpdatedAt_DESC_NULLS_LAST',
+  MemeTokenLockedLpTokensAsc = 'memeToken_lockedLpTokens_ASC',
+  MemeTokenLockedLpTokensAscNullsFirst = 'memeToken_lockedLpTokens_ASC_NULLS_FIRST',
+  MemeTokenLockedLpTokensAscNullsLast = 'memeToken_lockedLpTokens_ASC_NULLS_LAST',
+  MemeTokenLockedLpTokensDesc = 'memeToken_lockedLpTokens_DESC',
+  MemeTokenLockedLpTokensDescNullsFirst = 'memeToken_lockedLpTokens_DESC_NULLS_FIRST',
+  MemeTokenLockedLpTokensDescNullsLast = 'memeToken_lockedLpTokens_DESC_NULLS_LAST',
+  MemeTokenLpTokensUnlockTimeAsc = 'memeToken_lpTokensUnlockTime_ASC',
+  MemeTokenLpTokensUnlockTimeAscNullsFirst = 'memeToken_lpTokensUnlockTime_ASC_NULLS_FIRST',
+  MemeTokenLpTokensUnlockTimeAscNullsLast = 'memeToken_lpTokensUnlockTime_ASC_NULLS_LAST',
+  MemeTokenLpTokensUnlockTimeDesc = 'memeToken_lpTokensUnlockTime_DESC',
+  MemeTokenLpTokensUnlockTimeDescNullsFirst = 'memeToken_lpTokensUnlockTime_DESC_NULLS_FIRST',
+  MemeTokenLpTokensUnlockTimeDescNullsLast = 'memeToken_lpTokensUnlockTime_DESC_NULLS_LAST',
   MemeTokenMemeCreatedAtAsc = 'memeToken_memeCreatedAt_ASC',
   MemeTokenMemeCreatedAtAscNullsFirst = 'memeToken_memeCreatedAt_ASC_NULLS_FIRST',
   MemeTokenMemeCreatedAtAscNullsLast = 'memeToken_memeCreatedAt_ASC_NULLS_LAST',
   MemeTokenMemeCreatedAtDesc = 'memeToken_memeCreatedAt_DESC',
   MemeTokenMemeCreatedAtDescNullsFirst = 'memeToken_memeCreatedAt_DESC_NULLS_FIRST',
   MemeTokenMemeCreatedAtDescNullsLast = 'memeToken_memeCreatedAt_DESC_NULLS_LAST',
+  MemeTokenMemePicUrlAsc = 'memeToken_memePicUrl_ASC',
+  MemeTokenMemePicUrlAscNullsFirst = 'memeToken_memePicUrl_ASC_NULLS_FIRST',
+  MemeTokenMemePicUrlAscNullsLast = 'memeToken_memePicUrl_ASC_NULLS_LAST',
+  MemeTokenMemePicUrlDesc = 'memeToken_memePicUrl_DESC',
+  MemeTokenMemePicUrlDescNullsFirst = 'memeToken_memePicUrl_DESC_NULLS_FIRST',
+  MemeTokenMemePicUrlDescNullsLast = 'memeToken_memePicUrl_DESC_NULLS_LAST',
+  MemeTokenOwnerAddressAsc = 'memeToken_ownerAddress_ASC',
+  MemeTokenOwnerAddressAscNullsFirst = 'memeToken_ownerAddress_ASC_NULLS_FIRST',
+  MemeTokenOwnerAddressAscNullsLast = 'memeToken_ownerAddress_ASC_NULLS_LAST',
+  MemeTokenOwnerAddressDesc = 'memeToken_ownerAddress_DESC',
+  MemeTokenOwnerAddressDescNullsFirst = 'memeToken_ownerAddress_DESC_NULLS_FIRST',
+  MemeTokenOwnerAddressDescNullsLast = 'memeToken_ownerAddress_DESC_NULLS_LAST',
   MemeTokenOwnerAllocationAsc = 'memeToken_ownerAllocation_ASC',
   MemeTokenOwnerAllocationAscNullsFirst = 'memeToken_ownerAllocation_ASC_NULLS_FIRST',
   MemeTokenOwnerAllocationAscNullsLast = 'memeToken_ownerAllocation_ASC_NULLS_LAST',
@@ -2129,12 +2691,6 @@ export enum TokenOrderByInput {
   MemeTokenTokenNameDesc = 'memeToken_tokenName_DESC',
   MemeTokenTokenNameDescNullsFirst = 'memeToken_tokenName_DESC_NULLS_FIRST',
   MemeTokenTokenNameDescNullsLast = 'memeToken_tokenName_DESC_NULLS_LAST',
-  MemeTokenTokenPriceAsc = 'memeToken_tokenPrice_ASC',
-  MemeTokenTokenPriceAscNullsFirst = 'memeToken_tokenPrice_ASC_NULLS_FIRST',
-  MemeTokenTokenPriceAscNullsLast = 'memeToken_tokenPrice_ASC_NULLS_LAST',
-  MemeTokenTokenPriceDesc = 'memeToken_tokenPrice_DESC',
-  MemeTokenTokenPriceDescNullsFirst = 'memeToken_tokenPrice_DESC_NULLS_FIRST',
-  MemeTokenTokenPriceDescNullsLast = 'memeToken_tokenPrice_DESC_NULLS_LAST',
   MemeTokenTokenSymbolAsc = 'memeToken_tokenSymbol_ASC',
   MemeTokenTokenSymbolAscNullsFirst = 'memeToken_tokenSymbol_ASC_NULLS_FIRST',
   MemeTokenTokenSymbolAscNullsLast = 'memeToken_tokenSymbol_ASC_NULLS_LAST',
@@ -2147,12 +2703,6 @@ export enum TokenOrderByInput {
   MemeTokenTokenV60InitiatedDesc = 'memeToken_tokenV60Initiated_DESC',
   MemeTokenTokenV60InitiatedDescNullsFirst = 'memeToken_tokenV60Initiated_DESC_NULLS_FIRST',
   MemeTokenTokenV60InitiatedDescNullsLast = 'memeToken_tokenV60Initiated_DESC_NULLS_LAST',
-  MemeTokenUserAddressAsc = 'memeToken_userAddress_ASC',
-  MemeTokenUserAddressAscNullsFirst = 'memeToken_userAddress_ASC_NULLS_FIRST',
-  MemeTokenUserAddressAscNullsLast = 'memeToken_userAddress_ASC_NULLS_LAST',
-  MemeTokenUserAddressDesc = 'memeToken_userAddress_DESC',
-  MemeTokenUserAddressDescNullsFirst = 'memeToken_userAddress_DESC_NULLS_FIRST',
-  MemeTokenUserAddressDescNullsLast = 'memeToken_userAddress_DESC_NULLS_LAST',
   MemeTokenV60LpTokenAddressAsc = 'memeToken_v60LpTokenAddress_ASC',
   MemeTokenV60LpTokenAddressAscNullsFirst = 'memeToken_v60LpTokenAddress_ASC_NULLS_FIRST',
   MemeTokenV60LpTokenAddressAscNullsLast = 'memeToken_v60LpTokenAddress_ASC_NULLS_LAST',
@@ -2165,53 +2715,80 @@ export enum TokenOrderByInput {
   NameDesc = 'name_DESC',
   NameDescNullsFirst = 'name_DESC_NULLS_FIRST',
   NameDescNullsLast = 'name_DESC_NULLS_LAST',
+  PriceEthAsc = 'priceETH_ASC',
+  PriceEthAscNullsFirst = 'priceETH_ASC_NULLS_FIRST',
+  PriceEthAscNullsLast = 'priceETH_ASC_NULLS_LAST',
+  PriceEthDesc = 'priceETH_DESC',
+  PriceEthDescNullsFirst = 'priceETH_DESC_NULLS_FIRST',
+  PriceEthDescNullsLast = 'priceETH_DESC_NULLS_LAST',
+  PriceUsdAsc = 'priceUSD_ASC',
+  PriceUsdAscNullsFirst = 'priceUSD_ASC_NULLS_FIRST',
+  PriceUsdAscNullsLast = 'priceUSD_ASC_NULLS_LAST',
+  PriceUsdDesc = 'priceUSD_DESC',
+  PriceUsdDescNullsFirst = 'priceUSD_DESC_NULLS_FIRST',
+  PriceUsdDescNullsLast = 'priceUSD_DESC_NULLS_LAST',
   SymbolAsc = 'symbol_ASC',
   SymbolAscNullsFirst = 'symbol_ASC_NULLS_FIRST',
   SymbolAscNullsLast = 'symbol_ASC_NULLS_LAST',
   SymbolDesc = 'symbol_DESC',
   SymbolDescNullsFirst = 'symbol_DESC_NULLS_FIRST',
   SymbolDescNullsLast = 'symbol_DESC_NULLS_LAST',
-  TotalLiquidityAsc = 'totalLiquidity_ASC',
-  TotalLiquidityAscNullsFirst = 'totalLiquidity_ASC_NULLS_FIRST',
-  TotalLiquidityAscNullsLast = 'totalLiquidity_ASC_NULLS_LAST',
-  TotalLiquidityDesc = 'totalLiquidity_DESC',
-  TotalLiquidityDescNullsFirst = 'totalLiquidity_DESC_NULLS_FIRST',
-  TotalLiquidityDescNullsLast = 'totalLiquidity_DESC_NULLS_LAST',
+  TotalLiquidityAllPairsUsdAsc = 'totalLiquidityAllPairsUSD_ASC',
+  TotalLiquidityAllPairsUsdAscNullsFirst = 'totalLiquidityAllPairsUSD_ASC_NULLS_FIRST',
+  TotalLiquidityAllPairsUsdAscNullsLast = 'totalLiquidityAllPairsUSD_ASC_NULLS_LAST',
+  TotalLiquidityAllPairsUsdDesc = 'totalLiquidityAllPairsUSD_DESC',
+  TotalLiquidityAllPairsUsdDescNullsFirst = 'totalLiquidityAllPairsUSD_DESC_NULLS_FIRST',
+  TotalLiquidityAllPairsUsdDescNullsLast = 'totalLiquidityAllPairsUSD_DESC_NULLS_LAST',
+  TotalLiquidityAllPairsAsc = 'totalLiquidityAllPairs_ASC',
+  TotalLiquidityAllPairsAscNullsFirst = 'totalLiquidityAllPairs_ASC_NULLS_FIRST',
+  TotalLiquidityAllPairsAscNullsLast = 'totalLiquidityAllPairs_ASC_NULLS_LAST',
+  TotalLiquidityAllPairsDesc = 'totalLiquidityAllPairs_DESC',
+  TotalLiquidityAllPairsDescNullsFirst = 'totalLiquidityAllPairs_DESC_NULLS_FIRST',
+  TotalLiquidityAllPairsDescNullsLast = 'totalLiquidityAllPairs_DESC_NULLS_LAST',
   TotalSupplyAsc = 'totalSupply_ASC',
   TotalSupplyAscNullsFirst = 'totalSupply_ASC_NULLS_FIRST',
   TotalSupplyAscNullsLast = 'totalSupply_ASC_NULLS_LAST',
   TotalSupplyDesc = 'totalSupply_DESC',
   TotalSupplyDescNullsFirst = 'totalSupply_DESC_NULLS_FIRST',
   TotalSupplyDescNullsLast = 'totalSupply_DESC_NULLS_LAST',
-  TradeVolumeUsdAsc = 'tradeVolumeUSD_ASC',
-  TradeVolumeUsdAscNullsFirst = 'tradeVolumeUSD_ASC_NULLS_FIRST',
-  TradeVolumeUsdAscNullsLast = 'tradeVolumeUSD_ASC_NULLS_LAST',
-  TradeVolumeUsdDesc = 'tradeVolumeUSD_DESC',
-  TradeVolumeUsdDescNullsFirst = 'tradeVolumeUSD_DESC_NULLS_FIRST',
-  TradeVolumeUsdDescNullsLast = 'tradeVolumeUSD_DESC_NULLS_LAST',
-  TradeVolumeAsc = 'tradeVolume_ASC',
-  TradeVolumeAscNullsFirst = 'tradeVolume_ASC_NULLS_FIRST',
-  TradeVolumeAscNullsLast = 'tradeVolume_ASC_NULLS_LAST',
-  TradeVolumeDesc = 'tradeVolume_DESC',
-  TradeVolumeDescNullsFirst = 'tradeVolume_DESC_NULLS_FIRST',
-  TradeVolumeDescNullsLast = 'tradeVolume_DESC_NULLS_LAST',
-  TxCountAsc = 'txCount_ASC',
-  TxCountAscNullsFirst = 'txCount_ASC_NULLS_FIRST',
-  TxCountAscNullsLast = 'txCount_ASC_NULLS_LAST',
-  TxCountDesc = 'txCount_DESC',
-  TxCountDescNullsFirst = 'txCount_DESC_NULLS_FIRST',
-  TxCountDescNullsLast = 'txCount_DESC_NULLS_LAST',
-  UntrackedVolumeUsdAsc = 'untrackedVolumeUSD_ASC',
-  UntrackedVolumeUsdAscNullsFirst = 'untrackedVolumeUSD_ASC_NULLS_FIRST',
-  UntrackedVolumeUsdAscNullsLast = 'untrackedVolumeUSD_ASC_NULLS_LAST',
-  UntrackedVolumeUsdDesc = 'untrackedVolumeUSD_DESC',
-  UntrackedVolumeUsdDescNullsFirst = 'untrackedVolumeUSD_DESC_NULLS_FIRST',
-  UntrackedVolumeUsdDescNullsLast = 'untrackedVolumeUSD_DESC_NULLS_LAST',
+  TradeVolume24hAsc = 'tradeVolume24h_ASC',
+  TradeVolume24hAscNullsFirst = 'tradeVolume24h_ASC_NULLS_FIRST',
+  TradeVolume24hAscNullsLast = 'tradeVolume24h_ASC_NULLS_LAST',
+  TradeVolume24hDesc = 'tradeVolume24h_DESC',
+  TradeVolume24hDescNullsFirst = 'tradeVolume24h_DESC_NULLS_FIRST',
+  TradeVolume24hDescNullsLast = 'tradeVolume24h_DESC_NULLS_LAST',
+  TradeVolumeEth24hAsc = 'tradeVolumeETH24h_ASC',
+  TradeVolumeEth24hAscNullsFirst = 'tradeVolumeETH24h_ASC_NULLS_FIRST',
+  TradeVolumeEth24hAscNullsLast = 'tradeVolumeETH24h_ASC_NULLS_LAST',
+  TradeVolumeEth24hDesc = 'tradeVolumeETH24h_DESC',
+  TradeVolumeEth24hDescNullsFirst = 'tradeVolumeETH24h_DESC_NULLS_FIRST',
+  TradeVolumeEth24hDescNullsLast = 'tradeVolumeETH24h_DESC_NULLS_LAST',
+  TradeVolumeUsd24hAsc = 'tradeVolumeUSD24h_ASC',
+  TradeVolumeUsd24hAscNullsFirst = 'tradeVolumeUSD24h_ASC_NULLS_FIRST',
+  TradeVolumeUsd24hAscNullsLast = 'tradeVolumeUSD24h_ASC_NULLS_LAST',
+  TradeVolumeUsd24hDesc = 'tradeVolumeUSD24h_DESC',
+  TradeVolumeUsd24hDescNullsFirst = 'tradeVolumeUSD24h_DESC_NULLS_FIRST',
+  TradeVolumeUsd24hDescNullsLast = 'tradeVolumeUSD24h_DESC_NULLS_LAST',
+  TxCount24hAsc = 'txCount24h_ASC',
+  TxCount24hAscNullsFirst = 'txCount24h_ASC_NULLS_FIRST',
+  TxCount24hAscNullsLast = 'txCount24h_ASC_NULLS_LAST',
+  TxCount24hDesc = 'txCount24h_DESC',
+  TxCount24hDescNullsFirst = 'txCount24h_DESC_NULLS_FIRST',
+  TxCount24hDescNullsLast = 'txCount24h_DESC_NULLS_LAST',
 }
 
 export type TokenWhereInput = {
   AND?: InputMaybe<Array<TokenWhereInput>>;
   OR?: InputMaybe<Array<TokenWhereInput>>;
+  circulationSupply_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  circulationSupply_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  circulationSupply_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  circulationSupply_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  circulationSupply_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  circulationSupply_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  circulationSupply_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  circulationSupply_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  circulationSupply_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   decimals_eq?: InputMaybe<Scalars['BigInt']['input']>;
   decimals_gt?: InputMaybe<Scalars['BigInt']['input']>;
   decimals_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -2221,15 +2798,15 @@ export type TokenWhereInput = {
   decimals_lte?: InputMaybe<Scalars['BigInt']['input']>;
   decimals_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
   decimals_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  derivedETH_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  derivedETH_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  derivedETH_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  derivedETH_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  derivedETH_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  derivedETH_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  derivedETH_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  derivedETH_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  derivedETH_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  holders_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  holders_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  holders_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  holders_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  holders_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  holders_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  holders_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  holders_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  holders_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   id_contains?: InputMaybe<Scalars['String']['input']>;
   id_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
   id_endsWith?: InputMaybe<Scalars['String']['input']>;
@@ -2247,6 +2824,24 @@ export type TokenWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
   id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
   id_startsWith?: InputMaybe<Scalars['String']['input']>;
+  lastUpdatedAt_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lastUpdatedAt_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lastUpdatedAt_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  marketCapUSD_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  marketCapUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  marketCapUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  marketCapUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  marketCapUSD_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  marketCapUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  marketCapUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  marketCapUSD_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  marketCapUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   memeToken?: InputMaybe<MemeTokenWhereInput>;
   memeToken_isNull?: InputMaybe<Scalars['Boolean']['input']>;
   name_contains?: InputMaybe<Scalars['String']['input']>;
@@ -2266,6 +2861,24 @@ export type TokenWhereInput = {
   name_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
   name_not_startsWith?: InputMaybe<Scalars['String']['input']>;
   name_startsWith?: InputMaybe<Scalars['String']['input']>;
+  priceETH_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceETH_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceETH_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceETH_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  priceETH_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  priceETH_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceETH_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceETH_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceETH_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  priceUSD_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  priceUSD_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  priceUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceUSD_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   symbol_contains?: InputMaybe<Scalars['String']['input']>;
   symbol_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
   symbol_endsWith?: InputMaybe<Scalars['String']['input']>;
@@ -2283,15 +2896,30 @@ export type TokenWhereInput = {
   symbol_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
   symbol_not_startsWith?: InputMaybe<Scalars['String']['input']>;
   symbol_startsWith?: InputMaybe<Scalars['String']['input']>;
-  totalLiquidity_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidity_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidity_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidity_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  totalLiquidity_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  totalLiquidity_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidity_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidity_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  totalLiquidity_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  totalLiquidityAllPairsUSD_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairsUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairsUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairsUSD_in?: InputMaybe<
+    Array<Scalars['BigDecimal']['input']>
+  >;
+  totalLiquidityAllPairsUSD_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  totalLiquidityAllPairsUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairsUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairsUSD_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairsUSD_not_in?: InputMaybe<
+    Array<Scalars['BigDecimal']['input']>
+  >;
+  totalLiquidityAllPairs_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairs_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairs_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairs_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  totalLiquidityAllPairs_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  totalLiquidityAllPairs_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairs_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairs_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalLiquidityAllPairs_not_in?: InputMaybe<
+    Array<Scalars['BigDecimal']['input']>
+  >;
   totalSupply_eq?: InputMaybe<Scalars['BigInt']['input']>;
   totalSupply_gt?: InputMaybe<Scalars['BigInt']['input']>;
   totalSupply_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -2301,42 +2929,42 @@ export type TokenWhereInput = {
   totalSupply_lte?: InputMaybe<Scalars['BigInt']['input']>;
   totalSupply_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
   totalSupply_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  tradeVolumeUSD_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  tradeVolumeUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  tradeVolumeUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  tradeVolumeUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  tradeVolumeUSD_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  tradeVolumeUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  tradeVolumeUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  tradeVolumeUSD_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  tradeVolumeUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  tradeVolume_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  tradeVolume_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  tradeVolume_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  tradeVolume_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  tradeVolume_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  tradeVolume_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  tradeVolume_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  tradeVolume_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  tradeVolume_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  txCount_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  txCount_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  txCount_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  txCount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  txCount_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  txCount_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  txCount_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  txCount_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  txCount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  untrackedVolumeUSD_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  untrackedVolumeUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  untrackedVolumeUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  untrackedVolumeUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  untrackedVolumeUSD_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  untrackedVolumeUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  untrackedVolumeUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  untrackedVolumeUSD_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  untrackedVolumeUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  tradeVolume24h_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24h_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24h_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24h_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  tradeVolume24h_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  tradeVolume24h_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24h_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24h_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolume24h_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  tradeVolumeETH24h_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeETH24h_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeETH24h_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeETH24h_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  tradeVolumeETH24h_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  tradeVolumeETH24h_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeETH24h_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeETH24h_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeETH24h_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  tradeVolumeUSD24h_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeUSD24h_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeUSD24h_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeUSD24h_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  tradeVolumeUSD24h_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  tradeVolumeUSD24h_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeUSD24h_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeUSD24h_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  tradeVolumeUSD24h_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  txCount24h_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount24h_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount24h_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount24h_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  txCount24h_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  txCount24h_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount24h_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount24h_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  txCount24h_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
 };
 
 export type TokensConnection = {
@@ -2349,15 +2977,15 @@ export type TokensConnection = {
 export type User = {
   __typename?: 'User';
   id: Scalars['String']['output'];
-  liquidityPositions: Array<LiquidityPosition>;
+  liquidityPositions: Array<CurrentLiquidityPosition>;
   usdSwapped: Scalars['BigDecimal']['output'];
 };
 
 export type UserLiquidityPositionsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<LiquidityPositionOrderByInput>>;
-  where?: InputMaybe<LiquidityPositionWhereInput>;
+  orderBy?: InputMaybe<Array<CurrentLiquidityPositionOrderByInput>>;
+  where?: InputMaybe<CurrentLiquidityPositionWhereInput>;
 };
 
 export type UserEdge = {
@@ -2401,9 +3029,9 @@ export type UserWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
   id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
   id_startsWith?: InputMaybe<Scalars['String']['input']>;
-  liquidityPositions_every?: InputMaybe<LiquidityPositionWhereInput>;
-  liquidityPositions_none?: InputMaybe<LiquidityPositionWhereInput>;
-  liquidityPositions_some?: InputMaybe<LiquidityPositionWhereInput>;
+  liquidityPositions_every?: InputMaybe<CurrentLiquidityPositionWhereInput>;
+  liquidityPositions_none?: InputMaybe<CurrentLiquidityPositionWhereInput>;
+  liquidityPositions_some?: InputMaybe<CurrentLiquidityPositionWhereInput>;
   usdSwapped_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   usdSwapped_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   usdSwapped_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -2433,46 +3061,60 @@ export type PairByIdQuery = {
     id: string;
     reserve0: any;
     reserve1: any;
-    totalSupply: any;
-    reserveETH: any;
-    reserveUSD: any;
-    trackedReserveETH: any;
+    liquidityUSD?: any | null;
+    liquidity24hDelta?: any | null;
+    lpTotalSupply: any;
+    lpTotalLocked: any;
     token0Price: any;
     token1Price: any;
-    volumeToken0: any;
-    volumeToken1: any;
-    volumeUSD: any;
-    untrackedVolumeUSD: any;
-    txCount: any;
+    txCount24h: any;
+    tradeVolume24h?: any | null;
+    tradeVolumeUSD24h?: any | null;
+    tradeVolumeETH24h?: any | null;
+    tradeVolume24hDelta?: any | null;
+    fees24h?: any | null;
+    feesUSD24h?: any | null;
+    feesETH24h?: any | null;
+    fees24hDelta?: any | null;
     createdAtTimestamp: any;
     createdAtBlockNumber: any;
     liquidityProviderCount: any;
+    lastUpdatedAt: any;
     token0: {
       __typename?: 'Token';
       id: string;
       symbol: string;
       name: string;
       decimals: any;
+      priceUSD?: any | null;
+      priceETH?: any | null;
       totalSupply: any;
-      tradeVolume: any;
-      tradeVolumeUSD: any;
-      untrackedVolumeUSD: any;
-      txCount: any;
-      totalLiquidity: any;
-      derivedETH: any;
+      circulationSupply: any;
+      marketCapUSD: any;
+      tradeVolume24h: any;
+      tradeVolumeUSD24h: any;
+      tradeVolumeETH24h: any;
+      txCount24h: any;
+      totalLiquidityAllPairs: any;
+      totalLiquidityAllPairsUSD: any;
+      holders: any;
+      lastUpdatedAt: any;
       memeToken?: {
         __typename?: 'MemeToken';
         id: string;
-        userAddress: string;
+        ownerAddress: string;
         tokenAddress: string;
         tokenName: string;
         tokenSymbol: string;
-        tokenPrice?: any | null;
         tokenV60Initiated?: boolean | null;
         v60LpTokenAddress?: string | null;
         ownerAllocation?: any | null;
         activityVaultAllocation?: any | null;
         memeCreatedAt?: any | null;
+        memePicUrl?: string | null;
+        lockedLpTokens?: any | null;
+        lpTokensUnlockTime?: any | null;
+        lastUpdatedAt: any;
       } | null;
     };
     token1: {
@@ -2481,26 +3123,35 @@ export type PairByIdQuery = {
       symbol: string;
       name: string;
       decimals: any;
+      priceUSD?: any | null;
+      priceETH?: any | null;
       totalSupply: any;
-      tradeVolume: any;
-      tradeVolumeUSD: any;
-      untrackedVolumeUSD: any;
-      txCount: any;
-      totalLiquidity: any;
-      derivedETH: any;
+      circulationSupply: any;
+      marketCapUSD: any;
+      tradeVolume24h: any;
+      tradeVolumeUSD24h: any;
+      tradeVolumeETH24h: any;
+      txCount24h: any;
+      totalLiquidityAllPairs: any;
+      totalLiquidityAllPairsUSD: any;
+      holders: any;
+      lastUpdatedAt: any;
       memeToken?: {
         __typename?: 'MemeToken';
         id: string;
-        userAddress: string;
+        ownerAddress: string;
         tokenAddress: string;
         tokenName: string;
         tokenSymbol: string;
-        tokenPrice?: any | null;
         tokenV60Initiated?: boolean | null;
         v60LpTokenAddress?: string | null;
         ownerAllocation?: any | null;
         activityVaultAllocation?: any | null;
         memeCreatedAt?: any | null;
+        memePicUrl?: string | null;
+        lockedLpTokens?: any | null;
+        lpTokensUnlockTime?: any | null;
+        lastUpdatedAt: any;
       } | null;
     };
   } | null;
@@ -2520,46 +3171,60 @@ export type PairsQuery = {
     id: string;
     reserve0: any;
     reserve1: any;
-    totalSupply: any;
-    reserveETH: any;
-    reserveUSD: any;
-    trackedReserveETH: any;
+    liquidityUSD?: any | null;
+    liquidity24hDelta?: any | null;
+    lpTotalSupply: any;
+    lpTotalLocked: any;
     token0Price: any;
     token1Price: any;
-    volumeToken0: any;
-    volumeToken1: any;
-    volumeUSD: any;
-    untrackedVolumeUSD: any;
-    txCount: any;
+    txCount24h: any;
+    tradeVolume24h?: any | null;
+    tradeVolumeUSD24h?: any | null;
+    tradeVolumeETH24h?: any | null;
+    tradeVolume24hDelta?: any | null;
+    fees24h?: any | null;
+    feesUSD24h?: any | null;
+    feesETH24h?: any | null;
+    fees24hDelta?: any | null;
     createdAtTimestamp: any;
     createdAtBlockNumber: any;
     liquidityProviderCount: any;
+    lastUpdatedAt: any;
     token0: {
       __typename?: 'Token';
       id: string;
       symbol: string;
       name: string;
       decimals: any;
+      priceUSD?: any | null;
+      priceETH?: any | null;
       totalSupply: any;
-      tradeVolume: any;
-      tradeVolumeUSD: any;
-      untrackedVolumeUSD: any;
-      txCount: any;
-      totalLiquidity: any;
-      derivedETH: any;
+      circulationSupply: any;
+      marketCapUSD: any;
+      tradeVolume24h: any;
+      tradeVolumeUSD24h: any;
+      tradeVolumeETH24h: any;
+      txCount24h: any;
+      totalLiquidityAllPairs: any;
+      totalLiquidityAllPairsUSD: any;
+      holders: any;
+      lastUpdatedAt: any;
       memeToken?: {
         __typename?: 'MemeToken';
         id: string;
-        userAddress: string;
+        ownerAddress: string;
         tokenAddress: string;
         tokenName: string;
         tokenSymbol: string;
-        tokenPrice?: any | null;
         tokenV60Initiated?: boolean | null;
         v60LpTokenAddress?: string | null;
         ownerAllocation?: any | null;
         activityVaultAllocation?: any | null;
         memeCreatedAt?: any | null;
+        memePicUrl?: string | null;
+        lockedLpTokens?: any | null;
+        lpTokensUnlockTime?: any | null;
+        lastUpdatedAt: any;
       } | null;
     };
     token1: {
@@ -2568,92 +3233,117 @@ export type PairsQuery = {
       symbol: string;
       name: string;
       decimals: any;
+      priceUSD?: any | null;
+      priceETH?: any | null;
       totalSupply: any;
-      tradeVolume: any;
-      tradeVolumeUSD: any;
-      untrackedVolumeUSD: any;
-      txCount: any;
-      totalLiquidity: any;
-      derivedETH: any;
+      circulationSupply: any;
+      marketCapUSD: any;
+      tradeVolume24h: any;
+      tradeVolumeUSD24h: any;
+      tradeVolumeETH24h: any;
+      txCount24h: any;
+      totalLiquidityAllPairs: any;
+      totalLiquidityAllPairsUSD: any;
+      holders: any;
+      lastUpdatedAt: any;
       memeToken?: {
         __typename?: 'MemeToken';
         id: string;
-        userAddress: string;
+        ownerAddress: string;
         tokenAddress: string;
         tokenName: string;
         tokenSymbol: string;
-        tokenPrice?: any | null;
         tokenV60Initiated?: boolean | null;
         v60LpTokenAddress?: string | null;
         ownerAllocation?: any | null;
         activityVaultAllocation?: any | null;
         memeCreatedAt?: any | null;
+        memePicUrl?: string | null;
+        lockedLpTokens?: any | null;
+        lpTokensUnlockTime?: any | null;
+        lastUpdatedAt: any;
       } | null;
     };
   }>;
 };
 
-export type LiquidityPositionsQueryVariables = Exact<{
-  where?: InputMaybe<LiquidityPositionWhereInput>;
+export type CurrentLiquidityPositionsQueryVariables = Exact<{
+  where?: InputMaybe<CurrentLiquidityPositionWhereInput>;
   orderBy?: InputMaybe<
-    Array<LiquidityPositionOrderByInput> | LiquidityPositionOrderByInput
+    | Array<CurrentLiquidityPositionOrderByInput>
+    | CurrentLiquidityPositionOrderByInput
   >;
   offset?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
-export type LiquidityPositionsQuery = {
+export type CurrentLiquidityPositionsQuery = {
   __typename?: 'Query';
-  liquidityPositions: Array<{
-    __typename?: 'LiquidityPosition';
+  currentLiquidityPositions: Array<{
+    __typename?: 'CurrentLiquidityPosition';
     id: string;
     liquidityTokenBalance: any;
-    user: { __typename?: 'User'; id: string; usdSwapped: any };
+    lastUpdatedAt: any;
+    user: { __typename?: 'User'; usdSwapped: any; id: string };
     pair: {
       __typename?: 'Pair';
       id: string;
       reserve0: any;
       reserve1: any;
-      totalSupply: any;
-      reserveETH: any;
-      reserveUSD: any;
-      trackedReserveETH: any;
+      liquidityUSD?: any | null;
+      liquidity24hDelta?: any | null;
+      lpTotalSupply: any;
+      lpTotalLocked: any;
       token0Price: any;
       token1Price: any;
-      volumeToken0: any;
-      volumeToken1: any;
-      volumeUSD: any;
-      untrackedVolumeUSD: any;
-      txCount: any;
+      txCount24h: any;
+      tradeVolume24h?: any | null;
+      tradeVolumeUSD24h?: any | null;
+      tradeVolumeETH24h?: any | null;
+      tradeVolume24hDelta?: any | null;
+      fees24h?: any | null;
+      feesUSD24h?: any | null;
+      feesETH24h?: any | null;
+      fees24hDelta?: any | null;
       createdAtTimestamp: any;
       createdAtBlockNumber: any;
       liquidityProviderCount: any;
+      lastUpdatedAt: any;
       token0: {
         __typename?: 'Token';
         id: string;
         symbol: string;
         name: string;
         decimals: any;
+        priceUSD?: any | null;
+        priceETH?: any | null;
         totalSupply: any;
-        tradeVolume: any;
-        tradeVolumeUSD: any;
-        untrackedVolumeUSD: any;
-        txCount: any;
-        totalLiquidity: any;
-        derivedETH: any;
+        circulationSupply: any;
+        marketCapUSD: any;
+        tradeVolume24h: any;
+        tradeVolumeUSD24h: any;
+        tradeVolumeETH24h: any;
+        txCount24h: any;
+        totalLiquidityAllPairs: any;
+        totalLiquidityAllPairsUSD: any;
+        holders: any;
+        lastUpdatedAt: any;
         memeToken?: {
           __typename?: 'MemeToken';
           id: string;
-          userAddress: string;
+          ownerAddress: string;
           tokenAddress: string;
           tokenName: string;
           tokenSymbol: string;
-          tokenPrice?: any | null;
           tokenV60Initiated?: boolean | null;
           v60LpTokenAddress?: string | null;
           ownerAllocation?: any | null;
           activityVaultAllocation?: any | null;
           memeCreatedAt?: any | null;
+          memePicUrl?: string | null;
+          lockedLpTokens?: any | null;
+          lpTokensUnlockTime?: any | null;
+          lastUpdatedAt: any;
         } | null;
       };
       token1: {
@@ -2662,26 +3352,35 @@ export type LiquidityPositionsQuery = {
         symbol: string;
         name: string;
         decimals: any;
+        priceUSD?: any | null;
+        priceETH?: any | null;
         totalSupply: any;
-        tradeVolume: any;
-        tradeVolumeUSD: any;
-        untrackedVolumeUSD: any;
-        txCount: any;
-        totalLiquidity: any;
-        derivedETH: any;
+        circulationSupply: any;
+        marketCapUSD: any;
+        tradeVolume24h: any;
+        tradeVolumeUSD24h: any;
+        tradeVolumeETH24h: any;
+        txCount24h: any;
+        totalLiquidityAllPairs: any;
+        totalLiquidityAllPairsUSD: any;
+        holders: any;
+        lastUpdatedAt: any;
         memeToken?: {
           __typename?: 'MemeToken';
           id: string;
-          userAddress: string;
+          ownerAddress: string;
           tokenAddress: string;
           tokenName: string;
           tokenSymbol: string;
-          tokenPrice?: any | null;
           tokenV60Initiated?: boolean | null;
           v60LpTokenAddress?: string | null;
           ownerAllocation?: any | null;
           activityVaultAllocation?: any | null;
           memeCreatedAt?: any | null;
+          memePicUrl?: string | null;
+          lockedLpTokens?: any | null;
+          lpTokensUnlockTime?: any | null;
+          lastUpdatedAt: any;
         } | null;
       };
     };
@@ -2749,31 +3448,54 @@ export const PairByIdDocument = {
                       },
                       {
                         kind: 'Field',
+                        name: { kind: 'Name', value: 'priceUSD' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'priceETH' },
+                      },
+                      {
+                        kind: 'Field',
                         name: { kind: 'Name', value: 'totalSupply' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'tradeVolume' },
+                        name: { kind: 'Name', value: 'circulationSupply' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'tradeVolumeUSD' },
+                        name: { kind: 'Name', value: 'marketCapUSD' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'untrackedVolumeUSD' },
+                        name: { kind: 'Name', value: 'tradeVolume24h' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'txCount' },
+                        name: { kind: 'Name', value: 'tradeVolumeUSD24h' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'totalLiquidity' },
+                        name: { kind: 'Name', value: 'tradeVolumeETH24h' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'derivedETH' },
+                        name: { kind: 'Name', value: 'txCount24h' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'totalLiquidityAllPairs' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'totalLiquidityAllPairsUSD',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'holders' },
                       },
                       {
                         kind: 'Field',
@@ -2787,7 +3509,7 @@ export const PairByIdDocument = {
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'userAddress' },
+                              name: { kind: 'Name', value: 'ownerAddress' },
                             },
                             {
                               kind: 'Field',
@@ -2800,10 +3522,6 @@ export const PairByIdDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'tokenSymbol' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tokenPrice' },
                             },
                             {
                               kind: 'Field',
@@ -2834,8 +3552,31 @@ export const PairByIdDocument = {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'memeCreatedAt' },
                             },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'memePicUrl' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lockedLpTokens' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'lpTokensUnlockTime',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastUpdatedAt' },
+                            },
                           ],
                         },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'lastUpdatedAt' },
                       },
                     ],
                   },
@@ -2858,31 +3599,54 @@ export const PairByIdDocument = {
                       },
                       {
                         kind: 'Field',
+                        name: { kind: 'Name', value: 'priceUSD' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'priceETH' },
+                      },
+                      {
+                        kind: 'Field',
                         name: { kind: 'Name', value: 'totalSupply' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'tradeVolume' },
+                        name: { kind: 'Name', value: 'circulationSupply' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'tradeVolumeUSD' },
+                        name: { kind: 'Name', value: 'marketCapUSD' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'untrackedVolumeUSD' },
+                        name: { kind: 'Name', value: 'tradeVolume24h' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'txCount' },
+                        name: { kind: 'Name', value: 'tradeVolumeUSD24h' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'totalLiquidity' },
+                        name: { kind: 'Name', value: 'tradeVolumeETH24h' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'derivedETH' },
+                        name: { kind: 'Name', value: 'txCount24h' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'totalLiquidityAllPairs' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'totalLiquidityAllPairsUSD',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'holders' },
                       },
                       {
                         kind: 'Field',
@@ -2896,7 +3660,7 @@ export const PairByIdDocument = {
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'userAddress' },
+                              name: { kind: 'Name', value: 'ownerAddress' },
                             },
                             {
                               kind: 'Field',
@@ -2909,10 +3673,6 @@ export const PairByIdDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'tokenSymbol' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tokenPrice' },
                             },
                             {
                               kind: 'Field',
@@ -2943,37 +3703,79 @@ export const PairByIdDocument = {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'memeCreatedAt' },
                             },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'memePicUrl' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lockedLpTokens' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'lpTokensUnlockTime',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastUpdatedAt' },
+                            },
                           ],
                         },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'lastUpdatedAt' },
                       },
                     ],
                   },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'reserve0' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'reserve1' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'totalSupply' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'reserveETH' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'reserveUSD' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'trackedReserveETH' },
+                  name: { kind: 'Name', value: 'liquidityUSD' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'liquidity24hDelta' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'lpTotalSupply' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'lpTotalLocked' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'token0Price' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'token1Price' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'txCount24h' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'volumeToken0' },
+                  name: { kind: 'Name', value: 'tradeVolume24h' },
                 },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'volumeToken1' },
+                  name: { kind: 'Name', value: 'tradeVolumeUSD24h' },
                 },
-                { kind: 'Field', name: { kind: 'Name', value: 'volumeUSD' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'untrackedVolumeUSD' },
+                  name: { kind: 'Name', value: 'tradeVolumeETH24h' },
                 },
-                { kind: 'Field', name: { kind: 'Name', value: 'txCount' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'tradeVolume24hDelta' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'fees24h' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'feesUSD24h' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'feesETH24h' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'fees24hDelta' },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'createdAtTimestamp' },
@@ -2985,6 +3787,10 @@ export const PairByIdDocument = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'liquidityProviderCount' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'lastUpdatedAt' },
                 },
               ],
             },
@@ -3109,31 +3915,54 @@ export const PairsDocument = {
                       },
                       {
                         kind: 'Field',
+                        name: { kind: 'Name', value: 'priceUSD' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'priceETH' },
+                      },
+                      {
+                        kind: 'Field',
                         name: { kind: 'Name', value: 'totalSupply' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'tradeVolume' },
+                        name: { kind: 'Name', value: 'circulationSupply' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'tradeVolumeUSD' },
+                        name: { kind: 'Name', value: 'marketCapUSD' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'untrackedVolumeUSD' },
+                        name: { kind: 'Name', value: 'tradeVolume24h' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'txCount' },
+                        name: { kind: 'Name', value: 'tradeVolumeUSD24h' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'totalLiquidity' },
+                        name: { kind: 'Name', value: 'tradeVolumeETH24h' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'derivedETH' },
+                        name: { kind: 'Name', value: 'txCount24h' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'totalLiquidityAllPairs' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'totalLiquidityAllPairsUSD',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'holders' },
                       },
                       {
                         kind: 'Field',
@@ -3147,7 +3976,7 @@ export const PairsDocument = {
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'userAddress' },
+                              name: { kind: 'Name', value: 'ownerAddress' },
                             },
                             {
                               kind: 'Field',
@@ -3160,10 +3989,6 @@ export const PairsDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'tokenSymbol' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tokenPrice' },
                             },
                             {
                               kind: 'Field',
@@ -3194,8 +4019,31 @@ export const PairsDocument = {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'memeCreatedAt' },
                             },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'memePicUrl' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lockedLpTokens' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'lpTokensUnlockTime',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastUpdatedAt' },
+                            },
                           ],
                         },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'lastUpdatedAt' },
                       },
                     ],
                   },
@@ -3218,31 +4066,54 @@ export const PairsDocument = {
                       },
                       {
                         kind: 'Field',
+                        name: { kind: 'Name', value: 'priceUSD' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'priceETH' },
+                      },
+                      {
+                        kind: 'Field',
                         name: { kind: 'Name', value: 'totalSupply' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'tradeVolume' },
+                        name: { kind: 'Name', value: 'circulationSupply' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'tradeVolumeUSD' },
+                        name: { kind: 'Name', value: 'marketCapUSD' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'untrackedVolumeUSD' },
+                        name: { kind: 'Name', value: 'tradeVolume24h' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'txCount' },
+                        name: { kind: 'Name', value: 'tradeVolumeUSD24h' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'totalLiquidity' },
+                        name: { kind: 'Name', value: 'tradeVolumeETH24h' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'derivedETH' },
+                        name: { kind: 'Name', value: 'txCount24h' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'totalLiquidityAllPairs' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'totalLiquidityAllPairsUSD',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'holders' },
                       },
                       {
                         kind: 'Field',
@@ -3256,7 +4127,7 @@ export const PairsDocument = {
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'userAddress' },
+                              name: { kind: 'Name', value: 'ownerAddress' },
                             },
                             {
                               kind: 'Field',
@@ -3269,10 +4140,6 @@ export const PairsDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'tokenSymbol' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tokenPrice' },
                             },
                             {
                               kind: 'Field',
@@ -3303,37 +4170,79 @@ export const PairsDocument = {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'memeCreatedAt' },
                             },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'memePicUrl' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lockedLpTokens' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'lpTokensUnlockTime',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastUpdatedAt' },
+                            },
                           ],
                         },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'lastUpdatedAt' },
                       },
                     ],
                   },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'reserve0' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'reserve1' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'totalSupply' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'reserveETH' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'reserveUSD' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'trackedReserveETH' },
+                  name: { kind: 'Name', value: 'liquidityUSD' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'liquidity24hDelta' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'lpTotalSupply' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'lpTotalLocked' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'token0Price' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'token1Price' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'txCount24h' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'volumeToken0' },
+                  name: { kind: 'Name', value: 'tradeVolume24h' },
                 },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'volumeToken1' },
+                  name: { kind: 'Name', value: 'tradeVolumeUSD24h' },
                 },
-                { kind: 'Field', name: { kind: 'Name', value: 'volumeUSD' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'untrackedVolumeUSD' },
+                  name: { kind: 'Name', value: 'tradeVolumeETH24h' },
                 },
-                { kind: 'Field', name: { kind: 'Name', value: 'txCount' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'tradeVolume24hDelta' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'fees24h' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'feesUSD24h' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'feesETH24h' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'fees24hDelta' },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'createdAtTimestamp' },
@@ -3346,6 +4255,10 @@ export const PairsDocument = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'liquidityProviderCount' },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'lastUpdatedAt' },
+                },
               ],
             },
           },
@@ -3354,13 +4267,13 @@ export const PairsDocument = {
     },
   ],
 } as unknown as DocumentNode<PairsQuery, PairsQueryVariables>;
-export const LiquidityPositionsDocument = {
+export const CurrentLiquidityPositionsDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'LiquidityPositions' },
+      name: { kind: 'Name', value: 'CurrentLiquidityPositions' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -3370,7 +4283,7 @@ export const LiquidityPositionsDocument = {
           },
           type: {
             kind: 'NamedType',
-            name: { kind: 'Name', value: 'LiquidityPositionWhereInput' },
+            name: { kind: 'Name', value: 'CurrentLiquidityPositionWhereInput' },
           },
         },
         {
@@ -3385,7 +4298,10 @@ export const LiquidityPositionsDocument = {
               kind: 'NonNullType',
               type: {
                 kind: 'NamedType',
-                name: { kind: 'Name', value: 'LiquidityPositionOrderByInput' },
+                name: {
+                  kind: 'Name',
+                  value: 'CurrentLiquidityPositionOrderByInput',
+                },
               },
             },
           },
@@ -3412,7 +4328,7 @@ export const LiquidityPositionsDocument = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'liquidityPositions' },
+            name: { kind: 'Name', value: 'currentLiquidityPositions' },
             arguments: [
               {
                 kind: 'Argument',
@@ -3457,11 +4373,11 @@ export const LiquidityPositionsDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'usdSwapped' },
                       },
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                     ],
                   },
                 },
@@ -3496,34 +4412,66 @@ export const LiquidityPositionsDocument = {
                             },
                             {
                               kind: 'Field',
+                              name: { kind: 'Name', value: 'priceUSD' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'priceETH' },
+                            },
+                            {
+                              kind: 'Field',
                               name: { kind: 'Name', value: 'totalSupply' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tradeVolume' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tradeVolumeUSD' },
                             },
                             {
                               kind: 'Field',
                               name: {
                                 kind: 'Name',
-                                value: 'untrackedVolumeUSD',
+                                value: 'circulationSupply',
                               },
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'txCount' },
+                              name: { kind: 'Name', value: 'marketCapUSD' },
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'totalLiquidity' },
+                              name: { kind: 'Name', value: 'tradeVolume24h' },
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'derivedETH' },
+                              name: {
+                                kind: 'Name',
+                                value: 'tradeVolumeUSD24h',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'tradeVolumeETH24h',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'txCount24h' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'totalLiquidityAllPairs',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'totalLiquidityAllPairsUSD',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'holders' },
                             },
                             {
                               kind: 'Field',
@@ -3539,7 +4487,7 @@ export const LiquidityPositionsDocument = {
                                     kind: 'Field',
                                     name: {
                                       kind: 'Name',
-                                      value: 'userAddress',
+                                      value: 'ownerAddress',
                                     },
                                   },
                                   {
@@ -3559,10 +4507,6 @@ export const LiquidityPositionsDocument = {
                                       kind: 'Name',
                                       value: 'tokenSymbol',
                                     },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'tokenPrice' },
                                   },
                                   {
                                     kind: 'Field',
@@ -3599,8 +4543,37 @@ export const LiquidityPositionsDocument = {
                                       value: 'memeCreatedAt',
                                     },
                                   },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'memePicUrl' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'lockedLpTokens',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'lpTokensUnlockTime',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'lastUpdatedAt',
+                                    },
+                                  },
                                 ],
                               },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastUpdatedAt' },
                             },
                           ],
                         },
@@ -3629,34 +4602,66 @@ export const LiquidityPositionsDocument = {
                             },
                             {
                               kind: 'Field',
+                              name: { kind: 'Name', value: 'priceUSD' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'priceETH' },
+                            },
+                            {
+                              kind: 'Field',
                               name: { kind: 'Name', value: 'totalSupply' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tradeVolume' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tradeVolumeUSD' },
                             },
                             {
                               kind: 'Field',
                               name: {
                                 kind: 'Name',
-                                value: 'untrackedVolumeUSD',
+                                value: 'circulationSupply',
                               },
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'txCount' },
+                              name: { kind: 'Name', value: 'marketCapUSD' },
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'totalLiquidity' },
+                              name: { kind: 'Name', value: 'tradeVolume24h' },
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'derivedETH' },
+                              name: {
+                                kind: 'Name',
+                                value: 'tradeVolumeUSD24h',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'tradeVolumeETH24h',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'txCount24h' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'totalLiquidityAllPairs',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'totalLiquidityAllPairsUSD',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'holders' },
                             },
                             {
                               kind: 'Field',
@@ -3672,7 +4677,7 @@ export const LiquidityPositionsDocument = {
                                     kind: 'Field',
                                     name: {
                                       kind: 'Name',
-                                      value: 'userAddress',
+                                      value: 'ownerAddress',
                                     },
                                   },
                                   {
@@ -3692,10 +4697,6 @@ export const LiquidityPositionsDocument = {
                                       kind: 'Name',
                                       value: 'tokenSymbol',
                                     },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'tokenPrice' },
                                   },
                                   {
                                     kind: 'Field',
@@ -3732,8 +4733,37 @@ export const LiquidityPositionsDocument = {
                                       value: 'memeCreatedAt',
                                     },
                                   },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'memePicUrl' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'lockedLpTokens',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'lpTokensUnlockTime',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'lastUpdatedAt',
+                                    },
+                                  },
                                 ],
                               },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastUpdatedAt' },
                             },
                           ],
                         },
@@ -3748,19 +4778,19 @@ export const LiquidityPositionsDocument = {
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'totalSupply' },
+                        name: { kind: 'Name', value: 'liquidityUSD' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'reserveETH' },
+                        name: { kind: 'Name', value: 'liquidity24hDelta' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'reserveUSD' },
+                        name: { kind: 'Name', value: 'lpTotalSupply' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'trackedReserveETH' },
+                        name: { kind: 'Name', value: 'lpTotalLocked' },
                       },
                       {
                         kind: 'Field',
@@ -3772,23 +4802,39 @@ export const LiquidityPositionsDocument = {
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'volumeToken0' },
+                        name: { kind: 'Name', value: 'txCount24h' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'volumeToken1' },
+                        name: { kind: 'Name', value: 'tradeVolume24h' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'volumeUSD' },
+                        name: { kind: 'Name', value: 'tradeVolumeUSD24h' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'untrackedVolumeUSD' },
+                        name: { kind: 'Name', value: 'tradeVolumeETH24h' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'txCount' },
+                        name: { kind: 'Name', value: 'tradeVolume24hDelta' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'fees24h' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'feesUSD24h' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'feesETH24h' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'fees24hDelta' },
                       },
                       {
                         kind: 'Field',
@@ -3802,12 +4848,20 @@ export const LiquidityPositionsDocument = {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'liquidityProviderCount' },
                       },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'lastUpdatedAt' },
+                      },
                     ],
                   },
                 },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'liquidityTokenBalance' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'lastUpdatedAt' },
                 },
               ],
             },
@@ -3817,6 +4871,6 @@ export const LiquidityPositionsDocument = {
     },
   ],
 } as unknown as DocumentNode<
-  LiquidityPositionsQuery,
-  LiquidityPositionsQueryVariables
+  CurrentLiquidityPositionsQuery,
+  CurrentLiquidityPositionsQueryVariables
 >;

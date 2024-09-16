@@ -17,69 +17,92 @@ const GetPools = graphql(`
         symbol
         name
         decimals
+        priceUSD
+        priceETH
         totalSupply
-        tradeVolume
-        tradeVolumeUSD
-        untrackedVolumeUSD
-        txCount
-        totalLiquidity
-        derivedETH
+        circulationSupply
+        marketCapUSD
+        tradeVolume24h
+        tradeVolumeUSD24h
+        tradeVolumeETH24h
+        txCount24h
+        totalLiquidityAllPairs
+        totalLiquidityAllPairsUSD
+        holders
         memeToken {
           id
-          userAddress
+          ownerAddress
           tokenAddress
           tokenName
           tokenSymbol
-          tokenPrice
           tokenV60Initiated
           v60LpTokenAddress
           ownerAllocation
           activityVaultAllocation
           memeCreatedAt
+          memePicUrl
+          lockedLpTokens
+          lpTokensUnlockTime
+          lastUpdatedAt
         }
+        lastUpdatedAt
       }
       token1 {
         id
         symbol
         name
         decimals
+        priceUSD
+        priceETH
         totalSupply
-        tradeVolume
-        tradeVolumeUSD
-        untrackedVolumeUSD
-        txCount
-        totalLiquidity
-        derivedETH
+        circulationSupply
+        marketCapUSD
+        tradeVolume24h
+        tradeVolumeUSD24h
+        tradeVolumeETH24h
+        txCount24h
+        totalLiquidityAllPairs
+        totalLiquidityAllPairsUSD
+        holders
         memeToken {
           id
-          userAddress
+          ownerAddress
           tokenAddress
           tokenName
           tokenSymbol
-          tokenPrice
           tokenV60Initiated
           v60LpTokenAddress
           ownerAllocation
           activityVaultAllocation
           memeCreatedAt
+          memePicUrl
+          lockedLpTokens
+          lpTokensUnlockTime
+          lastUpdatedAt
         }
+        lastUpdatedAt
       }
       reserve0
       reserve1
-      totalSupply
-      reserveETH
-      reserveUSD
-      trackedReserveETH
+      liquidityUSD
+      liquidity24hDelta
+      lpTotalSupply
+      lpTotalLocked
       token0Price
       token1Price
-      volumeToken0
-      volumeToken1
-      volumeUSD
-      untrackedVolumeUSD
-      txCount
+      txCount24h
+      tradeVolume24h
+      tradeVolumeUSD24h
+      tradeVolumeETH24h
+      tradeVolume24hDelta
+      fees24h
+      feesUSD24h
+      feesETH24h
+      fees24hDelta
       createdAtTimestamp
       createdAtBlockNumber
       liquidityProviderCount
+      lastUpdatedAt
     }
   }
 `);

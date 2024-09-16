@@ -28,7 +28,7 @@ export const PairItem = ({
   const tokenBInfo = useToken(tokenB, chainId);
 
   return (
-    <Link href={`/`} legacyBehavior>
+    <Link href={`/pairs/${pair.id}`} legacyBehavior>
       <a
         className={css({
           display: 'table-row',
@@ -72,12 +72,12 @@ export const PairItem = ({
         </div>
 
         <div className={css({ display: 'table-cell' })}>
-          {parseFloat(pair.volumeUSD) || '☕'}
+          {parseFloat(pair.tradeVolumeUSD24h) || '☕'}
         </div>
         <div className={css({ display: 'table-cell' })}>
-          {parseFloat(pair.reserveUSD) || '☕'}
+          {parseFloat(pair.liquidityUSD) || '☕'}
         </div>
-        <div className={css({ display: 'table-cell' })}>{'☕'}</div>
+        <div className={css({ display: 'table-cell' })}>{pair.feesUSD24h}</div>
       </a>
     </Link>
   );

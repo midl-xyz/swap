@@ -4,7 +4,7 @@ import { Button, shortenAddress } from '@/shared';
 import { PairField } from '@/widgets/pair/ui/PairField';
 import { CopyIcon } from 'lucide-react';
 import Link from 'next/link';
-import { Address } from 'viem';
+import { Address, formatEther, parseEther } from 'viem';
 import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { HStack, Stack, VStack } from '~/styled-system/jsx';
@@ -14,9 +14,14 @@ interface Props {
 }
 
 export const Pair = ({ id }: Props) => {
+  console.log(id, 'id');
   const chainId = useChainId();
-  const { data } = useGetPair(id);
+  const { data, isLoading } = useGetPair(id);
+  console.log(data, 'data');
 
+  if (isLoading) {
+    return '...getting token';
+  }
   const pairData = data?.pairById;
 
   const token0Address = pairData?.token0.id as Address;
@@ -144,10 +149,10 @@ export const Pair = ({ id }: Props) => {
               })}
             >
               <span>
-                ${Number.parseFloat(pairData?.totalSupply || 0).toFixed(4)}
+                ${Number.parseFloat(pairData?.liquidityUSD || 0).toFixed(4)}
               </span>
               <span className={css({ fontWeight: 500, color: '#51935C' })}>
-                +1.1%
+                {pairData?.liquidity24hDelta || 0}%
               </span>
             </HStack>
           </PairField>
@@ -161,10 +166,11 @@ export const Pair = ({ id }: Props) => {
               })}
             >
               <span>
-                ${Number.parseFloat(pairData?.volumeUSD || 0).toFixed(4)}
+                $
+                {Number.parseFloat(pairData?.tradeVolumeUSD24h || 0).toFixed(4)}
               </span>
               <span className={css({ fontWeight: 500, color: '#51935C' })}>
-                +1.1%
+                {pairData?.tradeVolume24hDelta || 0}%
               </span>
             </HStack>
           </PairField>
@@ -183,9 +189,9 @@ export const Pair = ({ id }: Props) => {
                 justifyContent: 'space-between',
               })}
             >
-              <span>N/A</span>
+              <span>{pairData?.feesUSD24h || 0}</span>
               <span className={css({ fontWeight: 500, color: '#51935C' })}>
-                N/A
+                {pairData?.fees24hDelta || 0}%
               </span>
             </HStack>
           </PairField>
@@ -194,19 +200,13 @@ export const Pair = ({ id }: Props) => {
               <HStack>
                 <TokenLogo address={token0Address} chainId={chainId} />
                 <span>
-                  {Number.parseFloat(pairData?.token0.totalLiquidity).toFixed(
-                    4,
-                  )}{' '}
-                  ${token0Symbol}
+                  {formatEther(pairData?.token0.totalSupply)} {token0Symbol}
                 </span>
               </HStack>
               <HStack>
                 <TokenLogo address={token1Address} chainId={chainId} />
                 <span>
-                  {Number.parseFloat(pairData?.token1.totalLiquidity).toFixed(
-                    4,
-                  )}{' '}
-                  {token1Symbol}
+                  {formatEther(pairData?.token1.totalSupply)} {token1Symbol}
                 </span>
               </HStack>
             </HStack>
