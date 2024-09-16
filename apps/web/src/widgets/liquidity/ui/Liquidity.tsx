@@ -1,9 +1,9 @@
 'use client';
 
-import { useGetPools, useLiquidityPositions } from '@/features/liquidity';
+import { useLiquidityPositions } from '@/features/liquidity';
 import { LiquidityItem } from '@/features/liquidity/ui/liquidity';
 import { Loader2Icon } from 'lucide-react';
-import { Address, getAddress } from 'viem';
+import { getAddress } from 'viem';
 import { useAccount } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { vstack } from '~/styled-system/patterns';
@@ -40,11 +40,11 @@ export const Liquidity = () => {
     );
   }
 
-  const positionList = positions?.liquidityPositions?.filter(
+  const positionList = positions?.currentLiquidityPositions?.filter(
     ({ liquidityTokenBalance, pair }) => {
       return (
         (parseFloat(liquidityTokenBalance.toString()) /
-          parseFloat(pair.totalSupply.toString())) *
+          parseFloat(pair.lpTotalSupply.toString())) *
           100 >
         0.001
       );
@@ -78,7 +78,7 @@ export const Liquidity = () => {
                   reserveA={liquidity.pair.reserve0}
                   reserveB={liquidity.pair.reserve1}
                   liquidityTokenBalance={liquidity.liquidityTokenBalance}
-                  totalSupply={liquidity.pair.totalSupply}
+                  totalSupply={liquidity.pair.lpTotalSupply}
                 />
               </div>
             ))}
