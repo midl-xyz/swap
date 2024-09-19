@@ -36,6 +36,10 @@ export const LiquidityItem = ({
   const tokenASymbol = tokenAInfo.symbol;
   const tokenBSymbol = tokenBInfo.symbol;
 
+  const poolSharePercentage =
+    (parseFloat(liquidityTokenBalance.toString()) /
+      parseFloat(totalSupply.toString())) *
+    100;
   return (
     <Collapsible.Root
       defaultOpen={true}
@@ -92,10 +96,7 @@ export const LiquidityItem = ({
           <div className={hstack({ gap: 2, justifyContent: 'space-between' })}>
             <span>Pool share percentage:</span>
             <span>
-              {(parseFloat(liquidityTokenBalance.toString()) /
-                parseFloat(totalSupply.toString())) *
-                100}
-              %
+              {poolSharePercentage >= 99.9 ? 100 : poolSharePercentage}%
             </span>
           </div>
           <div>

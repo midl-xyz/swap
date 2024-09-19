@@ -42,11 +42,12 @@ export const Liquidity = () => {
 
   const positionList = positions?.currentLiquidityPositions?.filter(
     ({ liquidityTokenBalance, pair }) => {
+      const parsedBalance = parseFloat(liquidityTokenBalance.toString());
+
       return (
-        (parseFloat(liquidityTokenBalance.toString()) /
-          parseFloat(pair.lpTotalSupply.toString())) *
-          100 >
-        0.001
+        parsedBalance > 0.0001 &&
+        (parsedBalance / parseFloat(pair.lpTotalSupply.toString())) * 100 >
+          0.001
       );
     },
   );
@@ -70,7 +71,7 @@ export const Liquidity = () => {
         <div>
           <div className={vstack({ gap: 4, alignItems: 'stretch' })}>
             {positionList.map((liquidity) => (
-              <div key={liquidity.id}>
+              <div key={liquidity.id + liquidity.lastUpdatedAt}>
                 <LiquidityItem
                   liquidityToken={getAddress(liquidity.pair.id)}
                   tokenA={getAddress(liquidity.pair.token0.id)}

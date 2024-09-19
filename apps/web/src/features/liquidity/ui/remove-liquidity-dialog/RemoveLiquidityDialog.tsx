@@ -33,7 +33,6 @@ import * as yup from 'yup';
 import { useEstimateLiquidityPair } from '@/features/liquidity';
 import { useSlippage } from '@/features/slippage';
 import { Loader2Icon } from 'lucide-react';
-import { League_Gothic } from 'next/font/google';
 
 type RemoveLiquidityDialogProps = {
   onClose?: () => void;
@@ -95,10 +94,14 @@ export const RemoveLiquidityDialog = ({
   useEffect(() => {
     if (isRemovalConfirmed) {
       toast.success('Removed Liquidity');
-      queryClient.invalidateQueries({
-        queryKey: ['GetLiquidityPositions', userAddress],
-      });
-      onClose?.();
+      queryClient
+        .invalidateQueries({
+          queryKey: ['GetLiquidityPositions', userAddress],
+        })
+        .then(() => {
+          console.log('removed');
+          onClose?.();
+        });
     }
   }, [isRemovalConfirmed]);
 
@@ -124,7 +127,7 @@ export const RemoveLiquidityDialog = ({
     (parseFloat(parseNumberInput(value)) / 100); // 1* 0.25 = 0.25
 
   let parsedLPToken = parseUnits(
-    removeLPAmount.toString(),
+    Number(value) === 100 ? parsedLPTokenBalance : removeLPAmount.toString(),
     lpTokenInfo.decimals,
   ); // 250000000000
 
@@ -385,12 +388,12 @@ export const RemoveLiquidityDialog = ({
               })}
             >
               <span>
-                1 {tokenAInfo.symbol} = {parseFloat(priceAtoB.toFixed(4))}{' '}
-                {tokenBInfo.symbol}
+                1 {tokenBInfo.symbol} = {parseFloat(priceAtoB.toFixed(4))}{' '}
+                {tokenAInfo.symbol}
               </span>
               <span>
-                1 {tokenBInfo.symbol} = {parseFloat(priceBtoA.toFixed(4))}{' '}
-                {tokenAInfo.symbol}
+                1 {tokenAInfo.symbol} = {parseFloat(priceBtoA.toFixed(4))}{' '}
+                {tokenBInfo.symbol}
               </span>
             </div>
           </div>

@@ -26,12 +26,17 @@ const appMenuLinks: AppMenuLink[] = [
   },
 ];
 
-export const AppMenuList = () => {
+interface Props {
+  onToggleModal?: () => void;
+}
+
+export const AppMenuList = ({ onToggleModal }: Props) => {
   const pathname = usePathname();
   return (
     <>
       {appMenuLinks.map((link) => (
         <Link
+          onClick={onToggleModal}
           href={link.href}
           key={link.label}
           className={css({

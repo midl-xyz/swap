@@ -18,18 +18,18 @@ export const BugReportBar = () => (
     gap={'4px'}
   >
     <p>
-      Welcome to the testnet launch. If you find any issues please report them
+      Welcome to the testnet launch. If you find any issues please report them{' '}
+      <Link target="_blank" href="https://form.jotform.com/242532370066047">
+        <p
+          className={css({
+            display: 'inline',
+            fontWeight: 600,
+            color: 'black',
+          })}
+        >
+          here
+        </p>
+      </Link>
     </p>
-    <Link target="_blank" href="https://form.jotform.com/242532370066047">
-      <p
-        className={css({
-          display: 'inline',
-          fontWeight: 600,
-          color: 'black',
-        })}
-      >
-        here
-      </p>
-    </Link>
   </HStack>
 );

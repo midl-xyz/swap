@@ -125,7 +125,10 @@ const GetLiquidityPositions = graphql(`
 export const useLiquidityPositions = (account: Address) => {
   return useQuery<CurrentLiquidityPositionsQuery>({
     queryKey: ['GetLiquidityPositions', account],
-    refetchOnWindowFocus: false,
+    staleTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    enabled: !!account,
     queryFn: () => {
       return graphqlClient.request(GetLiquidityPositions, {
         where: {

@@ -26,7 +26,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useDebouncedCallback } from 'use-debounce';
 import { Address, formatUnits, parseUnits, zeroAddress } from 'viem';
-import { useChainId } from 'wagmi';
+import { useAccount, useChainId } from 'wagmi';
 import * as yup from 'yup';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
@@ -74,6 +74,7 @@ const schema = yup.object().shape({
 });
 
 export const LiquidityForm = () => {
+  const { address } = useAccount();
   const searchParams = useSearchParams();
   const [minValues, setValues] = useState({
     minAmountA: 0,
@@ -219,16 +220,24 @@ export const LiquidityForm = () => {
 
   const queryClient = useQueryClient();
 
-  const onSuccess = useCallback(() => {
-    queryClient.invalidateQueries({
-      predicate: scopeKeyPredicate(['balance', 'allowance', 'pairStats']),
+  const onSuccess = useCallback(async () => {
+    await queryClient.invalidateQueries({
+      predicate: scopeKeyPredicate([
+        'balance',
+        'allowance',
+        'pairStats',
+        'GetLiquidityPositions',
+      ]),
     });
     form.resetField('tokenBAmount');
+    setTimeout(() => {
+      router?.push('/liquidity');
+      setIsDialogOpen(false);
+    }, 1000);
   }, [form, queryClient]);
 
   const onClose = useCallback(() => {
     form.reset();
-    router?.push('/liquidity');
     setIsDialogOpen(false);
   }, []);
 

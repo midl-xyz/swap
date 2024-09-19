@@ -31,7 +31,7 @@ export const MobileAppMenu = () => {
           <X onClick={handleToggle} />
           <VStack width="100%" gap={5}>
             <VStack width="100%" gap={5}>
-              <AppMenuList />
+              <AppMenuList onToggleModal={handleToggle} />
             </VStack>
             <AccountButton />
           </VStack>

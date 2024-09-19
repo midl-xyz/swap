@@ -48,8 +48,14 @@ export const SupplyLiquidityDialog = ({
 
   const [slippage] = useSlippage();
 
-  const { addLiquidity, isConfirming, isPending, error, isConfirmed } =
-    useAddLiquidity();
+  const {
+    addLiquidity,
+    isConfirming,
+    isPending,
+    error,
+    isConfirmed,
+    isSuccess,
+  } = useAddLiquidity();
 
   const tokenAInfo = useToken(tokenA, chainId);
   const tokenBInfo = useToken(tokenB, chainId);
@@ -59,14 +65,15 @@ export const SupplyLiquidityDialog = ({
       toast.error(error.message);
     }
   }, [error]);
-
+  console.log(isSuccess, 'isSuccess');
+  console.log(isConfirmed, 'isConfirmed');
   useEffect(() => {
-    if (isConfirmed) {
-      onClose();
+    if (isSuccess && isConfirmed) {
+      // onClose();
       toast.success('Supply successful');
       onSuccess();
     }
-  }, [isConfirmed]);
+  }, [isSuccess, isConfirmed]);
 
   let priceAtoB = 0;
   let priceBtoA = 0;
