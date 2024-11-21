@@ -89,6 +89,27 @@ export default defineConfig({
           lineHeight: '1.2',
         },
       },
+      Display: {
+        value: {
+          fontSize: '70px',
+          fontWeight: 500,
+          lineHeight: '80px',
+        },
+      },
+      subtitle1: {
+        value: {
+          fontSize: '28px',
+          fontWeight: 600,
+          lineHeight: '32px',
+        },
+      },
+      subtitle3: {
+        value: {
+          fontSize: '18px',
+          fontWeight: 400,
+          lineHeight: '22px',
+        },
+      },
     },
   },
 

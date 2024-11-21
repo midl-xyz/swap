@@ -30,7 +30,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDebouncedCallback } from 'use-debounce';
 import { Address, formatUnits, parseUnits, zeroAddress } from 'viem';
-import { useAccount, useChainId } from 'wagmi';
+import { useAccount, useBalance, useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { vstack } from '~/styled-system/patterns';
 
@@ -137,6 +137,8 @@ export const SwapForm = () => {
   } = useSwap();
 
   const { address } = useAccount();
+  const balance = useBalance({ address });
+  console.log('Address: ', address, balance.data?.value);
 
   const {
     data: tokenAllowance,

@@ -12,16 +12,13 @@ const getUniswapV2FactoryAddress = async (chain: string, version: string) => {
 
 const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployer } = await hre.getNamedAccounts();
-  let wethAddress = process.env.WETH_ADDRESS;
-  if (!hre.ethers.isAddress(wethAddress)) {
-    const weth = await hre.deployments.get("WPROM9");
-    wethAddress = weth.address;
-  }
+
   await hre.deployments.deploy("UniswapV2Router02", {
     from: deployer,
     args: [
       await getUniswapV2FactoryAddress(hre.network.name, packageJSON.version),
-      wethAddress,
+      process.env.WETH_ADDRESS,
+      process.env.ADDRESS_REGISTRY,
     ],
     log: true,
   });

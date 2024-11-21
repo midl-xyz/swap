@@ -5,6 +5,11 @@
         "internalType": "address",
         "name": "_feeToSetter",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_v60AddressRegistry",
+        "type": "address"
       }
     ],
     "payable": false,
@@ -188,6 +193,21 @@
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "v60AddressRegistry",
+    "outputs": [
+      {
+        "internalType": "contract IV60AddressRegistry",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
     "type": "function"
   }
 ]

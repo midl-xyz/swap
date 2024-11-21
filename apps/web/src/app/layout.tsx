@@ -1,29 +1,16 @@
-import { FiatQuotesProvider } from '@/features/fiat-quote';
-import {
-  RemoveLiquidityProvider,
-  SettingsDialogProvider,
-  TokenDialogProvider,
-  Web3Provider,
-} from '@/global';
+import { AccountButton, AppMenuList, Header, Logo, Toast } from '@/widgets';
 import { MobileAppMenu } from '@/widgets/app-menu/ui/MobileAppMenu';
+import { Footer } from '@/widgets/footer/ui';
+import { BugReportBar } from '@/widgets/header/ui/BugReportBar';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { headers } from 'next/headers';
-import { ReactNode } from 'react';
-import { Toaster } from 'react-hot-toast';
-
-import { ErrorBoundary } from '@/global/providers/ErrorBoundary';
-import { AccountButton, AppMenuList, Header, Logo, RPCStatus } from '@/widgets';
 import Link from 'next/link';
+import React, { ReactNode } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { css, cx } from '~/styled-system/css';
 import { HStack, Stack } from '~/styled-system/jsx';
 import { hstack } from '~/styled-system/patterns';
-import '@rainbow-me/rainbowkit/styles.css';
 import './globals.css';
-import { renderErrorMessage } from '@/widgets/error-message';
-import { Footer } from '@/widgets/footer/ui';
-import { BugReportBar } from '@/widgets/header/ui/BugReportBar';
-import { TimeBar } from '@/widgets/header/ui/TimerBar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -65,13 +52,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: ReactNode;
-}>) {
-  const cookie = headers().get('cookie') || '';
-
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
@@ -87,68 +68,11 @@ export default function RootLayout({
           css({
             display: 'flex',
             flexDirection: 'column',
-            bg: 'neutral.50',
+            bg: '#FEFEFE',
           }),
         )}
       >
-        <Web3Provider cookie={cookie}>
-          <FiatQuotesProvider>
-            <TokenDialogProvider />
-            <SettingsDialogProvider />
-            <RemoveLiquidityProvider />
-            <RPCStatus />
-            <TimeBar />
-            <Header
-              leftSlot={
-                <div
-                  className={hstack({
-                    gap: 24,
-                    flexShrink: 0,
-                    width: {
-                      base: '100%',
-                      md: 'fit-content',
-                    },
-                    justifyContent: 'space-between',
-                  })}
-                >
-                  <Link href="/">
-                    <Logo />
-                  </Link>
-                  <HStack
-                    display={{ base: 'none', md: 'flex' }}
-                    gap={8}
-                    h="full"
-                  >
-                    <AppMenuList />
-                  </HStack>
-                  <Stack display={{ base: 'flex', md: 'none' }}>
-                    <MobileAppMenu />
-                  </Stack>
-                </div>
-              }
-              rightSlot={
-                <HStack gap={4} display={{ base: 'none', md: 'flex' }}>
-                  <AccountButton />
-                </HStack>
-              }
-            />
-            <BugReportBar />
-            <Toaster position="bottom-right" />
-            <ErrorBoundary fallback={renderErrorMessage}>
-              <div
-                className={css({
-                  paddingBlock: 4,
-                  flexGrow: 1,
-                  display: 'flex',
-                  flexDirection: 'column',
-                })}
-              >
-                {children}
-              </div>
-              <Footer />
-            </ErrorBoundary>
-          </FiatQuotesProvider>
-        </Web3Provider>
+        {children}
       </body>
     </html>
   );

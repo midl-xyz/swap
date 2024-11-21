@@ -13,7 +13,7 @@ type AppMenuLink = {
 const appMenuLinks: AppMenuLink[] = [
   {
     label: 'Swap',
-    href: '/',
+    href: '/swap',
     isExact: true,
   },
   {

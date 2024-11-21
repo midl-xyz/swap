@@ -1,6 +1,6 @@
 'use client';
 
-import { promTestnet } from '@/global/customChainsConfig';
+import { promMainnet } from '@/global/customChainsConfig';
 import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 import {
   frameWallet,
@@ -13,7 +13,6 @@ import {
   zerionWallet,
 } from '@rainbow-me/rainbowkit/wallets';
 import { createConfig, createStorage, http } from 'wagmi';
-import { sepolia } from 'wagmi/chains';
 
 declare module 'wagmi' {
   interface Register {
@@ -37,17 +36,16 @@ const connectors = connectorsForWallets(
     },
   ],
   {
-    appName: 'V60',
+    appName: 'v60',
     projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_ID as string,
   },
 );
 
 export const wagmiConfig = createConfig({
   connectors: connectors,
-  chains: [promTestnet],
+  chains: [promMainnet],
   transports: {
-    [sepolia.id]: http(process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL),
-    [promTestnet.id]: http(promTestnet.rpcUrls.default.http[0]),
+    [promMainnet.id]: http(promMainnet.rpcUrls.default.http[0]),
   },
   storage: createStorage({
     storage: typeof localStorage === 'undefined' ? undefined : localStorage,

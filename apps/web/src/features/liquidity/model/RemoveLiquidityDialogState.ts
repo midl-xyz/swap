@@ -1,5 +1,5 @@
 import { ChainId } from '@/global';
-import { promTestnet } from '@/global/customChainsConfig';
+import { promMainnet } from '@/global/customChainsConfig';
 import { atom } from 'jotai';
 import { Address } from 'viem';
 
@@ -15,7 +15,7 @@ export const removeLiquidityDialogAtom = atom<{
   open: false,
   lpToken: {
     address: '' as Address,
-    chainId: promTestnet.id,
+    chainId: promMainnet.id,
     tokenA: '' as Address,
     tokenB: '' as Address,
   },

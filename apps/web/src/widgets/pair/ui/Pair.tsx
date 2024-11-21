@@ -4,7 +4,7 @@ import { Button, shortenAddress } from '@/shared';
 import { PairField } from '@/widgets/pair/ui/PairField';
 import { CopyIcon } from 'lucide-react';
 import Link from 'next/link';
-import { Address, formatEther, parseEther } from 'viem';
+import { Address, formatEther } from 'viem';
 import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { HStack, Stack, VStack } from '~/styled-system/jsx';

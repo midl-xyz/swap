@@ -42,6 +42,13 @@ const buttonStyle = cva({
           backgroundColor: 'neutral.950',
         },
       },
+      link: {
+        backgroundColor: 'transparent',
+        color: '#8A8A8A',
+        _hover: {
+          opacity: 0.8,
+        },
+      },
       secondary: {
         backgroundColor: 'neutral.100',
         color: 'neutral.800',

@@ -6,7 +6,7 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   await hre.deployments.deploy("UniswapV2Factory", {
     from: deployer,
-    args: [deployer],
+    args: [deployer, "0x677ebf28ab1Ca164F5d86313359EEcbEe54fF22b"],
     log: true,
   });
 };

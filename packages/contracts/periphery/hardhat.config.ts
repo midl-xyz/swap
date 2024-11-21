@@ -30,6 +30,11 @@ const config: HardhatUserConfig = {
       chainId: 584548796,
       tags: ["weth", "core"],
     },
+    promMainnet: {
+      url: "https://prom-rpc.eu-north-2.gateway.fm",
+      accounts,
+      chainId: 227,
+    },
   },
   etherscan: {
     enabled: true,

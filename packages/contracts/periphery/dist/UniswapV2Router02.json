@@ -10,6 +10,11 @@
         "internalType": "address",
         "name": "_WETH",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_v60AddressRegistry",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -964,6 +969,19 @@
       }
     ],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "v60AddressRegistry",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

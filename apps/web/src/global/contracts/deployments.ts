@@ -1,4 +1,4 @@
-import { promTestnet } from '@/global/customChainsConfig';
+import { promTestnet, promMainnet } from '@/global/customChainsConfig';
 import { Address } from 'viem';
 import { sepolia } from 'viem/chains';
 import { Config } from 'wagmi';
@@ -20,6 +20,13 @@ type Deployments = Record<
 >;
 
 export const deployments: Deployments = {
+  [promMainnet.id]: {
+    UniswapV2Router02: require('@v60swap/periphery/deployments/2.0.0/promMainnet/UniswapV2Router02.json'),
+
+    UniswapV2Factory: require('@v60swap/core/deployments/2.0.0/promMainnet/UniswapV2Factory.json'),
+
+    UV2Library: require('@v60swap/periphery/deployments/2.0.0/promMainnet/UV2Library.json'),
+  },
   [promTestnet.id]: {
     UniswapV2Router02: require('@v60swap/periphery/deployments/1.0.3/testnetErigon/UniswapV2Router02.json'),
 
