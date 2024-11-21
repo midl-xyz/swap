@@ -19,7 +19,7 @@ export const BugReportBar = () => (
   >
     <p>
       Welcome to the testnet launch. If you find any issues please report them{' '}
-      <Link target="_blank" href="https://form.jotform.com/242945340704354">
+      <Link target="_blank" href="https://form.jotform.com/243244375752055">
         <p
           className={css({
             display: 'inline',
