@@ -33,7 +33,7 @@ import '../globals.css';
 export const metadata: Metadata = {
   title: 'V60 Swap',
   description: 'Web3 app for swapping ERC20 tokens on the Prom blockchain',
-  metadataBase: new URL('https://testnet.v60.io'),
+  metadataBase: new URL('https://v60.io'),
   alternates: {
     canonical: '/',
     languages: {
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'V60 Swap',
     description: 'Web3 app for swapping ERC20 tokens on the Prom blockchain',
-    url: 'https://testnet.v60.io',
+    url: 'https://v60.io',
     type: 'website',
     images: [
       {

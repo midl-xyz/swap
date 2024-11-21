@@ -45,12 +45,15 @@ export const Liquidity = () => {
       const parsedBalance = parseFloat(liquidityTokenBalance.toString());
 
       return (
-        parsedBalance > 0.0001 &&
-        (parsedBalance / parseFloat(pair.lpTotalSupply.toString())) * 100 >
-          0.001
+        parsedBalance > 0.000000000001 &&
+        (parsedBalance / parseFloat(pair.lpTotalSupply.toString())) *
+          10000000000 >
+          0.000000000001
       );
     },
   );
+
+  console.log('LIST: ', positionList);
 
   return (
     <div>

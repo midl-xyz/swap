@@ -4,7 +4,7 @@ import { Button, shortenAddress } from '@/shared';
 import { PairField } from '@/widgets/pair/ui/PairField';
 import { CopyIcon } from 'lucide-react';
 import Link from 'next/link';
-import { Address, formatEther } from 'viem';
+import { Address, formatEther, formatUnits } from 'viem';
 import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { HStack, Stack, VStack } from '~/styled-system/jsx';
@@ -200,13 +200,21 @@ export const Pair = ({ id }: Props) => {
               <HStack>
                 <TokenLogo address={token0Address} chainId={chainId} />
                 <span>
-                  {formatEther(pairData?.token0.totalSupply)} {token0Symbol}
+                  {formatUnits(
+                    pairData?.token0.totalSupply,
+                    pairData?.token0.decimals,
+                  )}{' '}
+                  {token0Symbol}
                 </span>
               </HStack>
               <HStack>
                 <TokenLogo address={token1Address} chainId={chainId} />
                 <span>
-                  {formatEther(pairData?.token1.totalSupply)} {token1Symbol}
+                  {formatUnits(
+                    pairData?.token1.totalSupply,
+                    pairData?.token1.decimals,
+                  )}{' '}
+                  {token1Symbol}
                 </span>
               </HStack>
             </HStack>
@@ -259,7 +267,7 @@ export const Pair = ({ id }: Props) => {
                 width: 'max-content',
               })}
               target="_blank"
-              href={`https://prom-testnet-blockscout.eu-north-2.gateway.fm/address/${id}`}
+              href={`https://promscan.io/address/${id}`}
             >
               <Button
                 appearance="secondary"
