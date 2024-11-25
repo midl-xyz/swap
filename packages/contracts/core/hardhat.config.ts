@@ -21,7 +21,7 @@ const config: HardhatUserConfig = {
       chainId: 584548796,
     },
     promMainnet: {
-      url: "https://prom-rpc.eu-north-2.gateway.fm",
+      url: "https://rpc.prom.io",
       accounts,
       chainId: 227,
     },

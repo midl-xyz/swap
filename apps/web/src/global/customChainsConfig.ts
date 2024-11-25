@@ -16,7 +16,7 @@ export const promMainnet: Chain = {
   },
   rpcUrls: {
     default: {
-      http: ['https://prom-rpc.eu-north-2.gateway.fm'],
+      http: ['https://rpc.prom.io'],
     },
   },
   contracts: {
