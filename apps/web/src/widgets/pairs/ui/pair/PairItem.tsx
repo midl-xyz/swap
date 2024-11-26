@@ -28,10 +28,8 @@ export const PairItem = ({
   const tokenBInfo = useToken(tokenB, chainId);
 
   return (
-    <Link
-      href={`/apps/web/src/app/(app-layout)/pairs/${pair.id}`}
-      legacyBehavior
-    >
+    <Link href={`/pairs/${pair.id}`} legacyBehavior>
+      {/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
       <a
         className={css({
           display: 'table-row',
