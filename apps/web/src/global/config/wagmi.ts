@@ -49,7 +49,7 @@ export const wagmiConfig = createConfig({
   },
   storage: createStorage({
     storage: typeof localStorage === 'undefined' ? undefined : localStorage,
-    key: 'v60-1.0.1',
+    key: 'v60-1.0.2',
   }),
   ssr: true,
 });
