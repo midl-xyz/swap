@@ -68,6 +68,16 @@ export const Pairs = () => {
           tokenB={getAddress(pair.token1.id)}
           id={getAddress(pair.id)}
           pair={pair}
+          overrideAPic={
+            pair.token0.memeToken?.memePicUrl
+              ? `https://ipfs.filebase.io/ipfs/${pair.token0.memeToken?.memePicUrl}`
+              : null
+          }
+          overrideBPic={
+            pair.token1.memeToken?.memePicUrl
+              ? `https://ipfs.filebase.io/ipfs/${pair.token1.memeToken?.memePicUrl}`
+              : null
+          }
         />
       ))}
     </div>

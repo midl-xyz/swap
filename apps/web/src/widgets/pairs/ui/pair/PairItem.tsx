@@ -1,8 +1,8 @@
 import { useToken } from '@/entities';
 import { TokenLogo } from '@/features';
-import { PairsQuery } from '@/features/liquidity/api/gql/graphql';
+import type { PairsQuery } from '@/features/liquidity/api/gql/graphql';
 import Link from 'next/link';
-import { Address } from 'viem';
+import type { Address } from 'viem';
 import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { hstack } from '~/styled-system/patterns';
@@ -13,6 +13,8 @@ type PairItemProps = {
   id: Address;
   pair: PairsQuery['pairs'][number];
   index: number;
+  overrideAPic?: string | null | undefined;
+  overrideBPic?: string | null | undefined;
 };
 
 export const PairItem = ({
@@ -21,6 +23,8 @@ export const PairItem = ({
   index,
   id,
   pair,
+  overrideAPic,
+  overrideBPic,
 }: PairItemProps) => {
   const chainId = useChainId();
 
@@ -55,11 +59,17 @@ export const PairItem = ({
                 marginRight: 6,
               })}
             >
-              <TokenLogo address={tokenA} chainId={chainId} size={8} />
+              <TokenLogo
+                address={tokenA}
+                chainId={chainId}
+                size={8}
+                overridePic={overrideAPic}
+              />
               <TokenLogo
                 address={tokenB}
                 chainId={chainId}
                 size={8}
+                overridePic={overrideBPic}
                 className={css({
                   marginLeft: -2,
                 })}

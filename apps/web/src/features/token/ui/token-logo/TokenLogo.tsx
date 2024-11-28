@@ -9,6 +9,7 @@ type TokenLogoProps = {
   chainId: number;
   size?: number;
   className?: HTMLAttributes<HTMLDivElement>['className'];
+  overridePic?: string | null | undefined;
 };
 
 export const TokenLogo = ({
@@ -16,8 +17,13 @@ export const TokenLogo = ({
   chainId,
   size = 6,
   className,
+  overridePic,
 }: TokenLogoProps) => {
-  const { logoURI, symbol } = useToken(address, chainId);
+  let { logoURI, symbol } = useToken(address, chainId);
+
+  if (overridePic) {
+    logoURI = overridePic;
+  }
 
   if (!logoURI) {
     return (
@@ -76,7 +82,10 @@ export const TokenLogo = ({
         src={logoURI}
         alt={symbol}
         style={{
-          objectFit: 'contain',
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          borderRadius: '50%', // Ensures the image stays circular
         }}
       />
     </div>
