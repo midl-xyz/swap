@@ -92,7 +92,13 @@ export const Pair = ({ id }: Props) => {
                 textTransform: 'uppercase',
               })}
             >
-              {pairData?.token0.symbol}-{pairData?.token1.symbol}
+              {pairData?.token0.symbol === 'WPROM'
+                ? 'PROM'
+                : pairData?.token0.symbol}
+              -
+              {pairData?.token1.symbol === 'WPROM'
+                ? 'PROM'
+                : pairData?.token1.symbol}
             </span>
             <span
               className={css({
@@ -152,7 +158,8 @@ export const Pair = ({ id }: Props) => {
                 ${Number.parseFloat(pairData?.liquidityUSD || 0).toFixed(4)}
               </span>
               <span className={css({ fontWeight: 500, color: '#51935C' })}>
-                {pairData?.liquidity24hDelta || 0}%
+                {Number.parseFloat(pairData?.liquidity24hDelta || 0).toFixed(3)}
+                %
               </span>
             </HStack>
           </PairField>
@@ -200,20 +207,21 @@ export const Pair = ({ id }: Props) => {
               <HStack>
                 <TokenLogo address={token0Address} chainId={chainId} />
                 <span>
-                  {formatUnits(
-                    pairData?.token0.totalSupply,
-                    pairData?.token0.decimals,
-                  )}{' '}
+                  {parseFloat(
+                    formatUnits(pairData?.token0.totalSupply, 18) || '0',
+                  ).toFixed(6)}{' '}
                   {token0Symbol}
                 </span>
               </HStack>
               <HStack>
                 <TokenLogo address={token1Address} chainId={chainId} />
                 <span>
-                  {formatUnits(
-                    pairData?.token1.totalSupply,
-                    pairData?.token1.decimals,
-                  )}{' '}
+                  {parseFloat(
+                    formatUnits(
+                      pairData?.token1.totalSupply,
+                      pairData?.token1.decimals,
+                    ) || '0',
+                  ).toFixed(6)}{' '}
                   {token1Symbol}
                 </span>
               </HStack>
@@ -275,7 +283,7 @@ export const Pair = ({ id }: Props) => {
                 fontSize="14px"
                 width="max-content"
               >
-                View on Etherscan
+                View on Block Explorer
               </Button>
             </Link>
           </HStack>

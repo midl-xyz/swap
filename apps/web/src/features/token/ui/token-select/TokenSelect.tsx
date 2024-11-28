@@ -145,7 +145,7 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
           alignItems: 'flex-start',
         })}
       >
-        {tokens.slice(0, 2).map(({ address, chainId, symbol }) => (
+        {tokens.slice(0, 5).map(({ address, chainId, symbol }) => (
           <Button
             key={`${address}_${symbol}_${chainId}`}
             onClick={() => onSubmit(address, chainId)}

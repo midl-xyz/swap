@@ -71,21 +71,28 @@ export const LiquidityItem = ({
               })}
             />
           </div>
-          {tokenASymbol} — {tokenBSymbol}
+          {tokenASymbol === 'WPROM' ? 'PROM' : tokenASymbol} —{' '}
+          {tokenBSymbol === 'WPROM' ? 'PROM' : tokenBSymbol}
         </div>
       </Collapsible.Trigger>
       <Collapsible.Content>
         <div className={vstack({ gap: 2, alignItems: 'stretch', pt: 4 })}>
           <div className={hstack({ gap: 2, justifyContent: 'space-between' })}>
-            <span>Pooled {tokenASymbol}</span>
             <span>
-              {reserveA.toString()} {tokenASymbol}
+              Pooled {tokenASymbol === 'WPROM' ? 'PROM' : tokenASymbol}
+            </span>
+            <span>
+              {reserveA.toString()}{' '}
+              {tokenASymbol === 'WPROM' ? 'PROM' : tokenASymbol}
             </span>
           </div>
           <div className={hstack({ gap: 2, justifyContent: 'space-between' })}>
-            <span>Pooled {tokenBSymbol}</span>
             <span>
-              {reserveB.toString()} {tokenBSymbol}
+              Pooled {tokenBSymbol === 'WPROM' ? 'PROM' : tokenBSymbol}
+            </span>
+            <span>
+              {reserveB.toString()}{' '}
+              {tokenBSymbol === 'WPROM' ? 'PROM' : tokenBSymbol}
             </span>
           </div>
           <div className={hstack({ gap: 2, justifyContent: 'space-between' })}>
