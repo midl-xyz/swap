@@ -1,4 +1,3 @@
-import { USDTAbi } from '@/features/token/api/USDTAbi';
 import { ChainId } from '@/global';
 import toast from 'react-hot-toast';
 import { Address, erc20Abi } from 'viem';
@@ -43,11 +42,7 @@ export const useERC20ApproveAllowance = () => {
     const chainIdToUse = chainId || globalChainId;
 
     return writeContract({
-      abi:
-        tokenAddress.toLowerCase() ===
-        '0xdac17f958d2ee523a2206206994597c13d831ec7'
-          ? USDTAbi
-          : erc20Abi,
+      abi: erc20Abi,
       address: tokenAddress,
       functionName: 'approve',
       args: [spenderAddress, amount],

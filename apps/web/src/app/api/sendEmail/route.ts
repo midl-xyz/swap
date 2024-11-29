@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 
-const API_KEY = process.env.MAILCHIMP_API_KEY!;
-const AUDIENCE_ID = process.env.MAILCHIMP_AUDIENCE_ID!;
-const DATACENTER = API_KEY.split('-')[1];
-
 export async function POST(request: NextRequest) {
+  const API_KEY = process.env.MAILCHIMP_API_KEY!;
+  const AUDIENCE_ID = process.env.MAILCHIMP_AUDIENCE_ID!;
+  const DATACENTER = API_KEY?.split('-')?.[1];
   try {
     const { email } = await request.json();
 
