@@ -1,7 +1,7 @@
 import { useToken } from '@/entities';
 import { TokenLogo } from '@/features';
 import { removeLiquidityDialogAtom } from '@/features/liquidity/model';
-import { Button } from '@/shared';
+import { beautifyNumber, Button } from '@/shared';
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { useAtom } from 'jotai';
 import { Address } from 'viem';
@@ -82,7 +82,7 @@ export const LiquidityItem = ({
               Pooled {tokenASymbol === 'WPROM' ? 'PROM' : tokenASymbol}
             </span>
             <span>
-              {reserveA.toString()}{' '}
+              {beautifyNumber(reserveA)}{' '}
               {tokenASymbol === 'WPROM' ? 'PROM' : tokenASymbol}
             </span>
           </div>
@@ -91,19 +91,22 @@ export const LiquidityItem = ({
               Pooled {tokenBSymbol === 'WPROM' ? 'PROM' : tokenBSymbol}
             </span>
             <span>
-              {reserveB.toString()}{' '}
+              {beautifyNumber(reserveB)}{' '}
               {tokenBSymbol === 'WPROM' ? 'PROM' : tokenBSymbol}
             </span>
           </div>
           <div className={hstack({ gap: 2, justifyContent: 'space-between' })}>
             <span>Your total pool tokens</span>
-            <span>{liquidityTokenBalance.toString()}</span>
+            <span>{beautifyNumber(liquidityTokenBalance)}</span>
           </div>
 
           <div className={hstack({ gap: 2, justifyContent: 'space-between' })}>
             <span>Pool share percentage:</span>
             <span>
-              {poolSharePercentage >= 99.9 ? 100 : poolSharePercentage}%
+              {poolSharePercentage >= 99.9
+                ? 100
+                : beautifyNumber(poolSharePercentage, 2)}
+              %
             </span>
           </div>
           <div>

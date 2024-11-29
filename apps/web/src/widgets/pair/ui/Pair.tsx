@@ -1,6 +1,6 @@
 import { TokenLogo } from '@/features';
 import { useGetPair } from '@/features/liquidity';
-import { Button, shortenAddress } from '@/shared';
+import { beautifyNumber, Button, shortenAddress } from '@/shared';
 import { PairField } from '@/widgets/pair/ui/PairField';
 import { CopyIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -70,6 +70,14 @@ export const Pair = ({ id }: Props) => {
     },
   ];
 
+  const override0Pic = pairData?.token0.memeToken?.memePicUrl
+    ? `https://ipfs.filebase.io/ipfs/${pairData.token0.memeToken.memePicUrl}`
+    : null;
+
+  const override1Pic = pairData?.token1.memeToken?.memePicUrl
+    ? `https://ipfs.filebase.io/ipfs/${pairData.token1.memeToken.memePicUrl}`
+    : null;
+
   return (
     <Stack background="white" padding={{ base: 2, md: 7 }}>
       <VStack
@@ -81,8 +89,16 @@ export const Pair = ({ id }: Props) => {
       >
         <HStack>
           <HStack>
-            <TokenLogo address={token0Address} chainId={chainId} />
-            <TokenLogo address={token1Address} chainId={chainId} />
+            <TokenLogo
+              address={token0Address}
+              chainId={chainId}
+              overridePic={override0Pic}
+            />
+            <TokenLogo
+              address={token1Address}
+              chainId={chainId}
+              overridePic={override1Pic}
+            />
           </HStack>
           <HStack>
             <span
@@ -112,13 +128,16 @@ export const Pair = ({ id }: Props) => {
         </HStack>
         <Stack gap={6} flexDirection={{ base: 'column', md: 'row' }}>
           {tokenPrices.map(
-            ({
-              tokenSymbol,
-              address,
-              secondTokenSymbol,
-              priceUsd,
-              priceInToken,
-            }) => {
+            (
+              {
+                tokenSymbol,
+                address,
+                secondTokenSymbol,
+                priceUsd,
+                priceInToken,
+              },
+              i,
+            ) => {
               return (
                 <HStack
                   key={tokenSymbol}
@@ -128,12 +147,17 @@ export const Pair = ({ id }: Props) => {
                   borderColor="#E2E2E2"
                   borderRadius="xl"
                 >
-                  <TokenLogo address={address} chainId={chainId} />
+                  <TokenLogo
+                    address={address}
+                    chainId={chainId}
+                    overridePic={i === 0 ? override0Pic : override1Pic}
+                  />
 
                   <span>
-                    1 {tokenSymbol} ={' '}
-                    {Number.parseFloat(priceInToken).toFixed(4)}{' '}
-                    {secondTokenSymbol} ${priceUsd}
+                    1 {tokenSymbol === 'WPROM' ? 'PROM' : tokenSymbol} ={' '}
+                    {beautifyNumber(priceInToken)}{' '}
+                    {secondTokenSymbol === 'WPROM' ? 'PROM' : secondTokenSymbol}{' '}
+                    ${beautifyNumber(priceUsd)}
                   </span>
                 </HStack>
               );
@@ -154,12 +178,9 @@ export const Pair = ({ id }: Props) => {
                 justifyContent: 'space-between',
               })}
             >
-              <span>
-                ${Number.parseFloat(pairData?.liquidityUSD || 0).toFixed(4)}
-              </span>
+              <span>${beautifyNumber(pairData?.liquidityUSD, 2)}</span>
               <span className={css({ fontWeight: 500, color: '#51935C' })}>
-                {Number.parseFloat(pairData?.liquidity24hDelta || 0).toFixed(3)}
-                %
+                {beautifyNumber(pairData?.liquidity24hDelta, 2)}%
               </span>
             </HStack>
           </PairField>
@@ -172,10 +193,7 @@ export const Pair = ({ id }: Props) => {
                 justifyContent: 'space-between',
               })}
             >
-              <span>
-                $
-                {Number.parseFloat(pairData?.tradeVolumeUSD24h || 0).toFixed(4)}
-              </span>
+              <span>${beautifyNumber(pairData?.tradeVolumeUSD24h, 2)}</span>
               <span className={css({ fontWeight: 500, color: '#51935C' })}>
                 {pairData?.tradeVolume24hDelta || 0}%
               </span>
@@ -196,32 +214,42 @@ export const Pair = ({ id }: Props) => {
                 justifyContent: 'space-between',
               })}
             >
-              <span>{pairData?.feesUSD24h || 0}</span>
+              <span>{beautifyNumber(pairData?.feesUSD24h, 2)}</span>
               <span className={css({ fontWeight: 500, color: '#51935C' })}>
-                {pairData?.fees24hDelta || 0}%
+                {beautifyNumber(pairData?.fees24hDelta, 2)}%
               </span>
             </HStack>
           </PairField>
           <PairField name="Pooled Tokens">
             <HStack gap={10}>
               <HStack>
-                <TokenLogo address={token0Address} chainId={chainId} />
+                <TokenLogo
+                  address={token0Address}
+                  chainId={chainId}
+                  overridePic={override0Pic}
+                />
                 <span>
-                  {parseFloat(
-                    formatUnits(pairData?.token0.totalSupply, 18) || '0',
-                  ).toFixed(6)}{' '}
+                  {beautifyNumber(
+                    formatUnits(pairData?.token0.totalSupply, 18),
+                    4,
+                  )}{' '}
                   {token0Symbol}
                 </span>
               </HStack>
               <HStack>
-                <TokenLogo address={token1Address} chainId={chainId} />
+                <TokenLogo
+                  address={token1Address}
+                  chainId={chainId}
+                  overridePic={override1Pic}
+                />
                 <span>
-                  {parseFloat(
+                  {beautifyNumber(
                     formatUnits(
                       pairData?.token1.totalSupply,
                       pairData?.token1.decimals,
-                    ) || '0',
-                  ).toFixed(6)}{' '}
+                    ),
+                    4,
+                  )}{' '}
                   {token1Symbol}
                 </span>
               </HStack>

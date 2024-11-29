@@ -1,6 +1,7 @@
 import { useToken } from '@/entities';
 import { TokenLogo } from '@/features';
 import type { PairsQuery } from '@/features/liquidity/api/gql/graphql';
+import { beautifyNumber } from '@/shared';
 import Link from 'next/link';
 import type { Address } from 'viem';
 import { useChainId } from 'wagmi';
@@ -83,12 +84,24 @@ export const PairItem = ({
         </div>
 
         <div className={css({ display: 'table-cell' })}>
-          {parseFloat(pair.tradeVolumeUSD24h) || '☕'}
+          {/* biome-ignore lint/complexity/noExtraBooleanCast: <explanation> */}
+          {Boolean(Number.parseFloat(pair.tradeVolumeUSD24h))
+            ? `${beautifyNumber(pair.tradeVolumeUSD24h, 2)}$`
+            : '☕'}
         </div>
         <div className={css({ display: 'table-cell' })}>
-          {parseFloat(pair.liquidityUSD) || '☕'}
+          {/* biome-ignore lint/complexity/noExtraBooleanCast: <explanation> */}
+          {Boolean(Number.parseFloat(pair.liquidityUSD))
+            ? `${beautifyNumber(pair.liquidityUSD, 2)}$`
+            : '☕'}
         </div>
-        <div className={css({ display: 'table-cell' })}>{pair.feesUSD24h}</div>
+        <div className={css({ display: 'table-cell' })}>
+          {' '}
+          {/* biome-ignore lint/complexity/noExtraBooleanCast: <explanation> */}
+          {Boolean(Number.parseFloat(pair.fees24h))
+            ? `${beautifyNumber(pair.fees24h, 2)}$`
+            : '☕'}
+        </div>
       </a>
     </Link>
   );

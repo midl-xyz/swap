@@ -16,15 +16,6 @@ export const tokenList: Token[] = [
       'https://assets-cdn.trustwallet.com/blockchains/ethereum/assets/0xfc82bb4ba86045Af6F327323a46E80412b91b27d/logo.png',
   },
   {
-    symbol: 'WPROM',
-    name: 'WProm',
-    address: '0x04A21a38D5E275d6023B27504beB3095dC43B0C0',
-    chainId: promMainnet.id,
-    decimals: 18,
-    logoURI:
-      'https://assets-cdn.trustwallet.com/blockchains/ethereum/assets/0xfc82bb4ba86045Af6F327323a46E80412b91b27d/logo.png',
-  },
-  {
     symbol: 'USDT',
     name: 'USDT',
     address: '0x7e942605B5028E3B751dBB5Ef8afC5CF85a5A7eD',
@@ -59,5 +50,14 @@ export const tokenList: Token[] = [
     decimals: 18,
     logoURI:
       'https://raw.githubusercontent.com/trustwallet/assets/77ef0d99eaf03aa766d64f7bd02eeb41c3b1604d/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
+  },
+  {
+    symbol: 'WPROM',
+    name: 'WProm',
+    address: '0x04A21a38D5E275d6023B27504beB3095dC43B0C0',
+    chainId: promMainnet.id,
+    decimals: 18,
+    logoURI:
+      'https://assets-cdn.trustwallet.com/blockchains/ethereum/assets/0xfc82bb4ba86045Af6F327323a46E80412b91b27d/logo.png',
   },
 ];
