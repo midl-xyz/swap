@@ -229,10 +229,7 @@ export const Pair = ({ id }: Props) => {
                   overridePic={override0Pic}
                 />
                 <span>
-                  {beautifyNumber(
-                    formatUnits(pairData?.token0.totalSupply, 18),
-                    4,
-                  )}{' '}
+                  {beautifyNumber(formatUnits(pairData?.reserve0, 18), 4)}{' '}
                   {token0Symbol}
                 </span>
               </HStack>
@@ -244,10 +241,7 @@ export const Pair = ({ id }: Props) => {
                 />
                 <span>
                   {beautifyNumber(
-                    formatUnits(
-                      pairData?.token1.totalSupply,
-                      pairData?.token1.decimals,
-                    ),
+                    formatUnits(pairData?.reserve1, pairData?.token1.decimals),
                     4,
                   )}{' '}
                   {token1Symbol}
