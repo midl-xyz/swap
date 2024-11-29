@@ -138,7 +138,6 @@ export const SwapForm = () => {
 
   const { address } = useAccount();
   const balance = useBalance({ address });
-  console.log('Address: ', address, balance.data?.value);
 
   const {
     data: tokenAllowance,

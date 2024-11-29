@@ -53,8 +53,6 @@ export const Liquidity = () => {
     },
   );
 
-  console.log('LIST: ', positionList);
-
   return (
     <div>
       {!positionList || positionList.length === 0 ? (

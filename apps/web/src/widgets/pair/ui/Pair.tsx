@@ -14,10 +14,8 @@ interface Props {
 }
 
 export const Pair = ({ id }: Props) => {
-  console.log(id, 'id');
   const chainId = useChainId();
   const { data, isLoading } = useGetPair(id);
-  console.log(data, 'data');
 
   if (isLoading) {
     return '...getting token';
@@ -229,8 +227,8 @@ export const Pair = ({ id }: Props) => {
                   overridePic={override0Pic}
                 />
                 <span>
-                  {beautifyNumber(formatUnits(pairData?.reserve0, 18), 4)}{' '}
-                  {token0Symbol}
+                  {beautifyNumber(pairData?.reserve0, 4)}{' '}
+                  {token0Symbol === 'WPROM' ? 'PROM' : token0Symbol}
                 </span>
               </HStack>
               <HStack>
@@ -240,11 +238,8 @@ export const Pair = ({ id }: Props) => {
                   overridePic={override1Pic}
                 />
                 <span>
-                  {beautifyNumber(
-                    formatUnits(pairData?.reserve1, pairData?.token1.decimals),
-                    4,
-                  )}{' '}
-                  {token1Symbol}
+                  {beautifyNumber(pairData?.reserve1, 4)}{' '}
+                  {token1Symbol === 'WPROM' ? 'PROM' : token1Symbol}
                 </span>
               </HStack>
             </HStack>

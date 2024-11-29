@@ -17,6 +17,9 @@ export const beautifyNumber = (
   } else if (typeof value === 'bigint') {
     typedValue = Number.parseFloat(value.toString());
   }
+  if (typedValue === 0) {
+    return '0';
+  }
 
   if (
     typedValue < 0.000001 ||

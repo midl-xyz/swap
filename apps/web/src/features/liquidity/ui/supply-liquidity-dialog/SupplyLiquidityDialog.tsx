@@ -65,8 +65,7 @@ export const SupplyLiquidityDialog = ({
       toast.error(error.message);
     }
   }, [error]);
-  console.log(isSuccess, 'isSuccess');
-  console.log(isConfirmed, 'isConfirmed');
+
   useEffect(() => {
     if (isSuccess && isConfirmed) {
       // onClose();
