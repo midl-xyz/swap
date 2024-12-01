@@ -19,7 +19,7 @@ import {
 } from '@/shared';
 import { AiOutlineSwapVertical } from '@/shared/assets';
 import { removePercentage } from '@/shared/lib/removePercentage';
-import { SlippageControl } from '@/widgets';
+import { AccountButton, SlippageControl } from '@/widgets';
 import { SwapDetails } from '@/widgets/swap-form/ui/SwapDetails';
 import { getCorrectToken } from '@/widgets/swap-form/ui/utils';
 import { useQueryClient } from '@tanstack/react-query';
@@ -306,6 +306,9 @@ export const SwapForm = () => {
     !!inputTokenAmount && !!outputTokenAmount && !!inputToken && !!outputToken;
 
   const getButtonText = () => {
+    if (!address) {
+      return <>Connect wallet</>;
+    }
     if (isSwapRatesFetching) {
       return <>Getting the best rate...</>;
     }
@@ -411,22 +414,26 @@ export const SwapForm = () => {
           />
         </div>
         <SlippageControl />
+        {!address ? (
+          <AccountButton />
+        ) : (
+          <Button
+            type="submit"
+            disabled={
+              isSwapRatesFetching ||
+              isConfirming ||
+              Boolean(swapRatesError) ||
+              isApproving ||
+              isPending ||
+              isSwapping ||
+              !isFormFilled ||
+              !isBalanceBigEnough
+            }
+          >
+            {getButtonText()}
+          </Button>
+        )}
 
-        <Button
-          type="submit"
-          disabled={
-            isSwapRatesFetching ||
-            isConfirming ||
-            Boolean(swapRatesError) ||
-            isApproving ||
-            isPending ||
-            isSwapping ||
-            !isFormFilled ||
-            !isBalanceBigEnough
-          }
-        >
-          {getButtonText()}
-        </Button>
         {inputToken && outputToken && inputTokenAmount && outputTokenAmount ? (
           <SwapDetails
             amountOutMin={Number.parseFloat(
