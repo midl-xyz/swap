@@ -37,7 +37,11 @@ export const AccountButton = () => (
           {(() => {
             if (!connected) {
               return (
-                <Button onClick={openConnectModal} appearance="tertiary">
+                <Button
+                  onClick={openConnectModal}
+                  appearance="tertiary"
+                  width="full"
+                >
                   Connect wallet
                 </Button>
               );
