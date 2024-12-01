@@ -411,13 +411,20 @@ export const LiquidityForm = () => {
         )}
         {isTokenANeedApprove && (
           <Button
-            onClick={() =>
+            onClick={() => {
+              console.log('APPROVING');
+              console.log(
+                'TOKEN A ADDRESS: ',
+                tokenAInfo.address,
+                UniswapV2Router02.address,
+                parsedTokenAAmount,
+              );
               approveERC20(
                 tokenAInfo.address,
                 UniswapV2Router02.address,
                 parsedTokenAAmount,
-              )
-            }
+              );
+            }}
             disabled={isPending || isConfirming || !isBalanceABigEnough}
           >
             {isBalanceABigEnough
