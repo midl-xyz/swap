@@ -33,7 +33,9 @@ export const MobileAppMenu = () => {
             <VStack width="100%" gap={5}>
               <AppMenuList onToggleModal={handleToggle} />
             </VStack>
-            <AccountButton />
+            <div onClick={() => setOpen(false)}>
+              <AccountButton />
+            </div>
           </VStack>
         </DialogContent>
       </Dialog>
