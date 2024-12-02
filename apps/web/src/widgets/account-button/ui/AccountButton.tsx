@@ -1,87 +1,55 @@
 'use client';
 
 import { Button, shortenAddress } from '@/shared';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { Address } from 'viem';
-import { vstack } from '~/styled-system/patterns';
+import { ConnectWalletDialog, AccountDialog } from '@/widgets/account';
+import { AddressPurpose } from '@midl-xyz/midl-js-core';
+import { useAccounts } from '@midl-xyz/midl-js-react';
+import { useState } from 'react';
+import { zeroAddress } from 'viem';
 
-export const AccountButton = () => (
-  <ConnectButton.Custom>
-    {({
-      account,
-      chain,
-      openAccountModal,
-      openChainModal,
-      openConnectModal,
-      authenticationStatus,
-      mounted,
-    }) => {
-      const ready = mounted && authenticationStatus !== 'loading';
-      const connected =
-        ready &&
-        account &&
-        chain &&
-        (!authenticationStatus || authenticationStatus === 'authenticated');
+export const AccountButton = () => {
+  const [isDialogOpen, setDialogOpen] = useState(false);
+  const [isAccountDialogOpen, setAccountDialogOpen] = useState(false);
+  const { accounts } = useAccounts();
 
-      return (
-        <div
-          {...(!ready && {
-            'aria-hidden': true,
-            style: {
-              opacity: 0,
-              pointerEvents: 'none',
-              userSelect: 'none',
-            },
-          })}
+  if (!accounts) {
+    return (
+      <>
+        <Button
+          onClick={() => {
+            setDialogOpen(true);
+          }}
+          appearance="tertiary"
         >
-          {(() => {
-            if (!connected) {
-              return (
-                <Button
-                  onClick={openConnectModal}
-                  appearance="tertiary"
-                  width="full"
-                >
-                  Connect wallet
-                </Button>
-              );
-            }
+          Connect wallet
+        </Button>
+        <ConnectWalletDialog
+          open={isDialogOpen}
+          onClose={() => setDialogOpen(false)}
+        />
+      </>
+    );
+  }
 
-            if (chain.unsupported) {
-              return (
-                <Button onClick={openChainModal} appearance="tertiary">
-                  Wrong Network
-                </Button>
-              );
-            }
-
-            return (
-              <div
-                className={vstack({
-                  gap: 4,
-                })}
-              >
-                <div
-                  className={vstack({
-                    gap: 4,
-                    alignItems: 'center',
-                  })}
-                >
-                  <div>
-                    <Button
-                      appearance="tertiary"
-                      aria-label="account menu"
-                      onClick={openAccountModal}
-                    >
-                      {shortenAddress(account.address as Address)}
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            );
-          })()}
-        </div>
-      );
-    }}
-  </ConnectButton.Custom>
-);
+  return (
+    <>
+      <Button
+        appearance="outline"
+        aria-label="account menu"
+        onClick={() => {
+          setAccountDialogOpen(true);
+        }}
+      >
+        {shortenAddress(
+          accounts.find((it) => it.purpose === AddressPurpose.Ordinals)
+            ?.address ?? zeroAddress,
+          8,
+        )}
+      </Button>
+      <AccountDialog
+        open={isAccountDialogOpen}
+        onClose={() => setAccountDialogOpen(false)}
+      />
+    </>
+  );
+};
