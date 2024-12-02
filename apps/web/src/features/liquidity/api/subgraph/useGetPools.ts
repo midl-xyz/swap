@@ -117,7 +117,7 @@ export const useGetPools = () => {
     queryFn: () => {
       // Sort by liq
       return graphqlClient.request(GetPools, {
-        orderBy: PairOrderByInput.LiquidityUsdAsc,
+        orderBy: PairOrderByInput.LiquidityUsdDesc,
       });
     },
   });
