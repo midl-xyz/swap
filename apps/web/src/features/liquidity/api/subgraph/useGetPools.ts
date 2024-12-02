@@ -1,6 +1,9 @@
 import { graphqlClient } from '@/features/liquidity';
 import { graphql } from '@/features/liquidity/api/gql';
-import { PairsQuery } from '@/features/liquidity/api/gql/graphql';
+import {
+  PairOrderByInput,
+  PairsQuery,
+} from '@/features/liquidity/api/gql/graphql';
 import { useQuery } from '@tanstack/react-query';
 
 const GetPools = graphql(`
@@ -112,8 +115,9 @@ export const useGetPools = () => {
     queryKey: ['GetPools'],
     refetchOnWindowFocus: false,
     queryFn: () => {
+      // Sort by liq
       return graphqlClient.request(GetPools, {
-        orderBy: 'PairOrderByInput.LiquidityUsdAsc',
+        orderBy: PairOrderByInput.LiquidityUsdAsc,
       });
     },
   });
