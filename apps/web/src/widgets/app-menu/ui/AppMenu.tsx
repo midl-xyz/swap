@@ -1,16 +1,14 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { css } from '~/styled-system/css';
+import { AppMenuLink } from '@/widgets/app-menu/ui/AppMenuLink';
 
-type AppMenuLink = {
+type AppMenuLinkParams = {
   label: string;
   href: string;
   isExact?: boolean;
 };
 
-const appMenuLinks: AppMenuLink[] = [
+const appMenuLinks: AppMenuLinkParams[] = [
   {
     label: 'Swap',
     href: '/swap',
@@ -31,33 +29,10 @@ interface Props {
 }
 
 export const AppMenuList = ({ onToggleModal }: Props) => {
-  const pathname = usePathname();
   return (
     <>
       {appMenuLinks.map((link) => (
-        <Link
-          onClick={onToggleModal}
-          href={link.href}
-          key={link.label}
-          className={css({
-            display: 'flex',
-            alignItems: 'center',
-            px: 1,
-            h: 'full',
-            color: 'neutral.800',
-            fontWeight: 'medium',
-            borderBottomWidth: 2,
-            borderColor: (
-              link.isExact
-                ? pathname === link.href
-                : pathname.startsWith(link.href)
-            )
-              ? 'neutral.800'
-              : 'transparent',
-          })}
-        >
-          {link.label}
-        </Link>
+        <AppMenuLink link={link} key={link.label} />
       ))}
     </>
   );

@@ -29,24 +29,23 @@ const buttonStyle = cva({
   variants: {
     appearance: {
       primary: {
-        backgroundColor: '#FE9780',
-        color: 'neutral.800',
+        backgroundColor: '#5107FFD6',
+        color: 'white',
         _hover: {
-          backgroundColor: '#FFBAA4',
+          backgroundColor: '#5107FF',
+        },
+        _disabled: {
+          backgroundColor: '#5107FF3D',
         },
       },
       tertiary: {
-        backgroundColor: 'neutral.800',
+        backgroundColor: '#FF4C00D6',
         color: 'white',
         _hover: {
-          backgroundColor: 'neutral.950',
+          backgroundColor: '#FF4C00',
         },
-      },
-      link: {
-        backgroundColor: 'transparent',
-        color: '#8A8A8A',
-        _hover: {
-          opacity: 0.8,
+        _disabled: {
+          backgroundColor: '#FF4C003D',
         },
       },
       secondary: {
@@ -81,7 +80,7 @@ const buttonStyle = cva({
         h: 11,
         px: 4,
         py: 2,
-        borderRadius: 'xl',
+        borderRadius: 0,
         fontSize: 'md',
       },
       large: {

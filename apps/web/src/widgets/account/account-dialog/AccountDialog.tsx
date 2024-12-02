@@ -22,7 +22,7 @@ type AccountDialogProps = DialogProps & {
 
 export const AccountDialog = ({ onClose, ...rest }: AccountDialogProps) => {
   const { accounts } = useAccounts();
-  const { disconnect, isPending } = useDisconnect({
+  const { disconnect } = useDisconnect({
     mutation: {
       onSuccess: () => {
         onClose();
