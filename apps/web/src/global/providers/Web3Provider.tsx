@@ -1,11 +1,12 @@
 'use client';
 
-import { cookieToInitialState, WagmiProvider } from 'wagmi';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit';
-import { wagmiConfig } from '@/global';
 import { LastUsedTokensProvider } from '@/features';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { midlConfig, wagmiConfig } from '@/global';
+import { WagmiMidlProvider } from '@midl-xyz/midl-js-executor';
+import { MidlProvider } from '@midl-xyz/midl-js-react';
+import { lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { cookieToInitialState, WagmiProvider } from 'wagmi';
 
 export const queryClient = new QueryClient({});
 
@@ -18,20 +19,22 @@ export const Web3Provider = ({
       config={wagmiConfig}
       initialState={cookieToInitialState(wagmiConfig, cookie)}
     >
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider
-          theme={lightTheme({
-            accentColor: '#212122',
-            accentColorForeground: 'white',
-            borderRadius: 'medium',
-            fontStack: 'system',
-          })}
-        >
-          <ReactQueryDevtools initialIsOpen={false} />
+      <MidlProvider config={midlConfig}>
+        <QueryClientProvider client={queryClient}>
+          <RainbowKitProvider
+            theme={lightTheme({
+              accentColor: '#212122',
+              accentColorForeground: 'white',
+              borderRadius: 'medium',
+              fontStack: 'system',
+            })}
+          >
+            <WagmiMidlProvider />
 
-          <LastUsedTokensProvider>{children}</LastUsedTokensProvider>
-        </RainbowKitProvider>
-      </QueryClientProvider>
+            <LastUsedTokensProvider>{children}</LastUsedTokensProvider>
+          </RainbowKitProvider>
+        </QueryClientProvider>
+      </MidlProvider>
     </WagmiProvider>
   );
 };

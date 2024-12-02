@@ -22,8 +22,6 @@ import {
 } from '@/widgets';
 import { renderErrorMessage } from '@/widgets/error-message';
 import { Footer } from '@/widgets/footer/ui';
-import { BugReportBar } from '@/widgets/header/ui/BugReportBar';
-import '@rainbow-me/rainbowkit/styles.css';
 import Link from 'next/link';
 import { css } from '~/styled-system/css';
 import { HStack, Stack } from '~/styled-system/jsx';
@@ -68,12 +66,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AppLayout({
+export default async function AppLayout({
   children,
 }: Readonly<{
   children: ReactNode;
 }>) {
-  const cookie = headers().get('cookie') || '';
+  const cookie = (await headers()).get('cookie') || '';
 
   return (
     <Web3Provider cookie={cookie}>
@@ -112,7 +110,6 @@ export default function AppLayout({
             </HStack>
           }
         />
-        <BugReportBar />
         <Toaster position="bottom-right" />
         <ErrorBoundary fallback={renderErrorMessage}>
           <div

@@ -2,6 +2,7 @@
   "name": "@v60swap/web",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -17,6 +18,9 @@
     "@maskito/core": "^2.2.0",
     "@maskito/kit": "^2.2.0",
     "@maskito/react": "^2.2.0",
+    "@midl-xyz/midl-js-core": "^0.0.29",
+    "@midl-xyz/midl-js-executor": "^0.0.39",
+    "@midl-xyz/midl-js-react": "^0.0.35",
     "@radix-ui/react-accordion": "^1.2.1",
     "@radix-ui/react-collapsible": "^1.0.3",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -34,7 +38,7 @@
     "jotai": "^2.6.4",
     "lucide-react": "^0.336.0",
     "millify": "^6.1.0",
-    "next": "14.1.0",
+    "next": "15.0.3",
     "pino-pretty": "^10.3.1",
     "react": "^18",
     "react-dom": "^18",
@@ -43,14 +47,14 @@
     "react-toastify": "^10.0.6",
     "swiper": "^11.1.14",
     "use-debounce": "^10.0.0",
-    "viem": "~2.21.9",
+    "viem": "npm:@midl-xyz/midl-viem@2.21.35",
     "wagmi": "^2.12.12",
     "yup": "^1.4.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.2",
     "@graphql-codegen/typescript-react-query": "^6.1.0",
-    "@pandacss/dev": "^0.29.1",
+    "@pandacss/dev": "^0.48.0",
     "@tanstack/react-query-devtools": "^5.29.2",
     "@testing-library/react": "^16.0.0",
     "@types/node": "^20",
@@ -70,7 +74,6 @@
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
-      "eslint --fix",
       "prettier --write"
     ]
   },

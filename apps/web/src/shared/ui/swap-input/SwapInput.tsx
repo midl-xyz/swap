@@ -1,35 +1,14 @@
 import { useToken } from '@/entities';
 import { TokenButton, useTokenBalance } from '@/features';
 import { Button, InputGroup, NumberInput } from '@/shared/ui';
-import { ChangeEvent, ChangeEventHandler, InputHTMLAttributes } from 'react';
+import millify from 'millify';
+import { ChangeEventHandler, InputHTMLAttributes } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useDebouncedCallback } from 'use-debounce';
 import { formatUnits } from 'viem';
 import { useChainId } from 'wagmi';
-import { css } from '~/styled-system/css';
-import { styled } from '~/styled-system/jsx';
+import { css, cx } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
-import millify from 'millify';
-
-export const StyledNumberInput = styled(
-  NumberInput,
-  {
-    base: {
-      textStyle: 'h4',
-      flexGrow: 1,
-      pl: 1,
-      caretColor: 'orange.500',
-      _focus: {
-        boxShadow: 'none',
-      },
-    },
-  },
-  {
-    defaultProps: {
-      autoComplete: 'off',
-    },
-  },
-);
 
 type SwapInputProps = {
   amountName: string;
@@ -106,9 +85,22 @@ export const SwapInput = ({
             name={amountName}
             render={({ field }) => (
               <>
-                <StyledNumberInput
+                <NumberInput
                   {...rest}
                   {...field}
+                  autoComplete="off"
+                  className={cx(
+                    rest.className,
+                    css({
+                      textStyle: 'h4',
+                      flexGrow: 1,
+                      pl: 1,
+                      caretColor: 'orange.500',
+                      _focus: {
+                        boxShadow: 'none',
+                      },
+                    }),
+                  )}
                   value={field.value ?? ''}
                   onChange={(e) => {
                     field.onChange(e);
