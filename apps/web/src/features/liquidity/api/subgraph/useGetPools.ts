@@ -113,7 +113,7 @@ export const useGetPools = () => {
     refetchOnWindowFocus: false,
     queryFn: () => {
       return graphqlClient.request(GetPools, {
-        orderBy: 'liquidityUSD_DESC',
+        orderBy: 'PairOrderByInput.LiquidityUsdAsc',
       });
     },
   });
