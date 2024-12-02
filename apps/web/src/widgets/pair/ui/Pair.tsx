@@ -193,7 +193,7 @@ export const Pair = ({ id }: Props) => {
             >
               <span>${beautifyNumber(pairData?.tradeVolumeUSD24h, 2)}</span>
               <span className={css({ fontWeight: 500, color: '#51935C' })}>
-                {pairData?.tradeVolume24hDelta || 0}%
+                {beautifyNumber(pairData?.tradeVolume24hDelta, 2)}%
               </span>
             </HStack>
           </PairField>
