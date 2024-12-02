@@ -112,7 +112,9 @@ export const useGetPools = () => {
     queryKey: ['GetPools'],
     refetchOnWindowFocus: false,
     queryFn: () => {
-      return graphqlClient.request(GetPools, {});
+      return graphqlClient.request(GetPools, {
+        orderBy: 'liquidityUSD_DESC',
+      });
     },
   });
 };
