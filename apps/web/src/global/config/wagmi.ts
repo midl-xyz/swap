@@ -1,6 +1,7 @@
 'use client';
 
-import { promMainnet } from '@/global/customChainsConfig';
+import { midlRegtest } from '@midl-xyz/midl-js-executor';
+import { Chain } from 'viem';
 import { createConfig, createStorage, http } from 'wagmi';
 
 declare module 'wagmi' {
@@ -11,13 +12,13 @@ declare module 'wagmi' {
 
 export const wagmiConfig = createConfig({
   connectors: [],
-  chains: [promMainnet],
+  chains: [midlRegtest as Chain],
   transports: {
-    [promMainnet.id]: http(promMainnet.rpcUrls.default.http[0]),
+    [midlRegtest.id]: http(midlRegtest.rpcUrls.default.http[0]),
   },
   storage: createStorage({
     storage: typeof localStorage === 'undefined' ? undefined : localStorage,
-    key: 'v60-1.0.2',
+    key: 'midl-swap-v0.0.1',
   }),
   ssr: true,
 });

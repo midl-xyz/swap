@@ -1,5 +1,5 @@
 import { ChainId } from '@/global';
-import { promMainnet } from '@/global/customChainsConfig';
+import { midlRegtest } from '@midl-xyz/midl-js-executor';
 import { atom } from 'jotai';
 import { Address } from 'viem';
 
@@ -15,7 +15,7 @@ export const removeLiquidityDialogAtom = atom<{
   open: false,
   lpToken: {
     address: '' as Address,
-    chainId: promMainnet.id,
+    chainId: midlRegtest.id,
     tokenA: '' as Address,
     tokenB: '' as Address,
   },

@@ -1,5 +1,5 @@
 import { WETHByChain } from '@/global';
-import { promMainnet } from '@/global/customChainsConfig';
+import { midlRegtest } from '@midl-xyz/midl-js-executor';
 import { Address, zeroAddress } from 'viem';
 
 export const calculatePriceImpact = ({
@@ -36,8 +36,8 @@ export const getCorrectToken = ({
 
 export const getTokenSymbol = (address: Address) => {
   const symbols = {
-    [zeroAddress as Address]: 'PROM',
-    [WETHByChain[promMainnet.id]]: 'PROM',
+    [zeroAddress as Address]: 'BTC',
+    [WETHByChain[midlRegtest.id]]: 'BTC',
   };
 
   return symbols[address];
