@@ -1,7 +1,6 @@
-import { promTestnet, promMainnet } from '@/global/customChainsConfig';
+import { midlRegtest } from '@midl-xyz/midl-js-executor';
 import { Address } from 'viem';
-import { sepolia } from 'viem/chains';
-import { Config } from 'wagmi';
+import type { Config } from 'wagmi';
 
 type UV2Library =
   typeof import('@v60swap/periphery/deployments/1.0.3/sepolia/UV2Library.json');
@@ -20,23 +19,9 @@ type Deployments = Record<
 >;
 
 export const deployments: Deployments = {
-  [promMainnet.id]: {
-    UniswapV2Router02: require('@v60swap/periphery/deployments/2.0.0/promMainnet/UniswapV2Router02.json'),
-
-    UniswapV2Factory: require('@v60swap/core/deployments/2.0.0/promMainnet/UniswapV2Factory.json'),
-
-    UV2Library: require('@v60swap/periphery/deployments/2.0.0/promMainnet/UV2Library.json'),
-  },
-  [promTestnet.id]: {
-    UniswapV2Router02: require('@v60swap/periphery/deployments/1.0.3/testnetErigon/UniswapV2Router02.json'),
-
-    UniswapV2Factory: require('@v60swap/core/deployments/1.0.3/testnetErigon/UniswapV2Factory.json'),
-
-    UV2Library: require('@v60swap/periphery/deployments/1.0.3/testnetErigon/UV2Library.json'),
-  },
-  [sepolia.id]: {
-    UniswapV2Factory: require('@v60swap/core/deployments/1.0.3/sepolia/UniswapV2Factory.json'),
-    UniswapV2Router02: require('@v60swap/periphery/deployments/1.0.3/sepolia/UniswapV2Router02.json'),
-    UV2Library: require('@v60swap/periphery/deployments/1.0.3/sepolia/UV2Library.json'),
+  [midlRegtest.id]: {
+    UniswapV2Router02: require('@v60swap/periphery/deployments/1.0.3/midl/UniswapV2Router02.json'),
+    UniswapV2Factory: require('@v60swap/core/deployments/1.0.4/midl/UniswapV2Factory.json'),
+    UV2Library: require('@v60swap/periphery/deployments/1.0.3/midl/UV2Library.json'),
   },
 };

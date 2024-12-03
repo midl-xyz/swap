@@ -2,14 +2,12 @@
 
 import { Button } from '@/shared';
 import { AppMenuList, Header, Logo, Toast } from '@/widgets';
-import { MobileAppMenu } from '@/widgets/app-menu/ui/MobileAppMenu';
 import { Footer } from '@/widgets/footer/ui';
 import { Landing } from '@/widgets/landing/ui/Landing';
 import Link from 'next/link';
-import React from 'react';
 import { Toaster } from 'react-hot-toast';
 import { css } from '~/styled-system/css';
-import { HStack, Stack } from '~/styled-system/jsx';
+import { HStack } from '~/styled-system/jsx';
 import { hstack } from '~/styled-system/patterns';
 
 export default function Home() {
