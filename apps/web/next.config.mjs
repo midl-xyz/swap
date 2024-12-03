@@ -8,6 +8,7 @@ const config = {
     config.experiments = {
       ...(config.experiments || {}),
       asyncWebAssembly: true,
+      topLevelAwait: true,
     };
 
     return config;

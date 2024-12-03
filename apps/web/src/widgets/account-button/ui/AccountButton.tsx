@@ -4,10 +4,14 @@ import { Button, shortenAddress } from '@/shared';
 import { ConnectWalletDialog, AccountDialog } from '@/widgets/account';
 import { AddressPurpose } from '@midl-xyz/midl-js-core';
 import { useAccounts } from '@midl-xyz/midl-js-react';
-import { useState } from 'react';
+import { ComponentProps, ReactNode, useState } from 'react';
 import { zeroAddress } from 'viem';
 
-export const AccountButton = () => {
+type AccountButtonProps = {
+  children?: ReactNode;
+} & Omit<ComponentProps<typeof Button>, 'children'>;
+
+export const AccountButton = ({ children, ...rest }: AccountButtonProps) => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isAccountDialogOpen, setAccountDialogOpen] = useState(false);
   const { accounts } = useAccounts();
@@ -20,6 +24,7 @@ export const AccountButton = () => {
             setDialogOpen(true);
           }}
           appearance="tertiary"
+          {...rest}
         >
           Connect wallet
         </Button>
@@ -32,24 +37,26 @@ export const AccountButton = () => {
   }
 
   return (
-    <>
-      <Button
-        appearance="outline"
-        aria-label="account menu"
-        onClick={() => {
-          setAccountDialogOpen(true);
-        }}
-      >
-        {shortenAddress(
-          accounts.find((it) => it.purpose === AddressPurpose.Ordinals)
-            ?.address ?? zeroAddress,
-          8,
-        )}
-      </Button>
-      <AccountDialog
-        open={isAccountDialogOpen}
-        onClose={() => setAccountDialogOpen(false)}
-      />
-    </>
+    children ?? (
+      <>
+        <Button
+          appearance="outline"
+          aria-label="account menu"
+          onClick={() => {
+            setAccountDialogOpen(true);
+          }}
+        >
+          {shortenAddress(
+            accounts.find((it) => it.purpose === AddressPurpose.Ordinals)
+              ?.address ?? zeroAddress,
+            8,
+          )}
+        </Button>
+        <AccountDialog
+          open={isAccountDialogOpen}
+          onClose={() => setAccountDialogOpen(false)}
+        />
+      </>
+    )
   );
 };
