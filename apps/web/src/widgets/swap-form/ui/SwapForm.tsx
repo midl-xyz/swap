@@ -419,6 +419,7 @@ export const SwapForm = () => {
         ) : (
           <Button
             type="submit"
+            appearance="primary"
             disabled={
               isSwapRatesFetching ||
               isConfirming ||

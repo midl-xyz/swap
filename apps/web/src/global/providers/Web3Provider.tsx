@@ -29,7 +29,7 @@ export const Web3Provider = ({
               fontStack: 'system',
             })}
           >
-            <WagmiMidlProvider />
+            {/* <WagmiMidlProvider /> */}
 
             <LastUsedTokensProvider>{children}</LastUsedTokensProvider>
           </RainbowKitProvider>

@@ -15,6 +15,7 @@ import { useCopyToClipboard } from 'usehooks-ts';
 import { css } from '~/styled-system/css';
 import { HStack, VStack } from '~/styled-system/jsx';
 import { vstack } from '~/styled-system/patterns';
+import { useDisconnect as useWagmiDisconnect } from 'wagmi';
 
 type AccountDialogProps = DialogProps & {
   onClose: () => void;
@@ -22,9 +23,11 @@ type AccountDialogProps = DialogProps & {
 
 export const AccountDialog = ({ onClose, ...rest }: AccountDialogProps) => {
   const { accounts } = useAccounts();
+  const { disconnect: wagmiDisconnect } = useWagmiDisconnect();
   const { disconnect } = useDisconnect({
     mutation: {
       onSuccess: () => {
+        wagmiDisconnect();
         onClose();
       },
     },
