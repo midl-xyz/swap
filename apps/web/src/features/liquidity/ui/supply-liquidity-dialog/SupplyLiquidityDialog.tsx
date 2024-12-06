@@ -1,13 +1,29 @@
 /* eslint-disable @next/next/no-img-element */
 import { useToken } from '@/entities';
 import { TokenLogo, TokenValue, useSlippage } from '@/features';
-import { useAddLiquidity, usePoolShare } from '@/features/liquidity';
+import { IntentionSigner } from '@/features/btc/ui/IntentionSigner';
+import { useAddLiquidityMidl, usePoolShare } from '@/features/liquidity';
 import { Button, Dialog, DialogContent, DialogOverlay } from '@/shared';
+import { useEVMAddress } from '@midl-xyz/midl-js-executor';
 import { DialogProps } from '@radix-ui/react-dialog';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { Address, formatUnits } from 'viem';
-import { useAccount } from 'wagmi';
+import {
+  Address,
+  encodeAbiParameters,
+  formatUnits,
+  keccak256,
+  parseUnits,
+  toHex,
+  zeroAddress,
+} from 'viem';
+import {
+  useAccount,
+  useClient,
+  useConnect,
+  useConnectorClient,
+  useWalletClient,
+} from 'wagmi';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
 
@@ -44,18 +60,20 @@ export const SupplyLiquidityDialog = ({
     },
   });
 
-  const { address } = useAccount();
+  const address = useEVMAddress();
 
   const [slippage] = useSlippage();
 
-  const {
-    addLiquidity,
-    isConfirming,
-    isPending,
-    error,
-    isConfirmed,
-    isSuccess,
-  } = useAddLiquidity();
+  const { addLiquidity, isPending, error, isSuccess } = useAddLiquidityMidl({
+    tokenA: {
+      address: tokenA,
+      amount: tokenAAmount,
+    },
+    tokenB: {
+      address: tokenB,
+      amount: tokenBAmount,
+    },
+  });
 
   const tokenAInfo = useToken(tokenA, chainId);
   const tokenBInfo = useToken(tokenB, chainId);
@@ -65,14 +83,6 @@ export const SupplyLiquidityDialog = ({
       toast.error(error.message);
     }
   }, [error]);
-
-  useEffect(() => {
-    if (isSuccess && isConfirmed) {
-      // onClose();
-      toast.success('Supply successful');
-      onSuccess();
-    }
-  }, [isSuccess, isConfirmed]);
 
   let priceAtoB = 0;
   let priceBtoA = 0;
@@ -91,6 +101,53 @@ export const SupplyLiquidityDialog = ({
     priceBtoA = b / a;
   } catch {}
 
+  const evmAddress = useEVMAddress();
+
+  const slot = keccak256(
+    encodeAbiParameters(
+      [
+        {
+          type: 'address',
+        },
+        { type: 'uint256' },
+      ],
+      [evmAddress, 0n],
+    ),
+  );
+
+  const stateOverride = [
+    {
+      address: evmAddress,
+      balance: parseUnits('10000000', 8), // TODO: very large balance for testing
+    },
+    ...(tokenA !== zeroAddress
+      ? [
+          {
+            address: tokenA,
+            stateDiff: [
+              {
+                slot: slot,
+                value: toHex(tokenAAmount, { size: 32 }),
+              },
+            ],
+          },
+        ]
+      : []),
+    ...(tokenB !== zeroAddress
+      ? [
+          {
+            address: tokenB,
+            stateDiff: [
+              {
+                slot: slot,
+                value: toHex(tokenBAmount, { size: 32 }),
+              },
+            ],
+          },
+        ]
+      : []),
+  ];
+
   return (
     <Dialog {...rest}>
       <DialogOverlay onClick={onClose} />
@@ -101,204 +158,227 @@ export const SupplyLiquidityDialog = ({
           maxWidth: 450,
         })}
       >
-        <div className={vstack({ gap: 4, alignItems: 'stretch' })}>
-          <div
-            className={vstack({
-              gap: 8,
-            })}
-          >
-            <h1
+        {isSuccess && (
+          <div className={vstack({ gap: 4, alignItems: 'center' })}>
+            <h3
               className={css({
-                textStyle: 'h4',
+                textStyle: 'h3',
               })}
             >
-              {isCreatePool ? "You're creating a new pool" : 'Confirm Supply'}
-            </h1>
+              Sign intentions to add liquidity
+            </h3>
+
+            <IntentionSigner stateOverride={stateOverride} onClose={onClose} />
           </div>
-
-          <div
-            className={hstack({
-              justifyContent: 'space-between',
-              gap: 4,
-              borderRadius: 'md',
-              borderColor: 'neutral.200',
-              borderWidth: 1,
-              borderStyle: 'solid',
-              px: 3,
-              py: 2,
-            })}
-          >
-            {isCreatePool ? (
-              <>
-                <span
-                  className={css({
-                    textStyle: 'h6',
-                  })}
-                >
-                  {tokenAInfo.symbol}/{tokenBInfo.symbol}
-                </span>
-
-                <div
-                  className={css({
-                    position: 'relative',
-                    width: 8,
-                    isolation: 'isolate',
-                  })}
-                >
-                  <TokenLogo
-                    address={tokenA}
-                    size={7}
-                    chainId={chainId}
-                    className={css({
-                      position: 'absolute',
-                      right: 5,
-                      zIndex: 1,
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                    })}
-                  />
-
-                  <TokenLogo
-                    address={tokenB}
-                    chainId={chainId}
-                    size={7}
-                    className={css({
-                      position: 'absolute',
-                      right: 0,
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                    })}
-                  />
-                </div>
-              </>
-            ) : (
-              <div
-                className={vstack({
-                  alignItems: 'stretch',
+        )}
+        {!isSuccess && (
+          <div className={vstack({ gap: 4, alignItems: 'stretch' })}>
+            <div
+              className={vstack({
+                gap: 8,
+              })}
+            >
+              <h1
+                className={css({
+                  textStyle: 'h4',
                 })}
               >
-                <span
-                  className={css({
-                    textStyle: 'caption',
-                    color: 'neutral.400',
-                  })}
-                >
-                  You will receive:
-                </span>
+                {isCreatePool ? "You're creating a new pool" : 'Confirm Supply'}
+              </h1>
+            </div>
 
-                <TokenValue
-                  hideLogo
-                  value={estimatedLPTokenBalance}
-                  address={poolToken.data as Address}
-                  chainId={chainId}
-                  hideSymbol
-                  className={css({
-                    textStyle: 'h5',
-                  })}
-                />
+            <div
+              className={hstack({
+                justifyContent: 'space-between',
+                gap: 4,
+                borderRadius: 'md',
+                borderColor: 'neutral.200',
+                borderWidth: 1,
+                borderStyle: 'solid',
+                px: 3,
+                py: 2,
+              })}
+            >
+              {isCreatePool ? (
+                <>
+                  <span
+                    className={css({
+                      textStyle: 'h6',
+                    })}
+                  >
+                    {tokenAInfo.symbol}/{tokenBInfo.symbol}
+                  </span>
 
-                <span className={css({ textStyle: 'caption' })}>
-                  {tokenAInfo.symbol}/{tokenBInfo.symbol} Pool Tokens
-                </span>
-              </div>
-            )}
-          </div>
+                  <div
+                    className={css({
+                      position: 'relative',
+                      width: 8,
+                      isolation: 'isolate',
+                    })}
+                  >
+                    <TokenLogo
+                      address={tokenA}
+                      size={7}
+                      chainId={chainId}
+                      className={css({
+                        position: 'absolute',
+                        right: 5,
+                        zIndex: 1,
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                      })}
+                    />
 
-          <div
-            className={vstack({
-              gap: 4,
-              alignItems: 'stretch',
-              px: 1,
-            })}
-          >
-            <div className={vstack({ gap: 4, alignItems: 'stretch' })}>
-              <div
-                className={hstack({ gap: 4, justifyContent: 'space-between' })}
-              >
-                <span>{tokenAInfo.symbol} Deposited</span>
-                <TokenValue
-                  address={tokenA}
-                  value={tokenAAmount}
-                  chainId={chainId}
-                  className={css({
-                    textStyle: 'h6',
-                  })}
-                />
-              </div>
-              <div
-                className={hstack({ gap: 4, justifyContent: 'space-between' })}
-              >
-                <span>{tokenBInfo.symbol} Deposited</span>
-                <TokenValue
-                  address={tokenB}
-                  value={tokenBAmount}
-                  chainId={chainId}
-                  className={css({
-                    textStyle: 'h6',
-                  })}
-                />
-              </div>
-
-              <div
-                className={hstack({
-                  gap: 4,
-                  justifyContent: 'space-between',
-                  alignItems: 'start',
-                })}
-              >
-                <span>Rates</span>
+                    <TokenLogo
+                      address={tokenB}
+                      chainId={chainId}
+                      size={7}
+                      className={css({
+                        position: 'absolute',
+                        right: 0,
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                      })}
+                    />
+                  </div>
+                </>
+              ) : (
                 <div
                   className={vstack({
-                    gap: 1,
-                    textAlign: 'right',
-                    alignItems: 'end',
+                    alignItems: 'stretch',
                   })}
                 >
-                  <span>
-                    1 {tokenAInfo.symbol} = {parseFloat(priceBtoA.toFixed(4))}{' '}
-                    {tokenBInfo.symbol}
+                  <span
+                    className={css({
+                      textStyle: 'caption',
+                      color: 'neutral.400',
+                    })}
+                  >
+                    You will receive:
                   </span>
-                  <span>
-                    1 {tokenBInfo.symbol} = {parseFloat(priceAtoB.toFixed(4))}{' '}
-                    {tokenAInfo.symbol}
+
+                  <TokenValue
+                    hideLogo
+                    value={estimatedLPTokenBalance}
+                    address={poolToken.data as Address}
+                    chainId={chainId}
+                    hideSymbol
+                    className={css({
+                      textStyle: 'h5',
+                    })}
+                  />
+
+                  <span className={css({ textStyle: 'caption' })}>
+                    {tokenAInfo.symbol}/{tokenBInfo.symbol} Pool Tokens
                   </span>
                 </div>
-              </div>
-              <div
-                className={hstack({ gap: 4, justifyContent: 'space-between' })}
-              >
-                <span>Pool Share</span>
-                <span>{parseFloat((poolShare * 100).toFixed(2))}%</span>
+              )}
+            </div>
+
+            <div
+              className={vstack({
+                gap: 4,
+                alignItems: 'stretch',
+                px: 1,
+              })}
+            >
+              <div className={vstack({ gap: 4, alignItems: 'stretch' })}>
+                <div
+                  className={hstack({
+                    gap: 4,
+                    justifyContent: 'space-between',
+                  })}
+                >
+                  <span>{tokenAInfo.symbol} Deposited</span>
+                  <TokenValue
+                    address={tokenA}
+                    value={tokenAAmount}
+                    chainId={chainId}
+                    className={css({
+                      textStyle: 'h6',
+                    })}
+                  />
+                </div>
+                <div
+                  className={hstack({
+                    gap: 4,
+                    justifyContent: 'space-between',
+                  })}
+                >
+                  <span>{tokenBInfo.symbol} Deposited</span>
+                  <TokenValue
+                    address={tokenB}
+                    value={tokenBAmount}
+                    chainId={chainId}
+                    className={css({
+                      textStyle: 'h6',
+                    })}
+                  />
+                </div>
+
+                <div
+                  className={hstack({
+                    gap: 4,
+                    justifyContent: 'space-between',
+                    alignItems: 'start',
+                  })}
+                >
+                  <span>Rates</span>
+                  <div
+                    className={vstack({
+                      gap: 1,
+                      textAlign: 'right',
+                      alignItems: 'end',
+                    })}
+                  >
+                    <span>
+                      1 {tokenAInfo.symbol} = {parseFloat(priceBtoA.toFixed(4))}{' '}
+                      {tokenBInfo.symbol}
+                    </span>
+                    <span>
+                      1 {tokenBInfo.symbol} = {parseFloat(priceAtoB.toFixed(4))}{' '}
+                      {tokenAInfo.symbol}
+                    </span>
+                  </div>
+                </div>
+                <div
+                  className={hstack({
+                    gap: 4,
+                    justifyContent: 'space-between',
+                  })}
+                >
+                  <span>Pool Share</span>
+                  <span>{parseFloat((poolShare * 100).toFixed(2))}%</span>
+                </div>
               </div>
             </div>
-          </div>
-          <Button
-            type="submit"
-            disabled={isPending || isConfirming}
-            onClick={() => {
-              addLiquidity({
-                tokenA,
-                tokenB,
-                amountADesired: tokenAAmount,
-                amountBDesired: tokenBAmount,
-                amountAMin:
-                  (tokenAAmount * BigInt(1000 - slippage * 1000)) /
-                  BigInt(1000),
-                amountBMin:
-                  (tokenBAmount * BigInt(1000 - slippage * 1000)) /
-                  BigInt(1000),
-                to: address as Address,
-                deadline: BigInt(
-                  parseInt(
-                    ((new Date().getTime() + 1000 * 60 * 15) / 1000).toString(),
+            <Button
+              type="submit"
+              disabled={isPending}
+              onClick={() => {
+                addLiquidity({
+                  amountAMin:
+                    (tokenAAmount * BigInt(1000 - slippage * 1000)) /
+                    BigInt(1000),
+                  amountBMin:
+                    (tokenBAmount * BigInt(1000 - slippage * 1000)) /
+                    BigInt(1000),
+                  to: address as Address,
+                  deadline: BigInt(
+                    parseInt(
+                      (
+                        (new Date().getTime() + 1000 * 60 * 15) /
+                        1000
+                      ).toString(),
+                    ),
                   ),
-                ),
-              });
-            }}
-          >
-            {isCreatePool ? 'Create Pool and Supply' : 'Supply'}
-          </Button>
-        </div>
+                });
+              }}
+            >
+              {isCreatePool ? 'Create Pool and Supply' : 'Supply'}
+            </Button>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );

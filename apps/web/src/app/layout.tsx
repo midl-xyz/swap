@@ -1,15 +1,7 @@
-import { AccountButton, AppMenuList, Header, Logo, Toast } from '@/widgets';
-import { MobileAppMenu } from '@/widgets/app-menu/ui/MobileAppMenu';
-import { Footer } from '@/widgets/footer/ui';
-import { BugReportBar } from '@/widgets/header/ui/BugReportBar';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import Link from 'next/link';
-import React, { ReactNode } from 'react';
-import { Toaster } from 'react-hot-toast';
+import { ReactNode } from 'react';
 import { css, cx } from '~/styled-system/css';
-import { HStack, Stack } from '~/styled-system/jsx';
-import { hstack } from '~/styled-system/patterns';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });

@@ -20,7 +20,7 @@ export const TokenDialog = ({
       <DialogContent
         onEscapeKeyDown={onClose}
         className={css({
-          maxW: 400,
+          maxW: '460px',
           width: '100%',
         })}
       >

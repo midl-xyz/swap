@@ -1,7 +1,14 @@
 import { tokenList } from '@/global';
+import { useToken } from '@midl-xyz/midl-js-executor';
+import {
+  useAccounts,
+  useBalance as useBTCBalance,
+  useRuneBalance,
+} from '@midl-xyz/midl-js-react';
 import { useMemo } from 'react';
-import { Address, erc20Abi, formatUnits, zeroAddress } from 'viem';
+import { Address, erc20Abi, formatUnits, parseUnits, zeroAddress } from 'viem';
 import { useAccount, useBalance, useReadContracts } from 'wagmi';
+
 export const useTokenBalance = (
   contract: Address,
   {
@@ -12,6 +19,10 @@ export const useTokenBalance = (
   } = {},
 ) => {
   const { address: userAddress } = useAccount();
+  const { ordinalsAccount, paymentAccount } = useAccounts();
+  const { balance: btcBalance } = useBTCBalance({
+    address: paymentAccount?.address || ordinalsAccount?.address || '',
+  });
 
   const contracts: any[] = [
     {
@@ -61,6 +72,23 @@ export const useTokenBalance = (
     },
   });
 
+  const { rune } = useToken(contract);
+
+  const { balance: runeBalance } = useRuneBalance({
+    runeId: rune?.id ?? '',
+    address: paymentAccount?.address || ordinalsAccount?.address || '',
+  });
+
+  const parsedRuneBalance = parseUnits(
+    runeBalance?.balance ?? '0',
+    rune?.divisibility ?? 0,
+  );
+
+  const combinedBalance =
+    ((data?.[4]?.result as bigint) || 0n) + parsedRuneBalance;
+
+  const decimals = rune?.divisibility ?? (data?.[0]?.result as number) ?? 0;
+
   const parsedData: {
     decimals?: number;
     name?: string;
@@ -70,31 +98,28 @@ export const useTokenBalance = (
     formattedBalance?: string;
   } = useMemo(
     () => ({
-      decimals: data?.[0]?.result as number,
-      name: data?.[1]?.result as string,
-      symbol: data?.[2]?.result as string,
+      decimals: rune?.divisibility ?? (data?.[0]?.result as number),
+      name: rune?.spaced_name ?? (data?.[1]?.result as string),
+      symbol: rune?.symbol ?? (data?.[2]?.result as string),
       totalSupply: data?.[3]?.result as bigint,
-      balance: data?.[4]?.result as bigint,
-      formattedBalance: formatUnits(
-        (data?.[4]?.result as bigint) ?? BigInt(0),
-        (data?.[0]?.result as number) ?? 18,
-      ),
+      balance: combinedBalance,
+      formattedBalance:
+        decimals > 0
+          ? formatUnits(combinedBalance, decimals)
+          : combinedBalance.toString(),
     }),
-    [data],
+    [data, rune, runeBalance],
   );
 
   if (contract === zeroAddress) {
     return {
       data: {
-        decimals: balance?.decimals,
+        decimals: 8,
         name: tokenList.find((it) => it.address === zeroAddress)?.name,
         symbol: tokenList.find((it) => it.address === zeroAddress)?.symbol,
         totalSupply: 0,
-        balance: balance?.value,
-        formattedBalance: formatUnits(
-          balance?.value ?? BigInt(0),
-          balance?.decimals ?? 18,
-        ),
+        balance: BigInt(btcBalance ?? 0),
+        formattedBalance: formatUnits(BigInt(btcBalance ?? 0), 8),
       },
       ...restBalance,
     };

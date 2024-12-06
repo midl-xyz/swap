@@ -12,14 +12,8 @@ import { ReactNode } from 'react';
 import { Toaster } from 'react-hot-toast';
 
 import { ErrorBoundary } from '@/global/providers/ErrorBoundary';
-import {
-  AccountButton,
-  AppMenuList,
-  Header,
-  Logo,
-  RPCStatus,
-  Toast,
-} from '@/widgets';
+import { RuneDialogProvider } from '@/global/providers/RuneDialogProvider';
+import { AccountButton, AppMenuList, Header, Logo, RPCStatus } from '@/widgets';
 import { renderErrorMessage } from '@/widgets/error-message';
 import { Footer } from '@/widgets/footer/ui';
 import Link from 'next/link';
@@ -77,6 +71,7 @@ export default async function AppLayout({
     <Web3Provider cookie={cookie}>
       <FiatQuotesProvider>
         <TokenDialogProvider />
+        <RuneDialogProvider />
         <SettingsDialogProvider />
         <RemoveLiquidityProvider />
         <RPCStatus />
@@ -125,7 +120,6 @@ export default async function AppLayout({
           <Footer />
         </ErrorBoundary>
       </FiatQuotesProvider>
-      <Toast />
     </Web3Provider>
   );
 }

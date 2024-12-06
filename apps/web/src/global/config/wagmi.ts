@@ -9,10 +9,25 @@ declare module 'wagmi' {
     config: typeof wagmiConfig;
   }
 }
-
 export const wagmiConfig = createConfig({
-  connectors: [],
-  chains: [midlRegtest as Chain],
+  chains: [
+    {
+      ...midlRegtest,
+      rpcUrls: {
+        default: {
+          http: [midlRegtest.rpcUrls.default.http[0]],
+        },
+      },
+      contracts: {
+        multicall3: {
+          address: '0x98e1171a1EeCbCC56a6DAC6a1e8D828dD407113c',
+        },
+      },
+    } as Chain,
+  ],
+  batch: {
+    multicall: false,
+  },
   transports: {
     [midlRegtest.id]: http(midlRegtest.rpcUrls.default.http[0]),
   },
@@ -20,7 +35,7 @@ export const wagmiConfig = createConfig({
     storage: typeof localStorage === 'undefined' ? undefined : localStorage,
     key: 'midl-swap-v0.0.1',
   }),
-  ssr: true,
+  ssr: false,
 });
 
 export type ChainId = (typeof wagmiConfig)['chains'][number]['id'];

@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/shared';
-import { AppMenuList, Header, Logo, Toast } from '@/widgets';
+import { AppMenuList, Header, Logo } from '@/widgets';
 import { Footer } from '@/widgets/footer/ui';
 import { Landing } from '@/widgets/landing/ui/Landing';
 import Link from 'next/link';
@@ -49,7 +49,6 @@ export default function Home() {
         <Landing />
       </div>
       <Footer />
-      <Toast />
     </>
   );
 }

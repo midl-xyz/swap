@@ -1,12 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 import { useToken } from '@/entities';
+import { useERC20Rune } from '@midl-xyz/midl-js-executor';
 import { HTMLAttributes } from 'react';
-import { Address } from 'viem';
+import { Address, zeroAddress } from 'viem';
+import { useChainId } from 'wagmi';
 import { css, cx } from '~/styled-system/css';
 
 type TokenLogoProps = {
-  address: Address;
-  chainId: number;
+  address?: Address;
+  runeId?: string;
+  chainId?: number;
   size?: number;
   className?: HTMLAttributes<HTMLDivElement>['className'];
   overridePic?: string | null | undefined;
@@ -15,17 +18,21 @@ type TokenLogoProps = {
 export const TokenLogo = ({
   address,
   chainId,
+  runeId,
   size = 6,
   className,
   overridePic,
 }: TokenLogoProps) => {
-  let { logoURI, symbol } = useToken(address, chainId);
+  const appChainId = useChainId();
+
+  let { logoURI, symbol } = useToken(address as Address, chainId ?? appChainId);
+  const { rune } = useERC20Rune(runeId || '');
 
   if (overridePic) {
     logoURI = overridePic;
   }
 
-  if (!logoURI) {
+  if (!logoURI || rune?.id) {
     return (
       <div
         className={css({
@@ -49,10 +56,10 @@ export const TokenLogo = ({
           className={css({
             color: 'white',
             fontWeight: 'bold',
-            fontSize: '8px',
+            fontSize: '16px',
           })}
         >
-          {symbol}
+          {rune?.symbol ?? symbol}
         </span>
       </div>
     );

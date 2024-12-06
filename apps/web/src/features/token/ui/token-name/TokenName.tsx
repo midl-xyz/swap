@@ -4,6 +4,7 @@ import { TokenLogo } from '@/features';
 import { Address } from 'viem';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
+import { useToken as useMidlToken } from '@midl-xyz/midl-js-executor';
 
 type TokenNameProps = {
   address: Address;
@@ -13,6 +14,7 @@ type TokenNameProps = {
 
 export const TokenName = ({ address, chainId, showName }: TokenNameProps) => {
   const { symbol, name } = useToken(address, chainId);
+  const { rune } = useMidlToken(address);
 
   return (
     <span
@@ -23,7 +25,7 @@ export const TokenName = ({ address, chainId, showName }: TokenNameProps) => {
         width: 'full',
       })}
     >
-      <TokenLogo address={address} chainId={chainId} />
+      <TokenLogo address={address} chainId={chainId} runeId={rune?.id} />
       <span
         className={vstack({
           gap: 0,
@@ -31,14 +33,14 @@ export const TokenName = ({ address, chainId, showName }: TokenNameProps) => {
           alignItems: 'flex-start',
         })}
       >
-        {symbol}
+        {rune?.symbol ?? symbol}
         {showName && (
           <span
             className={css({
               textStyle: 'caption',
             })}
           >
-            {name}
+            {rune?.spaced_name ?? name}
           </span>
         )}
       </span>

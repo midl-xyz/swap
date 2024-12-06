@@ -1,10 +1,17 @@
 import { Token, useToken } from '@/entities';
-import { LastUsedToken, TokenName, useLastUsedTokens } from '@/features';
+import {
+  LastUsedToken,
+  TokenLogo,
+  TokenName,
+  useLastUsedTokens,
+} from '@/features';
+import { useRuneDialog } from '@/features/runes';
 import { tokenList } from '@/global';
 import { Button, Input } from '@/shared';
+import { useERC20Rune } from '@midl-xyz/midl-js-executor';
 import { SearchIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import { Address, getAddress } from 'viem';
+import { Address, getAddress, zeroAddress } from 'viem';
 import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
@@ -29,6 +36,11 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
 
   const [filteredTokens, setFilteredTokens] = useState<Token[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const { open } = useRuneDialog();
+
+  const { rune, erc20Address, erc20State, state } = useERC20Rune(searchQuery, {
+    query: { retry: false },
+  });
 
   const onSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value.trim());
@@ -62,7 +74,14 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
     customTokenAddress = getAddress(searchQuery);
   } catch {}
 
-  const customToken = useToken(customTokenAddress as Address, chainId);
+  const customToken = useToken(
+    erc20Address
+      ? erc20Address !== zeroAddress
+        ? erc20Address
+        : (customTokenAddress as Address)
+      : (customTokenAddress as Address),
+    chainId,
+  );
 
   useEffect(() => {
     onSearch();
@@ -136,34 +155,39 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
         </div>
       )}
 
-      <h3>{searchQuery ? 'Search results' : 'Popular tokens'}</h3>
-
-      <div
-        className={vstack({
-          gap: 1,
-          justifyContent: 'flex-start',
-          alignItems: 'flex-start',
-        })}
-      >
-        {tokens.slice(0, 5).map(({ address, chainId, symbol }) => (
-          <Button
-            key={`${address}_${symbol}_${chainId}`}
-            onClick={() => onSubmit(address, chainId)}
-            appearance="ghost"
-            className={css({
-              width: '100%',
+      {tokens.length > 0 && (
+        <>
+          {!searchQuery && <h3>Popular tokens</h3>}
+          <div
+            className={vstack({
+              gap: 1,
               justifyContent: 'flex-start',
-              textAlign: 'left',
+              alignItems: 'flex-start',
             })}
           >
-            <TokenName address={address} chainId={chainId} showName />
-          </Button>
-        ))}
-      </div>
+            {tokens.slice(0, 5).map(({ address, chainId, symbol }) => (
+              <Button
+                key={`${address}_${symbol}_${chainId}`}
+                onClick={() => onSubmit(address, chainId)}
+                appearance="ghost"
+                className={css({
+                  width: '100%',
+                  justifyContent: 'flex-start',
+                  textAlign: 'left',
+                })}
+              >
+                <TokenName address={address} chainId={chainId} showName />
+              </Button>
+            ))}
+          </div>
+        </>
+      )}
+
+      {searchQuery && customToken.symbol !== 'N/A' && <h3>Search results</h3>}
 
       {searchQuery && filteredTokens.length === 0 && (
         <div>
-          {customToken.symbol !== 'N/A' ? (
+          {customToken.symbol !== 'N/A' && (
             <Button
               onClick={() => {
                 onSubmit(customToken.address, chainId);
@@ -181,7 +205,30 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
                 showName
               />
             </Button>
-          ) : (
+          )}
+
+          {rune?.id && customToken.symbol === 'N/A' && (
+            <div className={vstack({ gap: 2, alignItems: 'start' })}>
+              <div>Not added to the MIDL ecosystem yet. </div>
+              <div className={hstack()}>
+                <TokenLogo runeId={rune.id} size={12} />
+                <div className={vstack({ gap: 0, alignItems: 'start' })}>
+                  <div>{rune.spaced_name}</div>
+                  <div>{rune.symbol}</div>
+                </div>
+
+                <Button
+                  onClick={() => {
+                    open(rune.id);
+                  }}
+                >
+                  Add rune
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {!rune?.id && customToken.symbol === 'N/A' && (
             <div
               className={css({
                 color: 'neutral.400',

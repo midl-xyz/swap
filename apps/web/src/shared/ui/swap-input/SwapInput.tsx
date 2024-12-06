@@ -89,6 +89,8 @@ export const SwapInput = ({
                   {...rest}
                   {...field}
                   autoComplete="off"
+                  precision={tokenInfo.decimals}
+                  min={tokenInfo.decimals === 0 ? 5000 : 0}
                   className={cx(
                     rest.className,
                     css({
@@ -147,19 +149,10 @@ export const SwapInput = ({
                   color: 'neutral.500',
                 })}
               >
-                Balance:{' '}
-                {balance.data?.balance && balance.data?.decimals
-                  ? millify(
-                      parseFloat(
-                        formatUnits(
-                          balance.data?.balance,
-                          balance.data?.decimals,
-                        ),
-                      ),
-                      {
-                        precision: 4,
-                      },
-                    )
+                {balance.data?.balance
+                  ? millify(parseFloat(balance.data.formattedBalance!), {
+                      precision: 4,
+                    })
                   : '0'}
               </div>
             </>

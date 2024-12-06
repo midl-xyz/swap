@@ -17,17 +17,23 @@ import {
   scopeKeyPredicate,
 } from '@/shared';
 import { SlippageControl } from '@/widgets';
+import { schema } from '@/widgets/liquidity-form/ui/schema';
 import { correctNumber } from '@/widgets/swap-form/ui/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
+import {
+  getEVMAddress,
+  useEVMAddress,
+  usePublicKey,
+} from '@midl-xyz/midl-js-executor';
+import { useAccounts } from '@midl-xyz/midl-js-react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useDebouncedCallback } from 'use-debounce';
 import { Address, formatUnits, parseUnits, zeroAddress } from 'viem';
-import { useAccount, useChainId } from 'wagmi';
-import * as yup from 'yup';
+import { useChainId } from 'wagmi';
+
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
 
@@ -38,43 +44,7 @@ type FormData = {
   tokenB: Address;
 };
 
-const schema = yup.object().shape({
-  tokenAAmount: yup
-    .number()
-    .transform((value) => (isNaN(value) ? undefined : value))
-    .when(['$minAmountA'], ([minAmount], schema) => {
-      const rules = schema.min(
-        minAmount || 0,
-        `Minimum amount is ${minAmount}`,
-      );
-
-      if (minAmount > 0) {
-        return rules.required(`Minimum amount is ${minAmount}`);
-      }
-
-      return rules;
-    }),
-  tokenBAmount: yup
-    .number()
-    .transform((value) => (isNaN(value) ? undefined : value))
-    .when(['$minAmountB'], ([minAmount], schema) => {
-      const rules = schema.min(
-        minAmount || 0,
-        `Minimum amount is ${minAmount}`,
-      );
-
-      if (minAmount > 0) {
-        return rules.required(`Minimum amount is ${minAmount}`);
-      }
-
-      return rules;
-    }),
-  tokenA: yup.string<Address>().required(),
-  tokenB: yup.string<Address>().required(),
-});
-
 export const LiquidityForm = () => {
-  const { address } = useAccount();
   const searchParams = useSearchParams();
   const [minValues, setValues] = useState({
     minAmountA: 0,
@@ -160,7 +130,7 @@ export const LiquidityForm = () => {
   );
 
   const {
-    data: { poolShare, allowances, reserves },
+    data: { poolShare, reserves },
     refetch,
   } = usePoolShare({
     tokenA,
@@ -207,8 +177,6 @@ export const LiquidityForm = () => {
   }, [update, balanceA, balanceB, minAmountA, minAmountB, minValues]);
 
   const lpToken = useGetLPTokenAddress({ tokenA, tokenB });
-
-  const { UniswapV2Router02 } = deployments[chainId];
 
   const onSubmit = () => {
     setIsDialogOpen(true);
@@ -274,16 +242,6 @@ export const LiquidityForm = () => {
       }
     }
   }, []);
-
-  const isTokenANeedApprove =
-    formState.isValid &&
-    allowances.tokenA < parsedTokenAAmount &&
-    tokenA !== zeroAddress;
-
-  const isTokenBNeedApprove =
-    formState.isValid &&
-    allowances.tokenB < parsedTokenBAmount &&
-    tokenB !== zeroAddress;
 
   const isBalanceABigEnough =
     parsedTokenAAmount <=
@@ -409,64 +367,25 @@ export const LiquidityForm = () => {
             </div>
           </div>
         )}
-        {isTokenANeedApprove && (
-          <Button
-            onClick={() => {
-              console.log('APPROVING');
-              console.log(
-                'TOKEN A ADDRESS: ',
-                tokenAInfo.address,
-                UniswapV2Router02.address,
-                parsedTokenAAmount,
-              );
-              approveERC20(
-                tokenAInfo.address,
-                UniswapV2Router02.address,
-                parsedTokenAAmount,
-              );
-            }}
-            disabled={isPending || isConfirming || !isBalanceABigEnough}
-          >
-            {isBalanceABigEnough
-              ? `Approve ${tokenAInfo.symbol}`
-              : 'Insufficient Balance'}
-          </Button>
-        )}
-        {isTokenBNeedApprove && !isTokenANeedApprove && (
-          <Button
-            onClick={() =>
-              approveERC20(
-                tokenBInfo.address,
-                UniswapV2Router02.address,
-                parsedTokenBAmount,
-              )
-            }
-            disabled={isPending || isConfirming || !isBalanceBBigEnough}
-          >
-            {isBalanceBBigEnough
-              ? `Approve ${tokenBInfo.symbol}`
-              : 'Insufficient Balance'}
-          </Button>
-        )}
-        {!isTokenANeedApprove && !isTokenBNeedApprove && (
-          <Button
-            type="submit"
-            disabled={
-              !formState.isValid ||
-              isPending ||
-              isConfirming ||
-              !tokenAAmount ||
-              !tokenBAmount ||
-              !isBalanceBigEnough
-            }
-          >
-            {tokenAAmount && tokenBAmount && !isBalanceBigEnough
-              ? 'Insufficient Balance'
-              : !tokenA || !tokenB
-                ? 'Select token'
-                : 'Supply'}
-          </Button>
-        )}
+
+        <Button
+          type="submit"
+          disabled={
+            !formState.isValid ||
+            isPending ||
+            isConfirming ||
+            !tokenAAmount ||
+            !tokenBAmount ||
+            !isBalanceBigEnough
+          }
+        >
+          {tokenAAmount && tokenBAmount && !isBalanceBigEnough
+            ? 'Insufficient Balance'
+            : !tokenA || !tokenB
+              ? 'Select token'
+              : 'Supply'}
+        </Button>
+
         <SupplyLiquidityDialog
           open={isDialogOpen}
           tokenA={tokenA}
