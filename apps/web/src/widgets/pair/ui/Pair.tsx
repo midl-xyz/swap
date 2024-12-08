@@ -68,14 +68,6 @@ export const Pair = ({ id }: Props) => {
     },
   ];
 
-  const override0Pic = pairData?.token0.memeToken?.memePicUrl
-    ? `https://ipfs.filebase.io/ipfs/${pairData.token0.memeToken.memePicUrl}`
-    : null;
-
-  const override1Pic = pairData?.token1.memeToken?.memePicUrl
-    ? `https://ipfs.filebase.io/ipfs/${pairData.token1.memeToken.memePicUrl}`
-    : null;
-
   return (
     <Stack background="white" padding={{ base: 2, md: 7 }}>
       <VStack
@@ -87,16 +79,8 @@ export const Pair = ({ id }: Props) => {
       >
         <HStack>
           <HStack>
-            <TokenLogo
-              address={token0Address}
-              chainId={chainId}
-              overridePic={override0Pic}
-            />
-            <TokenLogo
-              address={token1Address}
-              chainId={chainId}
-              overridePic={override1Pic}
-            />
+            <TokenLogo address={token0Address} chainId={chainId} />
+            <TokenLogo address={token1Address} chainId={chainId} />
           </HStack>
           <HStack>
             <span
@@ -145,11 +129,7 @@ export const Pair = ({ id }: Props) => {
                   borderColor="#E2E2E2"
                   borderRadius="xl"
                 >
-                  <TokenLogo
-                    address={address}
-                    chainId={chainId}
-                    overridePic={i === 0 ? override0Pic : override1Pic}
-                  />
+                  <TokenLogo address={address} chainId={chainId} />
 
                   <span>
                     1 {tokenSymbol === 'WPROM' ? 'PROM' : tokenSymbol} ={' '}
@@ -221,22 +201,14 @@ export const Pair = ({ id }: Props) => {
           <PairField name="Pooled Tokens">
             <HStack gap={10}>
               <HStack>
-                <TokenLogo
-                  address={token0Address}
-                  chainId={chainId}
-                  overridePic={override0Pic}
-                />
+                <TokenLogo address={token0Address} chainId={chainId} />
                 <span>
                   {beautifyNumber(pairData?.reserve0, 4)}{' '}
                   {token0Symbol === 'WPROM' ? 'PROM' : token0Symbol}
                 </span>
               </HStack>
               <HStack>
-                <TokenLogo
-                  address={token1Address}
-                  chainId={chainId}
-                  overridePic={override1Pic}
-                />
+                <TokenLogo address={token1Address} chainId={chainId} />
                 <span>
                   {beautifyNumber(pairData?.reserve1, 4)}{' '}
                   {token1Symbol === 'WPROM' ? 'PROM' : token1Symbol}

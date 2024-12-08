@@ -37,6 +37,7 @@ export type CurrentLiquidityPosition = {
   __typename?: 'CurrentLiquidityPosition';
   id: Scalars['String']['output'];
   lastUpdatedAt: Scalars['BigInt']['output'];
+  lastUpdatedAtBlockTimestamp: Scalars['BigInt']['output'];
   liquidityTokenBalance: Scalars['BigDecimal']['output'];
   pair: Pair;
   user: User;
@@ -55,6 +56,12 @@ export enum CurrentLiquidityPositionOrderByInput {
   IdDesc = 'id_DESC',
   IdDescNullsFirst = 'id_DESC_NULLS_FIRST',
   IdDescNullsLast = 'id_DESC_NULLS_LAST',
+  LastUpdatedAtBlockTimestampAsc = 'lastUpdatedAtBlockTimestamp_ASC',
+  LastUpdatedAtBlockTimestampAscNullsFirst = 'lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
+  LastUpdatedAtBlockTimestampAscNullsLast = 'lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
+  LastUpdatedAtBlockTimestampDesc = 'lastUpdatedAtBlockTimestamp_DESC',
+  LastUpdatedAtBlockTimestampDescNullsFirst = 'lastUpdatedAtBlockTimestamp_DESC_NULLS_FIRST',
+  LastUpdatedAtBlockTimestampDescNullsLast = 'lastUpdatedAtBlockTimestamp_DESC_NULLS_LAST',
   LastUpdatedAtAsc = 'lastUpdatedAt_ASC',
   LastUpdatedAtAscNullsFirst = 'lastUpdatedAt_ASC_NULLS_FIRST',
   LastUpdatedAtAscNullsLast = 'lastUpdatedAt_ASC_NULLS_LAST',
@@ -109,6 +116,12 @@ export enum CurrentLiquidityPositionOrderByInput {
   PairIdDesc = 'pair_id_DESC',
   PairIdDescNullsFirst = 'pair_id_DESC_NULLS_FIRST',
   PairIdDescNullsLast = 'pair_id_DESC_NULLS_LAST',
+  PairLastUpdatedAtBlockTimestampAsc = 'pair_lastUpdatedAtBlockTimestamp_ASC',
+  PairLastUpdatedAtBlockTimestampAscNullsFirst = 'pair_lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
+  PairLastUpdatedAtBlockTimestampAscNullsLast = 'pair_lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
+  PairLastUpdatedAtBlockTimestampDesc = 'pair_lastUpdatedAtBlockTimestamp_DESC',
+  PairLastUpdatedAtBlockTimestampDescNullsFirst = 'pair_lastUpdatedAtBlockTimestamp_DESC_NULLS_FIRST',
+  PairLastUpdatedAtBlockTimestampDescNullsLast = 'pair_lastUpdatedAtBlockTimestamp_DESC_NULLS_LAST',
   PairLastUpdatedAtAsc = 'pair_lastUpdatedAt_ASC',
   PairLastUpdatedAtAscNullsFirst = 'pair_lastUpdatedAt_ASC_NULLS_FIRST',
   PairLastUpdatedAtAscNullsLast = 'pair_lastUpdatedAt_ASC_NULLS_LAST',
@@ -133,6 +146,12 @@ export enum CurrentLiquidityPositionOrderByInput {
   PairLiquidityUsdDesc = 'pair_liquidityUSD_DESC',
   PairLiquidityUsdDescNullsFirst = 'pair_liquidityUSD_DESC_NULLS_FIRST',
   PairLiquidityUsdDescNullsLast = 'pair_liquidityUSD_DESC_NULLS_LAST',
+  PairLpDecimalsAsc = 'pair_lpDecimals_ASC',
+  PairLpDecimalsAscNullsFirst = 'pair_lpDecimals_ASC_NULLS_FIRST',
+  PairLpDecimalsAscNullsLast = 'pair_lpDecimals_ASC_NULLS_LAST',
+  PairLpDecimalsDesc = 'pair_lpDecimals_DESC',
+  PairLpDecimalsDescNullsFirst = 'pair_lpDecimals_DESC_NULLS_FIRST',
+  PairLpDecimalsDescNullsLast = 'pair_lpDecimals_DESC_NULLS_LAST',
   PairLpTotalLockedAsc = 'pair_lpTotalLocked_ASC',
   PairLpTotalLockedAscNullsFirst = 'pair_lpTotalLocked_ASC_NULLS_FIRST',
   PairLpTotalLockedAscNullsLast = 'pair_lpTotalLocked_ASC_NULLS_LAST',
@@ -157,12 +176,24 @@ export enum CurrentLiquidityPositionOrderByInput {
   PairReserve1Desc = 'pair_reserve1_DESC',
   PairReserve1DescNullsFirst = 'pair_reserve1_DESC_NULLS_FIRST',
   PairReserve1DescNullsLast = 'pair_reserve1_DESC_NULLS_LAST',
+  PairToken0IdAsc = 'pair_token0Id_ASC',
+  PairToken0IdAscNullsFirst = 'pair_token0Id_ASC_NULLS_FIRST',
+  PairToken0IdAscNullsLast = 'pair_token0Id_ASC_NULLS_LAST',
+  PairToken0IdDesc = 'pair_token0Id_DESC',
+  PairToken0IdDescNullsFirst = 'pair_token0Id_DESC_NULLS_FIRST',
+  PairToken0IdDescNullsLast = 'pair_token0Id_DESC_NULLS_LAST',
   PairToken0PriceAsc = 'pair_token0Price_ASC',
   PairToken0PriceAscNullsFirst = 'pair_token0Price_ASC_NULLS_FIRST',
   PairToken0PriceAscNullsLast = 'pair_token0Price_ASC_NULLS_LAST',
   PairToken0PriceDesc = 'pair_token0Price_DESC',
   PairToken0PriceDescNullsFirst = 'pair_token0Price_DESC_NULLS_FIRST',
   PairToken0PriceDescNullsLast = 'pair_token0Price_DESC_NULLS_LAST',
+  PairToken1IdAsc = 'pair_token1Id_ASC',
+  PairToken1IdAscNullsFirst = 'pair_token1Id_ASC_NULLS_FIRST',
+  PairToken1IdAscNullsLast = 'pair_token1Id_ASC_NULLS_LAST',
+  PairToken1IdDesc = 'pair_token1Id_DESC',
+  PairToken1IdDescNullsFirst = 'pair_token1Id_DESC_NULLS_FIRST',
+  PairToken1IdDescNullsLast = 'pair_token1Id_DESC_NULLS_LAST',
   PairToken1PriceAsc = 'pair_token1Price_ASC',
   PairToken1PriceAscNullsFirst = 'pair_token1Price_ASC_NULLS_FIRST',
   PairToken1PriceAscNullsLast = 'pair_token1Price_ASC_NULLS_LAST',
@@ -205,6 +236,24 @@ export enum CurrentLiquidityPositionOrderByInput {
   UserIdDesc = 'user_id_DESC',
   UserIdDescNullsFirst = 'user_id_DESC_NULLS_FIRST',
   UserIdDescNullsLast = 'user_id_DESC_NULLS_LAST',
+  UserLastUpdatedAtBlockTimestampAsc = 'user_lastUpdatedAtBlockTimestamp_ASC',
+  UserLastUpdatedAtBlockTimestampAscNullsFirst = 'user_lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
+  UserLastUpdatedAtBlockTimestampAscNullsLast = 'user_lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
+  UserLastUpdatedAtBlockTimestampDesc = 'user_lastUpdatedAtBlockTimestamp_DESC',
+  UserLastUpdatedAtBlockTimestampDescNullsFirst = 'user_lastUpdatedAtBlockTimestamp_DESC_NULLS_FIRST',
+  UserLastUpdatedAtBlockTimestampDescNullsLast = 'user_lastUpdatedAtBlockTimestamp_DESC_NULLS_LAST',
+  UserLastUpdatedAtAsc = 'user_lastUpdatedAt_ASC',
+  UserLastUpdatedAtAscNullsFirst = 'user_lastUpdatedAt_ASC_NULLS_FIRST',
+  UserLastUpdatedAtAscNullsLast = 'user_lastUpdatedAt_ASC_NULLS_LAST',
+  UserLastUpdatedAtDesc = 'user_lastUpdatedAt_DESC',
+  UserLastUpdatedAtDescNullsFirst = 'user_lastUpdatedAt_DESC_NULLS_FIRST',
+  UserLastUpdatedAtDescNullsLast = 'user_lastUpdatedAt_DESC_NULLS_LAST',
+  UserSwapsAmountAsc = 'user_swapsAmount_ASC',
+  UserSwapsAmountAscNullsFirst = 'user_swapsAmount_ASC_NULLS_FIRST',
+  UserSwapsAmountAscNullsLast = 'user_swapsAmount_ASC_NULLS_LAST',
+  UserSwapsAmountDesc = 'user_swapsAmount_DESC',
+  UserSwapsAmountDescNullsFirst = 'user_swapsAmount_DESC_NULLS_FIRST',
+  UserSwapsAmountDescNullsLast = 'user_swapsAmount_DESC_NULLS_LAST',
   UserUsdSwappedAsc = 'user_usdSwapped_ASC',
   UserUsdSwappedAscNullsFirst = 'user_usdSwapped_ASC_NULLS_FIRST',
   UserUsdSwappedAscNullsLast = 'user_usdSwapped_ASC_NULLS_LAST',
@@ -233,6 +282,19 @@ export type CurrentLiquidityPositionWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
   id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
   id_startsWith?: InputMaybe<Scalars['String']['input']>;
+  lastUpdatedAtBlockTimestamp_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_in?: InputMaybe<
+    Array<Scalars['BigInt']['input']>
+  >;
+  lastUpdatedAtBlockTimestamp_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lastUpdatedAtBlockTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_not_in?: InputMaybe<
+    Array<Scalars['BigInt']['input']>
+  >;
   lastUpdatedAt_eq?: InputMaybe<Scalars['BigInt']['input']>;
   lastUpdatedAt_gt?: InputMaybe<Scalars['BigInt']['input']>;
   lastUpdatedAt_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -266,6 +328,155 @@ export type CurrentLiquidityPositionsConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+export type Holder = {
+  __typename?: 'Holder';
+  balance: Scalars['BigDecimal']['output'];
+  id: Scalars['String']['output'];
+  lastUpdatedAt: Scalars['BigInt']['output'];
+  lastUpdatedAtBlockTimestamp: Scalars['BigInt']['output'];
+  tokenId: Scalars['String']['output'];
+  userId: Scalars['String']['output'];
+};
+
+export type HolderEdge = {
+  __typename?: 'HolderEdge';
+  cursor: Scalars['String']['output'];
+  node: Holder;
+};
+
+export enum HolderOrderByInput {
+  BalanceAsc = 'balance_ASC',
+  BalanceAscNullsFirst = 'balance_ASC_NULLS_FIRST',
+  BalanceAscNullsLast = 'balance_ASC_NULLS_LAST',
+  BalanceDesc = 'balance_DESC',
+  BalanceDescNullsFirst = 'balance_DESC_NULLS_FIRST',
+  BalanceDescNullsLast = 'balance_DESC_NULLS_LAST',
+  IdAsc = 'id_ASC',
+  IdAscNullsFirst = 'id_ASC_NULLS_FIRST',
+  IdAscNullsLast = 'id_ASC_NULLS_LAST',
+  IdDesc = 'id_DESC',
+  IdDescNullsFirst = 'id_DESC_NULLS_FIRST',
+  IdDescNullsLast = 'id_DESC_NULLS_LAST',
+  LastUpdatedAtBlockTimestampAsc = 'lastUpdatedAtBlockTimestamp_ASC',
+  LastUpdatedAtBlockTimestampAscNullsFirst = 'lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
+  LastUpdatedAtBlockTimestampAscNullsLast = 'lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
+  LastUpdatedAtBlockTimestampDesc = 'lastUpdatedAtBlockTimestamp_DESC',
+  LastUpdatedAtBlockTimestampDescNullsFirst = 'lastUpdatedAtBlockTimestamp_DESC_NULLS_FIRST',
+  LastUpdatedAtBlockTimestampDescNullsLast = 'lastUpdatedAtBlockTimestamp_DESC_NULLS_LAST',
+  LastUpdatedAtAsc = 'lastUpdatedAt_ASC',
+  LastUpdatedAtAscNullsFirst = 'lastUpdatedAt_ASC_NULLS_FIRST',
+  LastUpdatedAtAscNullsLast = 'lastUpdatedAt_ASC_NULLS_LAST',
+  LastUpdatedAtDesc = 'lastUpdatedAt_DESC',
+  LastUpdatedAtDescNullsFirst = 'lastUpdatedAt_DESC_NULLS_FIRST',
+  LastUpdatedAtDescNullsLast = 'lastUpdatedAt_DESC_NULLS_LAST',
+  TokenIdAsc = 'tokenId_ASC',
+  TokenIdAscNullsFirst = 'tokenId_ASC_NULLS_FIRST',
+  TokenIdAscNullsLast = 'tokenId_ASC_NULLS_LAST',
+  TokenIdDesc = 'tokenId_DESC',
+  TokenIdDescNullsFirst = 'tokenId_DESC_NULLS_FIRST',
+  TokenIdDescNullsLast = 'tokenId_DESC_NULLS_LAST',
+  UserIdAsc = 'userId_ASC',
+  UserIdAscNullsFirst = 'userId_ASC_NULLS_FIRST',
+  UserIdAscNullsLast = 'userId_ASC_NULLS_LAST',
+  UserIdDesc = 'userId_DESC',
+  UserIdDescNullsFirst = 'userId_DESC_NULLS_FIRST',
+  UserIdDescNullsLast = 'userId_DESC_NULLS_LAST',
+}
+
+export type HolderWhereInput = {
+  AND?: InputMaybe<Array<HolderWhereInput>>;
+  OR?: InputMaybe<Array<HolderWhereInput>>;
+  balance_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  balance_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  balance_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  balance_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  balance_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  balance_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  balance_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  balance_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  balance_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  id_contains?: InputMaybe<Scalars['String']['input']>;
+  id_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  id_endsWith?: InputMaybe<Scalars['String']['input']>;
+  id_eq?: InputMaybe<Scalars['String']['input']>;
+  id_gt?: InputMaybe<Scalars['String']['input']>;
+  id_gte?: InputMaybe<Scalars['String']['input']>;
+  id_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  id_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  id_lt?: InputMaybe<Scalars['String']['input']>;
+  id_lte?: InputMaybe<Scalars['String']['input']>;
+  id_not_contains?: InputMaybe<Scalars['String']['input']>;
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  id_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  id_not_eq?: InputMaybe<Scalars['String']['input']>;
+  id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  id_startsWith?: InputMaybe<Scalars['String']['input']>;
+  lastUpdatedAtBlockTimestamp_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_in?: InputMaybe<
+    Array<Scalars['BigInt']['input']>
+  >;
+  lastUpdatedAtBlockTimestamp_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lastUpdatedAtBlockTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_not_in?: InputMaybe<
+    Array<Scalars['BigInt']['input']>
+  >;
+  lastUpdatedAt_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lastUpdatedAt_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lastUpdatedAt_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  tokenId_contains?: InputMaybe<Scalars['String']['input']>;
+  tokenId_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  tokenId_endsWith?: InputMaybe<Scalars['String']['input']>;
+  tokenId_eq?: InputMaybe<Scalars['String']['input']>;
+  tokenId_gt?: InputMaybe<Scalars['String']['input']>;
+  tokenId_gte?: InputMaybe<Scalars['String']['input']>;
+  tokenId_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  tokenId_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  tokenId_lt?: InputMaybe<Scalars['String']['input']>;
+  tokenId_lte?: InputMaybe<Scalars['String']['input']>;
+  tokenId_not_contains?: InputMaybe<Scalars['String']['input']>;
+  tokenId_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  tokenId_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  tokenId_not_eq?: InputMaybe<Scalars['String']['input']>;
+  tokenId_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  tokenId_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  tokenId_startsWith?: InputMaybe<Scalars['String']['input']>;
+  userId_contains?: InputMaybe<Scalars['String']['input']>;
+  userId_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  userId_endsWith?: InputMaybe<Scalars['String']['input']>;
+  userId_eq?: InputMaybe<Scalars['String']['input']>;
+  userId_gt?: InputMaybe<Scalars['String']['input']>;
+  userId_gte?: InputMaybe<Scalars['String']['input']>;
+  userId_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  userId_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  userId_lt?: InputMaybe<Scalars['String']['input']>;
+  userId_lte?: InputMaybe<Scalars['String']['input']>;
+  userId_not_contains?: InputMaybe<Scalars['String']['input']>;
+  userId_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  userId_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  userId_not_eq?: InputMaybe<Scalars['String']['input']>;
+  userId_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  userId_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  userId_startsWith?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type HoldersConnection = {
+  __typename?: 'HoldersConnection';
+  edges: Array<HolderEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
 export type LiquidityPositionHistoriesConnection = {
   __typename?: 'LiquidityPositionHistoriesConnection';
   edges: Array<LiquidityPositionHistoryEdge>;
@@ -278,6 +489,7 @@ export type LiquidityPositionHistory = {
   block: Scalars['Int']['output'];
   id: Scalars['String']['output'];
   lastUpdatedAt: Scalars['BigInt']['output'];
+  lastUpdatedAtBlockTimestamp: Scalars['BigInt']['output'];
   liquidityPosition: CurrentLiquidityPosition;
   liquidityTokenBalance: Scalars['BigDecimal']['output'];
   liquidityTokenTotalSupply: Scalars['BigDecimal']['output'];
@@ -310,6 +522,12 @@ export enum LiquidityPositionHistoryOrderByInput {
   IdDesc = 'id_DESC',
   IdDescNullsFirst = 'id_DESC_NULLS_FIRST',
   IdDescNullsLast = 'id_DESC_NULLS_LAST',
+  LastUpdatedAtBlockTimestampAsc = 'lastUpdatedAtBlockTimestamp_ASC',
+  LastUpdatedAtBlockTimestampAscNullsFirst = 'lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
+  LastUpdatedAtBlockTimestampAscNullsLast = 'lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
+  LastUpdatedAtBlockTimestampDesc = 'lastUpdatedAtBlockTimestamp_DESC',
+  LastUpdatedAtBlockTimestampDescNullsFirst = 'lastUpdatedAtBlockTimestamp_DESC_NULLS_FIRST',
+  LastUpdatedAtBlockTimestampDescNullsLast = 'lastUpdatedAtBlockTimestamp_DESC_NULLS_LAST',
   LastUpdatedAtAsc = 'lastUpdatedAt_ASC',
   LastUpdatedAtAscNullsFirst = 'lastUpdatedAt_ASC_NULLS_FIRST',
   LastUpdatedAtAscNullsLast = 'lastUpdatedAt_ASC_NULLS_LAST',
@@ -322,6 +540,12 @@ export enum LiquidityPositionHistoryOrderByInput {
   LiquidityPositionIdDesc = 'liquidityPosition_id_DESC',
   LiquidityPositionIdDescNullsFirst = 'liquidityPosition_id_DESC_NULLS_FIRST',
   LiquidityPositionIdDescNullsLast = 'liquidityPosition_id_DESC_NULLS_LAST',
+  LiquidityPositionLastUpdatedAtBlockTimestampAsc = 'liquidityPosition_lastUpdatedAtBlockTimestamp_ASC',
+  LiquidityPositionLastUpdatedAtBlockTimestampAscNullsFirst = 'liquidityPosition_lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
+  LiquidityPositionLastUpdatedAtBlockTimestampAscNullsLast = 'liquidityPosition_lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
+  LiquidityPositionLastUpdatedAtBlockTimestampDesc = 'liquidityPosition_lastUpdatedAtBlockTimestamp_DESC',
+  LiquidityPositionLastUpdatedAtBlockTimestampDescNullsFirst = 'liquidityPosition_lastUpdatedAtBlockTimestamp_DESC_NULLS_FIRST',
+  LiquidityPositionLastUpdatedAtBlockTimestampDescNullsLast = 'liquidityPosition_lastUpdatedAtBlockTimestamp_DESC_NULLS_LAST',
   LiquidityPositionLastUpdatedAtAsc = 'liquidityPosition_lastUpdatedAt_ASC',
   LiquidityPositionLastUpdatedAtAscNullsFirst = 'liquidityPosition_lastUpdatedAt_ASC_NULLS_FIRST',
   LiquidityPositionLastUpdatedAtAscNullsLast = 'liquidityPosition_lastUpdatedAt_ASC_NULLS_LAST',
@@ -394,6 +618,12 @@ export enum LiquidityPositionHistoryOrderByInput {
   PairIdDesc = 'pair_id_DESC',
   PairIdDescNullsFirst = 'pair_id_DESC_NULLS_FIRST',
   PairIdDescNullsLast = 'pair_id_DESC_NULLS_LAST',
+  PairLastUpdatedAtBlockTimestampAsc = 'pair_lastUpdatedAtBlockTimestamp_ASC',
+  PairLastUpdatedAtBlockTimestampAscNullsFirst = 'pair_lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
+  PairLastUpdatedAtBlockTimestampAscNullsLast = 'pair_lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
+  PairLastUpdatedAtBlockTimestampDesc = 'pair_lastUpdatedAtBlockTimestamp_DESC',
+  PairLastUpdatedAtBlockTimestampDescNullsFirst = 'pair_lastUpdatedAtBlockTimestamp_DESC_NULLS_FIRST',
+  PairLastUpdatedAtBlockTimestampDescNullsLast = 'pair_lastUpdatedAtBlockTimestamp_DESC_NULLS_LAST',
   PairLastUpdatedAtAsc = 'pair_lastUpdatedAt_ASC',
   PairLastUpdatedAtAscNullsFirst = 'pair_lastUpdatedAt_ASC_NULLS_FIRST',
   PairLastUpdatedAtAscNullsLast = 'pair_lastUpdatedAt_ASC_NULLS_LAST',
@@ -418,6 +648,12 @@ export enum LiquidityPositionHistoryOrderByInput {
   PairLiquidityUsdDesc = 'pair_liquidityUSD_DESC',
   PairLiquidityUsdDescNullsFirst = 'pair_liquidityUSD_DESC_NULLS_FIRST',
   PairLiquidityUsdDescNullsLast = 'pair_liquidityUSD_DESC_NULLS_LAST',
+  PairLpDecimalsAsc = 'pair_lpDecimals_ASC',
+  PairLpDecimalsAscNullsFirst = 'pair_lpDecimals_ASC_NULLS_FIRST',
+  PairLpDecimalsAscNullsLast = 'pair_lpDecimals_ASC_NULLS_LAST',
+  PairLpDecimalsDesc = 'pair_lpDecimals_DESC',
+  PairLpDecimalsDescNullsFirst = 'pair_lpDecimals_DESC_NULLS_FIRST',
+  PairLpDecimalsDescNullsLast = 'pair_lpDecimals_DESC_NULLS_LAST',
   PairLpTotalLockedAsc = 'pair_lpTotalLocked_ASC',
   PairLpTotalLockedAscNullsFirst = 'pair_lpTotalLocked_ASC_NULLS_FIRST',
   PairLpTotalLockedAscNullsLast = 'pair_lpTotalLocked_ASC_NULLS_LAST',
@@ -442,12 +678,24 @@ export enum LiquidityPositionHistoryOrderByInput {
   PairReserve1Desc = 'pair_reserve1_DESC',
   PairReserve1DescNullsFirst = 'pair_reserve1_DESC_NULLS_FIRST',
   PairReserve1DescNullsLast = 'pair_reserve1_DESC_NULLS_LAST',
+  PairToken0IdAsc = 'pair_token0Id_ASC',
+  PairToken0IdAscNullsFirst = 'pair_token0Id_ASC_NULLS_FIRST',
+  PairToken0IdAscNullsLast = 'pair_token0Id_ASC_NULLS_LAST',
+  PairToken0IdDesc = 'pair_token0Id_DESC',
+  PairToken0IdDescNullsFirst = 'pair_token0Id_DESC_NULLS_FIRST',
+  PairToken0IdDescNullsLast = 'pair_token0Id_DESC_NULLS_LAST',
   PairToken0PriceAsc = 'pair_token0Price_ASC',
   PairToken0PriceAscNullsFirst = 'pair_token0Price_ASC_NULLS_FIRST',
   PairToken0PriceAscNullsLast = 'pair_token0Price_ASC_NULLS_LAST',
   PairToken0PriceDesc = 'pair_token0Price_DESC',
   PairToken0PriceDescNullsFirst = 'pair_token0Price_DESC_NULLS_FIRST',
   PairToken0PriceDescNullsLast = 'pair_token0Price_DESC_NULLS_LAST',
+  PairToken1IdAsc = 'pair_token1Id_ASC',
+  PairToken1IdAscNullsFirst = 'pair_token1Id_ASC_NULLS_FIRST',
+  PairToken1IdAscNullsLast = 'pair_token1Id_ASC_NULLS_LAST',
+  PairToken1IdDesc = 'pair_token1Id_DESC',
+  PairToken1IdDescNullsFirst = 'pair_token1Id_DESC_NULLS_FIRST',
+  PairToken1IdDescNullsLast = 'pair_token1Id_DESC_NULLS_LAST',
   PairToken1PriceAsc = 'pair_token1Price_ASC',
   PairToken1PriceAscNullsFirst = 'pair_token1Price_ASC_NULLS_FIRST',
   PairToken1PriceAscNullsLast = 'pair_token1Price_ASC_NULLS_LAST',
@@ -520,6 +768,24 @@ export enum LiquidityPositionHistoryOrderByInput {
   UserIdDesc = 'user_id_DESC',
   UserIdDescNullsFirst = 'user_id_DESC_NULLS_FIRST',
   UserIdDescNullsLast = 'user_id_DESC_NULLS_LAST',
+  UserLastUpdatedAtBlockTimestampAsc = 'user_lastUpdatedAtBlockTimestamp_ASC',
+  UserLastUpdatedAtBlockTimestampAscNullsFirst = 'user_lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
+  UserLastUpdatedAtBlockTimestampAscNullsLast = 'user_lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
+  UserLastUpdatedAtBlockTimestampDesc = 'user_lastUpdatedAtBlockTimestamp_DESC',
+  UserLastUpdatedAtBlockTimestampDescNullsFirst = 'user_lastUpdatedAtBlockTimestamp_DESC_NULLS_FIRST',
+  UserLastUpdatedAtBlockTimestampDescNullsLast = 'user_lastUpdatedAtBlockTimestamp_DESC_NULLS_LAST',
+  UserLastUpdatedAtAsc = 'user_lastUpdatedAt_ASC',
+  UserLastUpdatedAtAscNullsFirst = 'user_lastUpdatedAt_ASC_NULLS_FIRST',
+  UserLastUpdatedAtAscNullsLast = 'user_lastUpdatedAt_ASC_NULLS_LAST',
+  UserLastUpdatedAtDesc = 'user_lastUpdatedAt_DESC',
+  UserLastUpdatedAtDescNullsFirst = 'user_lastUpdatedAt_DESC_NULLS_FIRST',
+  UserLastUpdatedAtDescNullsLast = 'user_lastUpdatedAt_DESC_NULLS_LAST',
+  UserSwapsAmountAsc = 'user_swapsAmount_ASC',
+  UserSwapsAmountAscNullsFirst = 'user_swapsAmount_ASC_NULLS_FIRST',
+  UserSwapsAmountAscNullsLast = 'user_swapsAmount_ASC_NULLS_LAST',
+  UserSwapsAmountDesc = 'user_swapsAmount_DESC',
+  UserSwapsAmountDescNullsFirst = 'user_swapsAmount_DESC_NULLS_FIRST',
+  UserSwapsAmountDescNullsLast = 'user_swapsAmount_DESC_NULLS_LAST',
   UserUsdSwappedAsc = 'user_usdSwapped_ASC',
   UserUsdSwappedAscNullsFirst = 'user_usdSwapped_ASC_NULLS_FIRST',
   UserUsdSwappedAscNullsLast = 'user_usdSwapped_ASC_NULLS_LAST',
@@ -557,6 +823,19 @@ export type LiquidityPositionHistoryWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
   id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
   id_startsWith?: InputMaybe<Scalars['String']['input']>;
+  lastUpdatedAtBlockTimestamp_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_in?: InputMaybe<
+    Array<Scalars['BigInt']['input']>
+  >;
+  lastUpdatedAtBlockTimestamp_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lastUpdatedAtBlockTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_not_in?: InputMaybe<
+    Array<Scalars['BigInt']['input']>
+  >;
   lastUpdatedAt_eq?: InputMaybe<Scalars['BigInt']['input']>;
   lastUpdatedAt_gt?: InputMaybe<Scalars['BigInt']['input']>;
   lastUpdatedAt_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -652,311 +931,6 @@ export type LiquidityPositionHistoryWhereInput = {
   user_isNull?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-export type MemeToken = {
-  __typename?: 'MemeToken';
-  activityVaultAllocation?: Maybe<Scalars['BigInt']['output']>;
-  id: Scalars['String']['output'];
-  lastUpdatedAt: Scalars['BigInt']['output'];
-  lockedLpTokens?: Maybe<Scalars['BigInt']['output']>;
-  lpTokensUnlockTime?: Maybe<Scalars['BigInt']['output']>;
-  memeCreatedAt?: Maybe<Scalars['BigInt']['output']>;
-  memePicUrl?: Maybe<Scalars['String']['output']>;
-  ownerAddress: Scalars['String']['output'];
-  ownerAllocation?: Maybe<Scalars['BigInt']['output']>;
-  tokenAddress: Scalars['String']['output'];
-  tokenName: Scalars['String']['output'];
-  tokenSymbol: Scalars['String']['output'];
-  tokenV60Initiated?: Maybe<Scalars['Boolean']['output']>;
-  v60LpTokenAddress?: Maybe<Scalars['String']['output']>;
-};
-
-export type MemeTokenEdge = {
-  __typename?: 'MemeTokenEdge';
-  cursor: Scalars['String']['output'];
-  node: MemeToken;
-};
-
-export enum MemeTokenOrderByInput {
-  ActivityVaultAllocationAsc = 'activityVaultAllocation_ASC',
-  ActivityVaultAllocationAscNullsFirst = 'activityVaultAllocation_ASC_NULLS_FIRST',
-  ActivityVaultAllocationAscNullsLast = 'activityVaultAllocation_ASC_NULLS_LAST',
-  ActivityVaultAllocationDesc = 'activityVaultAllocation_DESC',
-  ActivityVaultAllocationDescNullsFirst = 'activityVaultAllocation_DESC_NULLS_FIRST',
-  ActivityVaultAllocationDescNullsLast = 'activityVaultAllocation_DESC_NULLS_LAST',
-  IdAsc = 'id_ASC',
-  IdAscNullsFirst = 'id_ASC_NULLS_FIRST',
-  IdAscNullsLast = 'id_ASC_NULLS_LAST',
-  IdDesc = 'id_DESC',
-  IdDescNullsFirst = 'id_DESC_NULLS_FIRST',
-  IdDescNullsLast = 'id_DESC_NULLS_LAST',
-  LastUpdatedAtAsc = 'lastUpdatedAt_ASC',
-  LastUpdatedAtAscNullsFirst = 'lastUpdatedAt_ASC_NULLS_FIRST',
-  LastUpdatedAtAscNullsLast = 'lastUpdatedAt_ASC_NULLS_LAST',
-  LastUpdatedAtDesc = 'lastUpdatedAt_DESC',
-  LastUpdatedAtDescNullsFirst = 'lastUpdatedAt_DESC_NULLS_FIRST',
-  LastUpdatedAtDescNullsLast = 'lastUpdatedAt_DESC_NULLS_LAST',
-  LockedLpTokensAsc = 'lockedLpTokens_ASC',
-  LockedLpTokensAscNullsFirst = 'lockedLpTokens_ASC_NULLS_FIRST',
-  LockedLpTokensAscNullsLast = 'lockedLpTokens_ASC_NULLS_LAST',
-  LockedLpTokensDesc = 'lockedLpTokens_DESC',
-  LockedLpTokensDescNullsFirst = 'lockedLpTokens_DESC_NULLS_FIRST',
-  LockedLpTokensDescNullsLast = 'lockedLpTokens_DESC_NULLS_LAST',
-  LpTokensUnlockTimeAsc = 'lpTokensUnlockTime_ASC',
-  LpTokensUnlockTimeAscNullsFirst = 'lpTokensUnlockTime_ASC_NULLS_FIRST',
-  LpTokensUnlockTimeAscNullsLast = 'lpTokensUnlockTime_ASC_NULLS_LAST',
-  LpTokensUnlockTimeDesc = 'lpTokensUnlockTime_DESC',
-  LpTokensUnlockTimeDescNullsFirst = 'lpTokensUnlockTime_DESC_NULLS_FIRST',
-  LpTokensUnlockTimeDescNullsLast = 'lpTokensUnlockTime_DESC_NULLS_LAST',
-  MemeCreatedAtAsc = 'memeCreatedAt_ASC',
-  MemeCreatedAtAscNullsFirst = 'memeCreatedAt_ASC_NULLS_FIRST',
-  MemeCreatedAtAscNullsLast = 'memeCreatedAt_ASC_NULLS_LAST',
-  MemeCreatedAtDesc = 'memeCreatedAt_DESC',
-  MemeCreatedAtDescNullsFirst = 'memeCreatedAt_DESC_NULLS_FIRST',
-  MemeCreatedAtDescNullsLast = 'memeCreatedAt_DESC_NULLS_LAST',
-  MemePicUrlAsc = 'memePicUrl_ASC',
-  MemePicUrlAscNullsFirst = 'memePicUrl_ASC_NULLS_FIRST',
-  MemePicUrlAscNullsLast = 'memePicUrl_ASC_NULLS_LAST',
-  MemePicUrlDesc = 'memePicUrl_DESC',
-  MemePicUrlDescNullsFirst = 'memePicUrl_DESC_NULLS_FIRST',
-  MemePicUrlDescNullsLast = 'memePicUrl_DESC_NULLS_LAST',
-  OwnerAddressAsc = 'ownerAddress_ASC',
-  OwnerAddressAscNullsFirst = 'ownerAddress_ASC_NULLS_FIRST',
-  OwnerAddressAscNullsLast = 'ownerAddress_ASC_NULLS_LAST',
-  OwnerAddressDesc = 'ownerAddress_DESC',
-  OwnerAddressDescNullsFirst = 'ownerAddress_DESC_NULLS_FIRST',
-  OwnerAddressDescNullsLast = 'ownerAddress_DESC_NULLS_LAST',
-  OwnerAllocationAsc = 'ownerAllocation_ASC',
-  OwnerAllocationAscNullsFirst = 'ownerAllocation_ASC_NULLS_FIRST',
-  OwnerAllocationAscNullsLast = 'ownerAllocation_ASC_NULLS_LAST',
-  OwnerAllocationDesc = 'ownerAllocation_DESC',
-  OwnerAllocationDescNullsFirst = 'ownerAllocation_DESC_NULLS_FIRST',
-  OwnerAllocationDescNullsLast = 'ownerAllocation_DESC_NULLS_LAST',
-  TokenAddressAsc = 'tokenAddress_ASC',
-  TokenAddressAscNullsFirst = 'tokenAddress_ASC_NULLS_FIRST',
-  TokenAddressAscNullsLast = 'tokenAddress_ASC_NULLS_LAST',
-  TokenAddressDesc = 'tokenAddress_DESC',
-  TokenAddressDescNullsFirst = 'tokenAddress_DESC_NULLS_FIRST',
-  TokenAddressDescNullsLast = 'tokenAddress_DESC_NULLS_LAST',
-  TokenNameAsc = 'tokenName_ASC',
-  TokenNameAscNullsFirst = 'tokenName_ASC_NULLS_FIRST',
-  TokenNameAscNullsLast = 'tokenName_ASC_NULLS_LAST',
-  TokenNameDesc = 'tokenName_DESC',
-  TokenNameDescNullsFirst = 'tokenName_DESC_NULLS_FIRST',
-  TokenNameDescNullsLast = 'tokenName_DESC_NULLS_LAST',
-  TokenSymbolAsc = 'tokenSymbol_ASC',
-  TokenSymbolAscNullsFirst = 'tokenSymbol_ASC_NULLS_FIRST',
-  TokenSymbolAscNullsLast = 'tokenSymbol_ASC_NULLS_LAST',
-  TokenSymbolDesc = 'tokenSymbol_DESC',
-  TokenSymbolDescNullsFirst = 'tokenSymbol_DESC_NULLS_FIRST',
-  TokenSymbolDescNullsLast = 'tokenSymbol_DESC_NULLS_LAST',
-  TokenV60InitiatedAsc = 'tokenV60Initiated_ASC',
-  TokenV60InitiatedAscNullsFirst = 'tokenV60Initiated_ASC_NULLS_FIRST',
-  TokenV60InitiatedAscNullsLast = 'tokenV60Initiated_ASC_NULLS_LAST',
-  TokenV60InitiatedDesc = 'tokenV60Initiated_DESC',
-  TokenV60InitiatedDescNullsFirst = 'tokenV60Initiated_DESC_NULLS_FIRST',
-  TokenV60InitiatedDescNullsLast = 'tokenV60Initiated_DESC_NULLS_LAST',
-  V60LpTokenAddressAsc = 'v60LpTokenAddress_ASC',
-  V60LpTokenAddressAscNullsFirst = 'v60LpTokenAddress_ASC_NULLS_FIRST',
-  V60LpTokenAddressAscNullsLast = 'v60LpTokenAddress_ASC_NULLS_LAST',
-  V60LpTokenAddressDesc = 'v60LpTokenAddress_DESC',
-  V60LpTokenAddressDescNullsFirst = 'v60LpTokenAddress_DESC_NULLS_FIRST',
-  V60LpTokenAddressDescNullsLast = 'v60LpTokenAddress_DESC_NULLS_LAST',
-}
-
-export type MemeTokenWhereInput = {
-  AND?: InputMaybe<Array<MemeTokenWhereInput>>;
-  OR?: InputMaybe<Array<MemeTokenWhereInput>>;
-  activityVaultAllocation_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  activityVaultAllocation_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  activityVaultAllocation_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  activityVaultAllocation_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  activityVaultAllocation_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  activityVaultAllocation_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  activityVaultAllocation_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  activityVaultAllocation_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  activityVaultAllocation_not_in?: InputMaybe<
-    Array<Scalars['BigInt']['input']>
-  >;
-  id_contains?: InputMaybe<Scalars['String']['input']>;
-  id_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  id_endsWith?: InputMaybe<Scalars['String']['input']>;
-  id_eq?: InputMaybe<Scalars['String']['input']>;
-  id_gt?: InputMaybe<Scalars['String']['input']>;
-  id_gte?: InputMaybe<Scalars['String']['input']>;
-  id_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  id_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  id_lt?: InputMaybe<Scalars['String']['input']>;
-  id_lte?: InputMaybe<Scalars['String']['input']>;
-  id_not_contains?: InputMaybe<Scalars['String']['input']>;
-  id_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  id_not_endsWith?: InputMaybe<Scalars['String']['input']>;
-  id_not_eq?: InputMaybe<Scalars['String']['input']>;
-  id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
-  id_startsWith?: InputMaybe<Scalars['String']['input']>;
-  lastUpdatedAt_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  lastUpdatedAt_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  lastUpdatedAt_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  lastUpdatedAt_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  lastUpdatedAt_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  lastUpdatedAt_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  lastUpdatedAt_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  lastUpdatedAt_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  lastUpdatedAt_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  lockedLpTokens_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  lockedLpTokens_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  lockedLpTokens_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  lockedLpTokens_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  lockedLpTokens_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  lockedLpTokens_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  lockedLpTokens_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  lockedLpTokens_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  lockedLpTokens_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  lpTokensUnlockTime_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  lpTokensUnlockTime_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  lpTokensUnlockTime_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  lpTokensUnlockTime_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  lpTokensUnlockTime_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  lpTokensUnlockTime_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  lpTokensUnlockTime_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  lpTokensUnlockTime_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  lpTokensUnlockTime_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  memeCreatedAt_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  memeCreatedAt_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  memeCreatedAt_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  memeCreatedAt_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  memeCreatedAt_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  memeCreatedAt_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  memeCreatedAt_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  memeCreatedAt_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  memeCreatedAt_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  memePicUrl_contains?: InputMaybe<Scalars['String']['input']>;
-  memePicUrl_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  memePicUrl_endsWith?: InputMaybe<Scalars['String']['input']>;
-  memePicUrl_eq?: InputMaybe<Scalars['String']['input']>;
-  memePicUrl_gt?: InputMaybe<Scalars['String']['input']>;
-  memePicUrl_gte?: InputMaybe<Scalars['String']['input']>;
-  memePicUrl_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  memePicUrl_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  memePicUrl_lt?: InputMaybe<Scalars['String']['input']>;
-  memePicUrl_lte?: InputMaybe<Scalars['String']['input']>;
-  memePicUrl_not_contains?: InputMaybe<Scalars['String']['input']>;
-  memePicUrl_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  memePicUrl_not_endsWith?: InputMaybe<Scalars['String']['input']>;
-  memePicUrl_not_eq?: InputMaybe<Scalars['String']['input']>;
-  memePicUrl_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  memePicUrl_not_startsWith?: InputMaybe<Scalars['String']['input']>;
-  memePicUrl_startsWith?: InputMaybe<Scalars['String']['input']>;
-  ownerAddress_contains?: InputMaybe<Scalars['String']['input']>;
-  ownerAddress_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  ownerAddress_endsWith?: InputMaybe<Scalars['String']['input']>;
-  ownerAddress_eq?: InputMaybe<Scalars['String']['input']>;
-  ownerAddress_gt?: InputMaybe<Scalars['String']['input']>;
-  ownerAddress_gte?: InputMaybe<Scalars['String']['input']>;
-  ownerAddress_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  ownerAddress_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  ownerAddress_lt?: InputMaybe<Scalars['String']['input']>;
-  ownerAddress_lte?: InputMaybe<Scalars['String']['input']>;
-  ownerAddress_not_contains?: InputMaybe<Scalars['String']['input']>;
-  ownerAddress_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  ownerAddress_not_endsWith?: InputMaybe<Scalars['String']['input']>;
-  ownerAddress_not_eq?: InputMaybe<Scalars['String']['input']>;
-  ownerAddress_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  ownerAddress_not_startsWith?: InputMaybe<Scalars['String']['input']>;
-  ownerAddress_startsWith?: InputMaybe<Scalars['String']['input']>;
-  ownerAllocation_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  ownerAllocation_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  ownerAllocation_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  ownerAllocation_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  ownerAllocation_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  ownerAllocation_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  ownerAllocation_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  ownerAllocation_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
-  ownerAllocation_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  tokenAddress_contains?: InputMaybe<Scalars['String']['input']>;
-  tokenAddress_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  tokenAddress_endsWith?: InputMaybe<Scalars['String']['input']>;
-  tokenAddress_eq?: InputMaybe<Scalars['String']['input']>;
-  tokenAddress_gt?: InputMaybe<Scalars['String']['input']>;
-  tokenAddress_gte?: InputMaybe<Scalars['String']['input']>;
-  tokenAddress_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  tokenAddress_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  tokenAddress_lt?: InputMaybe<Scalars['String']['input']>;
-  tokenAddress_lte?: InputMaybe<Scalars['String']['input']>;
-  tokenAddress_not_contains?: InputMaybe<Scalars['String']['input']>;
-  tokenAddress_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  tokenAddress_not_endsWith?: InputMaybe<Scalars['String']['input']>;
-  tokenAddress_not_eq?: InputMaybe<Scalars['String']['input']>;
-  tokenAddress_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  tokenAddress_not_startsWith?: InputMaybe<Scalars['String']['input']>;
-  tokenAddress_startsWith?: InputMaybe<Scalars['String']['input']>;
-  tokenName_contains?: InputMaybe<Scalars['String']['input']>;
-  tokenName_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  tokenName_endsWith?: InputMaybe<Scalars['String']['input']>;
-  tokenName_eq?: InputMaybe<Scalars['String']['input']>;
-  tokenName_gt?: InputMaybe<Scalars['String']['input']>;
-  tokenName_gte?: InputMaybe<Scalars['String']['input']>;
-  tokenName_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  tokenName_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  tokenName_lt?: InputMaybe<Scalars['String']['input']>;
-  tokenName_lte?: InputMaybe<Scalars['String']['input']>;
-  tokenName_not_contains?: InputMaybe<Scalars['String']['input']>;
-  tokenName_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  tokenName_not_endsWith?: InputMaybe<Scalars['String']['input']>;
-  tokenName_not_eq?: InputMaybe<Scalars['String']['input']>;
-  tokenName_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  tokenName_not_startsWith?: InputMaybe<Scalars['String']['input']>;
-  tokenName_startsWith?: InputMaybe<Scalars['String']['input']>;
-  tokenSymbol_contains?: InputMaybe<Scalars['String']['input']>;
-  tokenSymbol_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  tokenSymbol_endsWith?: InputMaybe<Scalars['String']['input']>;
-  tokenSymbol_eq?: InputMaybe<Scalars['String']['input']>;
-  tokenSymbol_gt?: InputMaybe<Scalars['String']['input']>;
-  tokenSymbol_gte?: InputMaybe<Scalars['String']['input']>;
-  tokenSymbol_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  tokenSymbol_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  tokenSymbol_lt?: InputMaybe<Scalars['String']['input']>;
-  tokenSymbol_lte?: InputMaybe<Scalars['String']['input']>;
-  tokenSymbol_not_contains?: InputMaybe<Scalars['String']['input']>;
-  tokenSymbol_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  tokenSymbol_not_endsWith?: InputMaybe<Scalars['String']['input']>;
-  tokenSymbol_not_eq?: InputMaybe<Scalars['String']['input']>;
-  tokenSymbol_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  tokenSymbol_not_startsWith?: InputMaybe<Scalars['String']['input']>;
-  tokenSymbol_startsWith?: InputMaybe<Scalars['String']['input']>;
-  tokenV60Initiated_eq?: InputMaybe<Scalars['Boolean']['input']>;
-  tokenV60Initiated_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  tokenV60Initiated_not_eq?: InputMaybe<Scalars['Boolean']['input']>;
-  v60LpTokenAddress_contains?: InputMaybe<Scalars['String']['input']>;
-  v60LpTokenAddress_containsInsensitive?: InputMaybe<
-    Scalars['String']['input']
-  >;
-  v60LpTokenAddress_endsWith?: InputMaybe<Scalars['String']['input']>;
-  v60LpTokenAddress_eq?: InputMaybe<Scalars['String']['input']>;
-  v60LpTokenAddress_gt?: InputMaybe<Scalars['String']['input']>;
-  v60LpTokenAddress_gte?: InputMaybe<Scalars['String']['input']>;
-  v60LpTokenAddress_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  v60LpTokenAddress_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  v60LpTokenAddress_lt?: InputMaybe<Scalars['String']['input']>;
-  v60LpTokenAddress_lte?: InputMaybe<Scalars['String']['input']>;
-  v60LpTokenAddress_not_contains?: InputMaybe<Scalars['String']['input']>;
-  v60LpTokenAddress_not_containsInsensitive?: InputMaybe<
-    Scalars['String']['input']
-  >;
-  v60LpTokenAddress_not_endsWith?: InputMaybe<Scalars['String']['input']>;
-  v60LpTokenAddress_not_eq?: InputMaybe<Scalars['String']['input']>;
-  v60LpTokenAddress_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  v60LpTokenAddress_not_startsWith?: InputMaybe<Scalars['String']['input']>;
-  v60LpTokenAddress_startsWith?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type MemeTokensConnection = {
-  __typename?: 'MemeTokensConnection';
-  edges: Array<MemeTokenEdge>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
 export type PageInfo = {
   __typename?: 'PageInfo';
   endCursor: Scalars['String']['output'];
@@ -975,16 +949,20 @@ export type Pair = {
   feesUSD24h?: Maybe<Scalars['BigDecimal']['output']>;
   id: Scalars['String']['output'];
   lastUpdatedAt: Scalars['BigInt']['output'];
+  lastUpdatedAtBlockTimestamp: Scalars['BigInt']['output'];
   liquidity24hDelta?: Maybe<Scalars['BigDecimal']['output']>;
   liquidityProviderCount: Scalars['BigInt']['output'];
   liquidityUSD?: Maybe<Scalars['BigDecimal']['output']>;
+  lpDecimals: Scalars['BigInt']['output'];
   lpTotalLocked: Scalars['BigDecimal']['output'];
   lpTotalSupply: Scalars['BigDecimal']['output'];
   reserve0: Scalars['BigDecimal']['output'];
   reserve1: Scalars['BigDecimal']['output'];
   token0: Token;
+  token0Id?: Maybe<Scalars['String']['output']>;
   token0Price: Scalars['BigDecimal']['output'];
   token1: Token;
+  token1Id?: Maybe<Scalars['String']['output']>;
   token1Price: Scalars['BigDecimal']['output'];
   tradeVolume24h?: Maybe<Scalars['BigDecimal']['output']>;
   tradeVolume24hDelta?: Maybe<Scalars['BigDecimal']['output']>;
@@ -998,6 +976,7 @@ export type PairDayData = {
   date: Scalars['Int']['output'];
   id: Scalars['String']['output'];
   lastUpdatedAt: Scalars['BigInt']['output'];
+  lastUpdatedAtBlockTimestamp: Scalars['BigInt']['output'];
   liquidityProviderCount: Scalars['BigInt']['output'];
   liquidityUSD?: Maybe<Scalars['BigDecimal']['output']>;
   lpTotalLocked: Scalars['BigDecimal']['output'];
@@ -1038,6 +1017,12 @@ export enum PairDayDataOrderByInput {
   IdDesc = 'id_DESC',
   IdDescNullsFirst = 'id_DESC_NULLS_FIRST',
   IdDescNullsLast = 'id_DESC_NULLS_LAST',
+  LastUpdatedAtBlockTimestampAsc = 'lastUpdatedAtBlockTimestamp_ASC',
+  LastUpdatedAtBlockTimestampAscNullsFirst = 'lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
+  LastUpdatedAtBlockTimestampAscNullsLast = 'lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
+  LastUpdatedAtBlockTimestampDesc = 'lastUpdatedAtBlockTimestamp_DESC',
+  LastUpdatedAtBlockTimestampDescNullsFirst = 'lastUpdatedAtBlockTimestamp_DESC_NULLS_FIRST',
+  LastUpdatedAtBlockTimestampDescNullsLast = 'lastUpdatedAtBlockTimestamp_DESC_NULLS_LAST',
   LastUpdatedAtAsc = 'lastUpdatedAt_ASC',
   LastUpdatedAtAscNullsFirst = 'lastUpdatedAt_ASC_NULLS_FIRST',
   LastUpdatedAtAscNullsLast = 'lastUpdatedAt_ASC_NULLS_LAST',
@@ -1116,6 +1101,12 @@ export enum PairDayDataOrderByInput {
   Token0IdDesc = 'token0_id_DESC',
   Token0IdDescNullsFirst = 'token0_id_DESC_NULLS_FIRST',
   Token0IdDescNullsLast = 'token0_id_DESC_NULLS_LAST',
+  Token0LastUpdatedAtBlockTimestampAsc = 'token0_lastUpdatedAtBlockTimestamp_ASC',
+  Token0LastUpdatedAtBlockTimestampAscNullsFirst = 'token0_lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
+  Token0LastUpdatedAtBlockTimestampAscNullsLast = 'token0_lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
+  Token0LastUpdatedAtBlockTimestampDesc = 'token0_lastUpdatedAtBlockTimestamp_DESC',
+  Token0LastUpdatedAtBlockTimestampDescNullsFirst = 'token0_lastUpdatedAtBlockTimestamp_DESC_NULLS_FIRST',
+  Token0LastUpdatedAtBlockTimestampDescNullsLast = 'token0_lastUpdatedAtBlockTimestamp_DESC_NULLS_LAST',
   Token0LastUpdatedAtAsc = 'token0_lastUpdatedAt_ASC',
   Token0LastUpdatedAtAscNullsFirst = 'token0_lastUpdatedAt_ASC_NULLS_FIRST',
   Token0LastUpdatedAtAscNullsLast = 'token0_lastUpdatedAt_ASC_NULLS_LAST',
@@ -1212,6 +1203,12 @@ export enum PairDayDataOrderByInput {
   Token1IdDesc = 'token1_id_DESC',
   Token1IdDescNullsFirst = 'token1_id_DESC_NULLS_FIRST',
   Token1IdDescNullsLast = 'token1_id_DESC_NULLS_LAST',
+  Token1LastUpdatedAtBlockTimestampAsc = 'token1_lastUpdatedAtBlockTimestamp_ASC',
+  Token1LastUpdatedAtBlockTimestampAscNullsFirst = 'token1_lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
+  Token1LastUpdatedAtBlockTimestampAscNullsLast = 'token1_lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
+  Token1LastUpdatedAtBlockTimestampDesc = 'token1_lastUpdatedAtBlockTimestamp_DESC',
+  Token1LastUpdatedAtBlockTimestampDescNullsFirst = 'token1_lastUpdatedAtBlockTimestamp_DESC_NULLS_FIRST',
+  Token1LastUpdatedAtBlockTimestampDescNullsLast = 'token1_lastUpdatedAtBlockTimestamp_DESC_NULLS_LAST',
   Token1LastUpdatedAtAsc = 'token1_lastUpdatedAt_ASC',
   Token1LastUpdatedAtAscNullsFirst = 'token1_lastUpdatedAt_ASC_NULLS_FIRST',
   Token1LastUpdatedAtAscNullsLast = 'token1_lastUpdatedAt_ASC_NULLS_LAST',
@@ -1315,6 +1312,19 @@ export type PairDayDataWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
   id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
   id_startsWith?: InputMaybe<Scalars['String']['input']>;
+  lastUpdatedAtBlockTimestamp_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_in?: InputMaybe<
+    Array<Scalars['BigInt']['input']>
+  >;
+  lastUpdatedAtBlockTimestamp_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lastUpdatedAtBlockTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_not_in?: InputMaybe<
+    Array<Scalars['BigInt']['input']>
+  >;
   lastUpdatedAt_eq?: InputMaybe<Scalars['BigInt']['input']>;
   lastUpdatedAt_gt?: InputMaybe<Scalars['BigInt']['input']>;
   lastUpdatedAt_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -1477,6 +1487,12 @@ export enum PairOrderByInput {
   IdDesc = 'id_DESC',
   IdDescNullsFirst = 'id_DESC_NULLS_FIRST',
   IdDescNullsLast = 'id_DESC_NULLS_LAST',
+  LastUpdatedAtBlockTimestampAsc = 'lastUpdatedAtBlockTimestamp_ASC',
+  LastUpdatedAtBlockTimestampAscNullsFirst = 'lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
+  LastUpdatedAtBlockTimestampAscNullsLast = 'lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
+  LastUpdatedAtBlockTimestampDesc = 'lastUpdatedAtBlockTimestamp_DESC',
+  LastUpdatedAtBlockTimestampDescNullsFirst = 'lastUpdatedAtBlockTimestamp_DESC_NULLS_FIRST',
+  LastUpdatedAtBlockTimestampDescNullsLast = 'lastUpdatedAtBlockTimestamp_DESC_NULLS_LAST',
   LastUpdatedAtAsc = 'lastUpdatedAt_ASC',
   LastUpdatedAtAscNullsFirst = 'lastUpdatedAt_ASC_NULLS_FIRST',
   LastUpdatedAtAscNullsLast = 'lastUpdatedAt_ASC_NULLS_LAST',
@@ -1501,6 +1517,12 @@ export enum PairOrderByInput {
   LiquidityUsdDesc = 'liquidityUSD_DESC',
   LiquidityUsdDescNullsFirst = 'liquidityUSD_DESC_NULLS_FIRST',
   LiquidityUsdDescNullsLast = 'liquidityUSD_DESC_NULLS_LAST',
+  LpDecimalsAsc = 'lpDecimals_ASC',
+  LpDecimalsAscNullsFirst = 'lpDecimals_ASC_NULLS_FIRST',
+  LpDecimalsAscNullsLast = 'lpDecimals_ASC_NULLS_LAST',
+  LpDecimalsDesc = 'lpDecimals_DESC',
+  LpDecimalsDescNullsFirst = 'lpDecimals_DESC_NULLS_FIRST',
+  LpDecimalsDescNullsLast = 'lpDecimals_DESC_NULLS_LAST',
   LpTotalLockedAsc = 'lpTotalLocked_ASC',
   LpTotalLockedAscNullsFirst = 'lpTotalLocked_ASC_NULLS_FIRST',
   LpTotalLockedAscNullsLast = 'lpTotalLocked_ASC_NULLS_LAST',
@@ -1525,6 +1547,12 @@ export enum PairOrderByInput {
   Reserve1Desc = 'reserve1_DESC',
   Reserve1DescNullsFirst = 'reserve1_DESC_NULLS_FIRST',
   Reserve1DescNullsLast = 'reserve1_DESC_NULLS_LAST',
+  Token0IdAsc = 'token0Id_ASC',
+  Token0IdAscNullsFirst = 'token0Id_ASC_NULLS_FIRST',
+  Token0IdAscNullsLast = 'token0Id_ASC_NULLS_LAST',
+  Token0IdDesc = 'token0Id_DESC',
+  Token0IdDescNullsFirst = 'token0Id_DESC_NULLS_FIRST',
+  Token0IdDescNullsLast = 'token0Id_DESC_NULLS_LAST',
   Token0PriceAsc = 'token0Price_ASC',
   Token0PriceAscNullsFirst = 'token0Price_ASC_NULLS_FIRST',
   Token0PriceAscNullsLast = 'token0Price_ASC_NULLS_LAST',
@@ -1543,6 +1571,12 @@ export enum PairOrderByInput {
   Token0DecimalsDesc = 'token0_decimals_DESC',
   Token0DecimalsDescNullsFirst = 'token0_decimals_DESC_NULLS_FIRST',
   Token0DecimalsDescNullsLast = 'token0_decimals_DESC_NULLS_LAST',
+  Token0FdvAsc = 'token0_fdv_ASC',
+  Token0FdvAscNullsFirst = 'token0_fdv_ASC_NULLS_FIRST',
+  Token0FdvAscNullsLast = 'token0_fdv_ASC_NULLS_LAST',
+  Token0FdvDesc = 'token0_fdv_DESC',
+  Token0FdvDescNullsFirst = 'token0_fdv_DESC_NULLS_FIRST',
+  Token0FdvDescNullsLast = 'token0_fdv_DESC_NULLS_LAST',
   Token0HoldersAsc = 'token0_holders_ASC',
   Token0HoldersAscNullsFirst = 'token0_holders_ASC_NULLS_FIRST',
   Token0HoldersAscNullsLast = 'token0_holders_ASC_NULLS_LAST',
@@ -1555,6 +1589,12 @@ export enum PairOrderByInput {
   Token0IdDesc = 'token0_id_DESC',
   Token0IdDescNullsFirst = 'token0_id_DESC_NULLS_FIRST',
   Token0IdDescNullsLast = 'token0_id_DESC_NULLS_LAST',
+  Token0LastUpdatedAtBlockTimestampAsc = 'token0_lastUpdatedAtBlockTimestamp_ASC',
+  Token0LastUpdatedAtBlockTimestampAscNullsFirst = 'token0_lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
+  Token0LastUpdatedAtBlockTimestampAscNullsLast = 'token0_lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
+  Token0LastUpdatedAtBlockTimestampDesc = 'token0_lastUpdatedAtBlockTimestamp_DESC',
+  Token0LastUpdatedAtBlockTimestampDescNullsFirst = 'token0_lastUpdatedAtBlockTimestamp_DESC_NULLS_FIRST',
+  Token0LastUpdatedAtBlockTimestampDescNullsLast = 'token0_lastUpdatedAtBlockTimestamp_DESC_NULLS_LAST',
   Token0LastUpdatedAtAsc = 'token0_lastUpdatedAt_ASC',
   Token0LastUpdatedAtAscNullsFirst = 'token0_lastUpdatedAt_ASC_NULLS_FIRST',
   Token0LastUpdatedAtAscNullsLast = 'token0_lastUpdatedAt_ASC_NULLS_LAST',
@@ -1573,6 +1613,12 @@ export enum PairOrderByInput {
   Token0NameDesc = 'token0_name_DESC',
   Token0NameDescNullsFirst = 'token0_name_DESC_NULLS_FIRST',
   Token0NameDescNullsLast = 'token0_name_DESC_NULLS_LAST',
+  Token0Price24hDeltaAsc = 'token0_price24hDelta_ASC',
+  Token0Price24hDeltaAscNullsFirst = 'token0_price24hDelta_ASC_NULLS_FIRST',
+  Token0Price24hDeltaAscNullsLast = 'token0_price24hDelta_ASC_NULLS_LAST',
+  Token0Price24hDeltaDesc = 'token0_price24hDelta_DESC',
+  Token0Price24hDeltaDescNullsFirst = 'token0_price24hDelta_DESC_NULLS_FIRST',
+  Token0Price24hDeltaDescNullsLast = 'token0_price24hDelta_DESC_NULLS_LAST',
   Token0PriceEthAsc = 'token0_priceETH_ASC',
   Token0PriceEthAscNullsFirst = 'token0_priceETH_ASC_NULLS_FIRST',
   Token0PriceEthAscNullsLast = 'token0_priceETH_ASC_NULLS_LAST',
@@ -1633,6 +1679,12 @@ export enum PairOrderByInput {
   Token0TxCount24hDesc = 'token0_txCount24h_DESC',
   Token0TxCount24hDescNullsFirst = 'token0_txCount24h_DESC_NULLS_FIRST',
   Token0TxCount24hDescNullsLast = 'token0_txCount24h_DESC_NULLS_LAST',
+  Token1IdAsc = 'token1Id_ASC',
+  Token1IdAscNullsFirst = 'token1Id_ASC_NULLS_FIRST',
+  Token1IdAscNullsLast = 'token1Id_ASC_NULLS_LAST',
+  Token1IdDesc = 'token1Id_DESC',
+  Token1IdDescNullsFirst = 'token1Id_DESC_NULLS_FIRST',
+  Token1IdDescNullsLast = 'token1Id_DESC_NULLS_LAST',
   Token1PriceAsc = 'token1Price_ASC',
   Token1PriceAscNullsFirst = 'token1Price_ASC_NULLS_FIRST',
   Token1PriceAscNullsLast = 'token1Price_ASC_NULLS_LAST',
@@ -1651,6 +1703,12 @@ export enum PairOrderByInput {
   Token1DecimalsDesc = 'token1_decimals_DESC',
   Token1DecimalsDescNullsFirst = 'token1_decimals_DESC_NULLS_FIRST',
   Token1DecimalsDescNullsLast = 'token1_decimals_DESC_NULLS_LAST',
+  Token1FdvAsc = 'token1_fdv_ASC',
+  Token1FdvAscNullsFirst = 'token1_fdv_ASC_NULLS_FIRST',
+  Token1FdvAscNullsLast = 'token1_fdv_ASC_NULLS_LAST',
+  Token1FdvDesc = 'token1_fdv_DESC',
+  Token1FdvDescNullsFirst = 'token1_fdv_DESC_NULLS_FIRST',
+  Token1FdvDescNullsLast = 'token1_fdv_DESC_NULLS_LAST',
   Token1HoldersAsc = 'token1_holders_ASC',
   Token1HoldersAscNullsFirst = 'token1_holders_ASC_NULLS_FIRST',
   Token1HoldersAscNullsLast = 'token1_holders_ASC_NULLS_LAST',
@@ -1663,6 +1721,12 @@ export enum PairOrderByInput {
   Token1IdDesc = 'token1_id_DESC',
   Token1IdDescNullsFirst = 'token1_id_DESC_NULLS_FIRST',
   Token1IdDescNullsLast = 'token1_id_DESC_NULLS_LAST',
+  Token1LastUpdatedAtBlockTimestampAsc = 'token1_lastUpdatedAtBlockTimestamp_ASC',
+  Token1LastUpdatedAtBlockTimestampAscNullsFirst = 'token1_lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
+  Token1LastUpdatedAtBlockTimestampAscNullsLast = 'token1_lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
+  Token1LastUpdatedAtBlockTimestampDesc = 'token1_lastUpdatedAtBlockTimestamp_DESC',
+  Token1LastUpdatedAtBlockTimestampDescNullsFirst = 'token1_lastUpdatedAtBlockTimestamp_DESC_NULLS_FIRST',
+  Token1LastUpdatedAtBlockTimestampDescNullsLast = 'token1_lastUpdatedAtBlockTimestamp_DESC_NULLS_LAST',
   Token1LastUpdatedAtAsc = 'token1_lastUpdatedAt_ASC',
   Token1LastUpdatedAtAscNullsFirst = 'token1_lastUpdatedAt_ASC_NULLS_FIRST',
   Token1LastUpdatedAtAscNullsLast = 'token1_lastUpdatedAt_ASC_NULLS_LAST',
@@ -1681,6 +1745,12 @@ export enum PairOrderByInput {
   Token1NameDesc = 'token1_name_DESC',
   Token1NameDescNullsFirst = 'token1_name_DESC_NULLS_FIRST',
   Token1NameDescNullsLast = 'token1_name_DESC_NULLS_LAST',
+  Token1Price24hDeltaAsc = 'token1_price24hDelta_ASC',
+  Token1Price24hDeltaAscNullsFirst = 'token1_price24hDelta_ASC_NULLS_FIRST',
+  Token1Price24hDeltaAscNullsLast = 'token1_price24hDelta_ASC_NULLS_LAST',
+  Token1Price24hDeltaDesc = 'token1_price24hDelta_DESC',
+  Token1Price24hDeltaDescNullsFirst = 'token1_price24hDelta_DESC_NULLS_FIRST',
+  Token1Price24hDeltaDescNullsLast = 'token1_price24hDelta_DESC_NULLS_LAST',
   Token1PriceEthAsc = 'token1_priceETH_ASC',
   Token1PriceEthAscNullsFirst = 'token1_priceETH_ASC_NULLS_FIRST',
   Token1PriceEthAscNullsLast = 'token1_priceETH_ASC_NULLS_LAST',
@@ -1847,6 +1917,19 @@ export type PairWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
   id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
   id_startsWith?: InputMaybe<Scalars['String']['input']>;
+  lastUpdatedAtBlockTimestamp_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_in?: InputMaybe<
+    Array<Scalars['BigInt']['input']>
+  >;
+  lastUpdatedAtBlockTimestamp_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lastUpdatedAtBlockTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_not_in?: InputMaybe<
+    Array<Scalars['BigInt']['input']>
+  >;
   lastUpdatedAt_eq?: InputMaybe<Scalars['BigInt']['input']>;
   lastUpdatedAt_gt?: InputMaybe<Scalars['BigInt']['input']>;
   lastUpdatedAt_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -1883,6 +1966,15 @@ export type PairWhereInput = {
   liquidityUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   liquidityUSD_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   liquidityUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  lpDecimals_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lpDecimals_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lpDecimals_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lpDecimals_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lpDecimals_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lpDecimals_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lpDecimals_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lpDecimals_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lpDecimals_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   lpTotalLocked_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   lpTotalLocked_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   lpTotalLocked_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -1920,6 +2012,23 @@ export type PairWhereInput = {
   reserve1_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   reserve1_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   token0?: InputMaybe<TokenWhereInput>;
+  token0Id_contains?: InputMaybe<Scalars['String']['input']>;
+  token0Id_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  token0Id_endsWith?: InputMaybe<Scalars['String']['input']>;
+  token0Id_eq?: InputMaybe<Scalars['String']['input']>;
+  token0Id_gt?: InputMaybe<Scalars['String']['input']>;
+  token0Id_gte?: InputMaybe<Scalars['String']['input']>;
+  token0Id_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  token0Id_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  token0Id_lt?: InputMaybe<Scalars['String']['input']>;
+  token0Id_lte?: InputMaybe<Scalars['String']['input']>;
+  token0Id_not_contains?: InputMaybe<Scalars['String']['input']>;
+  token0Id_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  token0Id_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  token0Id_not_eq?: InputMaybe<Scalars['String']['input']>;
+  token0Id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  token0Id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  token0Id_startsWith?: InputMaybe<Scalars['String']['input']>;
   token0Price_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   token0Price_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   token0Price_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -1931,6 +2040,23 @@ export type PairWhereInput = {
   token0Price_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   token0_isNull?: InputMaybe<Scalars['Boolean']['input']>;
   token1?: InputMaybe<TokenWhereInput>;
+  token1Id_contains?: InputMaybe<Scalars['String']['input']>;
+  token1Id_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  token1Id_endsWith?: InputMaybe<Scalars['String']['input']>;
+  token1Id_eq?: InputMaybe<Scalars['String']['input']>;
+  token1Id_gt?: InputMaybe<Scalars['String']['input']>;
+  token1Id_gte?: InputMaybe<Scalars['String']['input']>;
+  token1Id_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  token1Id_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  token1Id_lt?: InputMaybe<Scalars['String']['input']>;
+  token1Id_lte?: InputMaybe<Scalars['String']['input']>;
+  token1Id_not_contains?: InputMaybe<Scalars['String']['input']>;
+  token1Id_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  token1Id_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  token1Id_not_eq?: InputMaybe<Scalars['String']['input']>;
+  token1Id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  token1Id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  token1Id_startsWith?: InputMaybe<Scalars['String']['input']>;
   token1Price_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   token1Price_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   token1Price_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -2002,12 +2128,12 @@ export type Query = {
   currentLiquidityPositionById?: Maybe<CurrentLiquidityPosition>;
   currentLiquidityPositions: Array<CurrentLiquidityPosition>;
   currentLiquidityPositionsConnection: CurrentLiquidityPositionsConnection;
+  holderById?: Maybe<Holder>;
+  holders: Array<Holder>;
+  holdersConnection: HoldersConnection;
   liquidityPositionHistories: Array<LiquidityPositionHistory>;
   liquidityPositionHistoriesConnection: LiquidityPositionHistoriesConnection;
   liquidityPositionHistoryById?: Maybe<LiquidityPositionHistory>;
-  memeTokenById?: Maybe<MemeToken>;
-  memeTokens: Array<MemeToken>;
-  memeTokensConnection: MemeTokensConnection;
   pairById?: Maybe<Pair>;
   pairDayData: Array<PairDayData>;
   pairDayDataById?: Maybe<PairDayData>;
@@ -2044,6 +2170,24 @@ export type QueryCurrentLiquidityPositionsConnectionArgs = {
   where?: InputMaybe<CurrentLiquidityPositionWhereInput>;
 };
 
+export type QueryHolderByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+export type QueryHoldersArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<HolderOrderByInput>>;
+  where?: InputMaybe<HolderWhereInput>;
+};
+
+export type QueryHoldersConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy: Array<HolderOrderByInput>;
+  where?: InputMaybe<HolderWhereInput>;
+};
+
 export type QueryLiquidityPositionHistoriesArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2060,24 +2204,6 @@ export type QueryLiquidityPositionHistoriesConnectionArgs = {
 
 export type QueryLiquidityPositionHistoryByIdArgs = {
   id: Scalars['String']['input'];
-};
-
-export type QueryMemeTokenByIdArgs = {
-  id: Scalars['String']['input'];
-};
-
-export type QueryMemeTokensArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<MemeTokenOrderByInput>>;
-  where?: InputMaybe<MemeTokenWhereInput>;
-};
-
-export type QueryMemeTokensConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy: Array<MemeTokenOrderByInput>;
-  where?: InputMaybe<MemeTokenWhereInput>;
 };
 
 export type QueryPairByIdArgs = {
@@ -2180,12 +2306,14 @@ export type Token = {
   __typename?: 'Token';
   circulationSupply: Scalars['BigInt']['output'];
   decimals: Scalars['BigInt']['output'];
+  fdv?: Maybe<Scalars['BigDecimal']['output']>;
   holders: Scalars['BigInt']['output'];
   id: Scalars['String']['output'];
   lastUpdatedAt: Scalars['BigInt']['output'];
+  lastUpdatedAtBlockTimestamp: Scalars['BigInt']['output'];
   marketCapUSD: Scalars['BigDecimal']['output'];
-  memeToken?: Maybe<MemeToken>;
   name: Scalars['String']['output'];
+  price24hDelta?: Maybe<Scalars['BigDecimal']['output']>;
   priceETH?: Maybe<Scalars['BigDecimal']['output']>;
   priceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   symbol: Scalars['String']['output'];
@@ -2205,6 +2333,7 @@ export type TokenDayData = {
   holders: Scalars['BigInt']['output'];
   id: Scalars['String']['output'];
   lastUpdatedAt: Scalars['BigInt']['output'];
+  lastUpdatedAtBlockTimestamp: Scalars['BigInt']['output'];
   marketCapUSD: Scalars['BigDecimal']['output'];
   priceETH?: Maybe<Scalars['BigDecimal']['output']>;
   priceUSD?: Maybe<Scalars['BigDecimal']['output']>;
@@ -2256,6 +2385,12 @@ export enum TokenDayDataOrderByInput {
   IdDesc = 'id_DESC',
   IdDescNullsFirst = 'id_DESC_NULLS_FIRST',
   IdDescNullsLast = 'id_DESC_NULLS_LAST',
+  LastUpdatedAtBlockTimestampAsc = 'lastUpdatedAtBlockTimestamp_ASC',
+  LastUpdatedAtBlockTimestampAscNullsFirst = 'lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
+  LastUpdatedAtBlockTimestampAscNullsLast = 'lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
+  LastUpdatedAtBlockTimestampDesc = 'lastUpdatedAtBlockTimestamp_DESC',
+  LastUpdatedAtBlockTimestampDescNullsFirst = 'lastUpdatedAtBlockTimestamp_DESC_NULLS_FIRST',
+  LastUpdatedAtBlockTimestampDescNullsLast = 'lastUpdatedAtBlockTimestamp_DESC_NULLS_LAST',
   LastUpdatedAtAsc = 'lastUpdatedAt_ASC',
   LastUpdatedAtAscNullsFirst = 'lastUpdatedAt_ASC_NULLS_FIRST',
   LastUpdatedAtAscNullsLast = 'lastUpdatedAt_ASC_NULLS_LAST',
@@ -2292,6 +2427,12 @@ export enum TokenDayDataOrderByInput {
   TokenDecimalsDesc = 'token_decimals_DESC',
   TokenDecimalsDescNullsFirst = 'token_decimals_DESC_NULLS_FIRST',
   TokenDecimalsDescNullsLast = 'token_decimals_DESC_NULLS_LAST',
+  TokenFdvAsc = 'token_fdv_ASC',
+  TokenFdvAscNullsFirst = 'token_fdv_ASC_NULLS_FIRST',
+  TokenFdvAscNullsLast = 'token_fdv_ASC_NULLS_LAST',
+  TokenFdvDesc = 'token_fdv_DESC',
+  TokenFdvDescNullsFirst = 'token_fdv_DESC_NULLS_FIRST',
+  TokenFdvDescNullsLast = 'token_fdv_DESC_NULLS_LAST',
   TokenHoldersAsc = 'token_holders_ASC',
   TokenHoldersAscNullsFirst = 'token_holders_ASC_NULLS_FIRST',
   TokenHoldersAscNullsLast = 'token_holders_ASC_NULLS_LAST',
@@ -2304,6 +2445,12 @@ export enum TokenDayDataOrderByInput {
   TokenIdDesc = 'token_id_DESC',
   TokenIdDescNullsFirst = 'token_id_DESC_NULLS_FIRST',
   TokenIdDescNullsLast = 'token_id_DESC_NULLS_LAST',
+  TokenLastUpdatedAtBlockTimestampAsc = 'token_lastUpdatedAtBlockTimestamp_ASC',
+  TokenLastUpdatedAtBlockTimestampAscNullsFirst = 'token_lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
+  TokenLastUpdatedAtBlockTimestampAscNullsLast = 'token_lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
+  TokenLastUpdatedAtBlockTimestampDesc = 'token_lastUpdatedAtBlockTimestamp_DESC',
+  TokenLastUpdatedAtBlockTimestampDescNullsFirst = 'token_lastUpdatedAtBlockTimestamp_DESC_NULLS_FIRST',
+  TokenLastUpdatedAtBlockTimestampDescNullsLast = 'token_lastUpdatedAtBlockTimestamp_DESC_NULLS_LAST',
   TokenLastUpdatedAtAsc = 'token_lastUpdatedAt_ASC',
   TokenLastUpdatedAtAscNullsFirst = 'token_lastUpdatedAt_ASC_NULLS_FIRST',
   TokenLastUpdatedAtAscNullsLast = 'token_lastUpdatedAt_ASC_NULLS_LAST',
@@ -2322,6 +2469,12 @@ export enum TokenDayDataOrderByInput {
   TokenNameDesc = 'token_name_DESC',
   TokenNameDescNullsFirst = 'token_name_DESC_NULLS_FIRST',
   TokenNameDescNullsLast = 'token_name_DESC_NULLS_LAST',
+  TokenPrice24hDeltaAsc = 'token_price24hDelta_ASC',
+  TokenPrice24hDeltaAscNullsFirst = 'token_price24hDelta_ASC_NULLS_FIRST',
+  TokenPrice24hDeltaAscNullsLast = 'token_price24hDelta_ASC_NULLS_LAST',
+  TokenPrice24hDeltaDesc = 'token_price24hDelta_DESC',
+  TokenPrice24hDeltaDescNullsFirst = 'token_price24hDelta_DESC_NULLS_FIRST',
+  TokenPrice24hDeltaDescNullsLast = 'token_price24hDelta_DESC_NULLS_LAST',
   TokenPriceEthAsc = 'token_priceETH_ASC',
   TokenPriceEthAscNullsFirst = 'token_priceETH_ASC_NULLS_FIRST',
   TokenPriceEthAscNullsLast = 'token_priceETH_ASC_NULLS_LAST',
@@ -2473,6 +2626,19 @@ export type TokenDayDataWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
   id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
   id_startsWith?: InputMaybe<Scalars['String']['input']>;
+  lastUpdatedAtBlockTimestamp_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_in?: InputMaybe<
+    Array<Scalars['BigInt']['input']>
+  >;
+  lastUpdatedAtBlockTimestamp_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lastUpdatedAtBlockTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_not_in?: InputMaybe<
+    Array<Scalars['BigInt']['input']>
+  >;
   lastUpdatedAt_eq?: InputMaybe<Scalars['BigInt']['input']>;
   lastUpdatedAt_gt?: InputMaybe<Scalars['BigInt']['input']>;
   lastUpdatedAt_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -2601,6 +2767,12 @@ export enum TokenOrderByInput {
   DecimalsDesc = 'decimals_DESC',
   DecimalsDescNullsFirst = 'decimals_DESC_NULLS_FIRST',
   DecimalsDescNullsLast = 'decimals_DESC_NULLS_LAST',
+  FdvAsc = 'fdv_ASC',
+  FdvAscNullsFirst = 'fdv_ASC_NULLS_FIRST',
+  FdvAscNullsLast = 'fdv_ASC_NULLS_LAST',
+  FdvDesc = 'fdv_DESC',
+  FdvDescNullsFirst = 'fdv_DESC_NULLS_FIRST',
+  FdvDescNullsLast = 'fdv_DESC_NULLS_LAST',
   HoldersAsc = 'holders_ASC',
   HoldersAscNullsFirst = 'holders_ASC_NULLS_FIRST',
   HoldersAscNullsLast = 'holders_ASC_NULLS_LAST',
@@ -2613,6 +2785,12 @@ export enum TokenOrderByInput {
   IdDesc = 'id_DESC',
   IdDescNullsFirst = 'id_DESC_NULLS_FIRST',
   IdDescNullsLast = 'id_DESC_NULLS_LAST',
+  LastUpdatedAtBlockTimestampAsc = 'lastUpdatedAtBlockTimestamp_ASC',
+  LastUpdatedAtBlockTimestampAscNullsFirst = 'lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
+  LastUpdatedAtBlockTimestampAscNullsLast = 'lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
+  LastUpdatedAtBlockTimestampDesc = 'lastUpdatedAtBlockTimestamp_DESC',
+  LastUpdatedAtBlockTimestampDescNullsFirst = 'lastUpdatedAtBlockTimestamp_DESC_NULLS_FIRST',
+  LastUpdatedAtBlockTimestampDescNullsLast = 'lastUpdatedAtBlockTimestamp_DESC_NULLS_LAST',
   LastUpdatedAtAsc = 'lastUpdatedAt_ASC',
   LastUpdatedAtAscNullsFirst = 'lastUpdatedAt_ASC_NULLS_FIRST',
   LastUpdatedAtAscNullsLast = 'lastUpdatedAt_ASC_NULLS_LAST',
@@ -2625,96 +2803,18 @@ export enum TokenOrderByInput {
   MarketCapUsdDesc = 'marketCapUSD_DESC',
   MarketCapUsdDescNullsFirst = 'marketCapUSD_DESC_NULLS_FIRST',
   MarketCapUsdDescNullsLast = 'marketCapUSD_DESC_NULLS_LAST',
-  MemeTokenActivityVaultAllocationAsc = 'memeToken_activityVaultAllocation_ASC',
-  MemeTokenActivityVaultAllocationAscNullsFirst = 'memeToken_activityVaultAllocation_ASC_NULLS_FIRST',
-  MemeTokenActivityVaultAllocationAscNullsLast = 'memeToken_activityVaultAllocation_ASC_NULLS_LAST',
-  MemeTokenActivityVaultAllocationDesc = 'memeToken_activityVaultAllocation_DESC',
-  MemeTokenActivityVaultAllocationDescNullsFirst = 'memeToken_activityVaultAllocation_DESC_NULLS_FIRST',
-  MemeTokenActivityVaultAllocationDescNullsLast = 'memeToken_activityVaultAllocation_DESC_NULLS_LAST',
-  MemeTokenIdAsc = 'memeToken_id_ASC',
-  MemeTokenIdAscNullsFirst = 'memeToken_id_ASC_NULLS_FIRST',
-  MemeTokenIdAscNullsLast = 'memeToken_id_ASC_NULLS_LAST',
-  MemeTokenIdDesc = 'memeToken_id_DESC',
-  MemeTokenIdDescNullsFirst = 'memeToken_id_DESC_NULLS_FIRST',
-  MemeTokenIdDescNullsLast = 'memeToken_id_DESC_NULLS_LAST',
-  MemeTokenLastUpdatedAtAsc = 'memeToken_lastUpdatedAt_ASC',
-  MemeTokenLastUpdatedAtAscNullsFirst = 'memeToken_lastUpdatedAt_ASC_NULLS_FIRST',
-  MemeTokenLastUpdatedAtAscNullsLast = 'memeToken_lastUpdatedAt_ASC_NULLS_LAST',
-  MemeTokenLastUpdatedAtDesc = 'memeToken_lastUpdatedAt_DESC',
-  MemeTokenLastUpdatedAtDescNullsFirst = 'memeToken_lastUpdatedAt_DESC_NULLS_FIRST',
-  MemeTokenLastUpdatedAtDescNullsLast = 'memeToken_lastUpdatedAt_DESC_NULLS_LAST',
-  MemeTokenLockedLpTokensAsc = 'memeToken_lockedLpTokens_ASC',
-  MemeTokenLockedLpTokensAscNullsFirst = 'memeToken_lockedLpTokens_ASC_NULLS_FIRST',
-  MemeTokenLockedLpTokensAscNullsLast = 'memeToken_lockedLpTokens_ASC_NULLS_LAST',
-  MemeTokenLockedLpTokensDesc = 'memeToken_lockedLpTokens_DESC',
-  MemeTokenLockedLpTokensDescNullsFirst = 'memeToken_lockedLpTokens_DESC_NULLS_FIRST',
-  MemeTokenLockedLpTokensDescNullsLast = 'memeToken_lockedLpTokens_DESC_NULLS_LAST',
-  MemeTokenLpTokensUnlockTimeAsc = 'memeToken_lpTokensUnlockTime_ASC',
-  MemeTokenLpTokensUnlockTimeAscNullsFirst = 'memeToken_lpTokensUnlockTime_ASC_NULLS_FIRST',
-  MemeTokenLpTokensUnlockTimeAscNullsLast = 'memeToken_lpTokensUnlockTime_ASC_NULLS_LAST',
-  MemeTokenLpTokensUnlockTimeDesc = 'memeToken_lpTokensUnlockTime_DESC',
-  MemeTokenLpTokensUnlockTimeDescNullsFirst = 'memeToken_lpTokensUnlockTime_DESC_NULLS_FIRST',
-  MemeTokenLpTokensUnlockTimeDescNullsLast = 'memeToken_lpTokensUnlockTime_DESC_NULLS_LAST',
-  MemeTokenMemeCreatedAtAsc = 'memeToken_memeCreatedAt_ASC',
-  MemeTokenMemeCreatedAtAscNullsFirst = 'memeToken_memeCreatedAt_ASC_NULLS_FIRST',
-  MemeTokenMemeCreatedAtAscNullsLast = 'memeToken_memeCreatedAt_ASC_NULLS_LAST',
-  MemeTokenMemeCreatedAtDesc = 'memeToken_memeCreatedAt_DESC',
-  MemeTokenMemeCreatedAtDescNullsFirst = 'memeToken_memeCreatedAt_DESC_NULLS_FIRST',
-  MemeTokenMemeCreatedAtDescNullsLast = 'memeToken_memeCreatedAt_DESC_NULLS_LAST',
-  MemeTokenMemePicUrlAsc = 'memeToken_memePicUrl_ASC',
-  MemeTokenMemePicUrlAscNullsFirst = 'memeToken_memePicUrl_ASC_NULLS_FIRST',
-  MemeTokenMemePicUrlAscNullsLast = 'memeToken_memePicUrl_ASC_NULLS_LAST',
-  MemeTokenMemePicUrlDesc = 'memeToken_memePicUrl_DESC',
-  MemeTokenMemePicUrlDescNullsFirst = 'memeToken_memePicUrl_DESC_NULLS_FIRST',
-  MemeTokenMemePicUrlDescNullsLast = 'memeToken_memePicUrl_DESC_NULLS_LAST',
-  MemeTokenOwnerAddressAsc = 'memeToken_ownerAddress_ASC',
-  MemeTokenOwnerAddressAscNullsFirst = 'memeToken_ownerAddress_ASC_NULLS_FIRST',
-  MemeTokenOwnerAddressAscNullsLast = 'memeToken_ownerAddress_ASC_NULLS_LAST',
-  MemeTokenOwnerAddressDesc = 'memeToken_ownerAddress_DESC',
-  MemeTokenOwnerAddressDescNullsFirst = 'memeToken_ownerAddress_DESC_NULLS_FIRST',
-  MemeTokenOwnerAddressDescNullsLast = 'memeToken_ownerAddress_DESC_NULLS_LAST',
-  MemeTokenOwnerAllocationAsc = 'memeToken_ownerAllocation_ASC',
-  MemeTokenOwnerAllocationAscNullsFirst = 'memeToken_ownerAllocation_ASC_NULLS_FIRST',
-  MemeTokenOwnerAllocationAscNullsLast = 'memeToken_ownerAllocation_ASC_NULLS_LAST',
-  MemeTokenOwnerAllocationDesc = 'memeToken_ownerAllocation_DESC',
-  MemeTokenOwnerAllocationDescNullsFirst = 'memeToken_ownerAllocation_DESC_NULLS_FIRST',
-  MemeTokenOwnerAllocationDescNullsLast = 'memeToken_ownerAllocation_DESC_NULLS_LAST',
-  MemeTokenTokenAddressAsc = 'memeToken_tokenAddress_ASC',
-  MemeTokenTokenAddressAscNullsFirst = 'memeToken_tokenAddress_ASC_NULLS_FIRST',
-  MemeTokenTokenAddressAscNullsLast = 'memeToken_tokenAddress_ASC_NULLS_LAST',
-  MemeTokenTokenAddressDesc = 'memeToken_tokenAddress_DESC',
-  MemeTokenTokenAddressDescNullsFirst = 'memeToken_tokenAddress_DESC_NULLS_FIRST',
-  MemeTokenTokenAddressDescNullsLast = 'memeToken_tokenAddress_DESC_NULLS_LAST',
-  MemeTokenTokenNameAsc = 'memeToken_tokenName_ASC',
-  MemeTokenTokenNameAscNullsFirst = 'memeToken_tokenName_ASC_NULLS_FIRST',
-  MemeTokenTokenNameAscNullsLast = 'memeToken_tokenName_ASC_NULLS_LAST',
-  MemeTokenTokenNameDesc = 'memeToken_tokenName_DESC',
-  MemeTokenTokenNameDescNullsFirst = 'memeToken_tokenName_DESC_NULLS_FIRST',
-  MemeTokenTokenNameDescNullsLast = 'memeToken_tokenName_DESC_NULLS_LAST',
-  MemeTokenTokenSymbolAsc = 'memeToken_tokenSymbol_ASC',
-  MemeTokenTokenSymbolAscNullsFirst = 'memeToken_tokenSymbol_ASC_NULLS_FIRST',
-  MemeTokenTokenSymbolAscNullsLast = 'memeToken_tokenSymbol_ASC_NULLS_LAST',
-  MemeTokenTokenSymbolDesc = 'memeToken_tokenSymbol_DESC',
-  MemeTokenTokenSymbolDescNullsFirst = 'memeToken_tokenSymbol_DESC_NULLS_FIRST',
-  MemeTokenTokenSymbolDescNullsLast = 'memeToken_tokenSymbol_DESC_NULLS_LAST',
-  MemeTokenTokenV60InitiatedAsc = 'memeToken_tokenV60Initiated_ASC',
-  MemeTokenTokenV60InitiatedAscNullsFirst = 'memeToken_tokenV60Initiated_ASC_NULLS_FIRST',
-  MemeTokenTokenV60InitiatedAscNullsLast = 'memeToken_tokenV60Initiated_ASC_NULLS_LAST',
-  MemeTokenTokenV60InitiatedDesc = 'memeToken_tokenV60Initiated_DESC',
-  MemeTokenTokenV60InitiatedDescNullsFirst = 'memeToken_tokenV60Initiated_DESC_NULLS_FIRST',
-  MemeTokenTokenV60InitiatedDescNullsLast = 'memeToken_tokenV60Initiated_DESC_NULLS_LAST',
-  MemeTokenV60LpTokenAddressAsc = 'memeToken_v60LpTokenAddress_ASC',
-  MemeTokenV60LpTokenAddressAscNullsFirst = 'memeToken_v60LpTokenAddress_ASC_NULLS_FIRST',
-  MemeTokenV60LpTokenAddressAscNullsLast = 'memeToken_v60LpTokenAddress_ASC_NULLS_LAST',
-  MemeTokenV60LpTokenAddressDesc = 'memeToken_v60LpTokenAddress_DESC',
-  MemeTokenV60LpTokenAddressDescNullsFirst = 'memeToken_v60LpTokenAddress_DESC_NULLS_FIRST',
-  MemeTokenV60LpTokenAddressDescNullsLast = 'memeToken_v60LpTokenAddress_DESC_NULLS_LAST',
   NameAsc = 'name_ASC',
   NameAscNullsFirst = 'name_ASC_NULLS_FIRST',
   NameAscNullsLast = 'name_ASC_NULLS_LAST',
   NameDesc = 'name_DESC',
   NameDescNullsFirst = 'name_DESC_NULLS_FIRST',
   NameDescNullsLast = 'name_DESC_NULLS_LAST',
+  Price24hDeltaAsc = 'price24hDelta_ASC',
+  Price24hDeltaAscNullsFirst = 'price24hDelta_ASC_NULLS_FIRST',
+  Price24hDeltaAscNullsLast = 'price24hDelta_ASC_NULLS_LAST',
+  Price24hDeltaDesc = 'price24hDelta_DESC',
+  Price24hDeltaDescNullsFirst = 'price24hDelta_DESC_NULLS_FIRST',
+  Price24hDeltaDescNullsLast = 'price24hDelta_DESC_NULLS_LAST',
   PriceEthAsc = 'priceETH_ASC',
   PriceEthAscNullsFirst = 'priceETH_ASC_NULLS_FIRST',
   PriceEthAscNullsLast = 'priceETH_ASC_NULLS_LAST',
@@ -2798,6 +2898,15 @@ export type TokenWhereInput = {
   decimals_lte?: InputMaybe<Scalars['BigInt']['input']>;
   decimals_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
   decimals_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  fdv_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  fdv_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  fdv_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  fdv_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  fdv_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  fdv_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  fdv_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  fdv_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  fdv_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   holders_eq?: InputMaybe<Scalars['BigInt']['input']>;
   holders_gt?: InputMaybe<Scalars['BigInt']['input']>;
   holders_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -2824,6 +2933,19 @@ export type TokenWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
   id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
   id_startsWith?: InputMaybe<Scalars['String']['input']>;
+  lastUpdatedAtBlockTimestamp_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_in?: InputMaybe<
+    Array<Scalars['BigInt']['input']>
+  >;
+  lastUpdatedAtBlockTimestamp_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lastUpdatedAtBlockTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_not_in?: InputMaybe<
+    Array<Scalars['BigInt']['input']>
+  >;
   lastUpdatedAt_eq?: InputMaybe<Scalars['BigInt']['input']>;
   lastUpdatedAt_gt?: InputMaybe<Scalars['BigInt']['input']>;
   lastUpdatedAt_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -2842,8 +2964,6 @@ export type TokenWhereInput = {
   marketCapUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   marketCapUSD_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   marketCapUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  memeToken?: InputMaybe<MemeTokenWhereInput>;
-  memeToken_isNull?: InputMaybe<Scalars['Boolean']['input']>;
   name_contains?: InputMaybe<Scalars['String']['input']>;
   name_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
   name_endsWith?: InputMaybe<Scalars['String']['input']>;
@@ -2861,6 +2981,15 @@ export type TokenWhereInput = {
   name_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
   name_not_startsWith?: InputMaybe<Scalars['String']['input']>;
   name_startsWith?: InputMaybe<Scalars['String']['input']>;
+  price24hDelta_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  price24hDelta_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  price24hDelta_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  price24hDelta_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  price24hDelta_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  price24hDelta_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  price24hDelta_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  price24hDelta_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  price24hDelta_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   priceETH_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   priceETH_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   priceETH_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -2977,7 +3106,10 @@ export type TokensConnection = {
 export type User = {
   __typename?: 'User';
   id: Scalars['String']['output'];
+  lastUpdatedAt: Scalars['BigInt']['output'];
+  lastUpdatedAtBlockTimestamp: Scalars['BigInt']['output'];
   liquidityPositions: Array<CurrentLiquidityPosition>;
+  swapsAmount: Scalars['BigInt']['output'];
   usdSwapped: Scalars['BigDecimal']['output'];
 };
 
@@ -3001,6 +3133,24 @@ export enum UserOrderByInput {
   IdDesc = 'id_DESC',
   IdDescNullsFirst = 'id_DESC_NULLS_FIRST',
   IdDescNullsLast = 'id_DESC_NULLS_LAST',
+  LastUpdatedAtBlockTimestampAsc = 'lastUpdatedAtBlockTimestamp_ASC',
+  LastUpdatedAtBlockTimestampAscNullsFirst = 'lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
+  LastUpdatedAtBlockTimestampAscNullsLast = 'lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
+  LastUpdatedAtBlockTimestampDesc = 'lastUpdatedAtBlockTimestamp_DESC',
+  LastUpdatedAtBlockTimestampDescNullsFirst = 'lastUpdatedAtBlockTimestamp_DESC_NULLS_FIRST',
+  LastUpdatedAtBlockTimestampDescNullsLast = 'lastUpdatedAtBlockTimestamp_DESC_NULLS_LAST',
+  LastUpdatedAtAsc = 'lastUpdatedAt_ASC',
+  LastUpdatedAtAscNullsFirst = 'lastUpdatedAt_ASC_NULLS_FIRST',
+  LastUpdatedAtAscNullsLast = 'lastUpdatedAt_ASC_NULLS_LAST',
+  LastUpdatedAtDesc = 'lastUpdatedAt_DESC',
+  LastUpdatedAtDescNullsFirst = 'lastUpdatedAt_DESC_NULLS_FIRST',
+  LastUpdatedAtDescNullsLast = 'lastUpdatedAt_DESC_NULLS_LAST',
+  SwapsAmountAsc = 'swapsAmount_ASC',
+  SwapsAmountAscNullsFirst = 'swapsAmount_ASC_NULLS_FIRST',
+  SwapsAmountAscNullsLast = 'swapsAmount_ASC_NULLS_LAST',
+  SwapsAmountDesc = 'swapsAmount_DESC',
+  SwapsAmountDescNullsFirst = 'swapsAmount_DESC_NULLS_FIRST',
+  SwapsAmountDescNullsLast = 'swapsAmount_DESC_NULLS_LAST',
   UsdSwappedAsc = 'usdSwapped_ASC',
   UsdSwappedAscNullsFirst = 'usdSwapped_ASC_NULLS_FIRST',
   UsdSwappedAscNullsLast = 'usdSwapped_ASC_NULLS_LAST',
@@ -3029,9 +3179,40 @@ export type UserWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
   id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
   id_startsWith?: InputMaybe<Scalars['String']['input']>;
+  lastUpdatedAtBlockTimestamp_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_in?: InputMaybe<
+    Array<Scalars['BigInt']['input']>
+  >;
+  lastUpdatedAtBlockTimestamp_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lastUpdatedAtBlockTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAtBlockTimestamp_not_in?: InputMaybe<
+    Array<Scalars['BigInt']['input']>
+  >;
+  lastUpdatedAt_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lastUpdatedAt_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lastUpdatedAt_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUpdatedAt_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   liquidityPositions_every?: InputMaybe<CurrentLiquidityPositionWhereInput>;
   liquidityPositions_none?: InputMaybe<CurrentLiquidityPositionWhereInput>;
   liquidityPositions_some?: InputMaybe<CurrentLiquidityPositionWhereInput>;
+  swapsAmount_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  swapsAmount_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  swapsAmount_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  swapsAmount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  swapsAmount_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  swapsAmount_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  swapsAmount_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  swapsAmount_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  swapsAmount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   usdSwapped_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
   usdSwapped_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   usdSwapped_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -3099,23 +3280,6 @@ export type PairByIdQuery = {
       totalLiquidityAllPairsUSD: any;
       holders: any;
       lastUpdatedAt: any;
-      memeToken?: {
-        __typename?: 'MemeToken';
-        id: string;
-        ownerAddress: string;
-        tokenAddress: string;
-        tokenName: string;
-        tokenSymbol: string;
-        tokenV60Initiated?: boolean | null;
-        v60LpTokenAddress?: string | null;
-        ownerAllocation?: any | null;
-        activityVaultAllocation?: any | null;
-        memeCreatedAt?: any | null;
-        memePicUrl?: string | null;
-        lockedLpTokens?: any | null;
-        lpTokensUnlockTime?: any | null;
-        lastUpdatedAt: any;
-      } | null;
     };
     token1: {
       __typename?: 'Token';
@@ -3136,23 +3300,6 @@ export type PairByIdQuery = {
       totalLiquidityAllPairsUSD: any;
       holders: any;
       lastUpdatedAt: any;
-      memeToken?: {
-        __typename?: 'MemeToken';
-        id: string;
-        ownerAddress: string;
-        tokenAddress: string;
-        tokenName: string;
-        tokenSymbol: string;
-        tokenV60Initiated?: boolean | null;
-        v60LpTokenAddress?: string | null;
-        ownerAllocation?: any | null;
-        activityVaultAllocation?: any | null;
-        memeCreatedAt?: any | null;
-        memePicUrl?: string | null;
-        lockedLpTokens?: any | null;
-        lpTokensUnlockTime?: any | null;
-        lastUpdatedAt: any;
-      } | null;
     };
   } | null;
 };
@@ -3209,23 +3356,6 @@ export type PairsQuery = {
       totalLiquidityAllPairsUSD: any;
       holders: any;
       lastUpdatedAt: any;
-      memeToken?: {
-        __typename?: 'MemeToken';
-        id: string;
-        ownerAddress: string;
-        tokenAddress: string;
-        tokenName: string;
-        tokenSymbol: string;
-        tokenV60Initiated?: boolean | null;
-        v60LpTokenAddress?: string | null;
-        ownerAllocation?: any | null;
-        activityVaultAllocation?: any | null;
-        memeCreatedAt?: any | null;
-        memePicUrl?: string | null;
-        lockedLpTokens?: any | null;
-        lpTokensUnlockTime?: any | null;
-        lastUpdatedAt: any;
-      } | null;
     };
     token1: {
       __typename?: 'Token';
@@ -3246,23 +3376,6 @@ export type PairsQuery = {
       totalLiquidityAllPairsUSD: any;
       holders: any;
       lastUpdatedAt: any;
-      memeToken?: {
-        __typename?: 'MemeToken';
-        id: string;
-        ownerAddress: string;
-        tokenAddress: string;
-        tokenName: string;
-        tokenSymbol: string;
-        tokenV60Initiated?: boolean | null;
-        v60LpTokenAddress?: string | null;
-        ownerAllocation?: any | null;
-        activityVaultAllocation?: any | null;
-        memeCreatedAt?: any | null;
-        memePicUrl?: string | null;
-        lockedLpTokens?: any | null;
-        lpTokensUnlockTime?: any | null;
-        lastUpdatedAt: any;
-      } | null;
     };
   }>;
 };
@@ -3328,23 +3441,6 @@ export type CurrentLiquidityPositionsQuery = {
         totalLiquidityAllPairsUSD: any;
         holders: any;
         lastUpdatedAt: any;
-        memeToken?: {
-          __typename?: 'MemeToken';
-          id: string;
-          ownerAddress: string;
-          tokenAddress: string;
-          tokenName: string;
-          tokenSymbol: string;
-          tokenV60Initiated?: boolean | null;
-          v60LpTokenAddress?: string | null;
-          ownerAllocation?: any | null;
-          activityVaultAllocation?: any | null;
-          memeCreatedAt?: any | null;
-          memePicUrl?: string | null;
-          lockedLpTokens?: any | null;
-          lpTokensUnlockTime?: any | null;
-          lastUpdatedAt: any;
-        } | null;
       };
       token1: {
         __typename?: 'Token';
@@ -3365,23 +3461,6 @@ export type CurrentLiquidityPositionsQuery = {
         totalLiquidityAllPairsUSD: any;
         holders: any;
         lastUpdatedAt: any;
-        memeToken?: {
-          __typename?: 'MemeToken';
-          id: string;
-          ownerAddress: string;
-          tokenAddress: string;
-          tokenName: string;
-          tokenSymbol: string;
-          tokenV60Initiated?: boolean | null;
-          v60LpTokenAddress?: string | null;
-          ownerAllocation?: any | null;
-          activityVaultAllocation?: any | null;
-          memeCreatedAt?: any | null;
-          memePicUrl?: string | null;
-          lockedLpTokens?: any | null;
-          lpTokensUnlockTime?: any | null;
-          lastUpdatedAt: any;
-        } | null;
       };
     };
   }>;
@@ -3499,83 +3578,6 @@ export const PairByIdDocument = {
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'memeToken' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'ownerAddress' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tokenAddress' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tokenName' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tokenSymbol' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'tokenV60Initiated',
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'v60LpTokenAddress',
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'ownerAllocation' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'activityVaultAllocation',
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'memeCreatedAt' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'memePicUrl' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lockedLpTokens' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'lpTokensUnlockTime',
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastUpdatedAt' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
                         name: { kind: 'Name', value: 'lastUpdatedAt' },
                       },
                     ],
@@ -3647,83 +3649,6 @@ export const PairByIdDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'holders' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'memeToken' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'ownerAddress' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tokenAddress' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tokenName' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tokenSymbol' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'tokenV60Initiated',
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'v60LpTokenAddress',
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'ownerAllocation' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'activityVaultAllocation',
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'memeCreatedAt' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'memePicUrl' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lockedLpTokens' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'lpTokensUnlockTime',
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastUpdatedAt' },
-                            },
-                          ],
-                        },
                       },
                       {
                         kind: 'Field',
@@ -3966,83 +3891,6 @@ export const PairsDocument = {
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'memeToken' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'ownerAddress' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tokenAddress' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tokenName' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tokenSymbol' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'tokenV60Initiated',
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'v60LpTokenAddress',
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'ownerAllocation' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'activityVaultAllocation',
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'memeCreatedAt' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'memePicUrl' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lockedLpTokens' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'lpTokensUnlockTime',
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastUpdatedAt' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
                         name: { kind: 'Name', value: 'lastUpdatedAt' },
                       },
                     ],
@@ -4114,83 +3962,6 @@ export const PairsDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'holders' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'memeToken' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'ownerAddress' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tokenAddress' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tokenName' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'tokenSymbol' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'tokenV60Initiated',
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'v60LpTokenAddress',
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'ownerAllocation' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'activityVaultAllocation',
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'memeCreatedAt' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'memePicUrl' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lockedLpTokens' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'lpTokensUnlockTime',
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastUpdatedAt' },
-                            },
-                          ],
-                        },
                       },
                       {
                         kind: 'Field',
@@ -4475,104 +4246,6 @@ export const CurrentLiquidityPositionsDocument = {
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'memeToken' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'ownerAddress',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'tokenAddress',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'tokenName' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'tokenSymbol',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'tokenV60Initiated',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'v60LpTokenAddress',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'ownerAllocation',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'activityVaultAllocation',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'memeCreatedAt',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'memePicUrl' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'lockedLpTokens',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'lpTokensUnlockTime',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'lastUpdatedAt',
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
                               name: { kind: 'Name', value: 'lastUpdatedAt' },
                             },
                           ],
@@ -4662,104 +4335,6 @@ export const CurrentLiquidityPositionsDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'holders' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'memeToken' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'ownerAddress',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'tokenAddress',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'tokenName' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'tokenSymbol',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'tokenV60Initiated',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'v60LpTokenAddress',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'ownerAllocation',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'activityVaultAllocation',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'memeCreatedAt',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'memePicUrl' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'lockedLpTokens',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'lpTokensUnlockTime',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'lastUpdatedAt',
-                                    },
-                                  },
-                                ],
-                              },
                             },
                             {
                               kind: 'Field',

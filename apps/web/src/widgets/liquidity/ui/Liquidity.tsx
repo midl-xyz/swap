@@ -40,18 +40,20 @@ export const Liquidity = () => {
     );
   }
 
-  const positionList = positions?.currentLiquidityPositions?.filter(
-    ({ liquidityTokenBalance, pair }) => {
-      const parsedBalance = parseFloat(liquidityTokenBalance.toString());
+  const positionList = positions?.currentLiquidityPositions;
 
-      return (
-        parsedBalance > 0.000000000001 &&
-        (parsedBalance / parseFloat(pair.lpTotalSupply.toString())) *
-          10000000000 >
-          0.000000000001
-      );
-    },
-  );
+  // TODO: filter out positions with 0 balance and 0% of the pool
+  // .filter(
+  //   ({ liquidityTokenBalance, pair }) => {
+  //     const parsedBalance = parseFloat(liquidityTokenBalance.toString());
+
+  //     return (
+  //       parsedBalance > 0.000000000001 &&
+  //       (parsedBalance / parseFloat(pair.lpTotalSupply.toString())) *
+  //         10000000000 >
+  //         0.000000000001
+  //     );
+  //   },
 
   return (
     <div>

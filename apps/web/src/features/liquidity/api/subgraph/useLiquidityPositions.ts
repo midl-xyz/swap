@@ -41,22 +41,6 @@ const GetLiquidityPositions = graphql(`
           totalLiquidityAllPairs
           totalLiquidityAllPairsUSD
           holders
-          memeToken {
-            id
-            ownerAddress
-            tokenAddress
-            tokenName
-            tokenSymbol
-            tokenV60Initiated
-            v60LpTokenAddress
-            ownerAllocation
-            activityVaultAllocation
-            memeCreatedAt
-            memePicUrl
-            lockedLpTokens
-            lpTokensUnlockTime
-            lastUpdatedAt
-          }
           lastUpdatedAt
         }
         token1 {
@@ -76,22 +60,6 @@ const GetLiquidityPositions = graphql(`
           totalLiquidityAllPairs
           totalLiquidityAllPairsUSD
           holders
-          memeToken {
-            id
-            ownerAddress
-            tokenAddress
-            tokenName
-            tokenSymbol
-            tokenV60Initiated
-            v60LpTokenAddress
-            ownerAllocation
-            activityVaultAllocation
-            memeCreatedAt
-            memePicUrl
-            lockedLpTokens
-            lpTokensUnlockTime
-            lastUpdatedAt
-          }
           lastUpdatedAt
         }
         reserve0
