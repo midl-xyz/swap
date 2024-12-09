@@ -11,7 +11,7 @@ export const tokenList: Token[] = [
     name: 'Bitcoin',
     address: zeroAddress,
     chainId: midlRegtest.id,
-    decimals: 8,
+    decimals: 18,
     logoURI:
       'https://assets-cdn.trustwallet.com/blockchains/bitcoin/info/logo.png',
   },

@@ -1,5 +1,5 @@
 import { Address, erc20Abi } from 'viem';
-import { useReadContract } from 'wagmi';
+import { useReadContract, UseReadContractParameters } from 'wagmi';
 
 export const useERC20Allowance = (
   {
@@ -11,7 +11,7 @@ export const useERC20Allowance = (
     spender: Address;
     user: Address;
   },
-  wagmiOverrides?: ContractCallOverrides,
+  wagmiOverrides?: ContractCallOverrides<typeof erc20Abi, 'allowance'>,
 ) => {
   return useReadContract({
     address: token,

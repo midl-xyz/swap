@@ -32,7 +32,7 @@ export const useSwapRates = () => {
     }
 
     try {
-      const result = await readContract(wagmiConfig, {
+      const result = await readContract(wagmiConfig as any, {
         abi: uniswapV2Router02Abi,
         address: deployments[chainId].UniswapV2Router02.address,
         functionName: method,

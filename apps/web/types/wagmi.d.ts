@@ -14,9 +14,9 @@ declare global {
     functionName extends ContractFunctionName<abi, 'view' | 'pure'>,
   > = ContractFunctionArgs<abi, 'view' | 'pure', functionName>;
 
-  type ContractCallOverrides = Omit<
-    UseReadContractParameters,
-    'abi' | 'address' | 'functionName' | 'chainId' | 'args'
+  type ContractCallOverrides<T = any, F = any> = Omit<
+    UseReadContractParameters<T, F>,
+    'abi' | 'address' | 'functionName' | 'chainId' | 'args' | 'query'
   > & {
     chainId?: GetChainIdReturnType<typeof wagmiConfig>;
   };

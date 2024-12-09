@@ -7,7 +7,7 @@ import {
 } from '@midl-xyz/midl-js-executor';
 import { useMutation } from '@tanstack/react-query';
 import { Address, encodeFunctionData, erc20Abi, zeroAddress } from 'viem';
-import { useChainId, useWalletClient } from 'wagmi';
+import { useChainId } from 'wagmi';
 
 type UseAddLiquidityParams = {
   tokenA: {
@@ -41,9 +41,6 @@ export const useAddLiquidityMidl = ({
       tokenBAmount: tokenB.amount,
     },
   });
-
-  console.log('tokenA', tokenA);
-  console.log('tokenB', tokenB);
 
   const chainId = useChainId();
   const { addTxIntention } = useAddTxIntention();

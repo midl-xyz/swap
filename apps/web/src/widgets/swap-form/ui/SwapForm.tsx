@@ -9,7 +9,9 @@ import {
   useSwap,
   useTokenBalance,
 } from '@/features';
+import { useSwapMidl } from '@/features/swap/api/useSwapMidl';
 import { useSwapRates } from '@/features/swap/api/useSwapRates';
+import { SwapDialog } from '@/features/swap/ui/swap-dialog/SwapDialog';
 import { deployments, tokenList } from '@/global';
 import {
   Button,
@@ -25,12 +27,12 @@ import { getCorrectToken } from '@/widgets/swap-form/ui/utils';
 import { useQueryClient } from '@tanstack/react-query';
 import { Loader2Icon } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDebouncedCallback } from 'use-debounce';
 import { Address, formatUnits, parseUnits, zeroAddress } from 'viem';
-import { useAccount, useBalance, useChainId } from 'wagmi';
+import { useAccount, useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { vstack } from '~/styled-system/patterns';
 
@@ -127,68 +129,15 @@ export const SwapForm = () => {
     );
   }, 0);
 
-  const {
-    swap,
-    error: swapError,
-    isPending: isSwapPending,
-    isConfirming: isSwapConfirming,
-    isConfirmed: isSwapSuccess,
-    reset,
-  } = useSwap();
-
   const { address } = useAccount();
-  const balance = useBalance({ address });
 
-  const {
-    data: tokenAllowance,
-    refetch,
-    dataUpdatedAt,
-  } = useERC20Allowance({
-    token: inputToken,
-    spender: deployments[chainId].UniswapV2Router02.address as Address,
-    user: address as Address,
-  });
-
-  const {
-    write: approveERC20,
-    isConfirmed,
-    isPending,
-    isConfirming,
-    confirmedAt,
-  } = useERC20ApproveAllowance();
-
-  useEffect(() => {
-    if (isConfirmed && dataUpdatedAt < confirmedAt) {
-      queryClient.invalidateQueries({
-        predicate: scopeKeyPredicate(['balance', 'allowance']),
-      });
-
-      toast.success('Approved');
-    }
-  }, [isConfirmed, dataUpdatedAt, confirmedAt, refetch]);
-
-  useEffect(() => {
-    if (swapError) {
-      toast.error(swapError.name);
-      console.error(swapError);
-    }
-  }, [swapError]);
-
-  useEffect(() => {
-    if (isSwapSuccess) {
-      queryClient.invalidateQueries({
-        predicate: scopeKeyPredicate(['balance', 'allowance']),
-      });
-
-      reset();
-
-      onInputTokenAmountChange({
-        target: { value: inputTokenAmount },
-      } as any);
-      form.reset();
-      toast.success('Swap successful');
-    }
-  }, [isSwapSuccess, queryClient, inputTokenAmount]);
+  const onSwapSuccess = () => {
+    onInputTokenAmountChange({
+      target: { value: inputTokenAmount },
+    } as any);
+    form.reset();
+    toast.success('Swap successful');
+  };
 
   const parsedInputTokenAmount = parseUnits(
     parseNumberInput(inputTokenAmount),
@@ -203,26 +152,21 @@ export const SwapForm = () => {
     slippage,
   );
 
-  const onSubmit = () => {
-    if (
-      (tokenAllowance as bigint) < parsedInputTokenAmount &&
-      inputToken !== zeroAddress
-    ) {
-      return approveERC20(
-        inputToken,
-        deployments[chainId].UniswapV2Router02.address as Address,
-        parsedInputTokenAmount,
-      );
-    }
+  const [isDialogOpen, setDialogOpen] = useState(false);
 
-    swap({
-      tokenIn: inputToken,
-      tokenOut: outputToken,
-      amountIn: parsedInputTokenAmount,
-      amountOutMin,
+  const { swapAsync } = useSwapMidl({
+    tokenIn: inputToken,
+    amountIn: parsedInputTokenAmount,
+  });
+
+  const onSubmit = async () => {
+    await swapAsync({
       to: address!,
+      tokenOut: outputToken,
       deadline: BigInt(Math.floor(Date.now() / 1000) + 60 * 20),
+      amountOutMin,
     });
+    setDialogOpen(true);
   };
 
   const onSwapInput = () => {
@@ -296,12 +240,9 @@ export const SwapForm = () => {
     data: { balance: inputTokenBalance },
   } = useTokenBalance(inputToken, { chainId, address });
 
-  const isApproving = isPending || isConfirming;
-  const shouldApprove = (tokenAllowance as bigint) < parsedInputTokenAmount;
   const isBalanceBigEnough =
     parsedInputTokenAmount <= (inputTokenBalance ?? Infinity);
 
-  const isSwapping = (isSwapPending || isSwapConfirming) && !shouldApprove;
   const isFormFilled =
     !!inputTokenAmount && !!outputTokenAmount && !!inputToken && !!outputToken;
 
@@ -316,28 +257,7 @@ export const SwapForm = () => {
       return <>Insufficient Balance</>;
     }
     if (!isSwapRatesFetching && !swapRatesError && isBalanceBigEnough) {
-      if (shouldApprove) {
-        if (isApproving) {
-          return (
-            <>
-              <Loader2Icon
-                className={css({
-                  animation: 'spin 1s linear infinite',
-                })}
-              />
-              Approving...
-            </>
-          );
-        } else {
-          return 'Approve';
-        }
-      } else {
-        if (isSwapping) {
-          return <>Swapping...</>;
-        } else {
-          return 'Swap';
-        }
-      }
+      return 'Swap';
     }
     if (!isSwapRatesFetching && Boolean(swapRatesError) && isFormFilled) {
       return 'Insufficient liquidity';
@@ -422,11 +342,7 @@ export const SwapForm = () => {
             appearance="primary"
             disabled={
               isSwapRatesFetching ||
-              isConfirming ||
               Boolean(swapRatesError) ||
-              isApproving ||
-              isPending ||
-              isSwapping ||
               !isFormFilled ||
               !isBalanceBigEnough
             }
@@ -446,6 +362,16 @@ export const SwapForm = () => {
             outputTokenAmount={outputTokenAmount}
           />
         ) : null}
+
+        <SwapDialog
+          onSuccessfulSwap={onSwapSuccess}
+          open={isDialogOpen}
+          tokenIn={inputToken}
+          amountIn={parsedInputTokenAmount}
+          onClose={() => {
+            setDialogOpen(false);
+          }}
+        />
       </form>
     </FormProvider>
   );

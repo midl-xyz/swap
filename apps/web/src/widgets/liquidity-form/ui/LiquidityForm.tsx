@@ -8,8 +8,7 @@ import {
   usePoolShare,
 } from '@/features/liquidity';
 import { useMinAmount } from '@/features/liquidity/api/useMinAmount';
-import { useERC20ApproveAllowance } from '@/features/token/api/useERC20ApprovaAllowance';
-import { deployments, tokenList } from '@/global';
+import { tokenList } from '@/global';
 import {
   Button,
   SwapInput,
@@ -20,12 +19,6 @@ import { SlippageControl } from '@/widgets';
 import { schema } from '@/widgets/liquidity-form/ui/schema';
 import { correctNumber } from '@/widgets/swap-form/ui/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  getEVMAddress,
-  useEVMAddress,
-  usePublicKey,
-} from '@midl-xyz/midl-js-executor';
-import { useAccounts } from '@midl-xyz/midl-js-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
@@ -113,13 +106,6 @@ export const LiquidityForm = () => {
     0,
   );
 
-  const {
-    write: approveERC20,
-    isPending,
-    isConfirming,
-    isConfirmed,
-  } = useERC20ApproveAllowance();
-
   const parsedTokenAAmount = parseUnits(
     parseNumberInput(tokenAAmount),
     tokenAInfo.decimals,
@@ -131,7 +117,6 @@ export const LiquidityForm = () => {
 
   const {
     data: { poolShare, reserves },
-    refetch,
   } = usePoolShare({
     tokenA,
     tokenB,
@@ -140,12 +125,6 @@ export const LiquidityForm = () => {
       tokenBAmount: parsedTokenBAmount,
     },
   });
-
-  useEffect(() => {
-    if (isConfirmed) {
-      refetch();
-    }
-  }, [isConfirmed]);
 
   useEffect(() => {
     form.trigger();
@@ -372,8 +351,6 @@ export const LiquidityForm = () => {
           type="submit"
           disabled={
             !formState.isValid ||
-            isPending ||
-            isConfirming ||
             !tokenAAmount ||
             !tokenBAmount ||
             !isBalanceBigEnough

@@ -24,6 +24,7 @@ export const useTokenBalance = (
     address: paymentAccount?.address || ordinalsAccount?.address || '',
   });
 
+  const convertedBTCBalance = btcBalance * 10 ** 10;
   const contracts: any[] = [
     {
       address: contract,
@@ -114,12 +115,12 @@ export const useTokenBalance = (
   if (contract === zeroAddress) {
     return {
       data: {
-        decimals: 8,
+        decimals: 18,
         name: tokenList.find((it) => it.address === zeroAddress)?.name,
         symbol: tokenList.find((it) => it.address === zeroAddress)?.symbol,
         totalSupply: 0,
-        balance: BigInt(btcBalance ?? 0),
-        formattedBalance: formatUnits(BigInt(btcBalance ?? 0), 8),
+        balance: BigInt(convertedBTCBalance ?? 0),
+        formattedBalance: formatUnits(BigInt(convertedBTCBalance ?? 0), 18),
       },
       ...restBalance,
     };

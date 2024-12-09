@@ -28,7 +28,7 @@ export const SwapInput = ({
   onMax,
   ...rest
 }: SwapInputProps) => {
-  const { control, watch, setValue, trigger, setFocus } = useFormContext();
+  const { control, watch, setValue, trigger } = useFormContext();
   const chainId = useChainId();
   const token = watch(tokenName);
   const tokenInfo = useToken(token, chainId);

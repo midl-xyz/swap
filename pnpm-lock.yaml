@@ -54,8 +54,8 @@ importers:
         specifier: ^0.0.33
         version: 0.0.33(@types/react@18.2.48)(bufferutil@4.0.8)(react@18.2.0)(typescript@5.3.3)(use-sync-external-store@1.2.0(react@18.2.0))(utf-8-validate@5.0.10)(webextension-polyfill@0.10.0)(zod@3.22.4)
       '@midl-xyz/midl-js-executor':
-        specifier: ^0.0.51
-        version: 0.0.51(4hsazoog622fprn55wcfg5ruwu)
+        specifier: ^0.0.58
+        version: 0.0.58(4hsazoog622fprn55wcfg5ruwu)
       '@midl-xyz/midl-js-react':
         specifier: ^0.0.40
         version: 0.0.40(@tanstack/react-query@5.18.0(react@18.2.0))(@types/react@18.2.48)(bufferutil@4.0.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.3.3)(use-sync-external-store@1.2.0(react@18.2.0))(utf-8-validate@5.0.10)(webextension-polyfill@0.10.0)(zod@3.22.4)
@@ -2221,8 +2221,8 @@ packages:
   '@midl-xyz/midl-js-core@0.0.33':
     resolution: {integrity: sha512-qPsHO9WJ/H682/S9/I4ZRGePe3/smrfFj5Li/C1ZEBhaybocfc+PkkQSfcPQpLHK/Ooq5P8omDlf++lm3kctew==, tarball: https://npm.pkg.github.com/download/@midl-xyz/midl-js-core/0.0.33/13f1475ac39171541c76142d40e17446391995e6}
 
-  '@midl-xyz/midl-js-executor@0.0.51':
-    resolution: {integrity: sha512-vOXYtvm5Q7L/kTr5vqTj/tAVjE16Ig1nz7ywBFCWv20E+oXrKBgofvUXHwB520TybPQBfLUe7y3DF6aUCkM7lg==, tarball: https://npm.pkg.github.com/download/@midl-xyz/midl-js-executor/0.0.51/6936febc492a946ec3ea3f35a3a7b38ee8c01aa9}
+  '@midl-xyz/midl-js-executor@0.0.58':
+    resolution: {integrity: sha512-FXYkOcZBwAcFgx+kk8tKAazpQQ6gu9/PGbMUfTzoMMUFq79BO5rjHvZVYF2BK6yXEElyjPKDu/J5xn+1FNkdEQ==, tarball: https://npm.pkg.github.com/download/@midl-xyz/midl-js-executor/0.0.58/58c520bc24b75601ac82ecb9fe093e0a7c936fb9}
     peerDependencies:
       '@midl-xyz/midl-js-react': ^0.0.40
       '@tanstack/react-query': ^5.59.9
@@ -12297,7 +12297,7 @@ snapshots:
       - webextension-polyfill
       - zod
 
-  '@midl-xyz/midl-js-executor@0.0.51(4hsazoog622fprn55wcfg5ruwu)':
+  '@midl-xyz/midl-js-executor@0.0.58(4hsazoog622fprn55wcfg5ruwu)':
     dependencies:
       '@bitcoinerlab/secp256k1': 1.1.1
       '@midl-xyz/contracts': 0.0.2
@@ -16332,7 +16332,7 @@ snapshots:
       eslint: 8.56.0
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.56.0))(eslint@8.56.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.56.0))(eslint@8.56.0))(eslint@8.56.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.56.0)
       eslint-plugin-jsx-a11y: 6.8.0(eslint@8.56.0)
       eslint-plugin-react: 7.33.2(eslint@8.56.0)
       eslint-plugin-react-hooks: 4.6.0(eslint@8.56.0)
@@ -16362,7 +16362,7 @@ snapshots:
       enhanced-resolve: 5.15.0
       eslint: 8.56.0
       eslint-module-utils: 2.8.0(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.56.0))(eslint@8.56.0))(eslint@8.56.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.56.0))(eslint@8.56.0))(eslint@8.56.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.56.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.2
       is-core-module: 2.13.1
@@ -16384,7 +16384,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.56.0))(eslint@8.56.0))(eslint@8.56.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.56.0):
     dependencies:
       array-includes: 3.1.7
       array.prototype.findlastindex: 1.2.3

@@ -17,10 +17,12 @@ import { hstack, vstack } from '~/styled-system/patterns';
 type IntentionSignerProps = {
   stateOverride?: StateOverride;
   onClose: () => void;
+  shouldComplete?: boolean;
 };
 
 export const IntentionSigner = ({
   stateOverride,
+  shouldComplete,
   onClose,
 }: IntentionSignerProps) => {
   const { txIntentions } = useAddTxIntention();
@@ -113,6 +115,7 @@ export const IntentionSigner = ({
             onClick={() => {
               finalizeBTCTransaction({
                 stateOverride,
+                shouldComplete,
               });
             }}
             disabled={isFinalizingBTC}

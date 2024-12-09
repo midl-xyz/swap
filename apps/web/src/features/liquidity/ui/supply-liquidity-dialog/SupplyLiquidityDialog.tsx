@@ -17,13 +17,6 @@ import {
   toHex,
   zeroAddress,
 } from 'viem';
-import {
-  useAccount,
-  useClient,
-  useConnect,
-  useConnectorClient,
-  useWalletClient,
-} from 'wagmi';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
 
@@ -118,7 +111,7 @@ export const SupplyLiquidityDialog = ({
   const stateOverride = [
     {
       address: evmAddress,
-      balance: parseUnits('10000000', 8), // TODO: very large balance for testing
+      balance: parseUnits('100000000000000000000000000', 18), // TODO: very large balance for testing
     },
     ...(tokenA !== zeroAddress
       ? [
