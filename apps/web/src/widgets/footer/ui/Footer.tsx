@@ -25,7 +25,7 @@ export const Footer = () => {
           gap: 1,
         })}
       >
-        <Logo black />
+        <Logo />
 
         <span
           className={css({
@@ -57,10 +57,10 @@ export const Footer = () => {
           </span>
           <VStack alignItems="baseline" gap={3}>
             <Link href="/swap">
-              <Button appearance="link">Swap</Button>
+              <Button appearance="ghost">Swap</Button>
             </Link>
             <Link href="/pairs">
-              <Button appearance="link">Pairs</Button>
+              <Button appearance="ghost">Pairs</Button>
             </Link>
             {/*<Link href="/about">*/}
             {/*  <Button appearance="tertiary">About</Button>*/}

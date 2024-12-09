@@ -2,7 +2,9 @@
 
 import { Pair } from '@/widgets/pair';
 
-const PairPage = ({ params: { id } }: { params: { id: string } }) => {
+const PairPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
+
   return <Pair id={id} />;
 };
 

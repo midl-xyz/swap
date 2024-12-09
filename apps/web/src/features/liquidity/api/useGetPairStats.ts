@@ -13,6 +13,7 @@ type PairStatsArgs = {
 export const useGetPairStats = (
   { lpTokenAddress, tokenA, tokenB, userAddress }: PairStatsArgs,
   wagmiOverrides: ContractCallOverrides = {
+    // @ts-ignore
     query: {
       enabled: !!lpTokenAddress && !!tokenA && !!tokenB,
     },

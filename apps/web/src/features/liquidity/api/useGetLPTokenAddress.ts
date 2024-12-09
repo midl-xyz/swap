@@ -32,7 +32,7 @@ export const useGetLPTokenAddress = (
     abi: uniswapV2FactoryAbi,
     address: deployments[chainId].UniswapV2Factory.address,
     functionName: 'getPair',
-    args: [correctTokenA, correctTokenB],
+    args: [correctTokenA!, correctTokenB!],
     query: {
       enabled: !!tokenA && !!tokenB,
     },
