@@ -9,7 +9,7 @@ import {
   useWaitForTransaction,
 } from '@midl-xyz/midl-js-react';
 import toast from 'react-hot-toast';
-import { StateOverride } from 'viem';
+import { Address, StateOverride, zeroAddress } from 'viem';
 import { useWalletClient } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
@@ -18,11 +18,13 @@ type IntentionSignerProps = {
   stateOverride?: StateOverride;
   onClose: () => void;
   shouldComplete?: boolean;
+  assetsToWithdraw?: [Address] | [Address, Address];
 };
 
 export const IntentionSigner = ({
   stateOverride,
   shouldComplete,
+  assetsToWithdraw,
   onClose,
 }: IntentionSignerProps) => {
   const { txIntentions } = useAddTxIntention();
@@ -116,6 +118,9 @@ export const IntentionSigner = ({
               finalizeBTCTransaction({
                 stateOverride,
                 shouldComplete,
+                assetsToWithdraw: assetsToWithdraw?.filter(
+                  (it) => it !== zeroAddress,
+                ) as any,
               });
             }}
             disabled={isFinalizingBTC}

@@ -366,6 +366,7 @@ export const SwapForm = () => {
         <SwapDialog
           onSuccessfulSwap={onSwapSuccess}
           open={isDialogOpen}
+          tokenOut={outputToken}
           tokenIn={inputToken}
           amountIn={parsedInputTokenAmount}
           onClose={() => {

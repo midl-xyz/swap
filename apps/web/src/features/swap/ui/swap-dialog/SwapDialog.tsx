@@ -18,12 +18,14 @@ type SwapDialogProps = DialogProps & {
   onClose: () => void;
   tokenIn: Address;
   amountIn: bigint;
+  tokenOut: Address;
 };
 
 export const SwapDialog = ({
   onClose,
   onSuccessfulSwap,
   tokenIn,
+  tokenOut,
   amountIn,
   ...rest
 }: SwapDialogProps) => {
@@ -77,6 +79,7 @@ export const SwapDialog = ({
 
           <IntentionSigner
             stateOverride={stateOverride}
+            assetsToWithdraw={[tokenOut]}
             shouldComplete={true}
             onClose={() => {
               onClose();
