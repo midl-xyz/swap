@@ -5,12 +5,15 @@ import { AppMenuList, Header, Logo } from '@/widgets';
 import { Footer } from '@/widgets/footer/ui';
 import { Landing } from '@/widgets/landing/ui/Landing';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { Toaster } from 'react-hot-toast';
 import { css } from '~/styled-system/css';
 import { HStack } from '~/styled-system/jsx';
 import { hstack } from '~/styled-system/patterns';
 
 export default function Home() {
+  redirect('/swap');
+
   return (
     <>
       <Header

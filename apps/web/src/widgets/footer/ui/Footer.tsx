@@ -39,7 +39,7 @@ export const Footer = () => {
             },
           })}
         >
-          © v60 2024
+          © Midl 2024
         </span>
       </div>
 
@@ -67,28 +67,6 @@ export const Footer = () => {
             {/*</Link>*/}
           </VStack>
         </VStack>
-        <div className={hstack({ gap: 4, fontSize: '2xl' })}>
-          {/*<a href="https://t.me/v60" target="_blank" rel="noopener noreferrer">*/}
-          {/*  <TelegramPlane />*/}
-          {/*</a>*/}
-          <a
-            href="https://x.com/v60dex"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Twitter />
-          </a>
-          {/*<a href="/" target="_blank" rel="noopener noreferrer">*/}
-          {/*  <CoinMarketcap />*/}
-          {/*</a>*/}
-          <a
-            href="https://medium.com/@v60dex"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Medium />
-          </a>
-        </div>
       </div>
     </footer>
   );

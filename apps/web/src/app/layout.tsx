@@ -7,9 +7,9 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'V60 Swap',
-  description: 'Web3 app for swapping ERC20 tokens on the Prom blockchain',
-  metadataBase: new URL('https://v60.io'),
+  title: 'MIDL Swap',
+  description: 'Web3 app for swapping Runes on Bitcoin',
+  metadataBase: new URL('https://swap.midl.xyz'),
   alternates: {
     canonical: '/',
     languages: {
@@ -18,29 +18,14 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'V60 Swap',
-    description: 'Web3 app for swapping ERC20 tokens on the Prom blockchain',
-    url: 'https://v60.io',
+    title: 'MIDL Swap',
+    description: 'Web3 app for swapping Runes on Bitcoin',
+    url: 'https://swap.midl.xyz',
     type: 'website',
-    images: [
-      {
-        url: '/opengraph-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'V60 Swap',
-      },
-    ],
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'V60 Swap',
-    description: 'Web3 app for swapping ERC20 tokens on the Prom blockchain',
-    images: [
-      {
-        url: '/twitter-image.png',
-        alt: 'V60 Swap',
-      },
-    ],
+    title: 'MIDL Swap',
+    description: 'Web3 app for swapping Runes on Bitcoin',
   },
 };
 
