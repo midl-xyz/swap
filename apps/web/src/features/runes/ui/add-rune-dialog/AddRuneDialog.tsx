@@ -32,6 +32,7 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
     edictRune,
     data,
     isPending: isTransactionBeingFormed,
+    reset,
   } = useEdictRune({
     mutation: {
       onSuccess(data) {
@@ -41,7 +42,12 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
       },
     },
   });
-  const { waitForTransaction, isSuccess, isPending } = useWaitForTransaction();
+  const {
+    waitForTransaction,
+    isSuccess,
+    isPending,
+    reset: resetWait,
+  } = useWaitForTransaction();
   const config = useConfig();
   const { network } = config;
 
@@ -79,11 +85,17 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
     });
   };
 
+  const handleClose = () => {
+    onClose();
+    reset();
+    resetWait();
+  };
+
   return (
     <Dialog {...rest}>
-      <DialogOverlay onClick={onClose} />
+      <DialogOverlay onClick={handleClose} />
       <DialogContent
-        onEscapeKeyDown={onClose}
+        onEscapeKeyDown={handleClose}
         className={css({
           maxW: '460px',
           width: '100%',
@@ -111,7 +123,7 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
               MIDL ecosystem.
             </p>
 
-            <Button onClick={onClose}>Close</Button>
+            <Button onClick={handleClose}>Close</Button>
           </div>
         )}
 
