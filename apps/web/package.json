@@ -19,7 +19,7 @@
     "@maskito/kit": "^2.2.0",
     "@maskito/react": "^2.2.0",
     "@midl-xyz/midl-js-core": "^0.0.33",
-    "@midl-xyz/midl-js-executor": "^0.0.63",
+    "@midl-xyz/midl-js-executor": "^0.0.66",
     "@midl-xyz/midl-js-react": "^0.0.40",
     "@radix-ui/react-accordion": "^1.2.1",
     "@radix-ui/react-collapsible": "^1.0.3",

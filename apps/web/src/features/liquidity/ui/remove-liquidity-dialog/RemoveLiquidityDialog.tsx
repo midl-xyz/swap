@@ -199,12 +199,7 @@ export const RemoveLiquidityDialog = ({
             shouldComplete={true}
             onClose={handleClose}
             stateOverride={stateOverride}
-            assetsToWithdraw={
-              [tokenA, tokenB].filter((it) => it !== zeroAddress) as [
-                Address,
-                Address,
-              ]
-            }
+            assetsToWithdraw={[tokenA, tokenB]}
           />
         )}
         {!isSuccess && (
