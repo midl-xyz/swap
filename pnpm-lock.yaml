@@ -95,6 +95,9 @@ importers:
       evm-maths:
         specifier: ^6.2.0
         version: 6.2.0
+      from-exponential:
+        specifier: ^1.1.1
+        version: 1.1.1
       graphql:
         specifier: ^16.8.1
         version: 16.8.1
@@ -2244,9 +2247,6 @@ packages:
     resolution: {integrity: sha512-MUiyfv2kpYl1iEmRHFC6gZDlcUzpBl8PGHHuIj3dBhWlwf5jhc5X1FvESKe3xYgYzhvp3gAGHjO+LtB551xXEg==, tarball: https://npm.pkg.github.com/download/@midl-xyz/midl-viem/2.21.36/171dc70bc54c172653191efdc1a281b7472cb706}
     peerDependencies:
       typescript: '>=5.0.4'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
 
   '@motionone/animation@10.17.0':
     resolution: {integrity: sha512-ANfIN9+iq1kGgsZxs+Nz96uiNcPLGTXwfNo2Xz/fcJXniPYpaz/Uyrfa+7I5BPLxCP82sh7quVDudf1GABqHbg==}
@@ -5591,6 +5591,9 @@ packages:
   fresh@0.5.2:
     resolution: {integrity: sha512-zJ2mQYM18rEFOudeV4GShTGIQ7RbzA7ozbU9I/XBpm7kqgMywgmylMwXHxZJmkVoYkna9d2pVXVXPdYTP9ej8Q==}
     engines: {node: '>= 0.6'}
+
+  from-exponential@1.1.1:
+    resolution: {integrity: sha512-VBE7f5OVnYwdgB3LHa+Qo29h8qVpxhVO9Trlc+AWm+/XNAgks1tAwMFHb33mjeiof77GglsJzeYF7OqXrROP/A==}
 
   fs-extra@0.30.0:
     resolution: {integrity: sha512-UvSPKyhMn6LEd/WpUaV9C9t3zATuqoqfWc3QdPhPLb58prN9tqYPlPWi8Krxi44loBoUzlobqZ3+8tGpxxSzwA==}
@@ -12349,10 +12352,9 @@ snapshots:
       '@scure/bip39': 1.4.0
       abitype: 1.0.5(typescript@5.3.3)(zod@3.22.4)
       isows: 1.0.4(ws@8.17.1(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+      typescript: 5.3.3
       webauthn-p256: 0.0.5
       ws: 8.17.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-    optionalDependencies:
-      typescript: 5.3.3
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -16952,6 +16954,8 @@ snapshots:
 
   fresh@0.5.2:
     optional: true
+
+  from-exponential@1.1.1: {}
 
   fs-extra@0.30.0:
     dependencies:

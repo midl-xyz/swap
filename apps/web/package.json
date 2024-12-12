@@ -33,6 +33,7 @@
     "axios": "^1.7.7",
     "classnames": "^2.5.1",
     "evm-maths": "^6.2.0",
+    "from-exponential": "^1.1.1",
     "graphql": "^16.8.1",
     "graphql-request": "5",
     "jotai": "^2.6.4",

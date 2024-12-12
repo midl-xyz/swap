@@ -13,20 +13,21 @@ export const wagmiConfig = createConfig({
   chains: [
     {
       ...midlRegtest,
+
       rpcUrls: {
         default: {
           http: [midlRegtest.rpcUrls.default.http[0]],
         },
       },
-      contracts: {
-        multicall3: {
-          address: '0x98e1171a1EeCbCC56a6DAC6a1e8D828dD407113c',
-        },
-      },
+      // contracts: {
+      //   multicall3: {
+      //     address: '0x98e1171a1EeCbCC56a6DAC6a1e8D828dD407113c',
+      //   },
+      // },
     } as Chain,
   ],
   batch: {
-    multicall: false,
+    multicall: true,
   },
   transports: {
     [midlRegtest.id]: http(midlRegtest.rpcUrls.default.http[0]),
