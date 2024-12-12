@@ -13,6 +13,7 @@ export const wagmiConfig = createConfig({
   chains: [
     {
       ...midlRegtest,
+
       rpcUrls: {
         default: {
           http: [midlRegtest.rpcUrls.default.http[0]],
@@ -26,7 +27,7 @@ export const wagmiConfig = createConfig({
     } as Chain,
   ],
   batch: {
-    multicall: false,
+    multicall: true,
   },
   transports: {
     [midlRegtest.id]: http(midlRegtest.rpcUrls.default.http[0]),

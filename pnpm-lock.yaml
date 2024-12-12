@@ -54,8 +54,8 @@ importers:
         specifier: ^0.0.33
         version: 0.0.33(@types/react@18.2.48)(bufferutil@4.0.8)(react@18.2.0)(typescript@5.3.3)(use-sync-external-store@1.2.0(react@18.2.0))(utf-8-validate@5.0.10)(webextension-polyfill@0.10.0)(zod@3.22.4)
       '@midl-xyz/midl-js-executor':
-        specifier: ^0.0.63
-        version: 0.0.63(4hsazoog622fprn55wcfg5ruwu)
+        specifier: ^0.0.66
+        version: 0.0.66(4hsazoog622fprn55wcfg5ruwu)
       '@midl-xyz/midl-js-react':
         specifier: ^0.0.40
         version: 0.0.40(@tanstack/react-query@5.18.0(react@18.2.0))(@types/react@18.2.48)(bufferutil@4.0.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.3.3)(use-sync-external-store@1.2.0(react@18.2.0))(utf-8-validate@5.0.10)(webextension-polyfill@0.10.0)(zod@3.22.4)
@@ -95,6 +95,9 @@ importers:
       evm-maths:
         specifier: ^6.2.0
         version: 6.2.0
+      from-exponential:
+        specifier: ^1.1.1
+        version: 1.1.1
       graphql:
         specifier: ^16.8.1
         version: 16.8.1
@@ -2215,14 +2218,14 @@ packages:
     resolution: {integrity: sha512-/u663aUaB6+Xe75i3Mt/1cCljm41HDYIsna5oBrwGvgkY2zH7/9k9Zjd706cxoAbxN7QgLSVAReUiGnuxCuXrQ==}
     engines: {node: '>=16.0.0'}
 
-  '@midl-xyz/contracts@0.0.2':
-    resolution: {integrity: sha512-YHH51kyZyTE10QexzIOkT6ZQ6wGFoZX26D9nwGlspqAeV3p7HhycsD0KSKkBgm4hyYsd7FkPgNv5q+qIOSdsvQ==, tarball: https://npm.pkg.github.com/download/@midl-xyz/contracts/0.0.2/02a09bea3ab252d4b7bb5a1872a557cd33a13cca}
+  '@midl-xyz/contracts@0.0.4-alpha':
+    resolution: {integrity: sha512-TuDNtBt3SUZ+fr/2RjUsIk3sXSG3pbMvydvpUy5TohC/KhnrnLRqzseqND/KDCBUDZYTBgU0Ee2dR4BxZxDyVw==, tarball: https://npm.pkg.github.com/download/@midl-xyz/contracts/0.0.4-alpha/b9389d5b64ccc939fa481f2e14d13da732249367}
 
   '@midl-xyz/midl-js-core@0.0.33':
     resolution: {integrity: sha512-qPsHO9WJ/H682/S9/I4ZRGePe3/smrfFj5Li/C1ZEBhaybocfc+PkkQSfcPQpLHK/Ooq5P8omDlf++lm3kctew==, tarball: https://npm.pkg.github.com/download/@midl-xyz/midl-js-core/0.0.33/13f1475ac39171541c76142d40e17446391995e6}
 
-  '@midl-xyz/midl-js-executor@0.0.63':
-    resolution: {integrity: sha512-7zoWlt1F3YmzgYx0/dHjQAsZVC+c1vl76IZCTjFQGFvS/OTmkXKPKbBGYf6DMAraIT+r6C/zHsyTmpr6qtx+PQ==, tarball: https://npm.pkg.github.com/download/@midl-xyz/midl-js-executor/0.0.63/755859146cba9c6e77a126cee450a753eaedcc98}
+  '@midl-xyz/midl-js-executor@0.0.66':
+    resolution: {integrity: sha512-2TgDLdmKjJyZezr1pqtV+2BoU7eURy/2W3OsAFD34V1dGtfsahXLbO+Yhk3IZCoQl8Urc0u+p5WEmsERjjFPew==, tarball: https://npm.pkg.github.com/download/@midl-xyz/midl-js-executor/0.0.66/aff8ee49e9d8ec9a795605480f24318662ee1c31}
     peerDependencies:
       '@midl-xyz/midl-js-react': ^0.0.40
       '@tanstack/react-query': ^5.59.9
@@ -5591,6 +5594,9 @@ packages:
   fresh@0.5.2:
     resolution: {integrity: sha512-zJ2mQYM18rEFOudeV4GShTGIQ7RbzA7ozbU9I/XBpm7kqgMywgmylMwXHxZJmkVoYkna9d2pVXVXPdYTP9ej8Q==}
     engines: {node: '>= 0.6'}
+
+  from-exponential@1.1.1:
+    resolution: {integrity: sha512-VBE7f5OVnYwdgB3LHa+Qo29h8qVpxhVO9Trlc+AWm+/XNAgks1tAwMFHb33mjeiof77GglsJzeYF7OqXrROP/A==}
 
   fs-extra@0.30.0:
     resolution: {integrity: sha512-UvSPKyhMn6LEd/WpUaV9C9t3zATuqoqfWc3QdPhPLb58prN9tqYPlPWi8Krxi44loBoUzlobqZ3+8tGpxxSzwA==}
@@ -12267,7 +12273,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@midl-xyz/contracts@0.0.2': {}
+  '@midl-xyz/contracts@0.0.4-alpha': {}
 
   '@midl-xyz/midl-js-core@0.0.33(@types/react@18.2.48)(bufferutil@4.0.8)(react@18.2.0)(typescript@5.3.3)(use-sync-external-store@1.2.0(react@18.2.0))(utf-8-validate@5.0.10)(webextension-polyfill@0.10.0)(zod@3.22.4)':
     dependencies:
@@ -12297,10 +12303,10 @@ snapshots:
       - webextension-polyfill
       - zod
 
-  '@midl-xyz/midl-js-executor@0.0.63(4hsazoog622fprn55wcfg5ruwu)':
+  '@midl-xyz/midl-js-executor@0.0.66(4hsazoog622fprn55wcfg5ruwu)':
     dependencies:
       '@bitcoinerlab/secp256k1': 1.1.1
-      '@midl-xyz/contracts': 0.0.2
+      '@midl-xyz/contracts': 0.0.4-alpha
       '@midl-xyz/midl-js-core': 0.0.33(@types/react@18.2.48)(bufferutil@4.0.8)(react@18.2.0)(typescript@5.3.3)(use-sync-external-store@1.2.0(react@18.2.0))(utf-8-validate@5.0.10)(webextension-polyfill@0.10.0)(zod@3.22.4)
       '@midl-xyz/midl-js-react': 0.0.40(@tanstack/react-query@5.18.0(react@18.2.0))(@types/react@18.2.48)(bufferutil@4.0.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.3.3)(use-sync-external-store@1.2.0(react@18.2.0))(utf-8-validate@5.0.10)(webextension-polyfill@0.10.0)(zod@3.22.4)
       '@tanstack/react-query': 5.18.0(react@18.2.0)
@@ -16332,7 +16338,7 @@ snapshots:
       eslint: 8.56.0
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.56.0))(eslint@8.56.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.56.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.56.0))(eslint@8.56.0))(eslint@8.56.0)
       eslint-plugin-jsx-a11y: 6.8.0(eslint@8.56.0)
       eslint-plugin-react: 7.33.2(eslint@8.56.0)
       eslint-plugin-react-hooks: 4.6.0(eslint@8.56.0)
@@ -16362,7 +16368,7 @@ snapshots:
       enhanced-resolve: 5.15.0
       eslint: 8.56.0
       eslint-module-utils: 2.8.0(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.56.0))(eslint@8.56.0))(eslint@8.56.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.56.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.56.0))(eslint@8.56.0))(eslint@8.56.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.2
       is-core-module: 2.13.1
@@ -16384,7 +16390,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.56.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.56.0))(eslint@8.56.0))(eslint@8.56.0):
     dependencies:
       array-includes: 3.1.7
       array.prototype.findlastindex: 1.2.3
@@ -16952,6 +16958,8 @@ snapshots:
 
   fresh@0.5.2:
     optional: true
+
+  from-exponential@1.1.1: {}
 
   fs-extra@0.30.0:
     dependencies:

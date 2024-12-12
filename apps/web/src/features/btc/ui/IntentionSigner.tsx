@@ -1,3 +1,4 @@
+import { WETHByChain } from '@/global';
 import { Button } from '@/shared';
 import {
   useAddTxIntention,
@@ -10,7 +11,7 @@ import {
 } from '@midl-xyz/midl-js-react';
 import toast from 'react-hot-toast';
 import { Address, StateOverride, zeroAddress } from 'viem';
-import { useWalletClient } from 'wagmi';
+import { useChainId, useWalletClient } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
 
@@ -47,6 +48,7 @@ export const IntentionSigner = ({
   });
 
   const { data: walletClient } = useWalletClient();
+  const chainId = useChainId();
 
   const { broadcastTransaction, isSuccess: isBroadcasted } =
     useBroadcastTransaction({
@@ -118,8 +120,9 @@ export const IntentionSigner = ({
               finalizeBTCTransaction({
                 stateOverride,
                 shouldComplete,
+                feeRateMultiplier: 4,
                 assetsToWithdraw: assetsToWithdraw?.filter(
-                  (it) => it !== zeroAddress,
+                  (it) => it !== zeroAddress && it !== WETHByChain[chainId],
                 ) as any,
               });
             }}
