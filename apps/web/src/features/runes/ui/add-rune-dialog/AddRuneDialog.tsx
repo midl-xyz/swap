@@ -14,6 +14,7 @@ import {
 import { DialogProps, DialogTitle } from '@radix-ui/react-dialog';
 import { useQuery } from '@tanstack/react-query';
 import { Loader2Icon } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { formatUnits } from 'viem';
 import { css } from '~/styled-system/css';
 import { vstack } from '~/styled-system/patterns';
@@ -35,6 +36,10 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
     reset,
   } = useEdictRune({
     mutation: {
+      onError(error) {
+        console.error(error);
+        toast.error(error.message);
+      },
       onSuccess(data) {
         waitForTransaction({
           txId: data.tx.id,
