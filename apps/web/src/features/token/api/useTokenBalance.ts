@@ -22,6 +22,9 @@ export const useTokenBalance = (
   const { ordinalsAccount, paymentAccount } = useAccounts();
   const { balance: btcBalance } = useBTCBalance({
     address: paymentAccount?.address || ordinalsAccount?.address || '',
+    query: {
+      enabled: Boolean(paymentAccount?.address || ordinalsAccount?.address),
+    },
   });
 
   const convertedBTCBalance = btcBalance * 10 ** 10;
@@ -78,6 +81,11 @@ export const useTokenBalance = (
   const { balance: runeBalance } = useRuneBalance({
     runeId: rune?.id ?? '',
     address: paymentAccount?.address || ordinalsAccount?.address || '',
+    query: {
+      enabled: Boolean(
+        rune?.id && (paymentAccount?.address || ordinalsAccount?.address),
+      ),
+    },
   });
 
   const parsedRuneBalance = parseUnits(

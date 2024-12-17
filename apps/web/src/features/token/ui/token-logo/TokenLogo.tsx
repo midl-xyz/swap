@@ -26,7 +26,7 @@ export const TokenLogo = ({
   const appChainId = useChainId();
 
   let { logoURI, symbol } = useToken(address as Address, chainId ?? appChainId);
-  const { rune } = useERC20Rune(runeId || '');
+  const { rune } = useERC20Rune(runeId || '', { query: { enabled: !!runeId } });
 
   if (overridePic) {
     logoURI = overridePic;

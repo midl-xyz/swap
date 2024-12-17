@@ -27,6 +27,9 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
   const { state } = useRuneDialog();
   const { rune } = useRune({
     runeId: state.value.runeId,
+    query: {
+      enabled: Boolean(state.value.runeId),
+    },
   });
 
   const {
