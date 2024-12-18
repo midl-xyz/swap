@@ -6,12 +6,11 @@ import {
   DialogContent,
   DialogOverlay,
   shortenAddress,
+  useCopyToClipboard,
 } from '@/shared';
 import { useAccounts, useDisconnect } from '@midl-xyz/midl-js-react';
-import { DialogProps, DialogTitle } from '@radix-ui/react-dialog';
+import { type DialogProps, DialogTitle } from '@radix-ui/react-dialog';
 import { CopyIcon, XIcon } from 'lucide-react';
-import toast from 'react-hot-toast';
-import { useCopyToClipboard } from 'usehooks-ts';
 import { css } from '~/styled-system/css';
 import { HStack, VStack } from '~/styled-system/jsx';
 import { vstack } from '~/styled-system/patterns';
@@ -33,16 +32,7 @@ export const AccountDialog = ({ onClose, ...rest }: AccountDialogProps) => {
     },
   });
 
-  const [copiedText, copy] = useCopyToClipboard();
-
-  const handleCopy = (text: string) => {
-    try {
-      copy(text);
-      toast.success('Copied to clipboard');
-    } catch (error) {
-      toast.error('Failed to copy to clipboard');
-    }
-  };
+  const { copyToClipboard } = useCopyToClipboard();
 
   return (
     <Dialog {...rest}>
@@ -103,7 +93,7 @@ export const AccountDialog = ({ onClose, ...rest }: AccountDialogProps) => {
                   <Button
                     appearance="ghost"
                     onClick={() => {
-                      handleCopy(account.address);
+                      copyToClipboard({ copyValue: account.address });
                     }}
                   >
                     <CopyIcon width={16} height={16} />
