@@ -1,10 +1,15 @@
 import { TokenLogo } from '@/features';
 import { useGetPair } from '@/features/liquidity';
-import { beautifyNumber, Button, shortenAddress } from '@/shared';
+import {
+  Button,
+  beautifyNumber,
+  shortenAddress,
+  useCopyToClipboard,
+} from '@/shared';
 import { PairField } from '@/widgets/pair/ui/PairField';
 import { CopyIcon } from 'lucide-react';
 import Link from 'next/link';
-import { Address, formatEther, formatUnits } from 'viem';
+import type { Address } from 'viem';
 import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { HStack, Stack, VStack } from '~/styled-system/jsx';
@@ -16,6 +21,8 @@ interface Props {
 export const Pair = ({ id }: Props) => {
   const chainId = useChainId();
   const { data, isLoading } = useGetPair(id);
+
+  const { copyToClipboard } = useCopyToClipboard();
 
   if (isLoading) {
     return '...getting token';
@@ -251,7 +258,7 @@ export const Pair = ({ id }: Props) => {
                         width={16}
                         height={16}
                         onClick={() =>
-                          navigator.clipboard.writeText(value || '')
+                          copyToClipboard({ copyValue: value || '' })
                         }
                       />
                     </HStack>

@@ -7,9 +7,8 @@ import {
 } from '@/global';
 import { MobileAppMenu } from '@/widgets/app-menu/ui/MobileAppMenu';
 import { headers } from 'next/headers';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Toaster } from 'react-hot-toast';
-
 import { ErrorBoundary } from '@/global/providers/ErrorBoundary';
 import { RuneDialogProvider } from '@/global/providers/RuneDialogProvider';
 import { AccountButton, AppMenuList, Header, Logo, RPCStatus } from '@/widgets';
