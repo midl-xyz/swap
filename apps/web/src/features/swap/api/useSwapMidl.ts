@@ -6,7 +6,7 @@ import {
   useClearTxIntentions,
   useEVMAddress,
   useToken,
-} from '@midl-xyz/midl-js-executor';
+} from '@midl-xyz/midl-js-executor-react';
 import { useMutation } from '@tanstack/react-query';
 import { Address, encodeFunctionData, erc20Abi, zeroAddress } from 'viem';
 import { useChainId } from 'wagmi';
@@ -61,29 +61,33 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
       if (rune && !isTokenETH) {
         if (isTokenANeedApprove) {
           addTxIntention({
-            hasRunesDeposit: true,
-            rune: {
-              id: rune.id,
-              value: amountIn,
-            },
-            evmTransaction: {
-              to: tokenIn,
-              data: encodeFunctionData({
-                abi: erc20Abi,
-                functionName: 'approve',
-                args: [
-                  deployments[chainId].UniswapV2Router02.address,
-                  amountIn,
-                ],
-              }),
+            intention: {
+              hasRunesDeposit: true,
+              rune: {
+                id: rune.id,
+                value: amountIn,
+              },
+              evmTransaction: {
+                to: tokenIn,
+                data: encodeFunctionData({
+                  abi: erc20Abi,
+                  functionName: 'approve',
+                  args: [
+                    deployments[chainId].UniswapV2Router02.address,
+                    amountIn,
+                  ],
+                }),
+              },
             },
           });
         } else {
           addTxIntention({
-            hasRunesDeposit: true,
-            rune: {
-              id: rune.id,
-              value: amountIn,
+            intention: {
+              hasRunesDeposit: true,
+              rune: {
+                id: rune.id,
+                value: amountIn,
+              },
             },
           });
         }
@@ -119,16 +123,18 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
       }
 
       addTxIntention({
-        evmTransaction: {
-          to: deployments[chainId].UniswapV2Router02.address,
-          chainId,
-          type: 'btc',
-          data: encodeFunctionData({
-            abi: uniswapV2Router02Abi,
-            functionName: txName,
-            args: args as any,
-          }),
-          value: (tokenIn === zeroAddress ? amountIn : BigInt(0)) as any,
+        intention: {
+          evmTransaction: {
+            to: deployments[chainId].UniswapV2Router02.address,
+            chainId,
+            type: 'btc',
+            data: encodeFunctionData({
+              abi: uniswapV2Router02Abi,
+              functionName: txName,
+              args: args as any,
+            }),
+            value: (tokenIn === zeroAddress ? amountIn : BigInt(0)) as any,
+          },
         },
       });
     },

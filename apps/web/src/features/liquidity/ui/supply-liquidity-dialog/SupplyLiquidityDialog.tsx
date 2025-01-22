@@ -4,7 +4,7 @@ import { TokenLogo, TokenValue, useSlippage } from '@/features';
 import { IntentionSigner } from '@/features/btc/ui/IntentionSigner';
 import { useAddLiquidityMidl, usePoolShare } from '@/features/liquidity';
 import { Button, Dialog, DialogContent, DialogOverlay } from '@/shared';
-import { useEVMAddress } from '@midl-xyz/midl-js-executor';
+import { useEVMAddress } from '@midl-xyz/midl-js-executor-react';
 import { DialogProps } from '@radix-ui/react-dialog';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';

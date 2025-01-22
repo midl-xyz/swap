@@ -4,7 +4,7 @@ import { TokenLogo } from '@/features';
 import { Address } from 'viem';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
-import { useToken as useMidlToken } from '@midl-xyz/midl-js-executor';
+import { useToken as useMidlToken } from '@midl-xyz/midl-js-executor-react';
 
 type TokenNameProps = {
   address: Address;

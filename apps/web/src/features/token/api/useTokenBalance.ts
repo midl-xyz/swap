@@ -1,5 +1,5 @@
 import { tokenList } from '@/global';
-import { useToken } from '@midl-xyz/midl-js-executor';
+import { useToken } from '@midl-xyz/midl-js-executor-react';
 import {
   useAccounts,
   useBalance as useBTCBalance,

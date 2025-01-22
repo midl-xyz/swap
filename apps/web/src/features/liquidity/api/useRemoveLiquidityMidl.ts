@@ -3,7 +3,7 @@ import { deployments, uniswapV2Router02Abi, WETHByChain } from '@/global';
 import {
   useAddTxIntention,
   useClearTxIntentions,
-} from '@midl-xyz/midl-js-executor';
+} from '@midl-xyz/midl-js-executor-react';
 import { useMutation } from '@tanstack/react-query';
 import { Address, encodeFunctionData, erc20Abi } from 'viem';
 import { useAccount, useChainId } from 'wagmi';
@@ -59,18 +59,20 @@ export const useRemoveLiquidityMidl = ({
 
       if (isTokenNeedApproved) {
         addTxIntention({
-          evmTransaction: {
-            to: lpToken.address,
-            chainId,
-            type: 'btc',
-            data: encodeFunctionData({
-              abi: erc20Abi,
-              functionName: 'approve',
-              args: [
-                deployments[chainId].UniswapV2Router02.address,
-                lpToken.amount,
-              ],
-            }),
+          intention: {
+            evmTransaction: {
+              to: lpToken.address,
+              chainId,
+              type: 'btc',
+              data: encodeFunctionData({
+                abi: erc20Abi,
+                functionName: 'approve',
+                args: [
+                  deployments[chainId].UniswapV2Router02.address,
+                  lpToken.amount,
+                ],
+              }),
+            },
           },
         });
       }
@@ -118,15 +120,17 @@ export const useRemoveLiquidityMidl = ({
       const functionName = isETH ? 'removeLiquidityETH' : 'removeLiquidity';
 
       addTxIntention({
-        evmTransaction: {
-          to: deployments[chainId].UniswapV2Router02.address,
-          chainId,
-          type: 'btc',
-          data: encodeFunctionData({
-            abi: uniswapV2Router02Abi,
-            functionName,
-            args: args as any,
-          }),
+        intention: {
+          evmTransaction: {
+            to: deployments[chainId].UniswapV2Router02.address,
+            chainId,
+            type: 'btc',
+            data: encodeFunctionData({
+              abi: uniswapV2Router02Abi,
+              functionName,
+              args: args as any,
+            }),
+          },
         },
       });
     },

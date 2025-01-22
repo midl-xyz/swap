@@ -4,7 +4,7 @@ import {
   useAddTxIntention,
   useClearTxIntentions,
   useToken,
-} from '@midl-xyz/midl-js-executor';
+} from '@midl-xyz/midl-js-executor-react';
 import { useMutation } from '@tanstack/react-query';
 import { Address, encodeFunctionData, erc20Abi, zeroAddress } from 'viem';
 import { useChainId } from 'wagmi';
@@ -56,18 +56,20 @@ export const useAddLiquidityMidl = ({
 
   const approveToken = (address: Address, runeId: string, amount: bigint) => {
     addTxIntention({
-      hasRunesDeposit: true,
-      rune: {
-        id: runeId,
-        value: amount,
-      },
-      evmTransaction: {
-        to: address,
-        data: encodeFunctionData({
-          abi: erc20Abi,
-          functionName: 'approve',
-          args: [deployments[chainId].UniswapV2Router02.address, amount],
-        }),
+      intention: {
+        hasRunesDeposit: true,
+        rune: {
+          id: runeId,
+          value: amount,
+        },
+        evmTransaction: {
+          to: address,
+          data: encodeFunctionData({
+            abi: erc20Abi,
+            functionName: 'approve',
+            args: [deployments[chainId].UniswapV2Router02.address, amount],
+          }),
+        },
       },
     });
   };
@@ -91,10 +93,12 @@ export const useAddLiquidityMidl = ({
           approveToken(tokenA.address, runeA.id, tokenA.amount);
         } else {
           addTxIntention({
-            hasRunesDeposit: true,
-            rune: {
-              id: runeA.id,
-              value: tokenA.amount,
+            intention: {
+              hasRunesDeposit: true,
+              rune: {
+                id: runeA.id,
+                value: tokenA.amount,
+              },
             },
           });
         }
@@ -105,10 +109,12 @@ export const useAddLiquidityMidl = ({
           approveToken(tokenB.address, runeB.id, tokenB.amount);
         } else {
           addTxIntention({
-            hasRunesDeposit: true,
-            rune: {
-              id: runeB.id,
-              value: tokenB.amount,
+            intention: {
+              hasRunesDeposit: true,
+              rune: {
+                id: runeB.id,
+                value: tokenB.amount,
+              },
             },
           });
         }
@@ -164,16 +170,18 @@ export const useAddLiquidityMidl = ({
       const functionName = isETH ? 'addLiquidityETH' : 'addLiquidity';
 
       addTxIntention({
-        evmTransaction: {
-          to: deployments[chainId].UniswapV2Router02.address,
-          chainId,
-          type: 'btc',
-          data: encodeFunctionData({
-            abi: uniswapV2Router02Abi,
-            functionName,
-            args: args as any,
-          }),
-          value: ethValue as any,
+        intention: {
+          evmTransaction: {
+            to: deployments[chainId].UniswapV2Router02.address,
+            chainId,
+            type: 'btc',
+            data: encodeFunctionData({
+              abi: uniswapV2Router02Abi,
+              functionName,
+              args: args as any,
+            }),
+            value: ethValue as any,
+          },
         },
       });
     },

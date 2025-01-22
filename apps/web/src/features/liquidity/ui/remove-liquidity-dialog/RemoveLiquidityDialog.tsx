@@ -16,7 +16,7 @@ import {
 } from '@/shared';
 import { SlippageControl } from '@/widgets';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useEVMAddress } from '@midl-xyz/midl-js-executor';
+import { useEVMAddress } from '@midl-xyz/midl-js-executor-react';
 import { DialogProps } from '@radix-ui/react-dialog';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAtom } from 'jotai';

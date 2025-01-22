@@ -3,7 +3,7 @@ import { Button } from '@/shared';
 import {
   useAddTxIntention,
   useFinalizeTxIntentions,
-} from '@midl-xyz/midl-js-executor';
+} from '@midl-xyz/midl-js-executor-react';
 import {
   useBroadcastTransaction,
   useConfig,

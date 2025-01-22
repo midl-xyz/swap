@@ -8,7 +8,7 @@ import {
 import { useRuneDialog } from '@/features/runes';
 import { tokenList } from '@/global';
 import { Button, Input } from '@/shared';
-import { useERC20Rune } from '@midl-xyz/midl-js-executor';
+import { useERC20Rune } from '@midl-xyz/midl-js-executor-react';
 import { SearchIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { Address, getAddress, zeroAddress } from 'viem';

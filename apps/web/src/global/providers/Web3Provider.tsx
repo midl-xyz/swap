@@ -2,7 +2,7 @@
 
 import { LastUsedTokensProvider } from '@/features';
 import { midlConfig, queryClient, wagmiConfig } from '@/global';
-import { WagmiMidlProvider } from '@midl-xyz/midl-js-executor';
+import { WagmiMidlProvider } from '@midl-xyz/midl-js-executor-react';
 import { MidlProvider } from '@midl-xyz/midl-js-react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { cookieToInitialState, WagmiProvider } from 'wagmi';
