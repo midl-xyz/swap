@@ -1,6 +1,5 @@
 import { WETHByChain, deployments, uniswapV2Router02Abi } from '@/global';
-import { getCorrectToken } from '@/widgets/swap-form/ui/utils';
-import { Address, zeroAddress } from 'viem';
+import { Address } from 'viem';
 import {
   useChainId,
   useWaitForTransactionReceipt,
