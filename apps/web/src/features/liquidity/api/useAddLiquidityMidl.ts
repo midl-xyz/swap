@@ -1,12 +1,13 @@
 import { usePoolShare } from '@/features/liquidity/api';
 import { deployments, uniswapV2Router02Abi } from '@/global/contracts';
+import { useApproveWithOptionalDeposit } from '@/shared';
 import {
   useAddTxIntention,
   useClearTxIntentions,
   useToken,
 } from '@midl-xyz/midl-js-executor-react';
 import { useMutation } from '@tanstack/react-query';
-import { Address, encodeFunctionData, erc20Abi, zeroAddress } from 'viem';
+import { Address, encodeFunctionData, zeroAddress } from 'viem';
 import { useChainId } from 'wagmi';
 
 type UseAddLiquidityParams = {
@@ -44,6 +45,7 @@ export const useAddLiquidityMidl = ({
 
   const chainId = useChainId();
   const { addTxIntention } = useAddTxIntention();
+  const { addApproveDepositIntention } = useApproveWithOptionalDeposit(chainId);
   const clearTxIntentions = useClearTxIntentions();
   const { rune: runeA } = useToken(tokenA.address);
   const { rune: runeB } = useToken(tokenB.address);
@@ -53,26 +55,6 @@ export const useAddLiquidityMidl = ({
 
   const isTokenBNeedApprove =
     allowances.tokenB < tokenB.amount && tokenB.address !== zeroAddress;
-
-  const approveToken = (address: Address, runeId: string, amount: bigint) => {
-    addTxIntention({
-      intention: {
-        hasRunesDeposit: true,
-        rune: {
-          id: runeId,
-          value: amount,
-        },
-        evmTransaction: {
-          to: address,
-          data: encodeFunctionData({
-            abi: erc20Abi,
-            functionName: 'approve',
-            args: [deployments[chainId].UniswapV2Router02.address, amount],
-          }),
-        },
-      },
-    });
-  };
 
   const {
     mutate: addLiquidity,
@@ -84,19 +66,19 @@ export const useAddLiquidityMidl = ({
       const isTokenAETH = tokenA.address === zeroAddress;
       const isTokenBETH = tokenB.address === zeroAddress;
 
-      if ((!isTokenAETH && !runeA) || (!isTokenBETH && !runeB)) {
-        throw new Error('Token not found');
-      }
-
-      if (runeA && !isTokenAETH) {
+      if (!isTokenAETH) {
         if (isTokenANeedApprove) {
-          approveToken(tokenA.address, runeA.id, tokenA.amount);
-        } else {
+          addApproveDepositIntention({
+            address: tokenA.address,
+            runeId: runeA?.id,
+            amount: tokenA.amount,
+          });
+        } else if (runeA) {
           addTxIntention({
             intention: {
               hasRunesDeposit: true,
               rune: {
-                id: runeA.id,
+                id: runeA?.id,
                 value: tokenA.amount,
               },
             },
@@ -106,8 +88,12 @@ export const useAddLiquidityMidl = ({
 
       if (runeB && !isTokenBETH) {
         if (isTokenBNeedApprove) {
-          approveToken(tokenB.address, runeB.id, tokenB.amount);
-        } else {
+          addApproveDepositIntention({
+            address: tokenB.address,
+            runeId: runeB.id,
+            amount: tokenB.amount,
+          });
+        } else if (runeB) {
           addTxIntention({
             intention: {
               hasRunesDeposit: true,

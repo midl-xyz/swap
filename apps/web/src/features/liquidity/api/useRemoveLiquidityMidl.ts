@@ -1,5 +1,6 @@
 import { useERC20Allowance } from '@/features/token';
 import { deployments, uniswapV2Router02Abi, WETHByChain } from '@/global';
+import { useApproveWithOptionalDeposit } from '@/shared';
 import {
   useAddTxIntention,
   useClearTxIntentions,
@@ -37,6 +38,8 @@ export const useRemoveLiquidityMidl = ({
     user: address as Address,
   });
   const { addTxIntention } = useAddTxIntention();
+  const { addApproveDepositIntention: addApproveIntention } =
+    useApproveWithOptionalDeposit(chainId);
   const clearTxIntentions = useClearTxIntentions();
 
   const isTokenNeedApproved = allowance < lpToken.amount;
@@ -58,22 +61,9 @@ export const useRemoveLiquidityMidl = ({
       clearTxIntentions();
 
       if (isTokenNeedApproved) {
-        addTxIntention({
-          intention: {
-            evmTransaction: {
-              to: lpToken.address,
-              chainId,
-              type: 'btc',
-              data: encodeFunctionData({
-                abi: erc20Abi,
-                functionName: 'approve',
-                args: [
-                  deployments[chainId].UniswapV2Router02.address,
-                  lpToken.amount,
-                ],
-              }),
-            },
-          },
+        addApproveIntention({
+          address: lpToken.address,
+          amount: lpToken.amount,
         });
       }
 

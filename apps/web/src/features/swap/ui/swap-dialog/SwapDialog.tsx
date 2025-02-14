@@ -1,6 +1,7 @@
-import { DialogProps } from '@radix-ui/react-dialog';
 import { IntentionSigner } from '@/features/btc/ui/IntentionSigner';
 import { Dialog, DialogContent, DialogOverlay } from '@/shared';
+import { useToken } from '@midl-xyz/midl-js-executor-react';
+import { DialogProps } from '@radix-ui/react-dialog';
 import {
   Address,
   encodeAbiParameters,
@@ -31,6 +32,7 @@ export const SwapDialog = ({
 }: SwapDialogProps) => {
   const { address } = useAccount();
 
+  const { rune } = useToken(tokenOut);
   const slot = keccak256(
     encodeAbiParameters(
       [
@@ -79,8 +81,8 @@ export const SwapDialog = ({
 
           <IntentionSigner
             stateOverride={stateOverride}
-            assetsToWithdraw={[tokenOut]}
-            shouldComplete={true}
+            assetsToWithdraw={rune?.id ? [tokenOut] : [zeroAddress]}
+            shouldComplete={!!rune?.id || tokenOut === zeroAddress}
             onClose={() => {
               onClose();
               onSuccessfulSwap?.();

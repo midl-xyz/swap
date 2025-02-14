@@ -1,6 +1,7 @@
 import { useERC20Allowance } from '@/features/token';
 import { WETHByChain } from '@/global';
 import { deployments, uniswapV2Router02Abi } from '@/global/contracts';
+import { useApproveWithOptionalDeposit } from '@/shared';
 import {
   useAddTxIntention,
   useClearTxIntentions,
@@ -8,7 +9,7 @@ import {
   useToken,
 } from '@midl-xyz/midl-js-executor-react';
 import { useMutation } from '@tanstack/react-query';
-import { Address, encodeFunctionData, erc20Abi, zeroAddress } from 'viem';
+import { Address, encodeFunctionData, zeroAddress } from 'viem';
 import { useChainId } from 'wagmi';
 
 type UseSwapMidlParams = {
@@ -26,7 +27,6 @@ export type SwapArgs = {
 export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
   const address = useEVMAddress();
   const chainId = useChainId();
-  console.log('address', address);
 
   const { data: allowance = 0n } = useERC20Allowance({
     token: tokenIn,
@@ -35,6 +35,7 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
   });
 
   const { addTxIntention } = useAddTxIntention();
+  const { addApproveDepositIntention } = useApproveWithOptionalDeposit(chainId);
   const clearTxIntentions = useClearTxIntentions();
   const { rune } = useToken(tokenIn);
 
@@ -54,38 +55,19 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
         throw new Error('WETH not found');
       }
 
-      if (!isTokenETH && !rune) {
-        throw new Error('Token not found');
-      }
-
-      if (rune && !isTokenETH) {
+      if (!isTokenETH) {
         if (isTokenANeedApprove) {
-          addTxIntention({
-            intention: {
-              hasRunesDeposit: true,
-              rune: {
-                id: rune.id,
-                value: amountIn,
-              },
-              evmTransaction: {
-                to: tokenIn,
-                data: encodeFunctionData({
-                  abi: erc20Abi,
-                  functionName: 'approve',
-                  args: [
-                    deployments[chainId].UniswapV2Router02.address,
-                    amountIn,
-                  ],
-                }),
-              },
-            },
+          addApproveDepositIntention({
+            address: tokenIn,
+            amount: amountIn,
+            runeId: rune?.id,
           });
-        } else {
+        } else if (rune) {
           addTxIntention({
             intention: {
               hasRunesDeposit: true,
               rune: {
-                id: rune.id,
+                id: rune?.id,
                 value: amountIn,
               },
             },
