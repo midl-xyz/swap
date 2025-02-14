@@ -1,4 +1,4 @@
-import { useToken } from '@/entities';
+import { useToken as useLocalToken } from '@/entities';
 import { IntentionSigner } from '@/features/btc/ui/IntentionSigner';
 import { useEstimateLiquidityPair } from '@/features/liquidity';
 import { useGetPairStats } from '@/features/liquidity/api';
@@ -6,6 +6,7 @@ import { useRemoveLiquidityMidl } from '@/features/liquidity/api/useRemoveLiquid
 import { removeLiquidityDialogAtom } from '@/features/liquidity/model';
 import { useSlippage } from '@/features/slippage';
 import { TokenLogo, TokenValue } from '@/features/token';
+import { WETHByChain } from '@/global';
 import {
   Button,
   Dialog,
@@ -16,17 +17,17 @@ import {
 } from '@/shared';
 import { SlippageControl } from '@/widgets';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useEVMAddress } from '@midl-xyz/midl-js-executor-react';
+import { useEVMAddress, useToken } from '@midl-xyz/midl-js-executor-react';
 import { DialogProps } from '@radix-ui/react-dialog';
 import { useQueryClient } from '@tanstack/react-query';
+import fromExponential from 'from-exponential';
 import { useAtom } from 'jotai';
 import { Controller, useForm } from 'react-hook-form';
 import { Address, formatUnits, parseUnits, zeroAddress } from 'viem';
-import { useAccount, useChainId } from 'wagmi';
+import { useChainId } from 'wagmi';
 import * as yup from 'yup';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
-import fromExponential from 'from-exponential';
 
 type RemoveLiquidityDialogProps = {
   onClose?: () => void;
@@ -78,9 +79,12 @@ export const RemoveLiquidityDialog = ({
     userAddress: userAddress as Address,
   });
   const queryClient = useQueryClient();
-  const tokenAInfo = useToken(tokenA, chainId);
-  const tokenBInfo = useToken(tokenB, chainId);
-  const lpTokenInfo = useToken(address, chainId);
+  const tokenAInfo = useLocalToken(tokenA, chainId);
+  const tokenBInfo = useLocalToken(tokenB, chainId);
+  const lpTokenInfo = useLocalToken(address, chainId);
+
+  const runeA = useToken(tokenA);
+  const runeB = useToken(tokenB);
 
   const value = watch('value');
 
@@ -132,10 +136,6 @@ export const RemoveLiquidityDialog = ({
       amount: parsedLPToken,
     },
   });
-
-  console.log(
-    [tokenA, tokenB].filter((it) => it !== zeroAddress) as [Address, Address],
-  );
 
   const onSubmit = () => {
     removeLiquidity({
@@ -196,10 +196,20 @@ export const RemoveLiquidityDialog = ({
       >
         {isSuccess && (
           <IntentionSigner
-            shouldComplete={true}
+            shouldComplete={
+              !!(
+                runeA.rune?.id ||
+                runeB.rune?.id ||
+                tokenA === WETHByChain[chainId] ||
+                tokenB === WETHByChain[chainId]
+              )
+            }
             onClose={handleClose}
             stateOverride={stateOverride}
-            assetsToWithdraw={[tokenA, tokenB]}
+            assetsToWithdraw={[
+              runeA.rune?.id ? tokenA : zeroAddress,
+              runeB.rune?.id ? tokenB : zeroAddress,
+            ]}
           />
         )}
         {!isSuccess && (
