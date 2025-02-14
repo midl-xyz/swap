@@ -65,23 +65,6 @@ export const useRemoveLiquidityMidl = ({
           address: lpToken.address,
           amount: lpToken.amount,
         });
-        addTxIntention({
-          intention: {
-            evmTransaction: {
-              to: lpToken.address,
-              chainId,
-              type: 'btc',
-              data: encodeFunctionData({
-                abi: erc20Abi,
-                functionName: 'approve',
-                args: [
-                  deployments[chainId].UniswapV2Router02.address,
-                  lpToken.amount,
-                ],
-              }),
-            },
-          },
-        });
       }
 
       const WETHAddr = WETHByChain[chainId];
