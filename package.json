@@ -28,8 +28,10 @@
       "prettier --write"
     ]
   },
-  "resolutions": {
-    "chai": "4.3.7"
+  "pnpm": {
+    "overrides": {
+      "chai": "4.3.7"
+    }
   },
   "packageManager": "pnpm@9.7.0"
 }
