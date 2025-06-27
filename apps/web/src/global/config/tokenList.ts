@@ -1,6 +1,3 @@
-/* eslint-disable prettier/prettier */
-'use client';
-
 import type { Token } from '@/entities';
 import { midlRegtest } from '@midl-xyz/midl-js-executor';
 import { zeroAddress } from 'viem';

@@ -1,5 +1,3 @@
-'use client';
-
 import { LastUsedTokensProvider } from '@/features';
 import { config, wagmiConfig } from '@/global';
 import { AddressPurpose } from '@midl-xyz/midl-js-core';
