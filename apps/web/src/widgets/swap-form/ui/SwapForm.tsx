@@ -15,14 +15,13 @@ import { getCorrectToken } from '@/widgets/swap-form/ui/utils';
 import { useEVMAddress } from '@midl-xyz/midl-js-executor-react';
 import { useAccounts } from '@midl-xyz/midl-js-react';
 import { ConnectButton } from '@midl-xyz/satoshi-kit';
-import { useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDebouncedCallback } from 'use-debounce';
 import { Address, formatUnits, parseUnits } from 'viem';
-import { useAccount, useChainId } from 'wagmi';
+import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { vstack } from '~/styled-system/patterns';
 
@@ -34,7 +33,6 @@ type FormData = {
 };
 
 export const SwapForm = () => {
-  console.log('A: ', useAccounts());
   const { selectTokens } = useLastUsedTokens();
   const searchParams = useSearchParams();
   const form = useForm<FormData>({
