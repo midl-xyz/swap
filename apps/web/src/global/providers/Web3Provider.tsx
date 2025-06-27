@@ -1,3 +1,4 @@
+'use client';
 import { LastUsedTokensProvider } from '@/features';
 import { config, wagmiConfig } from '@/global';
 import { AddressPurpose } from '@midl-xyz/midl-js-core';
@@ -7,7 +8,13 @@ import { SatoshiKitProvider } from '@midl-xyz/satoshi-kit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider } from 'wagmi';
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      experimental_prefetchInRender: true,
+    },
+  },
+});
 
 export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   return (
