@@ -34,7 +34,7 @@ export default async function AppLayout({
         <RuneDialogProvider />
         <SettingsDialogProvider />
         <RemoveLiquidityProvider />
-        {/* <RPCStatus /> */}
+        <RPCStatus />
         <Header
           leftSlot={
             <div
