@@ -72,6 +72,7 @@ export const IntentionSigner = ({
     );
 
     for (const intention of txIntentionsToPublish) {
+      console.log('trying to send');
       await walletClient?.sendRawTransaction({
         serializedTransaction: intention.signedEvmTransaction!,
       });

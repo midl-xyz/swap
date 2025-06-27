@@ -4,10 +4,11 @@ import { useApproveWithOptionalDeposit } from '@/shared';
 import {
   useAddTxIntention,
   useClearTxIntentions,
+  useEVMAddress,
 } from '@midl-xyz/midl-js-executor-react';
 import { useMutation } from '@tanstack/react-query';
 import { Address, encodeFunctionData, erc20Abi } from 'viem';
-import { useAccount, useChainId } from 'wagmi';
+import { useChainId } from 'wagmi';
 
 type UseRemoveLiquidityParams = {
   lpToken: {
@@ -30,7 +31,7 @@ export const useRemoveLiquidityMidl = ({
   lpToken,
 }: UseRemoveLiquidityParams) => {
   const chainId = useChainId();
-  const { address } = useAccount();
+  const address = useEVMAddress();
 
   const { data: allowance = 0n } = useERC20Allowance({
     token: lpToken.address,

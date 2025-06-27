@@ -2,14 +2,14 @@
 
 import { useLiquidityPositions } from '@/features/liquidity';
 import { LiquidityItem } from '@/features/liquidity/ui/liquidity';
+import { useEVMAddress } from '@midl-xyz/midl-js-executor-react';
 import { Loader2Icon } from 'lucide-react';
 import { getAddress } from 'viem';
-import { useAccount } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { vstack } from '~/styled-system/patterns';
 
 export const Liquidity = () => {
-  const { address } = useAccount();
+  const address = useEVMAddress();
 
   const { data: positions, isFetching } = useLiquidityPositions(address!);
 
