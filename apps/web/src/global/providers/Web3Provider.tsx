@@ -5,7 +5,8 @@ import { AddressPurpose } from '@midl-xyz/midl-js-core';
 import { WagmiMidlProvider } from '@midl-xyz/midl-js-executor-react';
 import { MidlProvider } from '@midl-xyz/midl-js-react';
 import { SatoshiKitProvider } from '@midl-xyz/satoshi-kit';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { Suspense } from 'react';
 import { WagmiProvider } from 'wagmi';
 
 export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
@@ -14,7 +15,9 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
       <MidlProvider config={config}>
         <SatoshiKitProvider purposes={[AddressPurpose.Ordinals]}>
           <QueryClientProvider client={queryClient}>
-            <WagmiMidlProvider />
+            <Suspense>
+              <WagmiMidlProvider />
+            </Suspense>
             <LastUsedTokensProvider>{children}</LastUsedTokensProvider>
           </QueryClientProvider>
         </SatoshiKitProvider>
