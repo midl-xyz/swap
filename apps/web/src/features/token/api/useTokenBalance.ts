@@ -19,11 +19,11 @@ export const useTokenBalance = (
   } = {},
 ) => {
   const userAddress = useEVMAddress();
-  const { ordinalsAccount, paymentAccount } = useAccounts();
+  const { ordinalsAccount } = useAccounts();
   const { balance: btcBalance } = useBTCBalance({
-    address: paymentAccount?.address || ordinalsAccount?.address || '',
+    address: ordinalsAccount?.address || '',
     query: {
-      enabled: Boolean(paymentAccount?.address || ordinalsAccount?.address),
+      enabled: Boolean(ordinalsAccount?.address),
     },
   });
 
@@ -80,11 +80,9 @@ export const useTokenBalance = (
 
   const { balance: runeBalance } = useRuneBalance({
     runeId: rune?.id ?? '',
-    address: paymentAccount?.address || ordinalsAccount?.address || '',
+    address: ordinalsAccount?.address || '',
     query: {
-      enabled: Boolean(
-        rune?.id && (paymentAccount?.address || ordinalsAccount?.address),
-      ),
+      enabled: Boolean(rune?.id && ordinalsAccount?.address),
     },
   });
 

@@ -11,7 +11,8 @@
     "test": "vitest",
     "generate": "graphql-codegen",
     "prepare": "panda codegen",
-    "dev:styles": "panda cssgen --watch --outfile styled-system/styles.css --polyfill"
+    "dev:styles": "panda cssgen --watch --outfile styled-system/styles.css --polyfill",
+    "prebuild": "panda cssgen --outfile styled-system/styles.css --polyfill"
   },
   "dependencies": {
     "@graphql-typed-document-node/core": "^3.2.0",

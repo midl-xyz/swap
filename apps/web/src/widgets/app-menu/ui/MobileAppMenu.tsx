@@ -1,12 +1,13 @@
 'use client';
 
 import { Dialog, DialogContent, DialogOverlay } from '@/shared';
-import { AccountButton, AppMenuList } from '@/widgets';
+import { AppMenuList } from '@/widgets';
 import { X } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { Stack, VStack } from '~/styled-system/jsx';
 import MenuIcon from '../assets/menu.svg';
+import { ConnectButton } from '@midl-xyz/satoshi-kit';
 
 export const MobileAppMenu = () => {
   const [open, setOpen] = useState(false);
@@ -34,7 +35,7 @@ export const MobileAppMenu = () => {
               <AppMenuList onToggleModal={handleToggle} />
             </VStack>
             <div onClick={() => setOpen(false)}>
-              <AccountButton />
+              <ConnectButton />
             </div>
           </VStack>
         </DialogContent>

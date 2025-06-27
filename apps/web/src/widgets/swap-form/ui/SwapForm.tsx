@@ -13,6 +13,7 @@ import { SlippageControl } from '@/widgets';
 import { SwapDetails } from '@/widgets/swap-form/ui/SwapDetails';
 import { getCorrectToken } from '@/widgets/swap-form/ui/utils';
 import { useEVMAddress } from '@midl-xyz/midl-js-executor-react';
+import { useAccounts } from '@midl-xyz/midl-js-react';
 import { ConnectButton } from '@midl-xyz/satoshi-kit';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
@@ -33,7 +34,7 @@ type FormData = {
 };
 
 export const SwapForm = () => {
-  console.log('CHECK: ', useAccount());
+  console.log('A: ', useAccounts());
   const { selectTokens } = useLastUsedTokens();
   const searchParams = useSearchParams();
   const form = useForm<FormData>({
