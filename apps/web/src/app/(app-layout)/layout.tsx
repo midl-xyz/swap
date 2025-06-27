@@ -22,7 +22,7 @@ import { hstack } from '~/styled-system/patterns';
 import '../globals.css';
 import { ConnectButton } from '@midl-xyz/satoshi-kit';
 
-export default async function AppLayout({
+export default function AppLayout({
   children,
 }: Readonly<{
   children: ReactNode;
