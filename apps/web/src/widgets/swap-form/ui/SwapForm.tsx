@@ -34,7 +34,7 @@ type FormData = {
 
 export const SwapForm = () => {
   console.log('WALLET CLIENT: ', useWalletClient());
-  console.log('ACCOUNT: ', useAccount());
+  console.log('ACCOUNT: ', useAccount().address);
   const { selectTokens } = useLastUsedTokens();
   const searchParams = useSearchParams();
   const form = useForm<FormData>({
