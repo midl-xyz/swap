@@ -1,4 +1,5 @@
 import { LiquidityForm } from '@/widgets';
+import { Suspense } from 'react';
 import { css } from '~/styled-system/css';
 import { vstack } from '~/styled-system/patterns';
 
@@ -22,7 +23,9 @@ export default function NewLiquidity() {
       >
         Add Liquidity
       </h1>
-      <LiquidityForm />
+      <Suspense>
+        <LiquidityForm />
+      </Suspense>
     </div>
   );
 }

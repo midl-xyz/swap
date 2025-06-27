@@ -1,5 +1,5 @@
 import { tokenList } from '@/global';
-import { useToken } from '@midl-xyz/midl-js-executor-react';
+import { useEVMAddress, useToken } from '@midl-xyz/midl-js-executor-react';
 import {
   useAccounts,
   useBalance as useBTCBalance,
@@ -7,7 +7,7 @@ import {
 } from '@midl-xyz/midl-js-react';
 import { useMemo } from 'react';
 import { Address, erc20Abi, formatUnits, parseUnits, zeroAddress } from 'viem';
-import { useAccount, useBalance, useReadContracts } from 'wagmi';
+import { useBalance, useReadContracts } from 'wagmi';
 
 export const useTokenBalance = (
   contract: Address,
@@ -18,12 +18,12 @@ export const useTokenBalance = (
     address?: Address;
   } = {},
 ) => {
-  const { address: userAddress } = useAccount();
-  const { ordinalsAccount, paymentAccount } = useAccounts();
+  const userAddress = useEVMAddress();
+  const { ordinalsAccount } = useAccounts();
   const { balance: btcBalance } = useBTCBalance({
-    address: paymentAccount?.address || ordinalsAccount?.address || '',
+    address: ordinalsAccount?.address || '',
     query: {
-      enabled: Boolean(paymentAccount?.address || ordinalsAccount?.address),
+      enabled: Boolean(ordinalsAccount?.address),
     },
   });
 
@@ -80,11 +80,9 @@ export const useTokenBalance = (
 
   const { balance: runeBalance } = useRuneBalance({
     runeId: rune?.id ?? '',
-    address: paymentAccount?.address || ordinalsAccount?.address || '',
+    address: ordinalsAccount?.address || '',
     query: {
-      enabled: Boolean(
-        rune?.id && (paymentAccount?.address || ordinalsAccount?.address),
-      ),
+      enabled: Boolean(rune?.id && ordinalsAccount?.address),
     },
   });
 

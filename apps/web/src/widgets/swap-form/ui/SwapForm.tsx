@@ -1,38 +1,27 @@
 'use client';
 
 import { useToken } from '@/entities';
-import {
-  useERC20Allowance,
-  useERC20ApproveAllowance,
-  useLastUsedTokens,
-  useSlippage,
-  useSwap,
-  useTokenBalance,
-} from '@/features';
+import { useLastUsedTokens, useSlippage, useTokenBalance } from '@/features';
 import { useSwapMidl } from '@/features/swap/api/useSwapMidl';
 import { useSwapRates } from '@/features/swap/api/useSwapRates';
 import { SwapDialog } from '@/features/swap/ui/swap-dialog/SwapDialog';
-import { deployments, tokenList } from '@/global';
-import {
-  Button,
-  SwapInput,
-  parseNumberInput,
-  scopeKeyPredicate,
-} from '@/shared';
+import { tokenList } from '@/global';
+import { Button, SwapInput, parseNumberInput } from '@/shared';
 import { AiOutlineSwapVertical } from '@/shared/assets';
 import { removePercentage } from '@/shared/lib/removePercentage';
-import { AccountButton, SlippageControl } from '@/widgets';
+import { SlippageControl } from '@/widgets';
 import { SwapDetails } from '@/widgets/swap-form/ui/SwapDetails';
 import { getCorrectToken } from '@/widgets/swap-form/ui/utils';
-import { useQueryClient } from '@tanstack/react-query';
-import { Loader2Icon } from 'lucide-react';
+import { useEVMAddress } from '@midl-xyz/midl-js-executor-react';
+import { useAccounts } from '@midl-xyz/midl-js-react';
+import { ConnectButton } from '@midl-xyz/satoshi-kit';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDebouncedCallback } from 'use-debounce';
-import { Address, formatUnits, parseUnits, zeroAddress } from 'viem';
-import { useAccount, useChainId } from 'wagmi';
+import { Address, formatUnits, parseUnits } from 'viem';
+import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { vstack } from '~/styled-system/patterns';
 
@@ -62,7 +51,6 @@ export const SwapForm = () => {
     watch();
   const inputTokenInfo = useToken(inputToken, chainId);
   const outputTokenInfo = useToken(outputToken, chainId);
-  const queryClient = useQueryClient();
 
   const {
     read: readSwapRates,
@@ -129,7 +117,7 @@ export const SwapForm = () => {
     );
   }, 0);
 
-  const { address } = useAccount();
+  const address = useEVMAddress();
 
   const onSwapSuccess = () => {
     onInputTokenAmountChange({
@@ -335,7 +323,7 @@ export const SwapForm = () => {
         </div>
         <SlippageControl />
         {!address ? (
-          <AccountButton />
+          <ConnectButton />
         ) : (
           <Button
             type="submit"

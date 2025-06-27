@@ -1,7 +1,8 @@
 import { useToken } from '@/entities';
 import { useGetLPTokenAddress, useGetPairStats } from '@/features/liquidity';
+import { useEVMAddress } from '@midl-xyz/midl-js-executor-react';
 import { Address, formatUnits, parseUnits } from 'viem';
-import { useAccount, useChainId } from 'wagmi';
+import { useChainId } from 'wagmi';
 
 export const usePoolShare = ({
   tokenA,
@@ -16,7 +17,7 @@ export const usePoolShare = ({
   };
 }) => {
   const poolToken = useGetLPTokenAddress({ tokenA, tokenB });
-  const { address } = useAccount();
+  const address = useEVMAddress();
   const chainId = useChainId();
   const poolTokenInfo = useToken(poolToken.data as Address, chainId);
   const tokenAInfo = useToken(tokenA as Address, chainId);

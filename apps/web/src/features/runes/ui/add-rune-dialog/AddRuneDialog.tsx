@@ -1,5 +1,6 @@
 import { TokenLogo } from '@/features';
 import { useRuneDialog } from '@/features/runes/api';
+import { config } from '@/global';
 import { Button, Dialog, DialogContent, DialogOverlay } from '@/shared';
 import {
   calculateTransactionsCost,
@@ -56,8 +57,7 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
     isPending,
     reset: resetWait,
   } = useWaitForTransaction();
-  const config = useConfig();
-  const { network } = config;
+  const { network } = useConfig();
 
   const { data: edictFee } = useQuery({
     queryKey: ['edictFee'],
