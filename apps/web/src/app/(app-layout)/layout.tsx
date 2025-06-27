@@ -1,3 +1,4 @@
+'use client';
 import { FiatQuotesProvider } from '@/features/fiat-quote';
 import {
   RemoveLiquidityProvider,
@@ -5,36 +6,35 @@ import {
   TokenDialogProvider,
   Web3Provider,
 } from '@/global';
-import { MobileAppMenu } from '@/widgets/app-menu/ui/MobileAppMenu';
-import { headers } from 'next/headers';
-import type { ReactNode } from 'react';
-import { Toaster } from 'react-hot-toast';
 import { ErrorBoundary } from '@/global/providers/ErrorBoundary';
 import { RuneDialogProvider } from '@/global/providers/RuneDialogProvider';
-import { AccountButton, AppMenuList, Header, Logo, RPCStatus } from '@/widgets';
+import { AppMenuList, Header, Logo, RPCStatus } from '@/widgets';
+import { MobileAppMenu } from '@/widgets/app-menu/ui/MobileAppMenu';
 import { renderErrorMessage } from '@/widgets/error-message';
 import { Footer } from '@/widgets/footer/ui';
+import '@midl-xyz/satoshi-kit/styles.css';
 import Link from 'next/link';
+import type { ReactNode } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { css } from '~/styled-system/css';
 import { HStack, Stack } from '~/styled-system/jsx';
 import { hstack } from '~/styled-system/patterns';
 import '../globals.css';
+import { ConnectButton } from '@midl-xyz/satoshi-kit';
 
 export default async function AppLayout({
   children,
 }: Readonly<{
   children: ReactNode;
 }>) {
-  const cookie = (await headers()).get('cookie') || '';
-
   return (
-    <Web3Provider cookie={cookie}>
+    <Web3Provider>
       <FiatQuotesProvider>
         <TokenDialogProvider />
         <RuneDialogProvider />
         <SettingsDialogProvider />
         <RemoveLiquidityProvider />
-        <RPCStatus />
+        {/* <RPCStatus /> */}
         <Header
           leftSlot={
             <div
@@ -61,7 +61,7 @@ export default async function AppLayout({
           }
           rightSlot={
             <HStack gap={4} display={{ base: 'none', md: 'flex' }}>
-              <AccountButton />
+              <ConnectButton />
             </HStack>
           }
         />
