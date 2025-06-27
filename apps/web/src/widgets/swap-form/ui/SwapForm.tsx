@@ -21,7 +21,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDebouncedCallback } from 'use-debounce';
 import { Address, formatUnits, parseUnits } from 'viem';
-import { useChainId } from 'wagmi';
+import { useAccount, useChainId, useWalletClient } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { vstack } from '~/styled-system/patterns';
 
@@ -33,6 +33,8 @@ type FormData = {
 };
 
 export const SwapForm = () => {
+  console.log('WALLET CLIENT: ', useWalletClient());
+  console.log('ACCOUNT: ', useAccount());
   const { selectTokens } = useLastUsedTokens();
   const searchParams = useSearchParams();
   const form = useForm<FormData>({
