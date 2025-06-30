@@ -15,6 +15,7 @@ import { getCorrectToken } from '@/widgets/swap-form/ui/utils';
 import { useEVMAddress } from '@midl-xyz/midl-js-executor-react';
 import { useAccounts } from '@midl-xyz/midl-js-react';
 import { ConnectButton } from '@midl-xyz/satoshi-kit';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -23,6 +24,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { Address, formatUnits, parseUnits } from 'viem';
 import { useAccount, useChainId, useWalletClient } from 'wagmi';
 import { css } from '~/styled-system/css';
+import { VStack } from '~/styled-system/jsx';
 import { vstack } from '~/styled-system/patterns';
 
 type FormData = {
@@ -33,8 +35,6 @@ type FormData = {
 };
 
 export const SwapForm = () => {
-  console.log('WALLET CLIENT: ', useWalletClient());
-  console.log('ACCOUNT: ', useAccount().address);
   const { selectTokens } = useLastUsedTokens();
   const searchParams = useSearchParams();
   const form = useForm<FormData>({
@@ -269,7 +269,8 @@ export const SwapForm = () => {
             base: 2,
             md: 16,
           },
-          py: 8,
+          padding: 8,
+          paddingBottom: 5,
           width: 'full',
           maxWidth: 640,
         })}
@@ -324,22 +325,41 @@ export const SwapForm = () => {
           />
         </div>
         <SlippageControl />
-        {!address ? (
-          <ConnectButton />
-        ) : (
-          <Button
-            type="submit"
-            appearance="primary"
-            disabled={
-              isSwapRatesFetching ||
-              Boolean(swapRatesError) ||
-              !isFormFilled ||
-              !isBalanceBigEnough
-            }
+        <VStack gap={4}>
+          {!address ? (
+            <ConnectButton />
+          ) : (
+            <Button
+              type="submit"
+              appearance="primary"
+              disabled={
+                isSwapRatesFetching ||
+                Boolean(swapRatesError) ||
+                !isFormFilled ||
+                !isBalanceBigEnough
+              }
+            >
+              {getButtonText()}
+            </Button>
+          )}
+          <Link
+            href="https://medium.com/midl-xyz/pioneer-the-midl-testnet-56c412486f08"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            {getButtonText()}
-          </Button>
-        )}
+            <p
+              className={css({
+                textStyle: 'caption',
+                color: 'neutral.700',
+                textAlign: 'center',
+                fontSize: 12,
+                fontWeight: 500,
+              })}
+            >
+              Guide: How to swap
+            </p>
+          </Link>
+        </VStack>
 
         {inputToken && outputToken && inputTokenAmount && outputTokenAmount ? (
           <SwapDetails

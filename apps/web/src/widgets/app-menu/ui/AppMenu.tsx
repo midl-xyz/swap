@@ -22,6 +22,10 @@ const appMenuLinks: AppMenuLinkParams[] = [
     label: 'All Pairs',
     href: '/pairs',
   },
+  {
+    label: 'Guide',
+    href: 'https://medium.com/midl-xyz/pioneer-the-midl-testnet-56c412486f08',
+  },
 ];
 
 interface Props {
