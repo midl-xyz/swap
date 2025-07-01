@@ -6,6 +6,7 @@ export type AppMenuLink = {
   label: string;
   href: string;
   isExact?: boolean;
+  openOnSeparateTab?: boolean;
 };
 
 type AppMenuLinkProps = {
@@ -13,7 +14,7 @@ type AppMenuLinkProps = {
 };
 
 export const AppMenuLink = ({
-  link: { label, href, isExact },
+  link: { label, href, isExact, openOnSeparateTab },
 }: AppMenuLinkProps) => {
   const pathname = usePathname();
 
@@ -32,6 +33,8 @@ export const AppMenuLink = ({
         fontWeight: 'medium',
         position: 'relative',
       })}
+      target={openOnSeparateTab ? '_blank' : '_self'}
+      rel={openOnSeparateTab ? 'noopener noreferrer' : ''}
     >
       {label}
       {isPathMatch && (

@@ -6,6 +6,7 @@ type AppMenuLinkParams = {
   label: string;
   href: string;
   isExact?: boolean;
+  openOnSeparateTab?: boolean;
 };
 
 const appMenuLinks: AppMenuLinkParams[] = [
@@ -23,8 +24,19 @@ const appMenuLinks: AppMenuLinkParams[] = [
     href: '/pairs',
   },
   {
+    label: 'Stable',
+    href: 'https://stable.midl.xyz',
+    openOnSeparateTab: true,
+  },
+  {
     label: 'Guide',
     href: 'https://medium.com/midl-xyz/pioneer-the-midl-testnet-56c412486f08',
+    openOnSeparateTab: true,
+  },
+  {
+    label: 'Earn Midl',
+    href: 'https://bootstrap.midl.xyz',
+    openOnSeparateTab: true,
   },
 ];
 
