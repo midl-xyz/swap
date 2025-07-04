@@ -3,6 +3,7 @@ import { WETHByChain } from '@/global';
 import { deployments, uniswapV2Router02Abi } from '@/global/contracts';
 import { useApproveWithOptionalDeposit } from '@/shared';
 import {
+  useAddCompleteTxIntention,
   useAddTxIntention,
   useClearTxIntentions,
   useEVMAddress,
@@ -35,6 +36,7 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
   });
 
   const { addTxIntention } = useAddTxIntention();
+  const { addCompleteTxIntention } = useAddCompleteTxIntention();
   const { addApproveDepositIntention } = useApproveWithOptionalDeposit(chainId);
   const clearTxIntentions = useClearTxIntentions();
   const { rune } = useToken(tokenIn);
@@ -119,6 +121,8 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
           },
         },
       });
+
+      addCompleteTxIntention({ assetsToWithdraw: [tokenOut] });
     },
   });
 

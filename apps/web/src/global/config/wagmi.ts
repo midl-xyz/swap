@@ -16,21 +16,16 @@ export const wagmiConfig = createConfig({
 
       rpcUrls: {
         default: {
-          http: [midlRegtest.rpcUrls.default.http[0]],
+          http: ['https://rpc.etna.midl.xyz'],
         },
       },
-      // contracts: {
-      //   multicall3: {
-      //     address: '0x98e1171a1EeCbCC56a6DAC6a1e8D828dD407113c',
-      //   },
-      // },
     } as Chain,
   ],
   batch: {
     multicall: true,
   },
   transports: {
-    [midlRegtest.id]: http(midlRegtest.rpcUrls.default.http[0]),
+    [midlRegtest.id]: http('https://rpc.etna.midl.xyz'),
   },
   storage: createStorage({
     storage: typeof localStorage === 'undefined' ? undefined : localStorage,
