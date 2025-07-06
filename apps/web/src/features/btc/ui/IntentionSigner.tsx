@@ -1,21 +1,13 @@
-import { WETHByChain } from '@/global';
 import { Button } from '@/shared';
 import {
-  useAddCompleteTxIntention,
   useAddTxIntention,
   useFinalizeBTCTransaction,
   useSendBTCTransactions,
   useSignIntention,
-  // TODO: doesn't exist anymore  useFinalizeTxIntentions,
 } from '@midl-xyz/midl-js-executor-react';
-import {
-  useBroadcastTransaction,
-  useConfig,
-  useWaitForTransaction,
-} from '@midl-xyz/midl-js-react';
+import { useConfig, useWaitForTransaction } from '@midl-xyz/midl-js-react';
 import toast from 'react-hot-toast';
-import { Address, StateOverride, zeroAddress } from 'viem';
-import { useChainId, useWalletClient } from 'wagmi';
+import { Address, StateOverride } from 'viem';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
 
@@ -33,6 +25,7 @@ export const IntentionSigner = ({
   onClose,
 }: IntentionSignerProps) => {
   const { txIntentions } = useAddTxIntention();
+
   const {
     data: btcTransaction,
     finalizeBTCTransaction,

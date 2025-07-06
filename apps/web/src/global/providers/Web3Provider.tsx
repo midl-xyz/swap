@@ -13,7 +13,7 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   return (
     <WagmiProvider config={wagmiConfig}>
       <MidlProvider config={config}>
-        <SatoshiKitProvider purposes={[AddressPurpose.Ordinals]}>
+        <SatoshiKitProvider>
           <QueryClientProvider client={queryClient}>
             <Suspense>
               <WagmiMidlProvider />
