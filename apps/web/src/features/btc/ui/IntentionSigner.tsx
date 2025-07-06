@@ -1,4 +1,5 @@
 import { Button } from '@/shared';
+import { SignMessageProtocol } from '@midl-xyz/midl-js-core';
 import {
   useAddTxIntention,
   useFinalizeBTCTransaction,
@@ -43,7 +44,7 @@ export const IntentionSigner = ({
     },
   });
 
-  const signIntentionState = useSignIntention();
+  const signIntentionState = useSignIntention({});
   const { network } = useConfig();
 
   const { waitForTransaction, isPending, isSuccess } = useWaitForTransaction();
