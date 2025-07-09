@@ -19,7 +19,7 @@ type Deployments = Record<
 >;
 
 export const deployments: Deployments = {
-  [midlRegtest.id]: {
+  ['777']: {
     UniswapV2Router02: require('@v60swap/periphery/deployments/1.0.3/midl/UniswapV2Router02.json'),
     UniswapV2Factory: require('@v60swap/core/deployments/1.0.4/midl/UniswapV2Factory.json'),
     UV2Library: require('@v60swap/periphery/deployments/1.0.3/midl/UV2Library.json'),

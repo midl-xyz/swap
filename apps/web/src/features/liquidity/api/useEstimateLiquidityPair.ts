@@ -19,7 +19,6 @@ export const useEstimateLiquidityPair = (
 ) => {
   const globalChainId = useChainId();
   const chainId = wagmiOverrides?.chainId || globalChainId;
-
   const { data, ...rest } = useReadContract({
     abi: uv2LibraryAbi,
     functionName: 'getLiquidityValue',

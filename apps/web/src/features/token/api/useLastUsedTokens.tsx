@@ -1,6 +1,5 @@
 'use client';
 
-import { wagmiConfig } from '@/global';
 import { usePathname } from 'next/navigation';
 import {
   createContext,
@@ -10,6 +9,7 @@ import {
   useState,
 } from 'react';
 import { Address } from 'viem';
+import { useConfig } from 'wagmi';
 
 export interface LastUsedToken {
   chain: number;
@@ -22,6 +22,7 @@ export const LastUsedTokensProvider = ({
 }: {
   children: ReactNode;
 }) => {
+  const wagmiConfig = useConfig();
   const pathname = usePathname();
   const localTokens =
     typeof window !== 'undefined' && localStorage.getItem('tokens');
