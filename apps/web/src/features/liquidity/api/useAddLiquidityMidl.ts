@@ -154,7 +154,7 @@ export const useAddLiquidityMidl = ({
       }
 
       const functionName = isETH ? 'addLiquidityETH' : 'addLiquidity';
-
+      console.log(deployments[chainId].UniswapV2Router02.address);
       addTxIntention({
         intention: {
           evmTransaction: {
