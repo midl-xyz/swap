@@ -4,7 +4,7 @@ import packageJSON from "../package.json";
 
 const getUniswapV2FactoryAddress = async (chain: string, version: string) => {
   const deployment = await import(
-    `@v60swap/core/deployments/${version}/${chain}/UniswapV2Factory.json`
+    `@midl-swap/core/deployments/${version}/${chain}/UniswapV2Factory.json`
   );
 
   return deployment.address;

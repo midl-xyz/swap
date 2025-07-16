@@ -24,7 +24,7 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
             },
           }}
         >
-          <SatoshiKitProvider>
+          <SatoshiKitProvider purposes={[AddressPurpose.Ordinals]}>
             <Suspense>
               <WagmiMidlProvider />
             </Suspense>

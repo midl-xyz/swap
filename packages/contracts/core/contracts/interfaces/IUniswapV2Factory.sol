@@ -29,6 +29,4 @@ interface IUniswapV2Factory {
   function setFeeTo(address) external;
 
   function setFeeToSetter(address) external;
-
-  function v60AddressRegistry() external returns (address);
 }

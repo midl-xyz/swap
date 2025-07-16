@@ -3,7 +3,7 @@ import { Address } from 'viem';
 import type { Config } from 'wagmi';
 
 type UV2Library =
-  typeof import('@v60swap/periphery/deployments/1.0.3/sepolia/UV2Library.json');
+  typeof import('@midl-swap/periphery/deployments/1.0.3/sepolia/UV2Library.json');
 
 type Deployments = Record<
   Config['chains'][number]['id'],
