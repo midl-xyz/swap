@@ -19,7 +19,7 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
 
             rpcUrls: {
               default: {
-                http: ['https://rpc.etna.midl.xyz'],
+                http: ['https://rpc.regtest.midl.xyz'],
               },
             },
           }}

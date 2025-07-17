@@ -5,6 +5,6 @@ export const config = createMidlConfig({
   networks: [regtest],
   persist: true,
   provider: new MempoolSpaceProvider({
-    regtest: 'https://mempool.etna.midl.xyz',
+    regtest: 'https://mempool.regtest.midl.xyz',
   } as any), // Any is used coz we don't wanna give mainnet links
 });
