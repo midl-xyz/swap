@@ -32,7 +32,7 @@ export const IntentionSigner = ({
     finalizeBTCTransaction,
     isSuccess: isFinalizedBTC,
     isPending: isFinalizingBTC,
-    // signIntentionState, TODO: useSignIntention
+    // signIntentionState, Notice: Now retrieved from useIntentionSigner
     isError,
     error,
   } = useFinalizeBTCTransaction({
@@ -66,7 +66,7 @@ export const IntentionSigner = ({
       .filter((it) => it.signedEvmTransaction)
       .map((it) => it.signedEvmTransaction);
 
-    // TODO: get intention.signedEvmTransaction! into an array and pass to serializedTransactions & btcTransaction?.tx.hex! to btcTransaction
+    // Notice now get intention.signedEvmTransaction! into an array and pass to serializedTransactions & btcTransaction?.tx.hex! to btcTransaction
     console.log('sending');
     sendBTCTransactions({
       serializedTransactions: txIntentionsToPublish as [],
@@ -113,12 +113,9 @@ export const IntentionSigner = ({
             onClick={() => {
               finalizeBTCTransaction({
                 stateOverride,
-                // shouldComplete, // TODO: useAddCompleteTxIntention
+                // shouldComplete, Notice: now is explicitly added as useAddCompleteTxIntention
                 feeRateMultiplier: 4,
                 assetsToWithdrawSize: assetsToWithdraw?.length,
-                // assetsToWithdraw: assetsToWithdraw?.filter(
-                //   (it) => it !== zeroAddress && it !== WETHByChain[chainId],
-                // ) as any, // TODO: assetsToWithdrawSize
               });
             }}
             disabled={isFinalizingBTC}
