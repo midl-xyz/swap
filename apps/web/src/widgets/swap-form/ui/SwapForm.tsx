@@ -35,6 +35,8 @@ type FormData = {
 };
 
 export const SwapForm = () => {
+  const addressA = useEVMAddress();
+  console.log('address:: ', addressA);
   const { selectTokens } = useLastUsedTokens();
   const searchParams = useSearchParams();
   const form = useForm<FormData>({

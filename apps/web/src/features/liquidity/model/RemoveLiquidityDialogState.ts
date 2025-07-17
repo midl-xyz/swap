@@ -1,13 +1,12 @@
-import { ChainId } from '@/global';
 import { midlRegtest } from '@midl-xyz/midl-js-executor';
 import { atom } from 'jotai';
-import { Address } from 'viem';
+import { Address, Chain } from 'viem';
 
 export const removeLiquidityDialogAtom = atom<{
   open: boolean;
   lpToken: {
     address: Address;
-    chainId: ChainId;
+    chainId: Chain['id'];
     tokenA: Address;
     tokenB: Address;
   };

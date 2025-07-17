@@ -1,5 +1,5 @@
 {
-  "name": "@v60swap/core",
+  "name": "@midl-swap/core",
   "version": "2.0.0",
   "scripts": {
     "build": "hardhat compile & hardhat export-abi"

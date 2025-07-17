@@ -3,7 +3,7 @@ import { Address } from 'viem';
 import type { Config } from 'wagmi';
 
 type UV2Library =
-  typeof import('@v60swap/periphery/deployments/1.0.3/sepolia/UV2Library.json');
+  typeof import('@midl-swap/periphery/deployments/1.0.3/sepolia/UV2Library.json');
 
 type Deployments = Record<
   Config['chains'][number]['id'],
@@ -14,14 +14,16 @@ type Deployments = Record<
     UniswapV2Factory: {
       address: Address;
     };
-    UV2Library: UV2Library;
+    UV2Library: { address: Address };
   }
 >;
 
 export const deployments: Deployments = {
-  [midlRegtest.id]: {
-    UniswapV2Router02: require('@v60swap/periphery/deployments/1.0.3/midl/UniswapV2Router02.json'),
-    UniswapV2Factory: require('@v60swap/core/deployments/1.0.4/midl/UniswapV2Factory.json'),
-    UV2Library: require('@v60swap/periphery/deployments/1.0.3/midl/UV2Library.json'),
+  ['777']: {
+    UniswapV2Router02: {
+      address: '0xee7d81B234042AB58192E0Ef6a5004b08ca65a34',
+    },
+    UniswapV2Factory: { address: '0x5B3046102F11Ac37Eea74741949bc2aF83c926E5' },
+    UV2Library: { address: '0x88bdaE217ba9782A46a02b14d51400BA5cA45a2C' },
   },
 };

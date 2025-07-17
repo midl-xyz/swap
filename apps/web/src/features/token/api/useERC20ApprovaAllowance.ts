@@ -1,6 +1,5 @@
-import { ChainId } from '@/global';
 import toast from 'react-hot-toast';
-import { Address, erc20Abi } from 'viem';
+import { Address, Chain, erc20Abi } from 'viem';
 import {
   useChainId,
   useWaitForTransactionReceipt,
@@ -37,7 +36,7 @@ export const useERC20ApproveAllowance = () => {
     tokenAddress: Address,
     spenderAddress: Address,
     amount: bigint,
-    chainId?: ChainId,
+    chainId?: Chain['id'],
   ) => {
     const chainIdToUse = chainId || globalChainId;
 

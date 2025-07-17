@@ -1,6 +1,6 @@
 pragma solidity >=0.6.2;
 
-import './IUniswapV2Router01.sol';
+import "./IUniswapV2Router01.sol";
 
 interface IUniswapV2Router02 is IUniswapV2Router01 {
   function removeLiquidityETHSupportingFeeOnTransferTokens(
@@ -47,6 +47,4 @@ interface IUniswapV2Router02 is IUniswapV2Router01 {
     address to,
     uint deadline
   ) external;
-
-  function v60AddressRegistry() external pure returns (address);
 }

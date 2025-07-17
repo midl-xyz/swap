@@ -18,7 +18,6 @@ export const useGetAmountOut = (
 ) => {
   const globalChainId = useChainId();
   const chainId = wagmiOverrides?.chainId || globalChainId;
-
   return useReadContract({
     abi: uniswapV2Router02Abi,
     address: deployments[chainId].UniswapV2Router02.address,

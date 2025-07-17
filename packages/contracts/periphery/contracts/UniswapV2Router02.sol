@@ -1,6 +1,6 @@
 pragma solidity =0.6.6;
 
-import "@v60swap/core/contracts/interfaces/IUniswapV2Factory.sol";
+import "@midl-swap/core/contracts/interfaces/IUniswapV2Factory.sol";
 import "@uniswap/lib/contracts/libraries/TransferHelper.sol";
 
 import "./interfaces/IUniswapV2Router02.sol";
@@ -9,38 +9,20 @@ import "./libraries/SafeMath.sol";
 import "./interfaces/IIIERC20.sol";
 import "./interfaces/IWETH.sol";
 
-interface IV60AddressRegistry {
-  function v60Factory() external returns (address);
-
-  function v60Router() external returns (address);
-
-  function isRektMeme(address) external returns (bool);
-
-  function isMemeFactoryValid(address) external returns (bool);
-
-  function addMeme(address) external;
-}
-
 contract UniswapV2Router02 is IUniswapV2Router02 {
   using SafeMath for uint;
 
   address public immutable override factory;
   address public immutable override WETH;
-  address public immutable override v60AddressRegistry;
 
   modifier ensure(uint deadline) {
     require(deadline >= block.timestamp, "UniswapV2Router: EXPIRED");
     _;
   }
 
-  constructor(
-    address _factory,
-    address _WETH,
-    address _v60AddressRegistry
-  ) public {
+  constructor(address _factory, address _WETH) public {
     factory = _factory;
     WETH = _WETH;
-    v60AddressRegistry = _v60AddressRegistry;
   }
 
   receive() external payable {
@@ -56,23 +38,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
     uint amountAMin,
     uint amountBMin
   ) internal virtual returns (uint amountA, uint amountB) {
-    // create the pair if it doesn't exist yet
-    if (IUniswapV2Factory(factory).getPair(tokenA, tokenB) == address(0)) {
-      IV60AddressRegistry addressRegistry = IV60AddressRegistry(
-        v60AddressRegistry
-      );
-      if (
-        addressRegistry.isRektMeme(tokenA) || addressRegistry.isRektMeme(tokenB)
-      ) {
-        if (tokenA == WETH || tokenB == WETH) {
-          require(
-            addressRegistry.isRektMeme(msg.sender),
-            "V60 Addition: memePair creation is only by memes logic"
-          );
-        }
-      }
-      IUniswapV2Factory(factory).createPair(tokenA, tokenB);
-    }
+    IUniswapV2Factory(factory).createPair(tokenA, tokenB);
 
     (uint reserveA, uint reserveB) = UniswapV2Library.getReserves(
       factory,

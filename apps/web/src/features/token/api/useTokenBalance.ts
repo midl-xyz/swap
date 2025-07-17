@@ -19,11 +19,11 @@ export const useTokenBalance = (
   } = {},
 ) => {
   const userAddress = useEVMAddress();
-  const { ordinalsAccount } = useAccounts();
+  const { ordinalsAccount, paymentAccount } = useAccounts();
   const { balance: btcBalance } = useBTCBalance({
-    address: ordinalsAccount?.address || '',
+    address: paymentAccount?.address ?? ordinalsAccount?.address ?? '',
     query: {
-      enabled: Boolean(ordinalsAccount?.address),
+      enabled: Boolean(paymentAccount?.address ?? ordinalsAccount?.address),
     },
   });
 
