@@ -64,7 +64,6 @@ export const IntentionSigner = ({
       .map((it) => it.signedEvmTransaction);
 
     // Notice now get intention.signedEvmTransaction! into an array and pass to serializedTransactions & btcTransaction?.tx.hex! to btcTransaction
-    console.log('sending intents: ');
     sendBTCTransactions({
       serializedTransactions: txIntentionsToPublish as [],
       btcTransaction: btcTransaction?.tx.hex!,

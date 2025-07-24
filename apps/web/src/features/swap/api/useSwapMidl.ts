@@ -128,7 +128,6 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
       });
 
       try {
-        console.log('adding complete tx intention', tokenOut);
         await addCompleteTxIntentionAsync({
           assetsToWithdraw: tokenOut !== zeroAddress ? ([tokenOut] as any) : [],
         });

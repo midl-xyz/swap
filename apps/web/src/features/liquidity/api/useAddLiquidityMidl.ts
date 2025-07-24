@@ -91,9 +91,7 @@ export const useAddLiquidityMidl = ({
       }
 
       if (runeB || !isTokenBETH) {
-        console.log('Checking if approve required');
         if (isTokenBNeedApprove) {
-          console.log('Adding approve intention');
           addApproveDepositIntention({
             address: tokenB.address,
             runeId: runeB?.id,
