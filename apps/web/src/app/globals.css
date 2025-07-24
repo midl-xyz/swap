@@ -1,6 +1,5 @@
 @layer reset, base, tokens, recipes, utilities;
 @import url("@midl-xyz/satoshi-kit/styles.css");
-@import url("~/styled-system/styles.css");
 body > [data-rk] {
     display: flex;
     flex-direction: column;

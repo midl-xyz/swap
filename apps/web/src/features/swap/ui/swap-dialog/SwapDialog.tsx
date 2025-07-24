@@ -79,7 +79,6 @@ export const SwapDialog = ({
           </h3>
 
           <IntentionSigner
-            stateOverride={stateOverride}
             assetsToWithdraw={rune?.id ? [tokenOut] : [zeroAddress]}
             shouldComplete={!!rune?.id || tokenOut === zeroAddress}
             onClose={() => {
