@@ -10,9 +10,10 @@ import {
   useEVMAddress,
   useToken,
 } from '@midl-xyz/midl-js-executor-react';
+import { useAccounts } from '@midl-xyz/midl-js-react';
 import { useMutation } from '@tanstack/react-query';
 import { Address, encodeFunctionData, zeroAddress } from 'viem';
-import { useChainId } from 'wagmi';
+import { useAccount, useChainId } from 'wagmi';
 
 type UseSwapMidlParams = {
   tokenIn: Address;
@@ -127,8 +128,10 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
       });
 
       try {
-        console.log('adding complete tx intention');
-        await addCompleteTxIntentionAsync({ assetsToWithdraw: [tokenOut] });
+        console.log('adding complete tx intention', tokenOut);
+        await addCompleteTxIntentionAsync({
+          assetsToWithdraw: tokenOut !== zeroAddress ? ([tokenOut] as any) : [],
+        });
       } catch (e) {
         console.error(e);
       }
