@@ -2,6 +2,7 @@ import { useERC20Allowance } from '@/features/token';
 import { WETHByChain } from '@/global';
 import { deployments, uniswapV2Router02Abi } from '@/global/contracts';
 import { useApproveWithOptionalDeposit } from '@/shared';
+import { convertETHtoBTC } from '@midl-xyz/midl-js-executor';
 import {
   useAddCompleteTxIntention,
   useAddTxIntention,
@@ -9,9 +10,10 @@ import {
   useEVMAddress,
   useToken,
 } from '@midl-xyz/midl-js-executor-react';
+import { useAccounts } from '@midl-xyz/midl-js-react';
 import { useMutation } from '@tanstack/react-query';
 import { Address, encodeFunctionData, zeroAddress } from 'viem';
-import { useChainId } from 'wagmi';
+import { useAccount, useChainId } from 'wagmi';
 
 type UseSwapMidlParams = {
   tokenIn: Address;
@@ -36,7 +38,7 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
   });
 
   const { addTxIntention } = useAddTxIntention();
-  const { addCompleteTxIntention } = useAddCompleteTxIntention();
+  const { addCompleteTxIntentionAsync } = useAddCompleteTxIntention();
   const { addApproveDepositIntention } = useApproveWithOptionalDeposit(chainId);
   const clearTxIntentions = useClearTxIntentions();
   const { rune } = useToken(tokenIn);
@@ -68,10 +70,13 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
           addTxIntention({
             intention: {
               hasRunesDeposit: true,
-              rune: {
-                id: rune?.id,
-                value: amountIn,
-              },
+              runes: [
+                {
+                  id: rune?.id,
+                  value: amountIn,
+                  address: tokenIn,
+                },
+              ],
             },
           });
         }
@@ -111,7 +116,6 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
           evmTransaction: {
             to: deployments[chainId].UniswapV2Router02.address,
             chainId,
-            type: 'btc',
             data: encodeFunctionData({
               abi: uniswapV2Router02Abi,
               functionName: txName,
@@ -119,10 +123,17 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
             }),
             value: (tokenIn === zeroAddress ? amountIn : BigInt(0)) as any,
           },
+          satoshis: tokenIn === zeroAddress ? convertETHtoBTC(amountIn) : 0,
         },
       });
 
-      addCompleteTxIntention({ assetsToWithdraw: [tokenOut] });
+      try {
+        await addCompleteTxIntentionAsync({
+          assetsToWithdraw: tokenOut !== zeroAddress ? ([tokenOut] as any) : [],
+        });
+      } catch (e) {
+        console.error(e);
+      }
     },
   });
 

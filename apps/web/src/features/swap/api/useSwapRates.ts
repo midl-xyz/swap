@@ -13,7 +13,6 @@ export const useSwapRates = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const config = useConfig();
-  console.log('address: ', deployments[chainId].UniswapV2Router02.address);
 
   const read = async ({
     value,
@@ -32,7 +31,6 @@ export const useSwapRates = () => {
     if (reverse) {
       method = 'getAmountsIn';
     }
-    console.log(value, pair);
 
     try {
       const result = await readContract(config as any, {

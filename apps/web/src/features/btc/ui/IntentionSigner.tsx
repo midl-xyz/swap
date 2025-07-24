@@ -8,19 +8,17 @@ import {
 } from '@midl-xyz/midl-js-executor-react';
 import { useConfig, useWaitForTransaction } from '@midl-xyz/midl-js-react';
 import toast from 'react-hot-toast';
-import { Address, StateOverride } from 'viem';
+import { Address } from 'viem';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
 
 type IntentionSignerProps = {
-  stateOverride?: StateOverride;
   onClose: () => void;
   shouldComplete?: boolean;
   assetsToWithdraw?: [Address] | [Address, Address];
 };
 
 export const IntentionSigner = ({
-  stateOverride,
   shouldComplete,
   assetsToWithdraw,
   onClose,
@@ -60,14 +58,12 @@ export const IntentionSigner = ({
         },
       },
     });
-
   const onPublish = async () => {
     const txIntentionsToPublish = txIntentions
       .filter((it) => it.signedEvmTransaction)
       .map((it) => it.signedEvmTransaction);
 
     // Notice now get intention.signedEvmTransaction! into an array and pass to serializedTransactions & btcTransaction?.tx.hex! to btcTransaction
-    console.log('sending');
     sendBTCTransactions({
       serializedTransactions: txIntentionsToPublish as [],
       btcTransaction: btcTransaction?.tx.hex!,
@@ -79,6 +75,7 @@ export const IntentionSigner = ({
       <div className={hstack({ gap: 4 })}>
         {new Array(toSignIntentions.length + 1).fill(0).map((_, i) => (
           <div
+            key={i}
             className={css({
               borderRadius: 'full',
               border: '1px solid',
@@ -112,9 +109,7 @@ export const IntentionSigner = ({
           <Button
             onClick={() => {
               finalizeBTCTransaction({
-                stateOverride,
                 // shouldComplete, Notice: now is explicitly added as useAddCompleteTxIntention
-                feeRateMultiplier: 4,
                 assetsToWithdrawSize: assetsToWithdraw?.length,
               });
             }}

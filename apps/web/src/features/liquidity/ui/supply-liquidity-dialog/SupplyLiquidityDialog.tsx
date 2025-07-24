@@ -108,39 +108,6 @@ export const SupplyLiquidityDialog = ({
     ),
   );
 
-  const stateOverride = [
-    {
-      address: evmAddress,
-      balance: parseUnits('100000000000000000000000000', 18), // TODO: very large balance for testing
-    },
-    ...(tokenA !== zeroAddress
-      ? [
-          {
-            address: tokenA,
-            stateDiff: [
-              {
-                slot: slot,
-                value: toHex(tokenAAmount, { size: 32 }),
-              },
-            ],
-          },
-        ]
-      : []),
-    ...(tokenB !== zeroAddress
-      ? [
-          {
-            address: tokenB,
-            stateDiff: [
-              {
-                slot: slot,
-                value: toHex(tokenBAmount, { size: 32 }),
-              },
-            ],
-          },
-        ]
-      : []),
-  ];
-
   return (
     <Dialog {...rest}>
       <DialogOverlay onClick={onClose} />
@@ -161,7 +128,7 @@ export const SupplyLiquidityDialog = ({
               Sign intentions to add liquidity
             </h3>
 
-            <IntentionSigner stateOverride={stateOverride} onClose={onClose} />
+            <IntentionSigner onClose={onClose} />
           </div>
         )}
         {!isSuccess && (

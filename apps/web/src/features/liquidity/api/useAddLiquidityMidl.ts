@@ -1,9 +1,11 @@
 import { usePoolShare } from '@/features/liquidity/api';
 import { deployments, uniswapV2Router02Abi } from '@/global/contracts';
 import { useApproveWithOptionalDeposit } from '@/shared';
+import { convertETHtoBTC } from '@midl-xyz/midl-js-executor';
 import {
   useAddTxIntention,
   useClearTxIntentions,
+  useEVMAddress,
   useToken,
 } from '@midl-xyz/midl-js-executor-react';
 import { useMutation } from '@tanstack/react-query';
@@ -55,7 +57,6 @@ export const useAddLiquidityMidl = ({
 
   const isTokenBNeedApprove =
     allowances.tokenB < tokenB.amount && tokenB.address !== zeroAddress;
-
   const {
     mutate: addLiquidity,
     mutateAsync: addLiquidityAsync,
@@ -77,19 +78,20 @@ export const useAddLiquidityMidl = ({
           addTxIntention({
             intention: {
               hasRunesDeposit: true,
-              rune: {
-                id: runeA?.id,
-                value: tokenA.amount,
-              },
+              runes: [
+                {
+                  id: runeA?.id,
+                  value: tokenA.amount,
+                  address: tokenA.address,
+                },
+              ],
             },
           });
         }
       }
 
       if (runeB || !isTokenBETH) {
-        console.log('Checking if approve required');
         if (isTokenBNeedApprove) {
-          console.log('Adding approve intention');
           addApproveDepositIntention({
             address: tokenB.address,
             runeId: runeB?.id,
@@ -99,10 +101,13 @@ export const useAddLiquidityMidl = ({
           addTxIntention({
             intention: {
               hasRunesDeposit: true,
-              rune: {
-                id: runeB.id,
-                value: tokenB.amount,
-              },
+              runes: [
+                {
+                  id: runeB.id,
+                  value: tokenB.amount,
+                  address: tokenB.address,
+                },
+              ],
             },
           });
         }
@@ -137,7 +142,7 @@ export const useAddLiquidityMidl = ({
         args = [
           erc20TokenAddress,
           erc20Desired,
-          erc20Min,
+          BigInt('0'),
           ethMin,
           to,
           deadline,
@@ -156,13 +161,12 @@ export const useAddLiquidityMidl = ({
       }
 
       const functionName = isETH ? 'addLiquidityETH' : 'addLiquidity';
-      console.log(deployments[chainId].UniswapV2Router02.address);
+
       addTxIntention({
         intention: {
           evmTransaction: {
             to: deployments[chainId].UniswapV2Router02.address,
             chainId,
-            type: 'btc',
             data: encodeFunctionData({
               abi: uniswapV2Router02Abi,
               functionName,
@@ -170,6 +174,7 @@ export const useAddLiquidityMidl = ({
             }),
             value: ethValue as any,
           },
+          satoshis: isETH ? convertETHtoBTC(ethValue) : undefined,
         },
       });
     },
