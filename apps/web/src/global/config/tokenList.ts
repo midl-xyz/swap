@@ -12,4 +12,12 @@ export const tokenList: Token[] = [
     logoURI:
       'https://assets-cdn.trustwallet.com/blockchains/bitcoin/info/logo.png',
   },
+  {
+    symbol: '🔥',
+    name: 'MIDLRUNESTABLECOIN',
+    address: '0x93a800a06BCc954020266227Fe644ec6962ad153',
+    chainId: midlRegtest.id,
+    decimals: 18,
+    logoURI: '',
+  },
 ];

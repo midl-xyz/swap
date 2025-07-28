@@ -33,7 +33,7 @@ export const TokenName = ({ address, chainId, showName }: TokenNameProps) => {
           alignItems: 'flex-start',
         })}
       >
-        {rune?.symbol ?? symbol}
+        {rune?.name ?? name}
         {showName && (
           <span
             className={css({

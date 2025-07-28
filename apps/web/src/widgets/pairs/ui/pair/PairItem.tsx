@@ -78,7 +78,7 @@ export const PairItem = ({
             </div>
 
             <div>
-              {tokenAInfo.symbol} — {tokenBInfo.symbol}
+              {tokenAInfo.name} — {tokenBInfo.name}
             </div>
           </div>
         </div>
