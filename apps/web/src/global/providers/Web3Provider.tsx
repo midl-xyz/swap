@@ -13,9 +13,6 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
       <QueryClientProvider client={queryClient}>
         <WagmiMidlProvider>
           <SatoshiKitProvider>
-            <Suspense>
-              <WagmiMidlProvider />
-            </Suspense>
             <LastUsedTokensProvider>{children}</LastUsedTokensProvider>
           </SatoshiKitProvider>
         </WagmiMidlProvider>

@@ -143,7 +143,7 @@ export const useAddLiquidityMidl = ({
           erc20TokenAddress,
           erc20Desired,
           BigInt('0'),
-          ethMin,
+          BigInt('0'),
           to,
           deadline,
         ];
