@@ -21,6 +21,33 @@ import { HStack, Stack } from '~/styled-system/jsx';
 import { hstack } from '~/styled-system/patterns';
 import '../globals.css';
 import { ConnectButton } from '@midl-xyz/satoshi-kit';
+import { useAddNetwork, useConfig } from '@midl-xyz/midl-js-react';
+import { xverseConnector } from '@midl-xyz/midl-js-connectors';
+
+const Wallet = () => {
+  const { addNetworkAsync } = useAddNetwork();
+  const { network } = useConfig();
+
+  return (
+    <ConnectButton
+      beforeConnect={async (connectorId) => {
+        if (connectorId !== xverseConnector().id) {
+          return;
+        }
+
+        await addNetworkAsync({
+          connectorId,
+          networkConfig: {
+            name: 'MIDL Regtest',
+            network: network.id,
+            rpcUrl: 'https://mempool.regtest.midl.xyz/api',
+            indexerUrl: 'https://api-regtest-midl.xverse.app',
+          },
+        });
+      }}
+    />
+  );
+};
 
 export default function AppLayout({
   children,
@@ -61,7 +88,7 @@ export default function AppLayout({
           }
           rightSlot={
             <HStack gap={4} display={{ base: 'none', md: 'flex' }}>
-              <ConnectButton />
+              <Wallet />
             </HStack>
           }
         />

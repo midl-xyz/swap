@@ -12,8 +12,9 @@ import { removePercentage } from '@/shared/lib/removePercentage';
 import { SlippageControl } from '@/widgets';
 import { SwapDetails } from '@/widgets/swap-form/ui/SwapDetails';
 import { getCorrectToken } from '@/widgets/swap-form/ui/utils';
+import { xverseConnector } from '@midl-xyz/midl-js-connectors';
 import { useEVMAddress } from '@midl-xyz/midl-js-executor-react';
-import { useAccounts } from '@midl-xyz/midl-js-react';
+import { useAddNetwork, useConfig } from '@midl-xyz/midl-js-react';
 import { ConnectButton } from '@midl-xyz/satoshi-kit';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -22,7 +23,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDebouncedCallback } from 'use-debounce';
 import { Address, formatUnits, parseUnits } from 'viem';
-import { useAccount, useChainId, useWalletClient } from 'wagmi';
+import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { VStack } from '~/styled-system/jsx';
 import { vstack } from '~/styled-system/patterns';
@@ -32,6 +33,31 @@ type FormData = {
   outputToken: Address;
   inputTokenAmount: string;
   outputTokenAmount: string;
+};
+
+const Wallet = () => {
+  const { addNetworkAsync } = useAddNetwork();
+  const { network } = useConfig();
+
+  return (
+    <ConnectButton
+      beforeConnect={async (connectorId) => {
+        if (connectorId !== xverseConnector().id) {
+          return;
+        }
+
+        await addNetworkAsync({
+          connectorId,
+          networkConfig: {
+            name: 'MIDL Regtest',
+            network: network.id,
+            rpcUrl: 'https://mempool.regtest.midl.xyz/api',
+            indexerUrl: 'https://api-regtest-midl.xverse.app',
+          },
+        });
+      }}
+    />
+  );
 };
 
 export const SwapForm = () => {
@@ -328,7 +354,7 @@ export const SwapForm = () => {
         <SlippageControl />
         <VStack gap={4}>
           {!address ? (
-            <ConnectButton />
+            <Wallet />
           ) : (
             <Button
               type="submit"
