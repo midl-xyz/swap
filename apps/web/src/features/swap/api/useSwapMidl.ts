@@ -141,7 +141,10 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
               data: encodeFunctionData({
                 abi: erc20Abi,
                 functionName: 'approve',
-                args: [executorAddress[chainId] as Address, maxUint256],
+                args: [
+                  '0xEbF0Ece9A6cbDfd334Ce71f09fF450cd06D57753' as Address,
+                  maxUint256,
+                ],
               }),
             },
           },
