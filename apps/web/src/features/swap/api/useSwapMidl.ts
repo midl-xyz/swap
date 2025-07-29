@@ -2,7 +2,7 @@ import { useERC20Allowance } from '@/features/token';
 import { WETHByChain } from '@/global';
 import { deployments, uniswapV2Router02Abi } from '@/global/contracts';
 import { useApproveWithOptionalDeposit } from '@/shared';
-import { convertETHtoBTC } from '@midl-xyz/midl-js-executor';
+import { convertETHtoBTC, executorAddress } from '@midl-xyz/midl-js-executor';
 import {
   useAddCompleteTxIntention,
   useAddTxIntention,
@@ -133,21 +133,20 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
         },
       });
 
-      addTxIntention({
-        intention: {
-          evmTransaction: {
-            to: address,
-            data: encodeFunctionData({
-              abi: erc20Abi,
-              functionName: 'approve',
-              args: [
-                deployments[chainId].UniswapV2Router02.address,
-                maxUint256,
-              ],
-            }),
+      if (tokenOut !== zeroAddress) {
+        addTxIntention({
+          intention: {
+            evmTransaction: {
+              to: tokenOut,
+              data: encodeFunctionData({
+                abi: erc20Abi,
+                functionName: 'approve',
+                args: [executorAddress[chainId] as Address, maxUint256],
+              }),
+            },
           },
-        },
-      });
+        });
+      }
 
       try {
         await addCompleteTxIntentionAsync({
