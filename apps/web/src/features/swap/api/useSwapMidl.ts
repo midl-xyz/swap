@@ -12,7 +12,13 @@ import {
 } from '@midl-xyz/midl-js-executor-react';
 import { useAccounts } from '@midl-xyz/midl-js-react';
 import { useMutation } from '@tanstack/react-query';
-import { Address, encodeFunctionData, zeroAddress } from 'viem';
+import {
+  Address,
+  encodeFunctionData,
+  erc20Abi,
+  maxUint256,
+  zeroAddress,
+} from 'viem';
 import { useAccount, useChainId } from 'wagmi';
 
 type UseSwapMidlParams = {
@@ -124,6 +130,22 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
             value: (tokenIn === zeroAddress ? amountIn : BigInt(0)) as any,
           },
           satoshis: tokenIn === zeroAddress ? convertETHtoBTC(amountIn) : 0,
+        },
+      });
+
+      addTxIntention({
+        intention: {
+          evmTransaction: {
+            to: address,
+            data: encodeFunctionData({
+              abi: erc20Abi,
+              functionName: 'approve',
+              args: [
+                deployments[chainId].UniswapV2Router02.address,
+                maxUint256,
+              ],
+            }),
+          },
         },
       });
 
