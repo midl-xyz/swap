@@ -1,8 +1,9 @@
+import { useStateOverride } from '@/features/state-override';
 import { useERC20Allowance } from '@/features/token';
 import { WETHByChain } from '@/global';
 import { deployments, uniswapV2Router02Abi } from '@/global/contracts';
 import { useApproveWithOptionalDeposit } from '@/shared';
-import { convertETHtoBTC, executorAddress } from '@midl-xyz/midl-js-executor';
+import { convertETHtoBTC } from '@midl-xyz/midl-js-executor';
 import {
   useAddCompleteTxIntention,
   useAddTxIntention,
@@ -10,16 +11,19 @@ import {
   useEVMAddress,
   useToken,
 } from '@midl-xyz/midl-js-executor-react';
-import { useAccounts } from '@midl-xyz/midl-js-react';
 import { useMutation } from '@tanstack/react-query';
 import {
   Address,
+  encodeAbiParameters,
   encodeFunctionData,
   erc20Abi,
+  keccak256,
   maxUint256,
+  parseEther,
+  toHex,
   zeroAddress,
 } from 'viem';
-import { useAccount, useChainId } from 'wagmi';
+import { useChainId } from 'wagmi';
 
 type UseSwapMidlParams = {
   tokenIn: Address;
@@ -33,10 +37,13 @@ export type SwapArgs = {
   deadline: bigint;
 };
 
+const LUSD_TOKEN = '0x93a800a06BCc954020266227Fe644ec6962ad153';
+
 export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
   const address = useEVMAddress();
   const chainId = useChainId();
-
+  const [, setStateOverride] = useStateOverride();
+  const userAddress = useEVMAddress();
   const { data: allowance = 0n } = useERC20Allowance({
     token: tokenIn,
     spender: deployments[chainId].UniswapV2Router02.address,
@@ -133,7 +140,7 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
         },
       });
 
-      if (tokenOut !== zeroAddress) {
+      if (tokenOut == LUSD_TOKEN) {
         addTxIntention({
           intention: {
             evmTransaction: {
@@ -151,6 +158,35 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
         });
       }
 
+      if (tokenIn === LUSD_TOKEN) {
+        const slot = keccak256(
+          encodeAbiParameters(
+            [
+              {
+                type: 'address',
+              },
+              { type: 'uint256' },
+            ],
+            [userAddress, 2n],
+          ),
+        );
+
+        const customStateOverride = [
+          {
+            address: LUSD_TOKEN as Address,
+            stateDiff: [
+              {
+                slot,
+                value: toHex(args['0'], { size: 32 }),
+              },
+            ],
+          },
+        ];
+
+        setStateOverride(customStateOverride);
+      } else {
+        setStateOverride([]);
+      }
       try {
         await addCompleteTxIntentionAsync({
           assetsToWithdraw: tokenOut !== zeroAddress ? ([tokenOut] as any) : [],
