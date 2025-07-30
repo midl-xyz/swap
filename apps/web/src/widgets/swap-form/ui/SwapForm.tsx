@@ -61,7 +61,6 @@ const Wallet = () => {
 };
 
 export const SwapForm = () => {
-  const addressA = useEVMAddress();
   const { selectTokens } = useLastUsedTokens();
   const searchParams = useSearchParams();
   const form = useForm<FormData>({

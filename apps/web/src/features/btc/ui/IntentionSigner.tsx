@@ -1,22 +1,14 @@
-import { stateOverride, useStateOverride } from '@/features/state-override';
+import { useStateOverride } from '@/features/state-override';
 import { Button } from '@/shared';
-import { SignMessageProtocol } from '@midl-xyz/midl-js-core';
 import {
   useAddTxIntention,
-  useEVMAddress,
   useFinalizeBTCTransaction,
   useSendBTCTransactions,
   useSignIntention,
 } from '@midl-xyz/midl-js-executor-react';
 import { useConfig, useWaitForTransaction } from '@midl-xyz/midl-js-react';
 import toast from 'react-hot-toast';
-import {
-  Address,
-  encodeAbiParameters,
-  keccak256,
-  parseEther,
-  toHex,
-} from 'viem';
+import { Address } from 'viem';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
 
@@ -52,7 +44,6 @@ export const IntentionSigner = ({
       },
     },
   });
-  const address = useEVMAddress();
   const [customStateOverride, setStateOverride] = useStateOverride();
 
   const signIntentionState = useSignIntention({});
