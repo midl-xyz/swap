@@ -32,7 +32,7 @@ export const TokenLogo = ({
     logoURI = overridePic;
   }
 
-  if (!logoURI || rune?.id) {
+  if (!logoURI && rune?.id) {
     return (
       <div
         className={css({
