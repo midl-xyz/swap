@@ -38,7 +38,6 @@ type FormData = {
 };
 
 export const LiquidityForm = () => {
-  const searchParams = useSearchParams();
   const [minValues, setValues] = useState({
     minAmountA: 0,
     minAmountB: 0,
@@ -203,8 +202,8 @@ export const LiquidityForm = () => {
   } catch {}
 
   useEffect(() => {
-    const inputTokenSymbol = searchParams.get('inputToken');
-    const outputTokenSymbol = searchParams.get('outputToken');
+    const inputTokenSymbol = null; // TODO: Search params are buggy and deactivated
+    const outputTokenSymbol = null; // TODO: Search params are buggy and deactivated
     if (inputTokenSymbol && outputTokenSymbol) {
       const inputTokenFound = tokenList.find(
         ({ symbol }) => symbol === inputTokenSymbol,
