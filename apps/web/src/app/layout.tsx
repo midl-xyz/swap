@@ -27,6 +27,7 @@ export const metadata: Metadata = {
     title: 'MIDL Swap',
     description: 'Web3 app for swapping Runes on Bitcoin',
   },
+  icons: { icon: '/images/favicon.png' },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

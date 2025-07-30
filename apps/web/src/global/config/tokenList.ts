@@ -18,6 +18,6 @@ export const tokenList: Token[] = [
     address: '0x93a800a06BCc954020266227Fe644ec6962ad153',
     chainId: midlRegtest.id,
     decimals: 18,
-    logoURI: '',
+    logoURI: '/images/stablecoin.png',
   },
 ];
