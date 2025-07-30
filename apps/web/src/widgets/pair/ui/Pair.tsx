@@ -6,13 +6,14 @@ import {
   shortenAddress,
   useCopyToClipboard,
 } from '@/shared';
+import { AppPreloader } from '@/widgets';
 import { PairField } from '@/widgets/pair/ui/PairField';
 import { CopyIcon } from 'lucide-react';
 import Link from 'next/link';
 import type { Address } from 'viem';
 import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
-import { HStack, Stack, VStack } from '~/styled-system/jsx';
+import { Box, HStack, Stack, VStack } from '~/styled-system/jsx';
 
 interface Props {
   id: string;
@@ -25,7 +26,7 @@ export const Pair = ({ id }: Props) => {
   const { copyToClipboard } = useCopyToClipboard();
 
   if (isLoading) {
-    return '...getting token';
+    return <AppPreloader />;
   }
   const pairData = data?.pairById;
 

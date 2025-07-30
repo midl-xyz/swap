@@ -7,3 +7,4 @@ export * from './logo';
 export * from './rpc-status';
 export * from './slippage-control';
 export * from './swap-form';
+export * from './app-preloader';

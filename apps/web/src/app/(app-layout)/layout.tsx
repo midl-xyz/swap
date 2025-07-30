@@ -8,10 +8,13 @@ import {
 } from '@/global';
 import { ErrorBoundary } from '@/global/providers/ErrorBoundary';
 import { RuneDialogProvider } from '@/global/providers/RuneDialogProvider';
-import { AppMenuList, Header, Logo, RPCStatus } from '@/widgets';
+import { AppMenuList, Header, Logo } from '@/widgets';
 import { MobileAppMenu } from '@/widgets/app-menu/ui/MobileAppMenu';
 import { renderErrorMessage } from '@/widgets/error-message';
 import { Footer } from '@/widgets/footer/ui';
+import { xverseConnector } from '@midl-xyz/midl-js-connectors';
+import { useAddNetwork, useConfig } from '@midl-xyz/midl-js-react';
+import { ConnectButton } from '@midl-xyz/satoshi-kit';
 import '@midl-xyz/satoshi-kit/styles.css';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
@@ -20,9 +23,6 @@ import { css } from '~/styled-system/css';
 import { HStack, Stack } from '~/styled-system/jsx';
 import { hstack } from '~/styled-system/patterns';
 import '../globals.css';
-import { ConnectButton } from '@midl-xyz/satoshi-kit';
-import { useAddNetwork, useConfig } from '@midl-xyz/midl-js-react';
-import { xverseConnector } from '@midl-xyz/midl-js-connectors';
 
 const Wallet = () => {
   const { addNetworkAsync } = useAddNetwork();
@@ -56,57 +56,54 @@ export default function AppLayout({
 }>) {
   return (
     <Web3Provider>
-      <FiatQuotesProvider>
-        <TokenDialogProvider />
-        <RuneDialogProvider />
-        <SettingsDialogProvider />
-        <RemoveLiquidityProvider />
-        <RPCStatus />
-        <Header
-          leftSlot={
-            <div
-              className={hstack({
-                gap: 24,
-                flexShrink: 0,
-                width: {
-                  base: '100%',
-                  md: 'fit-content',
-                },
-                justifyContent: 'space-between',
-              })}
-            >
-              <Link href="/">
-                <Logo />
-              </Link>
-              <HStack display={{ base: 'none', md: 'flex' }} gap={8} h="full">
-                <AppMenuList />
-              </HStack>
-              <Stack display={{ base: 'flex', md: 'none' }}>
-                <MobileAppMenu />
-              </Stack>
-            </div>
-          }
-          rightSlot={
-            <HStack gap={4} display={{ base: 'none', md: 'flex' }}>
-              <Wallet />
-            </HStack>
-          }
-        />
-        <Toaster position="bottom-right" />
-        <ErrorBoundary fallback={renderErrorMessage}>
+      <Header
+        leftSlot={
           <div
-            className={css({
-              paddingBlock: 4,
-              flexGrow: 1,
-              display: 'flex',
-              flexDirection: 'column',
+            className={hstack({
+              gap: 24,
+              flexShrink: 0,
+              width: {
+                base: '100%',
+                md: 'fit-content',
+              },
+              justifyContent: 'space-between',
             })}
           >
-            {children}
+            <Link href="/">
+              <Logo />
+            </Link>
+            <HStack display={{ base: 'none', md: 'flex' }} gap={8} h="full">
+              <AppMenuList />
+            </HStack>
+            <Stack display={{ base: 'flex', md: 'none' }}>
+              <MobileAppMenu />
+            </Stack>
           </div>
-          <Footer />
-        </ErrorBoundary>
-      </FiatQuotesProvider>
+        }
+        rightSlot={
+          <HStack gap={4} display={{ base: 'none', md: 'flex' }}>
+            <Wallet />
+          </HStack>
+        }
+      />
+      <Toaster position="bottom-right" />
+      <ErrorBoundary fallback={renderErrorMessage}>
+        <div
+          className={css({
+            paddingBlock: 4,
+            flexGrow: 1,
+            display: 'flex',
+            flexDirection: 'column',
+          })}
+        >
+          <TokenDialogProvider />
+          <RuneDialogProvider />
+          <SettingsDialogProvider />
+          <RemoveLiquidityProvider />
+          <FiatQuotesProvider>{children}</FiatQuotesProvider>
+        </div>
+        <Footer />
+      </ErrorBoundary>
     </Web3Provider>
   );
 }

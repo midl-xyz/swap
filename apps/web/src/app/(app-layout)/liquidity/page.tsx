@@ -1,7 +1,7 @@
 import { AddLiquidityButton } from '@/widgets/add-liquidity-button';
 import { Liquidity } from '@/widgets/liquidity';
-import { css, cx } from '~/styled-system/css';
-import { center, hstack, vstack } from '~/styled-system/patterns';
+import { css } from '~/styled-system/css';
+import { hstack } from '~/styled-system/patterns';
 
 export default function LiquidityPage() {
   return (
