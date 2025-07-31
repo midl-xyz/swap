@@ -28,12 +28,20 @@ import { Address } from 'viem';
        ];
  */
 
-export const stateOverride = atomWithStorage<
-  {
-    address: Address;
-    stateDiff: {
-      slot: `0x${string}`;
-      value: `0x${string}`;
-    }[];
-  }[]
->('stateOverride', []);
+export type StateDiffEntry = {
+  address: Address;
+  stateDiff: {
+    slot: `0x${string}`;
+    value: `0x${string}`;
+  }[];
+};
+
+export type BalanceEntry = {
+  address: Address;
+  balance: bigint; // use `bigint` (the primitive) rather than `BigInt`
+};
+
+export const stateOverride = atomWithStorage<(StateDiffEntry | BalanceEntry)[]>(
+  'stateOverride',
+  [],
+);

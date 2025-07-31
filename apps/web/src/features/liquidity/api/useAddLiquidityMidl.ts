@@ -1,15 +1,29 @@
 import { usePoolShare } from '@/features/liquidity/api';
+import {
+  BalanceEntry,
+  StateDiffEntry,
+  useStateOverride,
+} from '@/features/state-override';
+import { WETHByChain } from '@/global';
 import { deployments, uniswapV2Router02Abi } from '@/global/contracts';
 import { useApproveWithOptionalDeposit } from '@/shared';
-import { convertETHtoBTC } from '@midl-xyz/midl-js-executor';
+import { convertBTCtoETH, convertETHtoBTC } from '@midl-xyz/midl-js-executor';
 import {
   useAddTxIntention,
   useClearTxIntentions,
   useEVMAddress,
   useToken,
 } from '@midl-xyz/midl-js-executor-react';
+import { useBalance, useDefaultAccount } from '@midl-xyz/midl-js-react';
 import { useMutation } from '@tanstack/react-query';
-import { Address, encodeFunctionData, zeroAddress } from 'viem';
+import {
+  Address,
+  encodeAbiParameters,
+  encodeFunctionData,
+  keccak256,
+  toHex,
+  zeroAddress,
+} from 'viem';
 import { useChainId } from 'wagmi';
 
 type UseAddLiquidityParams = {
@@ -29,6 +43,9 @@ export type AddLiquidityVariables = {
   to: Address;
   deadline: bigint;
 };
+
+// NOTICE: This is a hack that allows to use tokens with unusual _balances field slot
+const LUSD_TOKEN = '0x93a800a06BCc954020266227Fe644ec6962ad153' as Address;
 
 export const useAddLiquidityMidl = ({
   tokenA,
@@ -51,6 +68,11 @@ export const useAddLiquidityMidl = ({
   const clearTxIntentions = useClearTxIntentions();
   const { rune: runeA } = useToken(tokenA.address);
   const { rune: runeB } = useToken(tokenB.address);
+  const userAddress = useEVMAddress();
+  const account = useDefaultAccount();
+  const [, setStateOverride] = useStateOverride();
+
+  const { balance } = useBalance({ address: account?.address });
 
   const isTokenANeedApprove =
     allowances.tokenA < tokenA.amount && tokenA.address !== zeroAddress;
@@ -66,7 +88,6 @@ export const useAddLiquidityMidl = ({
       clearTxIntentions();
       const isTokenAETH = tokenA.address === zeroAddress;
       const isTokenBETH = tokenB.address === zeroAddress;
-
       if (!isTokenAETH) {
         if (isTokenANeedApprove) {
           addApproveDepositIntention({
@@ -138,7 +159,6 @@ export const useAddLiquidityMidl = ({
         const erc20Desired = isTokenAETH ? tokenB.amount : tokenA.amount;
         const erc20Min = isTokenAETH ? amountBMin : amountAMin;
         const ethMin = isTokenAETH ? amountAMin : amountBMin;
-
         args = [
           erc20TokenAddress,
           erc20Desired,
@@ -170,13 +190,76 @@ export const useAddLiquidityMidl = ({
             data: encodeFunctionData({
               abi: uniswapV2Router02Abi,
               functionName,
-              args: args as any,
+              args: args,
             }),
-            value: ethValue as any,
+            value: ethValue,
           },
           satoshis: isETH ? convertETHtoBTC(ethValue) : undefined,
         },
       });
+      const slot = keccak256(
+        encodeAbiParameters(
+          [
+            {
+              type: 'address',
+            },
+            { type: 'uint256' },
+          ],
+          [userAddress, 2n],
+        ),
+      );
+
+      if (tokenA.address === LUSD_TOKEN) {
+        const customStateOverride: (StateDiffEntry | BalanceEntry)[] = [
+          {
+            address: LUSD_TOKEN as Address,
+            stateDiff: [
+              {
+                slot,
+                value: toHex(tokenA.amount, { size: 32 }),
+              },
+            ],
+          },
+        ];
+        if (
+          tokenB.address === zeroAddress ||
+          tokenB.address === WETHByChain[chainId]
+        ) {
+          const ethOverride: BalanceEntry = {
+            address: userAddress,
+            balance: convertBTCtoETH(balance),
+          };
+          customStateOverride.push(ethOverride);
+        }
+
+        setStateOverride(customStateOverride);
+      } else if (tokenB.address === LUSD_TOKEN) {
+        const customStateOverride: (StateDiffEntry | BalanceEntry)[] = [
+          {
+            address: LUSD_TOKEN as Address,
+            stateDiff: [
+              {
+                slot,
+                value: toHex(tokenB.amount, { size: 32 }),
+              },
+            ],
+          },
+        ];
+        if (
+          tokenA.address === zeroAddress ||
+          tokenA.address === WETHByChain[chainId]
+        ) {
+          const ethOverride: BalanceEntry = {
+            address: userAddress,
+            balance: convertBTCtoETH(balance),
+          };
+          customStateOverride.push(ethOverride);
+        }
+
+        setStateOverride(customStateOverride);
+      } else {
+        setStateOverride([]);
+      }
     },
   });
 

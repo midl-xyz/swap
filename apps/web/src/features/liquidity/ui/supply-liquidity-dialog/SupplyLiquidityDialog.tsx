@@ -8,15 +8,7 @@ import { useEVMAddress } from '@midl-xyz/midl-js-executor-react';
 import { DialogProps } from '@radix-ui/react-dialog';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
-import {
-  Address,
-  encodeAbiParameters,
-  formatUnits,
-  keccak256,
-  parseUnits,
-  toHex,
-  zeroAddress,
-} from 'viem';
+import { Address, encodeAbiParameters, formatUnits, keccak256 } from 'viem';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
 

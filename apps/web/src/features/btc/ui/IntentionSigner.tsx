@@ -111,12 +111,13 @@ export const IntentionSigner = ({
           <p>Sign BTC transaction</p>
           <Button
             onClick={() => {
+              console.log('State Override: ', customStateOverride);
               finalizeBTCTransaction({
                 // shouldComplete, Notice: now is explicitly added as useAddCompleteTxIntention
                 assetsToWithdrawSize: assetsToWithdraw?.length,
                 stateOverride:
                   customStateOverride.length > 0
-                    ? customStateOverride
+                    ? [...customStateOverride]
                     : undefined,
               });
             }}
