@@ -33,6 +33,7 @@ export default function NewLiquidity() {
         >
           Add Liquidity
         </h1>
+
         <LiquidityForm />
       </div>
     </Suspense>

@@ -23,6 +23,7 @@ import { css } from '~/styled-system/css';
 import { HStack, Stack } from '~/styled-system/jsx';
 import { hstack } from '~/styled-system/patterns';
 import '../globals.css';
+import dynamic from 'next/dynamic';
 
 const Wallet = () => {
   const { addNetworkAsync } = useAddNetwork();
