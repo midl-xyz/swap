@@ -8,7 +8,7 @@ import {
 } from '@/global';
 import { ErrorBoundary } from '@/global/providers/ErrorBoundary';
 import { RuneDialogProvider } from '@/global/providers/RuneDialogProvider';
-import { AppMenuList, Header, Logo } from '@/widgets';
+import { AppMenuList, AppPreloader, Header, Logo } from '@/widgets';
 import { MobileAppMenu } from '@/widgets/app-menu/ui/MobileAppMenu';
 import { renderErrorMessage } from '@/widgets/error-message';
 import { Footer } from '@/widgets/footer/ui';
@@ -17,7 +17,7 @@ import { useAddNetwork, useConfig } from '@midl-xyz/midl-js-react';
 import { ConnectButton } from '@midl-xyz/satoshi-kit';
 import '@midl-xyz/satoshi-kit/styles.css';
 import Link from 'next/link';
-import type { ReactNode } from 'react';
+import { Suspense, type ReactNode } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { css } from '~/styled-system/css';
 import { HStack, Stack } from '~/styled-system/jsx';
@@ -55,55 +55,57 @@ export default function AppLayout({
   children: ReactNode;
 }>) {
   return (
-    <Web3Provider>
-      <Header
-        leftSlot={
+    <Suspense fallback={<AppPreloader />}>
+      <Web3Provider>
+        <Header
+          leftSlot={
+            <div
+              className={hstack({
+                gap: 24,
+                flexShrink: 0,
+                width: {
+                  base: '100%',
+                  md: 'fit-content',
+                },
+                justifyContent: 'space-between',
+              })}
+            >
+              <Link href="/">
+                <Logo />
+              </Link>
+              <HStack display={{ base: 'none', md: 'flex' }} gap={8} h="full">
+                <AppMenuList />
+              </HStack>
+              <Stack display={{ base: 'flex', md: 'none' }}>
+                <MobileAppMenu />
+              </Stack>
+            </div>
+          }
+          rightSlot={
+            <HStack gap={4} display={{ base: 'none', md: 'flex' }}>
+              <Wallet />
+            </HStack>
+          }
+        />
+        <Toaster position="bottom-right" />
+        <ErrorBoundary fallback={renderErrorMessage}>
           <div
-            className={hstack({
-              gap: 24,
-              flexShrink: 0,
-              width: {
-                base: '100%',
-                md: 'fit-content',
-              },
-              justifyContent: 'space-between',
+            className={css({
+              paddingBlock: 4,
+              flexGrow: 1,
+              display: 'flex',
+              flexDirection: 'column',
             })}
           >
-            <Link href="/">
-              <Logo />
-            </Link>
-            <HStack display={{ base: 'none', md: 'flex' }} gap={8} h="full">
-              <AppMenuList />
-            </HStack>
-            <Stack display={{ base: 'flex', md: 'none' }}>
-              <MobileAppMenu />
-            </Stack>
+            <TokenDialogProvider />
+            <RuneDialogProvider />
+            <SettingsDialogProvider />
+            <RemoveLiquidityProvider />
+            <FiatQuotesProvider>{children}</FiatQuotesProvider>
           </div>
-        }
-        rightSlot={
-          <HStack gap={4} display={{ base: 'none', md: 'flex' }}>
-            <Wallet />
-          </HStack>
-        }
-      />
-      <Toaster position="bottom-right" />
-      <ErrorBoundary fallback={renderErrorMessage}>
-        <div
-          className={css({
-            paddingBlock: 4,
-            flexGrow: 1,
-            display: 'flex',
-            flexDirection: 'column',
-          })}
-        >
-          <TokenDialogProvider />
-          <RuneDialogProvider />
-          <SettingsDialogProvider />
-          <RemoveLiquidityProvider />
-          <FiatQuotesProvider>{children}</FiatQuotesProvider>
-        </div>
-        <Footer />
-      </ErrorBoundary>
-    </Web3Provider>
+          <Footer />
+        </ErrorBoundary>
+      </Web3Provider>
+    </Suspense>
   );
 }
