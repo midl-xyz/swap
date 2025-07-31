@@ -98,13 +98,13 @@ export const Pair = ({ id }: Props) => {
                 textTransform: 'uppercase',
               })}
             >
-              {pairData?.token0.symbol === 'WPROM'
-                ? 'PROM'
-                : pairData?.token0.symbol}
+              {pairData?.token0.name === 'BUSD'
+                ? 'MIDLRUNESTABLECOIN'
+                : pairData?.token0.name}
               -
-              {pairData?.token1.symbol === 'WPROM'
-                ? 'PROM'
-                : pairData?.token1.symbol}
+              {pairData?.token1.symbol === 'BUSD'
+                ? 'MIDLRUNESTABLECOIN'
+                : pairData?.token1.name}
             </span>
             <span
               className={css({
