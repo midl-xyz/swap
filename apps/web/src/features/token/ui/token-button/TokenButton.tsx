@@ -65,7 +65,7 @@ export const TokenButton = forwardRef<HTMLInputElement, TokenButtonProps>(
             })
           }
         >
-          <TokenName address={value} chainId={chainId} />
+          <TokenName address={value} chainId={chainId} shorten />
           <ChevronDownIcon />
         </Button>
         <input type="hidden" ref={refs} {...rest} />
