@@ -1,3 +1,5 @@
+'use client';
+
 import { AppPreloader, LiquidityForm } from '@/widgets';
 import { Suspense } from 'react';
 import { css } from '~/styled-system/css';
@@ -5,7 +7,13 @@ import { vstack } from '~/styled-system/patterns';
 
 export default function NewLiquidity() {
   return (
-    <Suspense fallback={<AppPreloader />}>
+    <Suspense
+      fallback={
+        <div style={{ width: '100vw', height: '100vh' }}>
+          <AppPreloader />
+        </div>
+      }
+    >
       <div
         className={vstack({
           maxW: 480,
@@ -15,6 +23,7 @@ export default function NewLiquidity() {
           backgroundColor: 'neutral.100',
           borderRadius: 'xl',
           gap: 4,
+          minW: { base: 200, md: 460 },
         })}
       >
         <h1
@@ -24,7 +33,6 @@ export default function NewLiquidity() {
         >
           Add Liquidity
         </h1>
-
         <LiquidityForm />
       </div>
     </Suspense>

@@ -1,3 +1,5 @@
+'use client';
+
 import { Token, useToken } from '@/entities';
 import {
   LastUsedToken,

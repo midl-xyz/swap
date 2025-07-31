@@ -1,3 +1,5 @@
+'use client';
+
 /* eslint-disable @next/next/no-img-element */
 import { useToken } from '@/entities';
 import { useERC20Rune } from '@midl-xyz/midl-js-executor-react';

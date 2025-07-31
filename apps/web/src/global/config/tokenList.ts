@@ -13,7 +13,7 @@ export const tokenList: Token[] = [
       'https://assets-cdn.trustwallet.com/blockchains/bitcoin/info/logo.png',
   },
   {
-    symbol: '🔥',
+    symbol: 'MIDLRUNESTABLECOIN',
     name: 'MIDLRUNESTABLECOIN',
     address: '0x93a800a06BCc954020266227Fe644ec6962ad153',
     chainId: midlRegtest.id,

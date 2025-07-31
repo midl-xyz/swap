@@ -1,9 +1,17 @@
-import { AddLiquidityButton } from '@/widgets/add-liquidity-button';
+'use client';
+
+import { Button } from '@/shared';
+import { AppPreloader } from '@/widgets';
 import { Liquidity } from '@/widgets/liquidity';
+import { useRouter } from 'next/navigation';
+import { startTransition } from 'react';
+import { Suspense } from 'react';
 import { css } from '~/styled-system/css';
 import { hstack } from '~/styled-system/patterns';
 
 export default function LiquidityPage() {
+  const router = useRouter();
+
   return (
     <>
       <div
@@ -19,10 +27,22 @@ export default function LiquidityPage() {
         >
           My Liquidity
         </h1>
-        <AddLiquidityButton />
+        {/* Imperatively navigate to "/liquidity/new" when the button is clicked */}
+        <Button
+          appearance="tertiary"
+          onClick={() =>
+            startTransition(() => {
+              router.push('/liquidity/new');
+            })
+          }
+        >
+          Add Liquidity
+        </Button>
       </div>
 
-      <Liquidity />
+      <Suspense fallback={<AppPreloader />}>
+        <Liquidity />
+      </Suspense>
     </>
   );
 }

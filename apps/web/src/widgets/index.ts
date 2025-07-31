@@ -1,4 +1,3 @@
-export * from './add-liquidity-button';
 export * from './app-menu';
 export * from './header';
 export * from './liquidity';

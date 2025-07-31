@@ -1,3 +1,5 @@
+'use client';
+
 import { TokenName, tokenDialogAtom } from '@/features';
 import { Button, mergeRefs } from '@/shared';
 import { useAtom } from 'jotai';
