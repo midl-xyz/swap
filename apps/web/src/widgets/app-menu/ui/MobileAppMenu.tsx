@@ -18,20 +18,20 @@ const Wallet: FC<{ onClick: () => void }> = ({ onClick }) => {
   return (
     <ConnectButton
       beforeConnect={async (connectorId) => {
-        if (connectorId !== xverseConnector().id) {
-          onClick();
-          return;
-        }
+        // if (connectorId !== xverseConnector().id) {
+        //   onClick();
+        //   return;
+        // }
 
-        await addNetworkAsync({
-          connectorId,
-          networkConfig: {
-            name: 'MIDL Regtest',
-            network: network.id,
-            rpcUrl: 'https://mempool.regtest.midl.xyz/api',
-            indexerUrl: 'https://api-regtest-midl.xverse.app',
-          },
-        });
+        // await addNetworkAsync({
+        //   connectorId,
+        //   networkConfig: {
+        //     name: 'MIDL Regtest',
+        //     network: network.id,
+        //     rpcUrl: 'https://mempool.regtest.midl.xyz/api',
+        //     indexerUrl: 'https://api-regtest-midl.xverse.app',
+        //   },
+        // });
         onClick();
       }}
     />
