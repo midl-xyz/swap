@@ -7,11 +7,11 @@ import { useAddNetwork, useConfig } from '@midl-xyz/midl-js-react';
 import { ConnectButton } from '@midl-xyz/satoshi-kit';
 import { X } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { Stack, VStack } from '~/styled-system/jsx';
 import MenuIcon from '../assets/menu.svg';
 
-const Wallet = () => {
+const Wallet: FC<{ onClick: () => void }> = ({ onClick }) => {
   const { addNetworkAsync } = useAddNetwork();
   const { network } = useConfig();
 
@@ -19,6 +19,7 @@ const Wallet = () => {
     <ConnectButton
       beforeConnect={async (connectorId) => {
         if (connectorId !== xverseConnector().id) {
+          onClick();
           return;
         }
 
@@ -31,6 +32,7 @@ const Wallet = () => {
             indexerUrl: 'https://api-regtest-midl.xverse.app',
           },
         });
+        onClick();
       }}
     />
   );
@@ -61,9 +63,8 @@ export const MobileAppMenu = () => {
             <VStack width="100%" gap={5}>
               <AppMenuList onToggleModal={handleToggle} />
             </VStack>
-            <div onClick={() => setOpen(false)}>
-              <Wallet />
-            </div>
+
+            <Wallet onClick={() => setOpen(false)} />
           </VStack>
         </DialogContent>
       </Dialog>
