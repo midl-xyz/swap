@@ -14,12 +14,10 @@ import { hstack, vstack } from '~/styled-system/patterns';
 
 type IntentionSignerProps = {
   onClose: () => void;
-  shouldComplete?: boolean;
   assetsToWithdraw?: [Address] | [Address, Address];
 };
 
 export const IntentionSigner = ({
-  shouldComplete,
   assetsToWithdraw,
   onClose,
 }: IntentionSignerProps) => {
@@ -37,6 +35,24 @@ export const IntentionSigner = ({
     mutation: {
       onError: (error) => {
         console.error(error);
+
+        const btcBalanceError = 'BTC balance is not enough to cover tx costs';
+        if (error.message === 'No selected UTXOs') {
+          error.message = btcBalanceError;
+        }
+
+        if (error.message === 'No ordinals UTXOs') {
+          error.message =
+            'MIDL•RUNE•STABLECOIN balance is not enough to cover tx';
+        }
+        if (error.message === 'Insufficient funds') {
+          error.message = 'Wallet balance is not enough';
+        }
+
+        if (error.message.startsWith('Cannot destructure')) {
+          error.message =
+            'Error at transaction signing. Refresh the page and try again';
+        }
         toast.error(error.message);
       },
       onSuccess: () => {
