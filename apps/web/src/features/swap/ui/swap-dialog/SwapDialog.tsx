@@ -60,7 +60,6 @@ export const SwapDialog = ({
 
           <IntentionSigner
             assetsToWithdraw={rune?.id ? [tokenOut] : [zeroAddress]}
-            shouldComplete={!!rune?.id || tokenOut === zeroAddress}
             onClose={() => {
               onClose();
               onSuccessfulSwap?.();

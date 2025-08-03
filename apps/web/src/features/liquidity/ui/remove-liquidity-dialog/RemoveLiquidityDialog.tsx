@@ -189,14 +189,6 @@ export const RemoveLiquidityDialog = ({
       >
         {isSuccess && (
           <IntentionSigner
-            shouldComplete={
-              !!(
-                runeA.rune?.id ||
-                runeB.rune?.id ||
-                tokenA === WETHByChain[chainId] ||
-                tokenB === WETHByChain[chainId]
-              )
-            }
             onClose={handleClose}
             assetsToWithdraw={[
               runeA.rune?.id ? tokenA : zeroAddress,
