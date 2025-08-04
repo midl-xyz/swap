@@ -69,7 +69,6 @@ export const IntentionSigner = ({
 
   const toSignIntentions = txIntentions.filter((it) => it.evmTransaction);
   const txToSign = toSignIntentions.find((it) => !it.signedEvmTransaction);
-
   const { sendBTCTransactions, isSuccess: isBroadcasted } =
     useSendBTCTransactions({
       mutation: {
@@ -127,9 +126,7 @@ export const IntentionSigner = ({
           <p>Sign BTC transaction</p>
           <Button
             onClick={() => {
-              console.log('State Override: ', customStateOverride);
               finalizeBTCTransaction({
-                // shouldComplete, Notice: now is explicitly added as useAddCompleteTxIntention
                 assetsToWithdrawSize: assetsToWithdraw?.length,
                 stateOverride:
                   customStateOverride.length > 0
