@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import { useToken } from '@/entities';
 import { TokenLogo } from '@/features';
+import { useToken as useMidlToken } from '@midl-xyz/midl-js-executor-react';
+import { useMemo } from 'react';
 import { Address } from 'viem';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
-import { useToken as useMidlToken } from '@midl-xyz/midl-js-executor-react';
-import { useMemo } from 'react';
 
 type TokenNameProps = {
   address: Address;
@@ -20,7 +20,7 @@ export const TokenName = ({
   showName,
   shorten,
 }: TokenNameProps) => {
-  const { symbol, name } = useToken(address, chainId);
+  const { name } = useToken(address, chainId);
   const { rune } = useMidlToken(address);
 
   const rawLabel = rune?.name ?? name;

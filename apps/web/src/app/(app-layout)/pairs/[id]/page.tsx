@@ -1,11 +1,19 @@
 'use client';
 
-import { Pair } from '@/widgets/pair';
+import { AppPreloader } from '@/widgets';
+import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
 
-const PairPage = async ({ params }: { params: Promise<{ id: string }> }) => {
-  const { id } = await params;
+const Pair = dynamic(() => import('@/widgets/pair').then((mod) => mod.Pair), {
+  ssr: false,
+});
 
-  return <Pair id={id} />;
-};
+export default function PairPage({ params }: { params: { id: string } }) {
+  if (!params.id) return <AppPreloader />;
 
-export default PairPage;
+  return (
+    <Suspense fallback={<AppPreloader />}>
+      <Pair id={params.id} />
+    </Suspense>
+  );
+}
