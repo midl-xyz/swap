@@ -8,12 +8,14 @@ const Pair = dynamic(() => import('@/widgets/pair').then((mod) => mod.Pair), {
   ssr: false,
 });
 
-export default function PairPage({ params }: { params: { id: string } }) {
-  if (!params.id) return <AppPreloader />;
+const PairPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+  if (!params) return <AppPreloader />;
+  const { id } = await params;
 
   return (
     <Suspense fallback={<AppPreloader />}>
-      <Pair id={params.id} />
+      <Pair id={id} />
     </Suspense>
   );
-}
+};
+export default PairPage;

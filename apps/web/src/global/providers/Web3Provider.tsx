@@ -1,6 +1,7 @@
 'use client';
 import { LastUsedTokensProvider } from '@/features';
 import { config, queryClient } from '@/global';
+import { AddressPurpose } from '@midl-xyz/midl-js-core';
 import { WagmiMidlProvider } from '@midl-xyz/midl-js-executor-react';
 import { MidlProvider } from '@midl-xyz/midl-js-react';
 import { SatoshiKitProvider } from '@midl-xyz/satoshi-kit';
@@ -11,7 +12,7 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
     <MidlProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <WagmiMidlProvider>
-          <SatoshiKitProvider>
+          <SatoshiKitProvider purposes={[AddressPurpose.Ordinals]}>
             <LastUsedTokensProvider>{children}</LastUsedTokensProvider>
           </SatoshiKitProvider>
         </WagmiMidlProvider>
