@@ -98,8 +98,14 @@ export const PairItem = ({
         <div className={css({ display: 'table-cell' })}>
           {' '}
           {/* biome-ignore lint/complexity/noExtraBooleanCast: <explanation> */}
-          {Boolean(Number.parseFloat(pair.feesUSD24h))
-            ? `${beautifyNumber(pair.feesUSD24h, 2)}$`
+          {Boolean(Number.parseFloat(pair.token0.priceUSD))
+            ? `${beautifyNumber(pair.token0.priceUSD, 2)}$`
+            : '0$'}
+        </div>
+
+        <div className={css({ display: 'table-cell' })}>
+          {Boolean(Number.parseFloat(pair.token1.priceUSD))
+            ? `${beautifyNumber(pair.token1.priceUSD, 2)}$`
             : '0$'}
         </div>
       </a>

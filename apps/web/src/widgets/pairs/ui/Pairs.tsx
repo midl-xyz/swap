@@ -34,7 +34,8 @@ export const Pairs = () => {
         <div className={css({ display: 'table-cell' })}>Pair</div>
         <div className={css({ display: 'table-cell' })}>Volume (24h)</div>
         <div className={css({ display: 'table-cell' })}>Liquidity</div>
-        <div className={css({ display: 'table-cell' })}>Fees(24h)</div>
+        <div className={css({ display: 'table-cell' })}>Token#1 USD Price</div>
+        <div className={css({ display: 'table-cell' })}>Token#2 USD Price</div>
       </div>
 
       {pools?.pairs.map((pair, index) => (
