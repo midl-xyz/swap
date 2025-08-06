@@ -2,7 +2,7 @@
 
 ## Web Application
 
-This branch is specifically designed for taproot purposes testing
+This branch is specifically designed for taproot purposes testing.
 
 ### Install
 
