@@ -149,7 +149,7 @@ export const Pair = ({ id }: Props) => {
 
                   <span>
                     1 {tokenSymbol} = {beautifyNumber(priceInToken)}{' '}
-                    {secondTokenSymbol} ${beautifyNumber(priceUsd)}
+                    {secondTokenSymbol} | ${beautifyNumber(priceUsd)}
                   </span>
                 </HStack>
               );
