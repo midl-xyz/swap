@@ -1,3 +1,4 @@
+'use client';
 import { TokenLogo } from '@/features';
 import { useGetPair } from '@/features/liquidity';
 import {
@@ -6,13 +7,20 @@ import {
   shortenAddress,
   useCopyToClipboard,
 } from '@/shared';
+import { AppPreloader } from '@/widgets';
 import { PairField } from '@/widgets/pair/ui/PairField';
 import { CopyIcon } from 'lucide-react';
 import Link from 'next/link';
 import type { Address } from 'viem';
 import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
-import { HStack, Stack, VStack } from '~/styled-system/jsx';
+import { Box, Divider, HStack, Stack, VStack } from '~/styled-system/jsx';
+
+const shortenName = (name: string | undefined) => {
+  if (!name) return '';
+  if (name.length <= 8) return name; // no need to shorten
+  return `${name.slice(0, 4)}...${name.slice(-4)}`;
+};
 
 interface Props {
   id: string;
@@ -20,24 +28,25 @@ interface Props {
 
 export const Pair = ({ id }: Props) => {
   const chainId = useChainId();
+
   const { data, isLoading } = useGetPair(id);
 
   const { copyToClipboard } = useCopyToClipboard();
 
-  if (isLoading) {
-    return '...getting token';
+  if (isLoading || !data) {
+    return <AppPreloader />;
   }
   const pairData = data?.pairById;
 
   const token0Address = pairData?.token0.id as Address;
   const token1Address = pairData?.token1.id as Address;
-  const token0Symbol = pairData?.token0.symbol;
-  const token1Symbol = pairData?.token1.symbol;
+  const token0Symbol = pairData?.token0.name;
+  const token1Symbol = pairData?.token1.name;
 
   const pairInformation = [
     {
       name: 'Pair Name',
-      value: `${token0Symbol} - ${token1Symbol}`,
+      value: `${shortenName(token0Symbol)} - ${shortenName(token1Symbol)}`,
       copy: false,
     },
     {
@@ -46,12 +55,12 @@ export const Pair = ({ id }: Props) => {
       copy: true,
     },
     {
-      name: `${token0Symbol} Address`,
+      name: `${shortenName(token0Symbol)} Address`,
       value: token0Address,
       copy: true,
     },
     {
-      name: `${token1Symbol} Address`,
+      name: `${shortenName(token1Symbol)} Address`,
       value: token1Address,
       copy: true,
     },
@@ -61,17 +70,17 @@ export const Pair = ({ id }: Props) => {
     {
       address: token0Address,
       tokenSymbol: token0Symbol,
-      priceInToken: pairData?.token0Price || 0,
+      priceInToken: pairData?.token1Price || 0,
       secondTokenSymbol: token1Symbol,
-      priceUsd: 0,
+      priceUsd: pairData?.token0?.priceUSD,
     },
     {
       address: token1Address,
       tokenImg: '',
       tokenSymbol: token1Symbol,
-      priceInToken: pairData?.token1Price || 0,
+      priceInToken: pairData?.token0Price || 0,
       secondTokenSymbol: token0Symbol,
-      priceUsd: 0,
+      priceUsd: pairData?.token1?.priceUSD,
     },
   ];
 
@@ -97,13 +106,13 @@ export const Pair = ({ id }: Props) => {
                 textTransform: 'uppercase',
               })}
             >
-              {pairData?.token0.symbol === 'WPROM'
-                ? 'PROM'
-                : pairData?.token0.symbol}
+              {pairData?.token0.name === 'BUSD'
+                ? 'MIDLRUNESTABLECOIN'
+                : pairData?.token0.name}
               -
-              {pairData?.token1.symbol === 'WPROM'
-                ? 'PROM'
-                : pairData?.token1.symbol}
+              {pairData?.token1.symbol === 'BUSD'
+                ? 'MIDLRUNESTABLECOIN'
+                : pairData?.token1.name}
             </span>
             <span
               className={css({
@@ -139,10 +148,8 @@ export const Pair = ({ id }: Props) => {
                   <TokenLogo address={address} chainId={chainId} />
 
                   <span>
-                    1 {tokenSymbol === 'WPROM' ? 'PROM' : tokenSymbol} ={' '}
-                    {beautifyNumber(priceInToken)}{' '}
-                    {secondTokenSymbol === 'WPROM' ? 'PROM' : secondTokenSymbol}{' '}
-                    ${beautifyNumber(priceUsd)}
+                    1 {tokenSymbol} = {beautifyNumber(priceInToken)}{' '}
+                    {secondTokenSymbol} | ${beautifyNumber(priceUsd)}
                   </span>
                 </HStack>
               );
@@ -253,14 +260,18 @@ export const Pair = ({ id }: Props) => {
                           ? shortenAddress(value as Address)
                           : value}
                       </span>
-                      <CopyIcon
-                        cursor="pointer"
-                        width={16}
-                        height={16}
-                        onClick={() =>
-                          copyToClipboard({ copyValue: value || '' })
-                        }
-                      />
+                      {copy && (
+                        <CopyIcon
+                          cursor="pointer"
+                          width={16}
+                          height={16}
+                          onClick={() =>
+                            copyToClipboard({ copyValue: value || '' })
+                          }
+                        />
+                      )}
+
+                      <Box width="1px" bg="gray.500" alignSelf="stretch" />
                     </HStack>
                   </VStack>
                 );

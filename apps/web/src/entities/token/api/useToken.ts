@@ -1,7 +1,8 @@
 import { Token } from '@/entities';
 import { useTokenBalance } from '@/features';
-import { tokenList } from '@/global';
+import { tokenList, WETHByChain } from '@/global';
 import { getTokenSymbol } from '@/widgets/swap-form/ui/utils';
+import { midlRegtest } from '@midl-xyz/midl-js-executor';
 import { useMemo } from 'react';
 import { Address } from 'viem';
 
@@ -20,7 +21,10 @@ export const useToken = (address: Address, chainId: number): Token => {
         address,
         chainId,
         decimals: data.decimals ?? 18,
-        logoURI: '',
+        logoURI:
+          address === WETHByChain[midlRegtest.id]
+            ? 'https://assets-cdn.trustwallet.com/blockchains/bitcoin/info/logo.png'
+            : '',
         isPopular: false,
       };
     }

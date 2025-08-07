@@ -151,7 +151,7 @@ export const SwapInput = ({
               >
                 {balance.data?.balance
                   ? millify(parseFloat(balance.data.formattedBalance!), {
-                      precision: 4,
+                      precision: 6,
                     })
                   : '0'}
               </div>

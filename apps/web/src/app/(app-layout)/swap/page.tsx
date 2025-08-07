@@ -1,14 +1,9 @@
 'use client';
 
-import dynamic from 'next/dynamic';
+import { AppPreloader, SwapForm } from '@/widgets';
 import { Suspense } from 'react';
 import { css, cx } from '~/styled-system/css';
 import { center } from '~/styled-system/patterns';
-
-const SwapForm = dynamic(
-  () => import('@/widgets/swap-form/ui/SwapForm').then((mod) => mod.SwapForm),
-  { ssr: false },
-);
 
 export default function SwapPage() {
   return (
@@ -20,7 +15,7 @@ export default function SwapPage() {
         }),
       )}
     >
-      <Suspense>
+      <Suspense fallback={<AppPreloader />}>
         <SwapForm />
       </Suspense>
     </main>

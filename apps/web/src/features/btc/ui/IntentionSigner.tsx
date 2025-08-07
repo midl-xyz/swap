@@ -1,5 +1,5 @@
+import { useStateOverride } from '@/features/state-override';
 import { Button } from '@/shared';
-import { SignMessageProtocol } from '@midl-xyz/midl-js-core';
 import {
   useAddTxIntention,
   useFinalizeBTCTransaction,
@@ -8,20 +8,16 @@ import {
 } from '@midl-xyz/midl-js-executor-react';
 import { useConfig, useWaitForTransaction } from '@midl-xyz/midl-js-react';
 import toast from 'react-hot-toast';
-import { Address, StateOverride } from 'viem';
+import { Address } from 'viem';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
 
 type IntentionSignerProps = {
-  stateOverride?: StateOverride;
   onClose: () => void;
-  shouldComplete?: boolean;
   assetsToWithdraw?: [Address] | [Address, Address];
 };
 
 export const IntentionSigner = ({
-  stateOverride,
-  shouldComplete,
   assetsToWithdraw,
   onClose,
 }: IntentionSignerProps) => {
@@ -32,17 +28,39 @@ export const IntentionSigner = ({
     finalizeBTCTransaction,
     isSuccess: isFinalizedBTC,
     isPending: isFinalizingBTC,
-    // signIntentionState, TODO: useSignIntention
+    // signIntentionState, Notice: Now retrieved from useIntentionSigner
     isError,
     error,
   } = useFinalizeBTCTransaction({
     mutation: {
       onError: (error) => {
         console.error(error);
+
+        const btcBalanceError = 'BTC balance is not enough to cover tx costs';
+        if (error.message === 'No selected UTXOs') {
+          error.message = btcBalanceError;
+        }
+
+        if (error.message === 'No ordinals UTXOs') {
+          error.message =
+            'MIDL•RUNE•STABLECOIN balance is not enough to cover tx';
+        }
+        if (error.message === 'Insufficient funds') {
+          error.message = 'Wallet balance is not enough';
+        }
+
+        if (error.message.startsWith('Cannot destructure')) {
+          error.message =
+            'Error at transaction signing. Refresh the page and try again';
+        }
         toast.error(error.message);
+      },
+      onSuccess: () => {
+        setStateOverride([]);
       },
     },
   });
+  const [customStateOverride, setStateOverride] = useStateOverride();
 
   const signIntentionState = useSignIntention({});
   const { network } = useConfig();
@@ -51,7 +69,6 @@ export const IntentionSigner = ({
 
   const toSignIntentions = txIntentions.filter((it) => it.evmTransaction);
   const txToSign = toSignIntentions.find((it) => !it.signedEvmTransaction);
-
   const { sendBTCTransactions, isSuccess: isBroadcasted } =
     useSendBTCTransactions({
       mutation: {
@@ -60,25 +77,23 @@ export const IntentionSigner = ({
         },
       },
     });
-
   const onPublish = async () => {
     const txIntentionsToPublish = txIntentions
       .filter((it) => it.signedEvmTransaction)
       .map((it) => it.signedEvmTransaction);
 
-    // TODO: get intention.signedEvmTransaction! into an array and pass to serializedTransactions & btcTransaction?.tx.hex! to btcTransaction
-    console.log('sending');
+    // Notice now get intention.signedEvmTransaction! into an array and pass to serializedTransactions & btcTransaction?.tx.hex! to btcTransaction
     sendBTCTransactions({
       serializedTransactions: txIntentionsToPublish as [],
       btcTransaction: btcTransaction?.tx.hex!,
     });
   };
-
   return (
     <div className={vstack({ gap: 4 })}>
       <div className={hstack({ gap: 4 })}>
         {new Array(toSignIntentions.length + 1).fill(0).map((_, i) => (
           <div
+            key={i}
             className={css({
               borderRadius: 'full',
               border: '1px solid',
@@ -112,13 +127,11 @@ export const IntentionSigner = ({
           <Button
             onClick={() => {
               finalizeBTCTransaction({
-                stateOverride,
-                // shouldComplete, // TODO: useAddCompleteTxIntention
-                feeRateMultiplier: 4,
                 assetsToWithdrawSize: assetsToWithdraw?.length,
-                // assetsToWithdraw: assetsToWithdraw?.filter(
-                //   (it) => it !== zeroAddress && it !== WETHByChain[chainId],
-                // ) as any, // TODO: assetsToWithdrawSize
+                stateOverride:
+                  customStateOverride.length > 0
+                    ? [...customStateOverride]
+                    : undefined,
               });
             }}
             disabled={isFinalizingBTC}

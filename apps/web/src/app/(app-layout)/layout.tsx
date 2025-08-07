@@ -8,19 +8,46 @@ import {
 } from '@/global';
 import { ErrorBoundary } from '@/global/providers/ErrorBoundary';
 import { RuneDialogProvider } from '@/global/providers/RuneDialogProvider';
-import { AppMenuList, Header, Logo, RPCStatus } from '@/widgets';
+import { AppMenuList, AppPreloader, Header, Logo } from '@/widgets';
 import { MobileAppMenu } from '@/widgets/app-menu/ui/MobileAppMenu';
 import { renderErrorMessage } from '@/widgets/error-message';
 import { Footer } from '@/widgets/footer/ui';
+import { xverseConnector } from '@midl-xyz/midl-js-connectors';
+import { useAddNetwork, useConfig } from '@midl-xyz/midl-js-react';
+import { ConnectButton } from '@midl-xyz/satoshi-kit';
 import '@midl-xyz/satoshi-kit/styles.css';
 import Link from 'next/link';
-import type { ReactNode } from 'react';
+import { Suspense, type ReactNode } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { css } from '~/styled-system/css';
 import { HStack, Stack } from '~/styled-system/jsx';
 import { hstack } from '~/styled-system/patterns';
 import '../globals.css';
-import { ConnectButton } from '@midl-xyz/satoshi-kit';
+
+const Wallet = () => {
+  const { addNetworkAsync } = useAddNetwork();
+  const { network } = useConfig();
+
+  return (
+    <ConnectButton
+      beforeConnect={async (connectorId) => {
+        if (connectorId !== xverseConnector().id) {
+          return;
+        }
+
+        await addNetworkAsync({
+          connectorId,
+          networkConfig: {
+            name: 'MIDL Regtest',
+            network: network.id,
+            rpcUrl: 'https://mempool.regtest.midl.xyz/api',
+            indexerUrl: 'https://api-regtest-midl.xverse.app',
+          },
+        });
+      }}
+    />
+  );
+};
 
 export default function AppLayout({
   children,
@@ -28,13 +55,8 @@ export default function AppLayout({
   children: ReactNode;
 }>) {
   return (
-    <Web3Provider>
-      <FiatQuotesProvider>
-        <TokenDialogProvider />
-        <RuneDialogProvider />
-        <SettingsDialogProvider />
-        <RemoveLiquidityProvider />
-        <RPCStatus />
+    <Suspense fallback={<AppPreloader />}>
+      <Web3Provider>
         <Header
           leftSlot={
             <div
@@ -61,7 +83,7 @@ export default function AppLayout({
           }
           rightSlot={
             <HStack gap={4} display={{ base: 'none', md: 'flex' }}>
-              <ConnectButton />
+              <Wallet />
             </HStack>
           }
         />
@@ -75,11 +97,15 @@ export default function AppLayout({
               flexDirection: 'column',
             })}
           >
-            {children}
+            <TokenDialogProvider />
+            <RuneDialogProvider />
+            <SettingsDialogProvider />
+            <RemoveLiquidityProvider />
+            <FiatQuotesProvider>{children}</FiatQuotesProvider>
           </div>
           <Footer />
         </ErrorBoundary>
-      </FiatQuotesProvider>
-    </Web3Provider>
+      </Web3Provider>
+    </Suspense>
   );
 }

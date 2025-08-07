@@ -1,3 +1,5 @@
+'use client';
+
 import { Input, InputProps, mergeRefs } from '@/shared';
 import { maskitoNumberOptionsGenerator } from '@maskito/kit';
 import { useMaskito } from '@maskito/react';

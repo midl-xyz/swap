@@ -1,38 +1,15 @@
 'use client';
 
 import { useGetPools } from '@/features/liquidity';
+import { AppPreloader } from '@/widgets';
 import { PairItem } from '@/widgets/pairs/ui/pair/PairItem';
-import { Loader2Icon } from 'lucide-react';
 import { getAddress } from 'viem';
 import { css } from '~/styled-system/css';
 
 export const Pairs = () => {
-  const { data: pools, isFetching } = useGetPools();
-  if (isFetching) {
-    return (
-      <div
-        className={css({
-          color: 'neutral.500',
-          padding: 4,
-          borderRadius: 'xl',
-          backgroundColor: 'neutral.100',
-          display: 'flex',
-          verticalAlign: 'middle',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 2,
-        })}
-      >
-        <Loader2Icon
-          className={css({
-            animation: 'spin 1s linear infinite',
-            display: 'inline-block',
-            verticalAlign: 'middle',
-          })}
-        />
-        <span>Loading...</span>
-      </div>
-    );
+  const { data: pools, isFetching, isLoading } = useGetPools();
+  if (isFetching || isLoading) {
+    return <AppPreloader />;
   }
 
   return (
@@ -57,7 +34,8 @@ export const Pairs = () => {
         <div className={css({ display: 'table-cell' })}>Pair</div>
         <div className={css({ display: 'table-cell' })}>Volume (24h)</div>
         <div className={css({ display: 'table-cell' })}>Liquidity</div>
-        <div className={css({ display: 'table-cell' })}>Fees(24h)</div>
+        <div className={css({ display: 'table-cell' })}>Token#1 USD Price</div>
+        <div className={css({ display: 'table-cell' })}>Token#2 USD Price</div>
       </div>
 
       {pools?.pairs.map((pair, index) => (

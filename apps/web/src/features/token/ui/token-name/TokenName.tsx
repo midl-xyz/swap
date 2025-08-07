@@ -1,20 +1,34 @@
 /* eslint-disable @next/next/no-img-element */
 import { useToken } from '@/entities';
 import { TokenLogo } from '@/features';
+import { useToken as useMidlToken } from '@midl-xyz/midl-js-executor-react';
+import { useMemo } from 'react';
 import { Address } from 'viem';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
-import { useToken as useMidlToken } from '@midl-xyz/midl-js-executor-react';
 
 type TokenNameProps = {
   address: Address;
   chainId: number;
   showName?: boolean;
+  shorten?: boolean;
 };
 
-export const TokenName = ({ address, chainId, showName }: TokenNameProps) => {
-  const { symbol, name } = useToken(address, chainId);
+export const TokenName = ({
+  address,
+  chainId,
+  showName,
+  shorten,
+}: TokenNameProps) => {
+  const { name } = useToken(address, chainId);
   const { rune } = useMidlToken(address);
+
+  const rawLabel = rune?.name ?? name;
+
+  const displayLabel = useMemo(() => {
+    if (!shorten || !rawLabel || rawLabel.length <= 8) return rawLabel;
+    return `${rawLabel.slice(0, 3)}…${rawLabel.slice(-3)}`;
+  }, [shorten, rawLabel]);
 
   return (
     <span
@@ -33,7 +47,7 @@ export const TokenName = ({ address, chainId, showName }: TokenNameProps) => {
           alignItems: 'flex-start',
         })}
       >
-        {rune?.symbol ?? symbol}
+        {displayLabel}
         {showName && (
           <span
             className={css({

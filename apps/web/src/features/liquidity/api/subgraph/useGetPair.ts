@@ -78,5 +78,6 @@ export const useGetPair = (id: string) => {
         pairByIdId: id,
       });
     },
+    enabled: !!id,
   });
 };

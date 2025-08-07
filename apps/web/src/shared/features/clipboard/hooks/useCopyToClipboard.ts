@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import copy from 'copy-to-clipboard';
 import toast from 'react-hot-toast';

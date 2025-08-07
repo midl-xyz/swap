@@ -25,7 +25,7 @@ export const beautifyNumber = (
     typedValue < 0.000001 ||
     (overrideToFixed && typedValue < 10 / overrideToFixed)
   ) {
-    return '<0.0001';
+    return '<0.01';
   }
 
   if (overrideToFixed) {

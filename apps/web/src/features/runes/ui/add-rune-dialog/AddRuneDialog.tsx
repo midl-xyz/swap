@@ -1,11 +1,11 @@
 import { TokenLogo } from '@/features';
 import { useRuneDialog } from '@/features/runes/api';
-import { config } from '@/global';
 import { Button, Dialog, DialogContent, DialogOverlay } from '@/shared';
 import {
   calculateTransactionsCost,
   multisigAddress,
 } from '@midl-xyz/midl-js-executor';
+import { useBTCFeeRate } from '@midl-xyz/midl-js-executor-react';
 import {
   useConfig,
   useEdictRune,
@@ -59,18 +59,15 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
   } = useWaitForTransaction();
   const { network } = useConfig();
 
+  const feeRate = useBTCFeeRate();
+
   const { data: edictFee } = useQuery({
     queryKey: ['edictFee'],
     queryFn: async () => {
-      const fee = await calculateTransactionsCost(
-        [
-          {
-            gas: 0n,
-          },
-        ],
-        config,
-        { hasRunesDeposit: true },
-      );
+      const fee = calculateTransactionsCost(0n, {
+        hasRunesDeposit: true,
+        feeRate: feeRate.data as any,
+      });
 
       return fee > 546n ? fee : 546n;
     },

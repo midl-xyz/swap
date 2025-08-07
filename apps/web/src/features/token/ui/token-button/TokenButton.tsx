@@ -1,3 +1,5 @@
+'use client';
+
 import { TokenName, tokenDialogAtom } from '@/features';
 import { Button, mergeRefs } from '@/shared';
 import { useAtom } from 'jotai';
@@ -63,7 +65,7 @@ export const TokenButton = forwardRef<HTMLInputElement, TokenButtonProps>(
             })
           }
         >
-          <TokenName address={value} chainId={chainId} />
+          <TokenName address={value} chainId={chainId} shorten />
           <ChevronDownIcon />
         </Button>
         <input type="hidden" ref={refs} {...rest} />

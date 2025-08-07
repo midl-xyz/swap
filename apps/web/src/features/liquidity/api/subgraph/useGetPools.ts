@@ -83,7 +83,6 @@ export const useGetPools = () => {
     queryKey: ['GetPools'],
     refetchOnWindowFocus: false,
     queryFn: () => {
-      // Sort by liq
       return graphqlClient.request(GetPools, {
         orderBy: PairOrderByInput.LiquidityUsdDesc,
       });

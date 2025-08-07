@@ -2,8 +2,8 @@
 
 import { useLiquidityPositions } from '@/features/liquidity';
 import { LiquidityItem } from '@/features/liquidity/ui/liquidity';
+import { AppPreloader } from '@/widgets';
 import { useEVMAddress } from '@midl-xyz/midl-js-executor-react';
-import { Loader2Icon } from 'lucide-react';
 import { getAddress } from 'viem';
 import { css } from '~/styled-system/css';
 import { vstack } from '~/styled-system/patterns';
@@ -14,30 +14,7 @@ export const Liquidity = () => {
   const { data: positions, isFetching } = useLiquidityPositions(address!);
 
   if (isFetching) {
-    return (
-      <div
-        className={css({
-          color: 'neutral.500',
-          padding: 4,
-          borderRadius: 'xl',
-          backgroundColor: 'neutral.100',
-          display: 'flex',
-          verticalAlign: 'middle',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 2,
-        })}
-      >
-        <Loader2Icon
-          className={css({
-            animation: 'spin 1s linear infinite',
-            display: 'inline-block',
-            verticalAlign: 'middle',
-          })}
-        />
-        <span>Loading...</span>
-      </div>
-    );
+    return <AppPreloader />;
   }
 
   const positionList = positions?.currentLiquidityPositions;

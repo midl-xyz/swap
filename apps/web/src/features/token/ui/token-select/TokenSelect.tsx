@@ -1,3 +1,5 @@
+'use client';
+
 import { Token, useToken } from '@/entities';
 import {
   LastUsedToken,
@@ -38,7 +40,7 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
   const [searchQuery, setSearchQuery] = useState('');
   const { open } = useRuneDialog();
 
-  const { rune, erc20Address, erc20State, state } = useERC20Rune(searchQuery, {
+  const { rune, erc20Address } = useERC20Rune(searchQuery, {
     query: { retry: false, enabled: !!searchQuery },
   });
 

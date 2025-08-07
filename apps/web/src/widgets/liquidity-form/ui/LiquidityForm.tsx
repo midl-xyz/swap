@@ -38,7 +38,7 @@ type FormData = {
 };
 
 export const LiquidityForm = () => {
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   const [minValues, setValues] = useState({
     minAmountA: 0,
     minAmountB: 0,
@@ -203,8 +203,8 @@ export const LiquidityForm = () => {
   } catch {}
 
   useEffect(() => {
-    const inputTokenSymbol = searchParams.get('inputToken');
-    const outputTokenSymbol = searchParams.get('outputToken');
+    const inputTokenSymbol = undefined; //searchParams.get('inputToken');
+    const outputTokenSymbol = undefined; //searchParams.get('outputToken');
     if (inputTokenSymbol && outputTokenSymbol) {
       const inputTokenFound = tokenList.find(
         ({ symbol }) => symbol === inputTokenSymbol,

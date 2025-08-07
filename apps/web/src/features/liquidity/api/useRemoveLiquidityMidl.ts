@@ -115,7 +115,6 @@ export const useRemoveLiquidityMidl = ({
           evmTransaction: {
             to: deployments[chainId].UniswapV2Router02.address,
             chainId,
-            type: 'btc',
             data: encodeFunctionData({
               abi: uniswapV2Router02Abi,
               functionName,
