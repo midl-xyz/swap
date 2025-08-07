@@ -1,6 +1,9 @@
 import { TokenLogo } from '@/features';
 import { useGetHistoricalPairMetrics } from '@/features/liquidity';
-import { HistoricalPairMetricsQuery } from '@/features/liquidity/api/gql/graphql';
+import {
+  HistoricalPairMetricsOrderByInput,
+  HistoricalPairMetricsQuery,
+} from '@/features/liquidity/api/gql/graphql';
 import { WETHByChain } from '@/global';
 import { AiOutlineSwapVertical } from '@/shared/assets';
 import { AppPreloader } from '@/widgets/app-preloader';
@@ -42,21 +45,26 @@ interface Props {
   };
 }
 
-const chartTabs = ['live', '4h', '1d', '1w', 'max'];
+const chartTabs = [
+  'live',
+  '4h',
+  // '1d', '1w', 'max'
+];
 const chartLabels: Record<string, string> = {
   live: 'Live',
   '4h': '4H',
-  '1d': '1D',
-  '1w': '1W',
-  max: 'Max',
+  // '1d': '1D',
+  // '1w': '1W',
+  // max: 'Max',
 };
 
 export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
   const chainId = useChainId();
   const [expand, setExpand] = useState(false);
   const [chartTime, setChartTime] = useState<
-    'max' | '1w' | '1d' | '4h' | 'live'
-  >('max');
+    //'max' | '1w' | '1d'
+    '4h' | 'live'
+  >('4h');
 
   const WBTC = WETHByChain[midlRegtest.id];
 
@@ -74,6 +82,7 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
           ? WBTC
           : outputTokenInfo.address,
     },
+    orderBy: HistoricalPairMetricsOrderByInput.DateAsc,
     queryKey: [
       `MemeTokenHistory-${
         inputTokenInfo.address === zeroAddress ? WBTC : inputTokenInfo.address
@@ -97,6 +106,7 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
           ? WBTC
           : outputTokenInfo.address,
     },
+    orderBy: HistoricalPairMetricsOrderByInput.DateDesc,
     queryKey: [
       `MemeTokenHistory-${
         outputTokenInfo.address === zeroAddress ? WBTC : outputTokenInfo.address
@@ -233,29 +243,29 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
         break;
       }
 
-      case '1w': {
-        const start = subDays(startOfDay(new Date()), 6);
-        filteredList = groupByDayAndTakeLast(chartList, start, 7);
+      // case '1w': {
+      //   const start = subDays(startOfDay(new Date()), 6);
+      //   filteredList = groupByDayAndTakeLast(chartList, start, 7);
 
-        if (filteredList.length < 2) {
-          filteredList = generateFakePoints(lastPoint, start, 24 * 60, 7);
-        }
-        break;
-      }
+      //   if (filteredList.length < 2) {
+      //     filteredList = generateFakePoints(lastPoint, start, 24 * 60, 7);
+      //   }
+      //   break;
+      // }
 
-      case 'max': {
-        const firstDate = startOfDay(fromUnixTime(chartList[0].time));
-        const lastDate = startOfDay(
-          fromUnixTime(chartList[chartList.length - 1].time),
-        );
-        const totalDays =
-          Math.ceil(
-            (getUnixTime(lastDate) - getUnixTime(firstDate)) / (24 * 60 * 60),
-          ) + 1;
+      // case 'max': {
+      //   const firstDate = startOfDay(fromUnixTime(chartList[0].time));
+      //   const lastDate = startOfDay(
+      //     fromUnixTime(chartList[chartList.length - 1].time),
+      //   );
+      //   const totalDays =
+      //     Math.ceil(
+      //       (getUnixTime(lastDate) - getUnixTime(firstDate)) / (24 * 60 * 60),
+      //     ) + 1;
 
-        filteredList = groupByDayAndTakeLast(chartList, firstDate, totalDays);
-        break;
-      }
+      //   filteredList = groupByDayAndTakeLast(chartList, firstDate, totalDays);
+      //   break;
+      // }
 
       default:
         filteredList = chartList;
@@ -419,7 +429,8 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
                           })}
                           onClick={() =>
                             setChartTime(
-                              option as 'live' | '4h' | '1d' | '1w' | 'max',
+                              option as 'live' | '4h',
+                              // | '1d' | '1w' | 'max',
                             )
                           }
                         >

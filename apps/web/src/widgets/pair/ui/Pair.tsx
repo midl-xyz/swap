@@ -72,7 +72,7 @@ export const Pair = ({ id }: Props) => {
       tokenSymbol: token0Symbol,
       priceInToken: pairData?.token1Price || 0,
       secondTokenSymbol: token1Symbol,
-      priceUsd: pairData?.token0?.priceUSD,
+      priceUsd: pairData?.token0?.tokenMetrics.priceUSD,
     },
     {
       address: token1Address,
@@ -80,7 +80,7 @@ export const Pair = ({ id }: Props) => {
       tokenSymbol: token1Symbol,
       priceInToken: pairData?.token0Price || 0,
       secondTokenSymbol: token0Symbol,
-      priceUsd: pairData?.token1?.priceUSD,
+      priceUsd: pairData?.token1?.tokenMetrics.priceUSD,
     },
   ];
 

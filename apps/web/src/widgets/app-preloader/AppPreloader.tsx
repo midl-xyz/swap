@@ -1,10 +1,14 @@
 import { Box } from '~/styled-system/jsx';
 import './styles.css';
+import { FC } from 'react';
+import { CssProperties } from '~/styled-system/types';
 
-export const AppPreloader = () => {
+export const AppPreloader: FC<{ position?: CssProperties['position'] }> = ({
+  position,
+}) => {
   return (
     <Box
-      position="fixed"
+      position={position || 'fixed'}
       top={0}
       left={0}
       right={0}

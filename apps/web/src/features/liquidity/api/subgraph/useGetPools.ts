@@ -20,48 +20,76 @@ const GetPools = graphql(`
         symbol
         name
         decimals
-        priceUSD
-        priceETH
         totalSupply
         circulationSupply
-        marketCapUSD
-        tradeVolume24h
-        tradeVolumeUSD24h
-        tradeVolumeETH24h
-        txCount24h
-        totalLiquidityAllPairs
-        totalLiquidityAllPairsUSD
         holders
+        tokenPicture
+        tokenMetrics {
+          id
+          tokenAddress
+          priceUSD
+          priceETH
+          price24hDelta
+          marketCapUSD
+          fdv
+          tradeVolume24h
+          tradeVolumeUSD24h
+          tradeVolumeETH24h
+          txCount24h
+          txCountTotal
+          totalLiquidityAllPairs
+          totalLiquidityAllPairsUSD
+          lastUpdatedAt
+          lastUpdatedAtBlockTimestamp
+        }
+        factoryAddress
         lastUpdatedAt
+        lastUpdatedAtBlockTimestamp
       }
       token1 {
         id
         symbol
         name
         decimals
-        priceUSD
-        priceETH
         totalSupply
         circulationSupply
-        marketCapUSD
-        tradeVolume24h
-        tradeVolumeUSD24h
-        tradeVolumeETH24h
-        txCount24h
-        totalLiquidityAllPairs
-        totalLiquidityAllPairsUSD
         holders
+        tokenPicture
+        tokenMetrics {
+          id
+          tokenAddress
+          priceUSD
+          priceETH
+          price24hDelta
+          marketCapUSD
+          fdv
+          tradeVolume24h
+          tradeVolumeUSD24h
+          tradeVolumeETH24h
+          txCount24h
+          txCountTotal
+          totalLiquidityAllPairs
+          totalLiquidityAllPairsUSD
+          lastUpdatedAt
+          lastUpdatedAtBlockTimestamp
+        }
+        factoryAddress
         lastUpdatedAt
+        lastUpdatedAtBlockTimestamp
       }
+      token0Id
+      token1Id
       reserve0
       reserve1
       liquidityUSD
       liquidity24hDelta
       lpTotalSupply
       lpTotalLocked
+      lpDecimals
       token0Price
       token1Price
       txCount24h
+      txCountTotal
       tradeVolume24h
       tradeVolumeUSD24h
       tradeVolumeETH24h
@@ -73,7 +101,9 @@ const GetPools = graphql(`
       createdAtTimestamp
       createdAtBlockNumber
       liquidityProviderCount
+      factoryAddress
       lastUpdatedAt
+      lastUpdatedAtBlockTimestamp
     }
   }
 `);
@@ -83,6 +113,7 @@ export const useGetPools = () => {
     queryKey: ['GetPools'],
     refetchOnWindowFocus: false,
     queryFn: () => {
+      // Sort by liq
       return graphqlClient.request(GetPools, {
         orderBy: PairOrderByInput.LiquidityUsdDesc,
       });
