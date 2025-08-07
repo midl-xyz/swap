@@ -7,7 +7,7 @@ import {
 import { WETHByChain } from '@/global';
 import { deployments, uniswapV2Router02Abi } from '@/global/contracts';
 import { useApproveWithOptionalDeposit } from '@/shared';
-import { convertBTCtoETH, convertETHtoBTC } from '@midl-xyz/midl-js-executor';
+import { satoshisToWei, weiToSatoshis } from '@midl-xyz/midl-js-executor';
 import {
   useAddTxIntention,
   useClearTxIntentions,
@@ -194,7 +194,7 @@ export const useAddLiquidityMidl = ({
             }),
             value: ethValue,
           },
-          satoshis: isETH ? convertETHtoBTC(ethValue) : undefined,
+          satoshis: isETH ? weiToSatoshis(ethValue) : undefined,
         },
       });
       const slot = keccak256(
@@ -227,7 +227,7 @@ export const useAddLiquidityMidl = ({
         ) {
           const ethOverride: BalanceEntry = {
             address: userAddress,
-            balance: convertBTCtoETH(balance),
+            balance: satoshisToWei(balance),
           };
           customStateOverride.push(ethOverride);
         }
@@ -251,7 +251,7 @@ export const useAddLiquidityMidl = ({
         ) {
           const ethOverride: BalanceEntry = {
             address: userAddress,
-            balance: convertBTCtoETH(balance),
+            balance: satoshisToWei(balance),
           };
           customStateOverride.push(ethOverride);
         }

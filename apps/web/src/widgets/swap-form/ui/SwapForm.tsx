@@ -9,7 +9,7 @@ import { tokenList } from '@/global';
 import { Button, SwapInput, parseNumberInput } from '@/shared';
 import { AiOutlineSwapVertical } from '@/shared/assets';
 import { removePercentage } from '@/shared/lib/removePercentage';
-import { SlippageControl } from '@/widgets';
+import { SlippageControl, SwapFormChart } from '@/widgets';
 import { SwapDetails } from '@/widgets/swap-form/ui/SwapDetails';
 import { getCorrectToken } from '@/widgets/swap-form/ui/utils';
 import { xverseConnector } from '@midl-xyz/midl-js-connectors';
@@ -22,10 +22,10 @@ import { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDebouncedCallback } from 'use-debounce';
-import { Address, formatUnits, parseUnits } from 'viem';
+import { Address, formatUnits, parseUnits, zeroAddress } from 'viem';
 import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
-import { VStack } from '~/styled-system/jsx';
+import { Stack, VStack } from '~/styled-system/jsx';
 import { vstack } from '~/styled-system/patterns';
 
 type FormData = {
@@ -65,8 +65,10 @@ export const SwapForm = () => {
   const searchParams = useSearchParams();
   const form = useForm<FormData>({
     defaultValues: {
-      inputToken: '' as Address,
-      outputToken: '' as Address,
+      inputToken: zeroAddress,
+      outputToken:
+        tokenList.find((it) => it.name === 'MIDL•RUNE•STABLECOIN')?.address ||
+        ('' as Address),
       inputTokenAmount: '',
       outputTokenAmount: '',
     },
@@ -283,133 +285,152 @@ export const SwapForm = () => {
   };
 
   return (
-    <FormProvider {...form}>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className={vstack({
-          gap: 8,
-          alignItems: 'stretch',
-          bg: 'neutral.100',
-          borderRadius: '2xl',
-          px: {
-            base: 2,
-            md: 16,
-          },
-          padding: 8,
-          paddingBottom: 5,
-          width: 'full',
-          maxWidth: 640,
-        })}
-      >
-        <h2
-          className={css({
-            textStyle: 'h2',
-            textAlign: 'center',
-          })}
-        >
-          Swap
-        </h2>
+    <Stack
+      flexDirection={{ base: 'column', lg: 'row' }}
+      width="100%"
+      gap={8}
+      justifyContent="center"
+      alignItems={{ base: 'center', lg: 'stretch' }}
+    >
+      <SwapFormChart
+        inputTokenInfo={inputTokenInfo}
+        outputTokenInfo={outputTokenInfo}
+      />
 
-        <div
+      <FormProvider {...form}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
           className={vstack({
+            gap: 8,
             alignItems: 'stretch',
-            gap: 4,
-            position: 'relative',
+            bg: 'neutral.100',
+            borderRadius: '2xl',
+            px: {
+              base: 2,
+              md: 16,
+              lg: 6,
+              xl: 16,
+            },
+            padding: 8,
+            paddingBottom: 5,
+            width: 'full',
+            maxWidth: 640,
+            height: '100%',
           })}
         >
-          <SwapInput
-            placeholder="0"
-            label="You pay"
-            tokenName="inputToken"
-            amountName="inputTokenAmount"
-            onChange={onInputTokenAmountChange}
-            onMax={onInputTokenAmountChange}
-          />
-
-          <Button
-            onClick={onSwapInput}
-            aria-label="Swap input and output tokens"
-            appearance="secondary"
+          <h2
             className={css({
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              zIndex: 2,
-              transform: 'translate(-50%, -50%)',
+              textStyle: 'h2',
+              textAlign: 'center',
             })}
           >
-            <AiOutlineSwapVertical width={24} height={24} />
-          </Button>
+            Swap
+          </h2>
 
-          <SwapInput
-            placeholder="0"
-            label="You receive"
-            tokenName="outputToken"
-            amountName="outputTokenAmount"
-            onChange={onOutputTokenAmountChange}
-            onMax={onOutputTokenAmountChange}
-          />
-        </div>
-        <SlippageControl />
-        <VStack gap={4}>
-          {!address ? (
-            <Wallet />
-          ) : (
-            <Button
-              type="submit"
-              appearance="primary"
-              disabled={
-                isSwapRatesFetching ||
-                Boolean(swapRatesError) ||
-                !isFormFilled ||
-                !isBalanceBigEnough
-              }
-            >
-              {getButtonText()}
-            </Button>
-          )}
-          <Link
-            href="https://medium.com/midl-xyz/pioneer-the-midl-testnet-56c412486f08"
-            target="_blank"
-            rel="noopener noreferrer"
+          <div
+            className={vstack({
+              alignItems: 'stretch',
+              gap: 4,
+              position: 'relative',
+            })}
           >
-            <p
+            <SwapInput
+              placeholder="0"
+              label="You pay"
+              tokenName="inputToken"
+              amountName="inputTokenAmount"
+              onChange={onInputTokenAmountChange}
+              onMax={onInputTokenAmountChange}
+            />
+
+            <Button
+              onClick={onSwapInput}
+              aria-label="Swap input and output tokens"
+              appearance="secondary"
               className={css({
-                textStyle: 'caption',
-                color: 'neutral.700',
-                textAlign: 'center',
-                fontSize: 12,
-                fontWeight: 500,
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                zIndex: 2,
+                transform: 'translate(-50%, -50%)',
               })}
             >
-              Guide: How to swap
-            </p>
-          </Link>
-        </VStack>
+              <AiOutlineSwapVertical width={24} height={24} />
+            </Button>
 
-        {inputToken && outputToken && inputTokenAmount && outputTokenAmount ? (
-          <SwapDetails
-            amountOutMin={Number.parseFloat(
-              formatUnits(amountOutMin, outputTokenInfo.decimals),
-            ).toFixed(2)}
-            inputTokenInfo={inputTokenInfo}
-            outputTokenInfo={outputTokenInfo}
-            inputTokenAmount={inputTokenAmount}
-            outputTokenAmount={outputTokenAmount}
+            <SwapInput
+              placeholder="0"
+              label="You receive"
+              tokenName="outputToken"
+              amountName="outputTokenAmount"
+              onChange={onOutputTokenAmountChange}
+              onMax={onOutputTokenAmountChange}
+            />
+          </div>
+          <SlippageControl />
+          <VStack gap={4}>
+            {!address ? (
+              <Wallet />
+            ) : (
+              <Button
+                type="submit"
+                appearance="primary"
+                disabled={
+                  isSwapRatesFetching ||
+                  Boolean(swapRatesError) ||
+                  !isFormFilled ||
+                  !isBalanceBigEnough
+                }
+              >
+                {getButtonText()}
+              </Button>
+            )}
+            <Link
+              href="https://medium.com/midl-xyz/pioneer-the-midl-testnet-56c412486f08"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <p
+                className={css({
+                  textStyle: 'caption',
+                  color: 'neutral.700',
+                  textAlign: 'center',
+                  fontSize: 12,
+                  fontWeight: 500,
+                })}
+              >
+                Guide: How to swap
+              </p>
+            </Link>
+          </VStack>
+
+          {inputToken &&
+          outputToken &&
+          inputTokenAmount &&
+          outputTokenAmount ? (
+            <SwapDetails
+              amountOutMin={Number.parseFloat(
+                formatUnits(amountOutMin, outputTokenInfo.decimals),
+              ).toFixed(2)}
+              inputTokenInfo={inputTokenInfo}
+              outputTokenInfo={outputTokenInfo}
+              inputTokenAmount={inputTokenAmount}
+              outputTokenAmount={outputTokenAmount}
+            />
+          ) : null}
+
+          <SwapDialog
+            onSuccessfulSwap={onSwapSuccess}
+            open={isDialogOpen}
+            tokenOut={outputToken}
+            tokenIn={inputToken}
+            amountIn={parsedInputTokenAmount}
+            onClose={() => {
+              setDialogOpen(false);
+            }}
           />
-        ) : null}
-
-        <SwapDialog
-          onSuccessfulSwap={onSwapSuccess}
-          open={isDialogOpen}
-          tokenOut={outputToken}
-          tokenIn={inputToken}
-          amountIn={parsedInputTokenAmount}
-          onClose={() => {
-            setDialogOpen(false);
-          }}
-        />
-      </form>
-    </FormProvider>
+        </form>
+      </FormProvider>
+    </Stack>
   );
 };

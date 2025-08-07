@@ -3,7 +3,7 @@ import { useERC20Allowance } from '@/features/token';
 import { WETHByChain } from '@/global';
 import { deployments, uniswapV2Router02Abi } from '@/global/contracts';
 import { useApproveWithOptionalDeposit } from '@/shared';
-import { convertETHtoBTC } from '@midl-xyz/midl-js-executor';
+import { weiToSatoshis } from '@midl-xyz/midl-js-executor';
 import {
   useAddCompleteTxIntention,
   useAddTxIntention,
@@ -80,18 +80,21 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
             runeId: rune?.id,
           });
         } else if (rune) {
-          addTxIntention({
-            intention: {
-              hasRunesDeposit: true,
-              runes: [
-                {
-                  id: rune?.id,
-                  value: amountIn,
-                  address: tokenIn,
-                },
-              ],
+          addTxIntention(
+            {
+              intention: {
+                hasRunesDeposit: true,
+                runes: [
+                  {
+                    id: rune?.id,
+                    value: amountIn,
+                    address: tokenIn,
+                  },
+                ],
+              },
             },
-          });
+            {},
+          );
         }
       }
       let args:
@@ -136,7 +139,7 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
             }),
             value: (tokenIn === zeroAddress ? amountIn : BigInt(0)) as any,
           },
-          satoshis: tokenIn === zeroAddress ? convertETHtoBTC(amountIn) : 0,
+          satoshis: tokenIn === zeroAddress ? weiToSatoshis(amountIn) : 0,
         },
       });
 
