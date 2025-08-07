@@ -23,7 +23,7 @@
     "@maskito/react": "^2.2.0",
     "@midl-swap/core": "workspace:^",
     "@midl-swap/periphery": "workspace:^",
-    "@midl-xyz/midl-js-connectors": "2.0.0-next.47",
+    "@midl-xyz/midl-js-connectors": "2.0.0-next.59",
     "@midl-xyz/midl-js-core": "2.0.0-next.59",
     "@midl-xyz/midl-js-executor": "2.0.0-next.60",
     "@midl-xyz/midl-js-executor-react": "2.0.0-next.60",
