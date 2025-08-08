@@ -286,7 +286,7 @@ export const SwapForm = () => {
 
   return (
     <Stack
-      flexDirection={{ base: 'column', lg: 'row' }}
+      flexDirection={{ base: 'column-reverse', lg: 'row' }}
       width="100%"
       gap={8}
       justifyContent="center"

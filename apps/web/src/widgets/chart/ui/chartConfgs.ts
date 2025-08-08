@@ -12,6 +12,7 @@ export const chartOptions: DeepPartial<ChartOptions> = {
   layout: {
     textColor: '#BFBFBF',
     fontSize: 12,
+    attributionLogo: false,
   },
   handleScroll: {
     mouseWheel: false,
@@ -107,6 +108,9 @@ export const timeChartOptions: DeepPartial<TimeChartOptions> = {
       visible: true,
       labelVisible: false,
     },
+  },
+  layout: {
+    attributionLogo: false,
   },
   timeScale: {
     ignoreWhitespaceIndices: false,

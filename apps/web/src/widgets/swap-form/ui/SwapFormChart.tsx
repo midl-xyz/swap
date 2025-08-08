@@ -5,6 +5,7 @@ import {
   HistoricalPairMetricsQuery,
 } from '@/features/liquidity/api/gql/graphql';
 import { WETHByChain } from '@/global';
+import { Button } from '@/shared';
 import { AiOutlineSwapVertical } from '@/shared/assets';
 import { AppPreloader } from '@/widgets/app-preloader';
 import { Chart } from '@/widgets/chart';
@@ -311,14 +312,24 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
             >
               Chart
             </span>
-            <HStack
+            <Button
               className={css({
                 cursor: 'pointer',
               })}
+              appearance="ghost"
+              css={{
+                display: {
+                  base: 'flex',
+                  lg: 'none',
+                },
+                _hover: {
+                  backgroundColor: 'transparent',
+                },
+              }}
               gap={1}
               onClick={() => setExpand((prev) => !prev)}
             >
-              <span>{expand ? 'Lessen' : 'Expand'}</span>{' '}
+              <span>{expand ? 'Hide chart' : 'Show chart'}</span>{' '}
               <Image
                 style={{
                   transform: `rotate(${expand ? '180deg' : '0'})`,
@@ -328,126 +339,134 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
                 src={Arrow}
                 alt="arrow"
               />
-            </HStack>
+            </Button>
           </HStack>
-          {expand &&
-            (chartData?.historicalPairMetrics?.length ||
-            chartDataInverse?.historicalPairMetrics?.length ? (
-              <>
-                <VStack gap={4} width="100%" alignItems="baseline">
-                  <div className={hstack({ gap: 2, alignItems: 'center' })}>
-                    <div
-                      className={css({
-                        position: 'relative',
-                        display: 'flex',
-                        width: '1/12',
-                        minWidth: 'fit-content',
-                      })}
-                    >
-                      <TokenLogo
-                        address={inputTokenInfo?.address as Address}
-                        chainId={chainId}
-                        size={5}
-                        // overridePic={overrideAPic}
-                      />
-                      <TokenLogo
-                        address={outputTokenInfo?.address as Address}
-                        chainId={chainId}
-                        size={5}
-                        // overridePic={overrideBPic}
-                        className={css({
-                          marginLeft: -2,
-                        })}
-                      />
-                    </div>
 
-                    <div
+          {chartData?.historicalPairMetrics?.length ||
+          chartDataInverse?.historicalPairMetrics?.length ? (
+            <VStack
+              w="full"
+              css={{
+                display: {
+                  base: expand ? 'flex' : 'none',
+                  lg: 'flex',
+                },
+              }}
+            >
+              <VStack gap={4} width="100%" alignItems="baseline">
+                <div className={hstack({ gap: 2, alignItems: 'center' })}>
+                  <div
+                    className={css({
+                      position: 'relative',
+                      display: 'flex',
+                      width: '1/12',
+                      minWidth: 'fit-content',
+                    })}
+                  >
+                    <TokenLogo
+                      address={inputTokenInfo?.address as Address}
+                      chainId={chainId}
+                      size={5}
+                      // overridePic={overrideAPic}
+                    />
+                    <TokenLogo
+                      address={outputTokenInfo?.address as Address}
+                      chainId={chainId}
+                      size={5}
+                      // overridePic={overrideBPic}
                       className={css({
-                        textStyle: 'subtitle3',
-                        color: '#373737',
-                      })}
-                    >
-                      {inputTokenInfo.symbol} / {outputTokenInfo.symbol}
-                    </div>
-                    <AiOutlineSwapVertical
-                      width={16}
-                      height={16}
-                      className={css({
-                        transform: 'rotate(90deg)',
-                        color: '#67696E',
+                        marginLeft: -2,
                       })}
                     />
                   </div>
-                  <HStack>
-                    <HStack
-                      className={css({
-                        color: '#111111',
-                        textStyle: 'subtitle2',
-                      })}
-                    >
-                      {+chartData?.historicalPairMetrics?.[
-                        chartData.historicalPairMetrics?.length - 1
-                      ]?.token1Price ||
-                        +chartDataInverse?.historicalPairMetrics?.[
-                          chartDataInverse.historicalPairMetrics?.length - 1
-                        ]?.token0Price}
-                      {'  '} {outputTokenInfo.symbol}
-                    </HStack>
-                    {/*<span*/}
-                    {/*  className={css({*/}
-                    {/*    color: '#51935C',*/}
-                    {/*    textStyle: 'body1',*/}
-                    {/*  })}*/}
-                    {/*>*/}
-                    {/*  +0.13%*/}
-                    {/*</span>*/}
-                  </HStack>
-                </VStack>
-                {inputTokenInfo?.address &&
-                outputTokenInfo?.address &&
-                (chartData?.historicalPairMetrics?.length ||
-                  chartDataInverse?.historicalPairMetrics?.length) ? (
-                  <Stack
-                    borderRadius="16px"
-                    padding={{
-                      base: '16px',
-                      md: '20px',
-                    }}
-                    background="white"
-                    width="100%"
+
+                  <div
+                    className={css({
+                      textStyle: 'subtitle3',
+                      color: '#373737',
+                    })}
                   >
-                    <HStack>
-                      {chartTabs.map((option) => (
-                        <span
-                          key={option}
-                          className={css({
-                            fontSize: '14px',
-                            cursor: 'pointer',
-                            fontWeight: 700,
-                            color: chartTime === option ? '#2F80ED' : '#9498A2',
-                            transition: 'color 0.2s ease',
-                          })}
-                          onClick={() =>
-                            setChartTime(
-                              option as 'live' | '4h',
-                              // | '1d' | '1w' | 'max',
-                            )
-                          }
-                        >
-                          {chartLabels[option]}
-                        </span>
-                      ))}
-                    </HStack>
-                    <Chart
-                      data={chartList}
-                      areaOptions={areaOptions}
-                      chartOptions={chartOptions}
-                      timeChartOptions={timeChartOptions}
-                    />
-                  </Stack>
-                ) : null}
-              </>
-            ) : null)}
+                    {inputTokenInfo.symbol} / {outputTokenInfo.symbol}
+                  </div>
+                  <AiOutlineSwapVertical
+                    width={16}
+                    height={16}
+                    className={css({
+                      transform: 'rotate(90deg)',
+                      color: '#67696E',
+                    })}
+                  />
+                </div>
+                <HStack>
+                  <HStack
+                    className={css({
+                      color: '#111111',
+                      textStyle: 'subtitle2',
+                    })}
+                  >
+                    {+chartData?.historicalPairMetrics?.[
+                      chartData.historicalPairMetrics?.length - 1
+                    ]?.token1Price ||
+                      +chartDataInverse?.historicalPairMetrics?.[
+                        chartDataInverse.historicalPairMetrics?.length - 1
+                      ]?.token0Price}
+                    {'  '} {outputTokenInfo.symbol}
+                  </HStack>
+                  {/*<span*/}
+                  {/*  className={css({*/}
+                  {/*    color: '#51935C',*/}
+                  {/*    textStyle: 'body1',*/}
+                  {/*  })}*/}
+                  {/*>*/}
+                  {/*  +0.13%*/}
+                  {/*</span>*/}
+                </HStack>
+              </VStack>
+              {inputTokenInfo?.address &&
+              outputTokenInfo?.address &&
+              (chartData?.historicalPairMetrics?.length ||
+                chartDataInverse?.historicalPairMetrics?.length) ? (
+                <Stack
+                  borderRadius="16px"
+                  padding={{
+                    base: '16px',
+                    md: '20px',
+                  }}
+                  background="white"
+                  width="100%"
+                >
+                  <HStack>
+                    {chartTabs.map((option) => (
+                      <span
+                        key={option}
+                        className={css({
+                          fontSize: '14px',
+                          cursor: 'pointer',
+                          fontWeight: 700,
+                          color: chartTime === option ? '#2F80ED' : '#9498A2',
+                          transition: 'color 0.2s ease',
+                        })}
+                        onClick={() =>
+                          setChartTime(
+                            option as 'live' | '4h',
+                            // | '1d' | '1w' | 'max',
+                          )
+                        }
+                      >
+                        {chartLabels[option]}
+                      </span>
+                    ))}
+                  </HStack>
+                  <Chart
+                    data={chartList}
+                    areaOptions={areaOptions}
+                    chartOptions={chartOptions}
+                    timeChartOptions={timeChartOptions}
+                  />
+                </Stack>
+              ) : null}
+            </VStack>
+          ) : null}
         </>
       )}
     </VStack>

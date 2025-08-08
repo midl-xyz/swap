@@ -23,6 +23,7 @@ export const Footer = () => {
       <div
         className={vstack({
           gap: 1,
+          alignItems: 'flex-start',
         })}
       >
         <Logo />
@@ -40,6 +41,16 @@ export const Footer = () => {
           })}
         >
           © Midl 2024
+        </span>
+
+        <span
+          className={css({
+            color: 'neutral.500',
+            fontSize: 12,
+            fontWeight: '300',
+          })}
+        >
+          <Link href="/credits">Credits</Link>
         </span>
       </div>
 
