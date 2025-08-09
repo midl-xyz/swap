@@ -1784,6 +1784,12 @@ export enum PairOrderByInput {
   Reserve1Desc = 'reserve1_DESC',
   Reserve1DescNullsFirst = 'reserve1_DESC_NULLS_FIRST',
   Reserve1DescNullsLast = 'reserve1_DESC_NULLS_LAST',
+  Token0IdAsc = 'token0Id_ASC',
+  Token0IdAscNullsFirst = 'token0Id_ASC_NULLS_FIRST',
+  Token0IdAscNullsLast = 'token0Id_ASC_NULLS_LAST',
+  Token0IdDesc = 'token0Id_DESC',
+  Token0IdDescNullsFirst = 'token0Id_DESC_NULLS_FIRST',
+  Token0IdDescNullsLast = 'token0Id_DESC_NULLS_LAST',
   Token0PriceAsc = 'token0Price_ASC',
   Token0PriceAscNullsFirst = 'token0Price_ASC_NULLS_FIRST',
   Token0PriceAscNullsLast = 'token0Price_ASC_NULLS_LAST',
@@ -1814,12 +1820,6 @@ export enum PairOrderByInput {
   Token0HoldersDesc = 'token0_holders_DESC',
   Token0HoldersDescNullsFirst = 'token0_holders_DESC_NULLS_FIRST',
   Token0HoldersDescNullsLast = 'token0_holders_DESC_NULLS_LAST',
-  Token0IdAsc = 'token0_id_ASC',
-  Token0IdAscNullsFirst = 'token0_id_ASC_NULLS_FIRST',
-  Token0IdAscNullsLast = 'token0_id_ASC_NULLS_LAST',
-  Token0IdDesc = 'token0_id_DESC',
-  Token0IdDescNullsFirst = 'token0_id_DESC_NULLS_FIRST',
-  Token0IdDescNullsLast = 'token0_id_DESC_NULLS_LAST',
   Token0LastUpdatedAtBlockTimestampAsc = 'token0_lastUpdatedAtBlockTimestamp_ASC',
   Token0LastUpdatedAtBlockTimestampAscNullsFirst = 'token0_lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
   Token0LastUpdatedAtBlockTimestampAscNullsLast = 'token0_lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
@@ -1977,6 +1977,13 @@ export enum PairOrderByInput {
   TxCountTotalDescNullsFirst = 'txCountTotal_DESC_NULLS_FIRST',
   TxCountTotalDescNullsLast = 'txCountTotal_DESC_NULLS_LAST',
 }
+
+export type PairPricePoint = {
+  __typename?: 'PairPricePoint';
+  timestamp: Scalars['String']['output'];
+  token0Price?: Maybe<Scalars['String']['output']>;
+  token1Price?: Maybe<Scalars['String']['output']>;
+};
 
 export type PairWhereInput = {
   AND?: InputMaybe<Array<PairWhereInput>>;
@@ -2304,6 +2311,7 @@ export type Query = {
   liquidityPositionHistoriesConnection: LiquidityPositionHistoriesConnection;
   liquidityPositionHistoryById?: Maybe<LiquidityPositionHistory>;
   pairById?: Maybe<Pair>;
+  pairPrices: Array<PairPricePoint>;
   pairs: Array<Pair>;
   pairsConnection: PairsConnection;
   squidStatus?: Maybe<SquidStatus>;
@@ -2311,6 +2319,7 @@ export type Query = {
   tokenMetrics: Array<TokenMetrics>;
   tokenMetricsById?: Maybe<TokenMetrics>;
   tokenMetricsConnection: TokenMetricsConnection;
+  tokenPrices: Array<TokenPricePoint>;
   tokens: Array<Token>;
   tokensConnection: TokensConnection;
   tradeById?: Maybe<Trade>;
@@ -2415,6 +2424,13 @@ export type QueryPairByIdArgs = {
   id: Scalars['String']['input'];
 };
 
+export type QueryPairPricesArgs = {
+  from: Scalars['String']['input'];
+  maxPoints: Scalars['Int']['input'];
+  pairAddress: Scalars['String']['input'];
+  to: Scalars['String']['input'];
+};
+
 export type QueryPairsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2449,6 +2465,13 @@ export type QueryTokenMetricsConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   orderBy: Array<TokenMetricsOrderByInput>;
   where?: InputMaybe<TokenMetricsWhereInput>;
+};
+
+export type QueryTokenPricesArgs = {
+  from: Scalars['String']['input'];
+  maxPoints: Scalars['Int']['input'];
+  to: Scalars['String']['input'];
+  tokenAddress: Scalars['String']['input'];
 };
 
 export type QueryTokensArgs = {
@@ -3007,6 +3030,13 @@ export enum TokenOrderByInput {
   TotalSupplyDescNullsFirst = 'totalSupply_DESC_NULLS_FIRST',
   TotalSupplyDescNullsLast = 'totalSupply_DESC_NULLS_LAST',
 }
+
+export type TokenPricePoint = {
+  __typename?: 'TokenPricePoint';
+  priceETH?: Maybe<Scalars['String']['output']>;
+  priceUSD?: Maybe<Scalars['String']['output']>;
+  timestamp: Scalars['String']['output'];
+};
 
 export type TokenWhereInput = {
   AND?: InputMaybe<Array<TokenWhereInput>>;
@@ -3676,6 +3706,22 @@ export type PairByIdQuery = {
       };
     };
   } | null;
+};
+
+export type GetPairTokenPricesQueryQueryVariables = Exact<{
+  maxPoints: Scalars['Int']['input'];
+  from: Scalars['String']['input'];
+  to: Scalars['String']['input'];
+  tokenAddress: Scalars['String']['input'];
+}>;
+
+export type GetPairTokenPricesQueryQuery = {
+  __typename?: 'Query';
+  tokenPrices: Array<{
+    __typename?: 'TokenPricePoint';
+    timestamp: string;
+    priceUSD?: string | null;
+  }>;
 };
 
 export type PairsQueryVariables = Exact<{
@@ -4433,6 +4479,118 @@ export const PairByIdDocument = {
     },
   ],
 } as unknown as DocumentNode<PairByIdQuery, PairByIdQueryVariables>;
+export const GetPairTokenPricesQueryDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetPairTokenPricesQuery' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'maxPoints' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'from' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'to' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'tokenAddress' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'tokenPrices' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'maxPoints' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'maxPoints' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'to' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'to' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'from' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'from' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'tokenAddress' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'tokenAddress' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'timestamp' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'priceUSD' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetPairTokenPricesQueryQuery,
+  GetPairTokenPricesQueryQueryVariables
+>;
 export const PairsDocument = {
   kind: 'Document',
   definitions: [

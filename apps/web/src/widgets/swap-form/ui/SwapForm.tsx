@@ -2,6 +2,7 @@
 
 import { useToken } from '@/entities';
 import { useLastUsedTokens, useSlippage, useTokenBalance } from '@/features';
+import { useGetPairPrices } from '@/features/liquidity/api/subgraph/useGetPairPrices';
 import { useSwapMidl } from '@/features/swap/api/useSwapMidl';
 import { useSwapRates } from '@/features/swap/api/useSwapRates';
 import { SwapDialog } from '@/features/swap/ui/swap-dialog/SwapDialog';
@@ -16,6 +17,7 @@ import { xverseConnector } from '@midl-xyz/midl-js-connectors';
 import { useEVMAddress } from '@midl-xyz/midl-js-executor-react';
 import { useAddNetwork, useConfig } from '@midl-xyz/midl-js-react';
 import { ConnectButton } from '@midl-xyz/satoshi-kit';
+import { getUnixTime, milliseconds, subHours } from 'date-fns';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';

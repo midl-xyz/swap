@@ -1,9 +1,5 @@
 import { TokenLogo } from '@/features';
-import { useGetHistoricalPairMetrics } from '@/features/liquidity';
-import {
-  HistoricalPairMetricsOrderByInput,
-  HistoricalPairMetricsQuery,
-} from '@/features/liquidity/api/gql/graphql';
+import { useGetPairPrices } from '@/features/liquidity/api/subgraph/useGetPairPrices';
 import { WETHByChain } from '@/global';
 import { Button } from '@/shared';
 import { AiOutlineSwapVertical } from '@/shared/assets';
@@ -16,20 +12,10 @@ import {
 } from '@/widgets/chart/ui/chartConfgs';
 import Arrow from '@/widgets/swap-form/assets/Arrow.svg';
 import { midlRegtest } from '@midl-xyz/midl-js-executor';
-import {
-  fromUnixTime,
-  startOfDay,
-  subDays,
-  getUnixTime,
-  addDays,
-  isWithinInterval,
-  addMinutes,
-  subHours,
-  startOfHour,
-} from 'date-fns';
+import { getUnixTime, subHours, subDays, subWeeks } from 'date-fns';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { Address, zeroAddress } from 'viem';
+import { useEffect, useState, useMemo } from 'react';
+import { Address, parseEther, zeroAddress } from 'viem';
 import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { HStack, Stack, VStack } from '~/styled-system/jsx';
@@ -46,238 +32,65 @@ interface Props {
   };
 }
 
-const chartTabs = [
-  'live',
-  '4h',
-  // '1d', '1w', 'max'
-];
+const chartTabs = ['live', '4h', '1d', '1w', 'max'];
 const chartLabels: Record<string, string> = {
   live: 'Live',
   '4h': '4H',
-  // '1d': '1D',
-  // '1w': '1W',
-  // max: 'Max',
+  '1d': '1D',
+  '1w': '1W',
+  max: 'Max',
 };
 
 export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
   const chainId = useChainId();
   const [expand, setExpand] = useState(false);
   const [chartTime, setChartTime] = useState<
-    //'max' | '1w' | '1d'
-    '4h' | 'live'
+    'max' | '1w' | '1d' | '4h' | 'live'
   >('4h');
 
-  const WBTC = WETHByChain[midlRegtest.id];
+  const now = useMemo(() => getUnixTime(new Date()), []);
 
-  const {
-    data: chartData,
-    isLoading: isInitialLoading,
-    isError: isInitialError,
-  } = useGetHistoricalPairMetrics({
-    enabled: !!inputTokenInfo?.address && !!outputTokenInfo?.address,
-    where: {
-      token0_eq:
-        inputTokenInfo.address === zeroAddress ? WBTC : inputTokenInfo.address,
-      token1_eq:
-        outputTokenInfo.address === zeroAddress
-          ? WBTC
-          : outputTokenInfo.address,
-    },
-    orderBy: HistoricalPairMetricsOrderByInput.DateAsc,
-    queryKey: [
-      `MemeTokenHistory-${
-        inputTokenInfo.address === zeroAddress ? WBTC : inputTokenInfo.address
-      }-${
-        outputTokenInfo.address === zeroAddress ? WBTC : outputTokenInfo.address
-      }`,
-      chainId,
-    ],
-  });
-  const {
-    data: chartDataInverse,
-    isLoading,
-    isError: isSecondaryError,
-  } = useGetHistoricalPairMetrics({
-    enabled: !!inputTokenInfo?.address && !!outputTokenInfo?.address,
-    where: {
-      token1_eq:
-        inputTokenInfo.address === zeroAddress ? WBTC : inputTokenInfo.address,
-      token0_eq:
-        outputTokenInfo.address === zeroAddress
-          ? WBTC
-          : outputTokenInfo.address,
-    },
-    orderBy: HistoricalPairMetricsOrderByInput.DateDesc,
-    queryKey: [
-      `MemeTokenHistory-${
-        outputTokenInfo.address === zeroAddress ? WBTC : outputTokenInfo.address
-      }-${
-        inputTokenInfo.address === zeroAddress ? WBTC : inputTokenInfo.address
-      }`,
-      chainId,
-    ],
+  const fromTime = useMemo(() => {
+    const currentDate = new Date();
+    switch (chartTime) {
+      case 'live':
+        return getUnixTime(subHours(currentDate, 1)); // Last hour for live
+      case '4h':
+        return getUnixTime(subHours(currentDate, 4));
+      case '1d':
+        return getUnixTime(subDays(currentDate, 1));
+      case '1w':
+        return getUnixTime(subWeeks(currentDate, 1));
+      case 'max':
+        return getUnixTime(subDays(currentDate, 365)); // 1 year for max
+      default:
+        return getUnixTime(subHours(currentDate, 4));
+    }
+  }, [chartTime]);
+
+  const { data: chartData, isLoading } = useGetPairPrices({
+    maxPoints: 250,
+    from: String(fromTime * 1000),
+    to: String(now * 1000),
+    tokenAddress:
+      outputTokenInfo.address === zeroAddress
+        ? inputTokenInfo.address
+        : outputTokenInfo.address,
   });
 
   useEffect(() => {
-    if (chartData || chartDataInverse) {
+    if (chartData) {
       setExpand(true);
     }
-  }, [chartData, chartDataInverse]);
+  }, [chartData]);
 
-  const rawChartList = (
-    chartData?.historicalPairMetrics?.length
-      ? (chartData?.historicalPairMetrics as HistoricalPairMetricsQuery['historicalPairMetrics'])
-      : (chartDataInverse?.historicalPairMetrics as HistoricalPairMetricsQuery['historicalPairMetrics']) ||
-        []
-  )
-    .map(({ token1Price, token0Price, date: timestamp }) => {
-      const priceUSD = chartData?.historicalPairMetrics.length
-        ? token1Price
-        : token0Price;
-      return {
-        value: parseFloat(priceUSD || 0),
-        time: Math.floor(+timestamp / 1000),
-      };
-    })
-    .sort((a, b) => a.time - b.time);
-  // Ensure the data is sorted by time in ascending order.
-  if (rawChartList.length > 0) {
-    rawChartList.push({
-      value: rawChartList[rawChartList.length - 1].value, // Use the last value
-      time: Math.floor(Date.now() / 1000), // Use current time
-    });
-  }
-
-  const generateFakePoints = (
-    lastPoint: (typeof rawChartList)[number],
-    start: Date,
-    stepMinutes: number,
-    totalPoints: number,
-  ) => {
-    const points: typeof rawChartList = [];
-
-    for (let i = 0; i < totalPoints; i++) {
-      const time = getUnixTime(addMinutes(start, i * stepMinutes));
-      points.push({ ...lastPoint, time });
-    }
-
-    return points;
-  };
-
-  const filterChartData = (chartList: typeof rawChartList, range: string) => {
-    const now = Math.floor(Date.now() / 1000);
-    let filteredList: typeof rawChartList = [];
-
-    const lastPoint = chartList[chartList.length - 1];
-    if (!lastPoint) return [];
-
-    const groupByDayAndTakeLast = (
-      list: typeof rawChartList,
-      startDate: Date,
-      days: number,
-    ) => {
-      const result: typeof rawChartList = [];
-
-      for (let i = 0; i < days; i++) {
-        const dayStart = startOfDay(addDays(startDate, i));
-        const dayEnd = addDays(dayStart, 1);
-
-        const dayData = list.filter((item) =>
-          isWithinInterval(fromUnixTime(item.time), {
-            start: dayStart,
-            end: dayEnd,
-          }),
-        );
-
-        if (dayData.length > 0) {
-          result.push(dayData[dayData.length - 1]);
-        }
-      }
-
-      return result;
+  const rawChartList = chartData?.tokenPrices.map(({ timestamp, priceUSD }) => {
+    return {
+      value: parseFloat(priceUSD || '0'),
+      time: Math.floor(+timestamp / 1000),
     };
-
-    switch (range) {
-      case 'live': {
-        filteredList = chartList.filter((item) => item.time >= now - 5 * 60);
-
-        if (filteredList.length < 3) {
-          const lastPoint = chartList[chartList.length - 1];
-          if (lastPoint) {
-            const nowSec = Math.floor(Date.now() / 1000);
-            const twoMinutesAgo = nowSec - 2.5 * 60;
-            const fiveMinutesAgo = nowSec - 5 * 60;
-
-            filteredList = [
-              { ...lastPoint, time: fiveMinutesAgo },
-              { ...lastPoint, time: twoMinutesAgo },
-              { ...lastPoint, time: nowSec },
-            ];
-          }
-        }
-        break;
-      }
-
-      case '4h': {
-        const start = subHours(new Date(), 4);
-        filteredList = chartList.filter(
-          (item) => fromUnixTime(item.time) >= start,
-        );
-
-        if (filteredList.length < 2) {
-          const alignedStart = startOfHour(start);
-          filteredList = generateFakePoints(lastPoint, alignedStart, 30, 8);
-        }
-        break;
-      }
-
-      case '1d': {
-        const start = subHours(new Date(), 24);
-        filteredList = chartList.filter(
-          (item) => fromUnixTime(item.time) >= start,
-        );
-
-        if (filteredList.length < 2) {
-          const alignedStart = startOfHour(start);
-          filteredList = generateFakePoints(lastPoint, alignedStart, 60, 24);
-        }
-        break;
-      }
-
-      // case '1w': {
-      //   const start = subDays(startOfDay(new Date()), 6);
-      //   filteredList = groupByDayAndTakeLast(chartList, start, 7);
-
-      //   if (filteredList.length < 2) {
-      //     filteredList = generateFakePoints(lastPoint, start, 24 * 60, 7);
-      //   }
-      //   break;
-      // }
-
-      // case 'max': {
-      //   const firstDate = startOfDay(fromUnixTime(chartList[0].time));
-      //   const lastDate = startOfDay(
-      //     fromUnixTime(chartList[chartList.length - 1].time),
-      //   );
-      //   const totalDays =
-      //     Math.ceil(
-      //       (getUnixTime(lastDate) - getUnixTime(firstDate)) / (24 * 60 * 60),
-      //     ) + 1;
-
-      //   filteredList = groupByDayAndTakeLast(chartList, firstDate, totalDays);
-      //   break;
-      // }
-
-      default:
-        filteredList = chartList;
-    }
-
-    filteredList.sort((a, b) => a.time - b.time);
-
-    return filteredList;
-  };
-
-  const chartList = filterChartData(rawChartList, chartTime);
+  });
+  //.sort((a, b) => a.time - b.time);
 
   return (
     <VStack
@@ -292,7 +105,7 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
       }}
       alignItems="baseline"
     >
-      {isLoading || isInitialLoading || isSecondaryError || isInitialError ? (
+      {isLoading ? (
         <Stack
           alignItems="center"
           justifyContent="center"
@@ -342,8 +155,8 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
             </Button>
           </HStack>
 
-          {chartData?.historicalPairMetrics?.length ||
-          chartDataInverse?.historicalPairMetrics?.length ? (
+          {chartData?.tokenPrices?.length &&
+          chartData?.tokenPrices?.length > 0 ? (
             <VStack
               w="full"
               css={{
@@ -404,28 +217,15 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
                       textStyle: 'subtitle2',
                     })}
                   >
-                    {+chartData?.historicalPairMetrics?.[
-                      chartData.historicalPairMetrics?.length - 1
-                    ]?.token1Price ||
-                      +chartDataInverse?.historicalPairMetrics?.[
-                        chartDataInverse.historicalPairMetrics?.length - 1
-                      ]?.token0Price}
+                    {
+                      chartData.tokenPrices[chartData.tokenPrices.length - 1]
+                        .priceUSD
+                    }
                     {'  '} {outputTokenInfo.symbol}
                   </HStack>
-                  {/*<span*/}
-                  {/*  className={css({*/}
-                  {/*    color: '#51935C',*/}
-                  {/*    textStyle: 'body1',*/}
-                  {/*  })}*/}
-                  {/*>*/}
-                  {/*  +0.13%*/}
-                  {/*</span>*/}
                 </HStack>
               </VStack>
-              {inputTokenInfo?.address &&
-              outputTokenInfo?.address &&
-              (chartData?.historicalPairMetrics?.length ||
-                chartDataInverse?.historicalPairMetrics?.length) ? (
+              {inputTokenInfo?.address && outputTokenInfo?.address && (
                 <Stack
                   borderRadius="16px"
                   padding={{
@@ -448,8 +248,7 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
                         })}
                         onClick={() =>
                           setChartTime(
-                            option as 'live' | '4h',
-                            // | '1d' | '1w' | 'max',
+                            option as 'live' | '4h' | '1d' | '1w' | 'max',
                           )
                         }
                       >
@@ -458,13 +257,13 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
                     ))}
                   </HStack>
                   <Chart
-                    data={chartList}
+                    data={rawChartList || []}
                     areaOptions={areaOptions}
                     chartOptions={chartOptions}
                     timeChartOptions={timeChartOptions}
                   />
                 </Stack>
-              ) : null}
+              )}
             </VStack>
           ) : null}
         </>
