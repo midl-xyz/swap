@@ -82,7 +82,7 @@ export const areaOptions: DeepPartial<AreaStyleOptions & SeriesOptionsCommon> =
             return '$0';
           }
 
-          return `$0.0${superscriptMap[countZeros] || countZeros}${significantDigits}`.replace(
+          return `0.0${superscriptMap[countZeros] || countZeros}${significantDigits}`.replace(
             /000$/,
             '',
           );
