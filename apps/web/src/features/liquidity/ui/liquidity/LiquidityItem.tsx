@@ -71,15 +71,15 @@ export const LiquidityItem = ({
               })}
             />
           </div>
-          {tokenASymbol === 'WPROM' ? 'PROM' : tokenASymbol} —{' '}
-          {tokenBSymbol === 'WPROM' ? 'PROM' : tokenBSymbol}
+          {tokenASymbol === 'WPROM' ? 'PROM' : tokenAInfo.name} —{' '}
+          {tokenBSymbol === 'WPROM' ? 'PROM' : tokenBInfo.name}
         </div>
       </Collapsible.Trigger>
       <Collapsible.Content>
         <div className={vstack({ gap: 2, alignItems: 'stretch', pt: 4 })}>
           <div className={hstack({ gap: 2, justifyContent: 'space-between' })}>
             <span>
-              Pooled {tokenASymbol === 'WPROM' ? 'PROM' : tokenASymbol}
+              Pooled {tokenASymbol === 'WPROM' ? 'PROM' : tokenAInfo.name}
             </span>
             <span>
               {beautifyNumber(reserveA)}{' '}
@@ -88,7 +88,7 @@ export const LiquidityItem = ({
           </div>
           <div className={hstack({ gap: 2, justifyContent: 'space-between' })}>
             <span>
-              Pooled {tokenBSymbol === 'WPROM' ? 'PROM' : tokenBSymbol}
+              Pooled {tokenBSymbol === 'WPROM' ? 'PROM' : tokenBInfo.name}
             </span>
             <span>
               {beautifyNumber(reserveB)}{' '}

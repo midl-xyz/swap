@@ -2,7 +2,6 @@
 
 import { useToken } from '@/entities';
 import { useLastUsedTokens, useSlippage, useTokenBalance } from '@/features';
-import { useGetPairPrices } from '@/features/liquidity/api/subgraph/useGetPairPrices';
 import { useSwapMidl } from '@/features/swap/api/useSwapMidl';
 import { useSwapRates } from '@/features/swap/api/useSwapRates';
 import { SwapDialog } from '@/features/swap/ui/swap-dialog/SwapDialog';
@@ -17,7 +16,6 @@ import { xverseConnector } from '@midl-xyz/midl-js-connectors';
 import { useEVMAddress } from '@midl-xyz/midl-js-executor-react';
 import { useAddNetwork, useConfig } from '@midl-xyz/midl-js-react';
 import { ConnectButton } from '@midl-xyz/satoshi-kit';
-import { getUnixTime, milliseconds, subHours } from 'date-fns';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -62,18 +60,40 @@ const Wallet = () => {
   );
 };
 
-export const SwapForm = () => {
+type SwapFormProps = {
+  inputToken?: Address;
+  outputToken?: Address;
+  amount?: string;
+  field?: 'input' | 'output';
+};
+
+export const SwapForm = ({
+  inputToken: customInputToken,
+  outputToken: customOutputToken,
+  amount,
+  field,
+}: SwapFormProps) => {
+  const outputTokenDefault =
+    customInputToken ||
+    tokenList.find((it) => it.name === 'MIDL•RUNE•STABLECOIN')?.address ||
+    ('' as Address);
+
+  const inputTokenDefault = customInputToken || zeroAddress;
+
+  const defaultValues = {
+    inputToken: inputTokenDefault,
+    outputToken:
+      outputTokenDefault === inputTokenDefault
+        ? ('' as Address)
+        : outputTokenDefault,
+    inputTokenAmount: field === 'input' ? amount || '' : '',
+    outputTokenAmount: field === 'output' ? amount || '' : '',
+  };
+
   const { selectTokens } = useLastUsedTokens();
   const searchParams = useSearchParams();
   const form = useForm<FormData>({
-    defaultValues: {
-      inputToken: zeroAddress,
-      outputToken:
-        tokenList.find((it) => it.name === 'MIDL•RUNE•STABLECOIN')?.address ||
-        ('' as Address),
-      inputTokenAmount: '',
-      outputTokenAmount: '',
-    },
+    defaultValues,
   });
 
   const chainId = useChainId();

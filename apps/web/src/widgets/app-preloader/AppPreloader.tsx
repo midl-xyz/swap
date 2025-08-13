@@ -1,3 +1,5 @@
+'use client';
+
 import { Box } from '~/styled-system/jsx';
 import './styles.css';
 import { FC } from 'react';
