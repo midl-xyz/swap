@@ -95,7 +95,7 @@ export const PairItem = ({
             : '0$'}
         </div>
 
-        <div>
+        <div className={css({ display: 'table-cell' })}>
           {/* biome-ignore lint/complexity/noExtraBooleanCast: <explanation> */}
           {Boolean(Number.parseFloat(pair.token0.tokenMetrics.priceUSD))
             ? `${beautifyNumber(pair.token0.tokenMetrics.priceUSD, 2)}$`
