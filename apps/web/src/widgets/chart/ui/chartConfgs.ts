@@ -79,15 +79,15 @@ export const areaOptions: DeepPartial<AreaStyleOptions & SeriesOptionsCommon> =
           );
 
           if (!significantDigits) {
-            return 0;
+            return '$0';
           }
 
-          return `0.0${superscriptMap[countZeros] || countZeros}${significantDigits}`.replace(
+          return `$0.0${superscriptMap[countZeros] || countZeros}${significantDigits}`.replace(
             /000$/,
             '',
           );
         }
-        return price.toFixed(2);
+        return `$${price.toFixed(2)}`;
       },
     },
   };
@@ -147,5 +147,10 @@ export const timeChartOptions: DeepPartial<TimeChartOptions> = {
   rightPriceScale: {
     autoScale: true,
     borderColor: 'transparent',
+    mode: 0, // Normal price scale mode
+    scaleMargins: {
+      top: 0.1,
+      bottom: 0.1,
+    },
   },
 };

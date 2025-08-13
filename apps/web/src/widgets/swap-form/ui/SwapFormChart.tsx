@@ -2,6 +2,7 @@
 
 import { TokenLogo } from '@/features';
 import { useGetPairPrices } from '@/features/liquidity/api/subgraph/useGetPairPrices';
+import { WETHByChain } from '@/global';
 import { Button } from '@/shared';
 import { AiOutlineSwapVertical } from '@/shared/assets';
 import { AppPreloader } from '@/widgets/app-preloader';
@@ -12,6 +13,8 @@ import {
   timeChartOptions,
 } from '@/widgets/chart/ui/chartConfgs';
 import Arrow from '@/widgets/swap-form/assets/Arrow.svg';
+import { regtest } from '@midl-xyz/midl-js-core';
+import { midlRegtest } from '@midl-xyz/midl-js-executor';
 import { getUnixTime, subDays, subHours, subWeeks } from 'date-fns';
 import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
@@ -74,11 +77,14 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
     to: String(now * 1000),
     tokenAddress:
       outputTokenInfo.address === zeroAddress
-        ? inputTokenInfo.address
+        ? WETHByChain[midlRegtest.id]
         : outputTokenInfo.address,
   });
 
   useEffect(() => {
+    if (chartData?.tokenPrices.length === 0) {
+      setChartTime('max');
+    }
     if (chartData) {
       setExpand(true);
     }
