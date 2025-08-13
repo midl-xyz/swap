@@ -87,7 +87,7 @@ export const areaOptions: DeepPartial<AreaStyleOptions & SeriesOptionsCommon> =
             '',
           );
         }
-        return `$${price.toFixed(2)}`;
+        return `${price.toFixed(2)}`;
       },
     },
   };

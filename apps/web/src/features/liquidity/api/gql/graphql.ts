@@ -1820,6 +1820,12 @@ export enum PairOrderByInput {
   Token0HoldersDesc = 'token0_holders_DESC',
   Token0HoldersDescNullsFirst = 'token0_holders_DESC_NULLS_FIRST',
   Token0HoldersDescNullsLast = 'token0_holders_DESC_NULLS_LAST',
+  Token0IdAsc = 'token0_id_ASC',
+  Token0IdAscNullsFirst = 'token0_id_ASC_NULLS_FIRST',
+  Token0IdAscNullsLast = 'token0_id_ASC_NULLS_LAST',
+  Token0IdDesc = 'token0_id_DESC',
+  Token0IdDescNullsFirst = 'token0_id_DESC_NULLS_FIRST',
+  Token0IdDescNullsLast = 'token0_id_DESC_NULLS_LAST',
   Token0LastUpdatedAtBlockTimestampAsc = 'token0_lastUpdatedAtBlockTimestamp_ASC',
   Token0LastUpdatedAtBlockTimestampAscNullsFirst = 'token0_lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
   Token0LastUpdatedAtBlockTimestampAscNullsLast = 'token0_lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
@@ -1898,6 +1904,12 @@ export enum PairOrderByInput {
   Token1HoldersDesc = 'token1_holders_DESC',
   Token1HoldersDescNullsFirst = 'token1_holders_DESC_NULLS_FIRST',
   Token1HoldersDescNullsLast = 'token1_holders_DESC_NULLS_LAST',
+  Token1IdAsc = 'token1_id_ASC',
+  Token1IdAscNullsFirst = 'token1_id_ASC_NULLS_FIRST',
+  Token1IdAscNullsLast = 'token1_id_ASC_NULLS_LAST',
+  Token1IdDesc = 'token1_id_DESC',
+  Token1IdDescNullsFirst = 'token1_id_DESC_NULLS_FIRST',
+  Token1IdDescNullsLast = 'token1_id_DESC_NULLS_LAST',
   Token1LastUpdatedAtBlockTimestampAsc = 'token1_lastUpdatedAtBlockTimestamp_ASC',
   Token1LastUpdatedAtBlockTimestampAscNullsFirst = 'token1_lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
   Token1LastUpdatedAtBlockTimestampAscNullsLast = 'token1_lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
@@ -1981,8 +1993,8 @@ export enum PairOrderByInput {
 export type PairPricePoint = {
   __typename?: 'PairPricePoint';
   timestamp: Scalars['String']['output'];
-  token0Price?: Maybe<Scalars['String']['output']>;
-  token1Price?: Maybe<Scalars['String']['output']>;
+  token0?: Maybe<TokenInPair>;
+  token1?: Maybe<TokenInPair>;
 };
 
 export type PairWhereInput = {
@@ -2427,8 +2439,9 @@ export type QueryPairByIdArgs = {
 export type QueryPairPricesArgs = {
   from: Scalars['String']['input'];
   maxPoints: Scalars['Int']['input'];
-  pairAddress: Scalars['String']['input'];
   to: Scalars['String']['input'];
+  token0Address: Scalars['String']['input'];
+  token1Address: Scalars['String']['input'];
 };
 
 export type QueryPairsArgs = {
@@ -2551,6 +2564,12 @@ export type TokenEdge = {
   __typename?: 'TokenEdge';
   cursor: Scalars['String']['output'];
   node: Token;
+};
+
+export type TokenInPair = {
+  __typename?: 'TokenInPair';
+  tokenAddress: Scalars['String']['output'];
+  tokenPrice?: Maybe<Scalars['String']['output']>;
 };
 
 export type TokenMetrics = {
@@ -3033,7 +3052,6 @@ export enum TokenOrderByInput {
 
 export type TokenPricePoint = {
   __typename?: 'TokenPricePoint';
-  priceETH?: Maybe<Scalars['String']['output']>;
   priceUSD?: Maybe<Scalars['String']['output']>;
   timestamp: Scalars['String']['output'];
 };
@@ -3708,19 +3726,29 @@ export type PairByIdQuery = {
   } | null;
 };
 
-export type GetPairTokenPricesQueryQueryVariables = Exact<{
+export type GetPairPricesQueryQueryVariables = Exact<{
   maxPoints: Scalars['Int']['input'];
   from: Scalars['String']['input'];
   to: Scalars['String']['input'];
-  tokenAddress: Scalars['String']['input'];
+  token0Address: Scalars['String']['input'];
+  token1Address: Scalars['String']['input'];
 }>;
 
-export type GetPairTokenPricesQueryQuery = {
+export type GetPairPricesQueryQuery = {
   __typename?: 'Query';
-  tokenPrices: Array<{
-    __typename?: 'TokenPricePoint';
+  pairPrices: Array<{
+    __typename?: 'PairPricePoint';
     timestamp: string;
-    priceUSD?: string | null;
+    token0?: {
+      __typename?: 'TokenInPair';
+      tokenAddress: string;
+      tokenPrice?: string | null;
+    } | null;
+    token1?: {
+      __typename?: 'TokenInPair';
+      tokenAddress: string;
+      tokenPrice?: string | null;
+    } | null;
   }>;
 };
 
@@ -4479,13 +4507,13 @@ export const PairByIdDocument = {
     },
   ],
 } as unknown as DocumentNode<PairByIdQuery, PairByIdQueryVariables>;
-export const GetPairTokenPricesQueryDocument = {
+export const GetPairPricesQueryDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'GetPairTokenPricesQuery' },
+      name: { kind: 'Name', value: 'GetPairPricesQuery' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -4524,7 +4552,21 @@ export const GetPairTokenPricesQueryDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'tokenAddress' },
+            name: { kind: 'Name', value: 'token0Address' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'token1Address' },
           },
           type: {
             kind: 'NonNullType',
@@ -4540,7 +4582,7 @@ export const GetPairTokenPricesQueryDocument = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'tokenPrices' },
+            name: { kind: 'Name', value: 'pairPrices' },
             arguments: [
               {
                 kind: 'Argument',
@@ -4568,18 +4610,59 @@ export const GetPairTokenPricesQueryDocument = {
               },
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'tokenAddress' },
+                name: { kind: 'Name', value: 'token0Address' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'tokenAddress' },
+                  name: { kind: 'Name', value: 'token0Address' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'token1Address' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'token1Address' },
                 },
               },
             ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'token0' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'tokenAddress' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'tokenPrice' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'token1' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'tokenAddress' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'tokenPrice' },
+                      },
+                    ],
+                  },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'timestamp' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'priceUSD' } },
               ],
             },
           },
@@ -4588,8 +4671,8 @@ export const GetPairTokenPricesQueryDocument = {
     },
   ],
 } as unknown as DocumentNode<
-  GetPairTokenPricesQueryQuery,
-  GetPairTokenPricesQueryQueryVariables
+  GetPairPricesQueryQuery,
+  GetPairPricesQueryQueryVariables
 >;
 export const PairsDocument = {
   kind: 'Document',

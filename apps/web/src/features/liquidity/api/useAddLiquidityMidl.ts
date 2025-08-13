@@ -111,7 +111,7 @@ export const useAddLiquidityMidl = ({
         }
       }
 
-      if (runeB || !isTokenBETH) {
+      if (!isTokenBETH) {
         if (isTokenBNeedApprove) {
           addApproveDepositIntention({
             address: tokenB.address,
@@ -173,8 +173,8 @@ export const useAddLiquidityMidl = ({
           tokenB.address,
           tokenA.amount,
           tokenB.amount,
-          amountAMin,
-          amountBMin,
+          BigInt(0),
+          BigInt(0),
           to,
           deadline,
         ];
@@ -245,6 +245,7 @@ export const useAddLiquidityMidl = ({
             ],
           },
         ];
+
         if (
           tokenA.address === zeroAddress ||
           tokenA.address === WETHByChain[chainId]

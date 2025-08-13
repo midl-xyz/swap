@@ -13,7 +13,6 @@ import {
   timeChartOptions,
 } from '@/widgets/chart/ui/chartConfgs';
 import Arrow from '@/widgets/swap-form/assets/Arrow.svg';
-import { regtest } from '@midl-xyz/midl-js-core';
 import { midlRegtest } from '@midl-xyz/midl-js-executor';
 import { getUnixTime, subDays, subHours, subWeeks } from 'date-fns';
 import Image from 'next/image';
@@ -35,14 +34,21 @@ interface Props {
   };
 }
 
+interface PairPriceData {
+  pairPrices: Array<{
+    token0: {
+      tokenAddress: string;
+      tokenPrice: string;
+    };
+    token1: {
+      tokenAddress: string;
+      tokenPrice: string;
+    };
+    timestamp: string;
+  }>;
+}
+
 const chartTabs = ['live', '4h', '1d', '1w', 'max'];
-const chartLabels: Record<string, string> = {
-  live: 'Live',
-  '4h': '4H',
-  '1d': '1D',
-  '1w': '1W',
-  max: 'Max',
-};
 
 export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
   const chainId = useChainId();
@@ -71,31 +77,56 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
     }
   }, [chartTime]);
 
-  const { data: chartData, isLoading } = useGetPairPrices({
+  const {
+    data: chartData,
+    isLoading,
+    refetch,
+  } = useGetPairPrices({
     maxPoints: 250,
     from: String(fromTime * 1000),
     to: String(now * 1000),
-    tokenAddress:
+    token0Address:
+      inputTokenInfo.address === zeroAddress
+        ? WETHByChain[midlRegtest.id]
+        : inputTokenInfo.address,
+    token1Address:
       outputTokenInfo.address === zeroAddress
         ? WETHByChain[midlRegtest.id]
         : outputTokenInfo.address,
   });
 
+  const typedChartData = chartData as PairPriceData | undefined;
+
   useEffect(() => {
-    if (chartData?.tokenPrices.length === 0) {
+    if (typedChartData?.pairPrices.length === 0) {
       setChartTime('max');
     }
-    if (chartData) {
+
+    if (typedChartData && typedChartData.pairPrices.length > 0) {
       setExpand(true);
     }
-  }, [chartData]);
+  }, [typedChartData, refetch]);
 
-  const rawChartList = chartData?.tokenPrices.map(({ timestamp, priceUSD }) => {
-    return {
-      value: parseFloat(priceUSD || '0'),
-      time: Math.floor(+timestamp / 1000),
-    };
-  });
+  const rawChartList = typedChartData?.pairPrices.map(
+    ({ timestamp, token0, token1 }) => {
+      // Determine which token is the input token (or WETH equivalent)
+      const inputTokenAddress =
+        inputTokenInfo.address === zeroAddress
+          ? WETHByChain[midlRegtest.id]
+          : inputTokenInfo.address;
+
+      // Return the price of the token that matches the input token
+      const priceValue =
+        token0.tokenAddress.toLowerCase() === inputTokenAddress.toLowerCase()
+          ? parseFloat(token0.tokenPrice)
+          : parseFloat(token1.tokenPrice);
+
+      return {
+        value: priceValue,
+        time: Math.floor(+timestamp / 1000),
+      };
+    },
+  );
   //.sort((a, b) => a.time - b.time);
 
   return (
@@ -161,8 +192,8 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
             </Button>
           </HStack>
 
-          {chartData?.tokenPrices?.length &&
-          chartData?.tokenPrices?.length > 0 ? (
+          {typedChartData?.pairPrices?.length &&
+          typedChartData?.pairPrices?.length > 0 ? (
             <VStack
               w="full"
               css={{
@@ -223,11 +254,20 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
                       textStyle: 'subtitle2',
                     })}
                   >
-                    {
-                      chartData.tokenPrices[chartData.tokenPrices.length - 1]
-                        .priceUSD
-                    }
-                    {'  '} {outputTokenInfo.symbol}
+                    {typedChartData.pairPrices.length > 0 &&
+                      (
+                        parseFloat(
+                          typedChartData.pairPrices[
+                            typedChartData.pairPrices.length - 1
+                          ].token1.tokenPrice,
+                        ) /
+                        parseFloat(
+                          typedChartData.pairPrices[
+                            typedChartData.pairPrices.length - 1
+                          ].token0.tokenPrice,
+                        )
+                      ).toFixed(6)}
+                    {'  '} {outputTokenInfo.symbol} per {inputTokenInfo.symbol}
                   </HStack>
                 </HStack>
               </VStack>
@@ -258,7 +298,7 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
                           )
                         }
                       >
-                        {chartLabels[option]}
+                        {option.toUpperCase()}
                       </span>
                     ))}
                   </HStack>

@@ -1,38 +1,51 @@
 import { graphqlClient } from '@/features/liquidity';
 import { graphql } from '@/features/liquidity/api/gql';
-import { TokenPricePoint } from '@/features/liquidity/api/gql/graphql';
 import { useQuery } from '@tanstack/react-query';
-import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 
-type GetPairTokenPricesQuery = {
-  tokenPrices: TokenPricePoint[];
+type PairPricePoint = {
+  token0: {
+    tokenAddress: string;
+    tokenPrice: string;
+  };
+  token1: {
+    tokenAddress: string;
+    tokenPrice: string;
+  };
+  timestamp: string;
 };
 
-type GetPairTokenPricesVariables = {
+type GetPairPricesVariables = {
   maxPoints: number;
   from: string;
   to: string;
-  tokenAddress: string;
+  token0Address: string;
+  token1Address: string;
 };
 
-const GetPairTokenPrices: TypedDocumentNode<
-  GetPairTokenPricesQuery,
-  GetPairTokenPricesVariables
-> = graphql(/* GraphQL */ `
-  query GetPairTokenPricesQuery(
+const GetPairPrices = graphql(/* GraphQL */ `
+  query GetPairPricesQuery(
     $maxPoints: Int!
     $from: String!
     $to: String!
-    $tokenAddress: String!
+    $token0Address: String!
+    $token1Address: String!
   ) {
-    tokenPrices(
+    pairPrices(
       maxPoints: $maxPoints
       to: $to
       from: $from
-      tokenAddress: $tokenAddress
+      token0Address: $token0Address
+      token1Address: $token1Address
     ) {
+      token0 {
+        tokenAddress
+        tokenPrice
+      }
+      token1 {
+        tokenAddress
+        tokenPrice
+      }
       timestamp
-      priceUSD
     }
   }
 `);
@@ -41,20 +54,30 @@ export const useGetPairPrices = ({
   maxPoints,
   from,
   to,
-  tokenAddress,
-}: GetPairTokenPricesVariables) => {
-  return useQuery<GetPairTokenPricesQuery>({
+  token0Address,
+  token1Address,
+}: GetPairPricesVariables) => {
+  return useQuery({
     queryFn: async () => {
-      return await graphqlClient.request(GetPairTokenPrices, {
+      return await graphqlClient.request(GetPairPrices as any, {
         maxPoints,
         from,
         to,
-        tokenAddress,
+        token0Address,
+        token1Address,
       });
     },
-    queryKey: ['GetPairTokenPrices', maxPoints, from, to, tokenAddress],
-    enabled: !!tokenAddress && !!from && !!to,
+    queryKey: [
+      'GetPairPrices',
+      maxPoints,
+      from,
+      to,
+      token0Address,
+      token1Address,
+    ],
+    enabled: !!token0Address && !!token1Address && !!from && !!to,
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
+    retry: 3, // Built-in retry mechanism
   });
 };
