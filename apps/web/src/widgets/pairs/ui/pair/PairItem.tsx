@@ -22,7 +22,6 @@ export const PairItem = ({
   tokenA,
   tokenB,
   index,
-  id,
   pair,
   overrideAPic,
   overrideBPic,
@@ -95,17 +94,11 @@ export const PairItem = ({
             ? `${beautifyNumber(pair.liquidityUSD, 2)}$`
             : '0$'}
         </div>
+
         <div className={css({ display: 'table-cell' })}>
-          {' '}
           {/* biome-ignore lint/complexity/noExtraBooleanCast: <explanation> */}
           {Boolean(Number.parseFloat(pair.token0.tokenMetrics.priceUSD))
             ? `${beautifyNumber(pair.token0.tokenMetrics.priceUSD, 2)}$`
-            : '0$'}
-        </div>
-
-        <div className={css({ display: 'table-cell' })}>
-          {Boolean(Number.parseFloat(pair.token1.tokenMetrics.priceUSD))
-            ? `${beautifyNumber(pair.token1.tokenMetrics.priceUSD, 2)}$`
             : '0$'}
         </div>
       </a>

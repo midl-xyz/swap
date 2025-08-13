@@ -7,7 +7,58 @@ import { getAddress } from 'viem';
 import { css } from '~/styled-system/css';
 
 export const Pairs = () => {
-  const { data: pools, isFetching, isLoading } = useGetPools();
+  const tokens = [
+    ['LOBOTHEWOLFPUP', 'BTC'],
+    ['DOGGOTOTHEMOON', 'BTC'],
+    ['DOGECOINDOGEDOSU', 'BTC'],
+    ['LOBOTHEWOLFPUP', 'BUSD'],
+    ['DOGGOTOTHEMOON', 'BUSD'],
+    ['DOGECOINDOGEDOSU', 'BUSD'],
+    ['BUSD', 'BTC'],
+    ['MIDLGROUNDSGEARS', 'BTC'],
+    ['BUSD', 'MIDLGROUNDSGEARS'],
+  ].reduce(
+    (acc, symbols) => {
+      acc.push({
+        token0: {
+          name_eq: symbols[0],
+        },
+        token1: {
+          name_eq: symbols[1],
+        },
+      });
+
+      acc.push({
+        token0: {
+          name_eq: symbols[1],
+        },
+        token1: {
+          name_eq: symbols[0],
+        },
+      });
+
+      return acc;
+    },
+    [] as {
+      token0: { name_eq: string };
+      token1: { name_eq: string };
+    }[],
+  );
+
+  const {
+    data: pools,
+    isFetching,
+    isLoading,
+  } = useGetPools({
+    ...(process.env.NEXT_PUBLIC_DISPLAY_ALL_PAIRS
+      ? {}
+      : {
+          where: {
+            OR: tokens,
+          },
+        }),
+  });
+
   if (isFetching || isLoading) {
     return <AppPreloader />;
   }
@@ -34,20 +85,39 @@ export const Pairs = () => {
         <div className={css({ display: 'table-cell' })}>Pair</div>
         <div className={css({ display: 'table-cell' })}>Volume (24h)</div>
         <div className={css({ display: 'table-cell' })}>Liquidity</div>
-        <div className={css({ display: 'table-cell' })}>Token#1 USD Price</div>
-        <div className={css({ display: 'table-cell' })}>Token#2 USD Price</div>
+        <div className={css({ display: 'table-cell' })}>Price</div>
       </div>
 
-      {pools?.pairs.map((pair, index) => (
-        <PairItem
-          index={index}
-          key={pair.id}
-          tokenA={getAddress(pair.token0.id)}
-          tokenB={getAddress(pair.token1.id)}
-          id={getAddress(pair.id)}
-          pair={pair}
-        />
-      ))}
+      {pools?.pairs.map((pair, index) => {
+        let tokenA = pair.token0.id;
+        let tokenB = pair.token1.id;
+
+        if (pair.token0.name === 'BUSD') {
+          tokenA = pair.token1.id;
+          tokenB = pair.token0.id;
+        }
+
+        if (pair.token1.name === 'BTC') {
+          tokenA = pair.token0.id;
+          tokenB = pair.token1.id;
+        }
+
+        if (pair.token0.name === 'BTC') {
+          tokenA = pair.token1.id;
+          tokenB = pair.token0.id;
+        }
+
+        return (
+          <PairItem
+            index={index}
+            key={pair.id}
+            tokenA={getAddress(tokenA)}
+            tokenB={getAddress(tokenB)}
+            id={getAddress(pair.id)}
+            pair={pair}
+          />
+        );
+      })}
     </div>
   );
 };

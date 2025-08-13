@@ -1,6 +1,7 @@
+'use client';
+
 import { TokenLogo } from '@/features';
 import { useGetPairPrices } from '@/features/liquidity/api/subgraph/useGetPairPrices';
-import { WETHByChain } from '@/global';
 import { Button } from '@/shared';
 import { AiOutlineSwapVertical } from '@/shared/assets';
 import { AppPreloader } from '@/widgets/app-preloader';
@@ -11,11 +12,10 @@ import {
   timeChartOptions,
 } from '@/widgets/chart/ui/chartConfgs';
 import Arrow from '@/widgets/swap-form/assets/Arrow.svg';
-import { midlRegtest } from '@midl-xyz/midl-js-executor';
-import { getUnixTime, subHours, subDays, subWeeks } from 'date-fns';
+import { getUnixTime, subDays, subHours, subWeeks } from 'date-fns';
 import Image from 'next/image';
-import { useEffect, useState, useMemo } from 'react';
-import { Address, parseEther, zeroAddress } from 'viem';
+import { useEffect, useMemo, useState } from 'react';
+import { Address, zeroAddress } from 'viem';
 import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { HStack, Stack, VStack } from '~/styled-system/jsx';

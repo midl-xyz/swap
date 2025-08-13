@@ -3,6 +3,7 @@ import { graphql } from '@/features/liquidity/api/gql';
 import {
   PairOrderByInput,
   PairsQuery,
+  PairWhereInput,
 } from '@/features/liquidity/api/gql/graphql';
 import { useQuery } from '@tanstack/react-query';
 
@@ -108,7 +109,11 @@ const GetPools = graphql(`
   }
 `);
 
-export const useGetPools = () => {
+type UseGetPoolsVariables = {
+  where?: PairWhereInput;
+};
+
+export const useGetPools = ({ where }: UseGetPoolsVariables = {}) => {
   return useQuery<PairsQuery>({
     queryKey: ['GetPools'],
     refetchOnWindowFocus: false,
@@ -116,6 +121,7 @@ export const useGetPools = () => {
       // Sort by liq
       return graphqlClient.request(GetPools, {
         orderBy: PairOrderByInput.LiquidityUsdDesc,
+        where,
       });
     },
   });

@@ -6,7 +6,7 @@ export const beautifyNumber = (
 ) => {
   let typedValue = 0;
 
-  if (!value) {
+  if (value === undefined || value === null) {
     return '0';
   }
 
@@ -17,18 +17,17 @@ export const beautifyNumber = (
   } else if (typeof value === 'bigint') {
     typedValue = Number.parseFloat(value.toString());
   }
-  if (typedValue === 0) {
+
+  if (!Number.isFinite(typedValue) || typedValue === 0) {
     return '0';
   }
 
-  if (
-    typedValue < 0.000001 ||
-    (overrideToFixed && typedValue < 10 / overrideToFixed)
-  ) {
+  // Show <0.01 for values less than 0.01
+  if (typedValue > 0 && typedValue < 0.01) {
     return '<0.01';
   }
 
-  if (overrideToFixed) {
+  if (overrideToFixed !== undefined) {
     return typedValue.toFixed(overrideToFixed);
   }
 
