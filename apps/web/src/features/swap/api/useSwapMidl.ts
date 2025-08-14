@@ -197,7 +197,7 @@ export const useSwapMidl = ({
         customStateOverride.push({
           address: userAddress,
           balance: parseEther('0.1'),
-        });
+        } as any);
 
         setStateOverride(customStateOverride);
       } else {
