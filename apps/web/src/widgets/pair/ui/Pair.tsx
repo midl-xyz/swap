@@ -40,8 +40,14 @@ export const Pair = ({ id }: Props) => {
 
   const token0Address = pairData?.token0.id as Address;
   const token1Address = pairData?.token1.id as Address;
-  const token0Symbol = pairData?.token0.name;
-  const token1Symbol = pairData?.token1.name;
+  const token0Symbol =
+    pairData?.token0.symbol === 'BUSD'
+      ? 'MIDLRUNESTABLECOIN'
+      : pairData?.token0.name;
+  const token1Symbol =
+    pairData?.token1.symbol === 'BUSD'
+      ? 'MIDLRUNESTABLECOIN'
+      : pairData?.token1.name;
 
   const pairInformation = [
     {
@@ -90,7 +96,7 @@ export const Pair = ({ id }: Props) => {
         gap={8}
         margin="auto"
         alignItems="baseline"
-        maxWidth="1088px"
+        maxWidth="1288px"
         width="100%"
       >
         <HStack>
@@ -124,18 +130,20 @@ export const Pair = ({ id }: Props) => {
             </span>
           </HStack>
         </HStack>
-        <Stack gap={6} flexDirection={{ base: 'column', md: 'row' }}>
+        <Stack
+          gap={6}
+          flexDirection={{ base: 'column', md: 'row' }}
+          justifyContent={{ md: 'space-between', base: 'flex-start' }}
+          width="100%"
+        >
           {tokenPrices.map(
-            (
-              {
-                tokenSymbol,
-                address,
-                secondTokenSymbol,
-                priceUsd,
-                priceInToken,
-              },
-              i,
-            ) => {
+            ({
+              tokenSymbol,
+              address,
+              secondTokenSymbol,
+              priceUsd,
+              priceInToken,
+            }) => {
               return (
                 <HStack
                   key={tokenSymbol}

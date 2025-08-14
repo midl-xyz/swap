@@ -78,7 +78,7 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
       transfers: [
         {
           receiver: multisigAddress[network!.id],
-          amount: Number(edictFee),
+          amount: Number(edictFee ?? 546n),
         },
         {
           runeId: rune!.id,
@@ -194,7 +194,8 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
             <p>
               To add the rune, please transfer the minimum amount (e.g 1{' '}
               {rune?.symbol}) of <b>{rune?.spaced_name}</b> and validator's fee
-              ({formatUnits(edictFee ?? 0n, 8)} BTC) to the following address:
+              ({formatUnits(BigInt(edictFee ?? 546), 8)} BTC) to the following
+              address:
               <br />
               <i>{multisigAddress[network!.id]}</i>
             </p>

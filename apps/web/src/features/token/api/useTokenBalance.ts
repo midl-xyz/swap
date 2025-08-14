@@ -19,13 +19,8 @@ export const useTokenBalance = (
   } = {},
 ) => {
   const userAddress = useEVMAddress();
-  const { ordinalsAccount, paymentAccount } = useAccounts();
-  const { balance: btcBalance } = useBTCBalance({
-    address: paymentAccount?.address ?? ordinalsAccount?.address ?? '',
-    query: {
-      enabled: Boolean(paymentAccount?.address ?? ordinalsAccount?.address),
-    },
-  });
+  const { ordinalsAccount } = useAccounts();
+  const { balance: btcBalance } = useBTCBalance({});
 
   const convertedBTCBalance = btcBalance * 10 ** 10;
   const contracts: any[] = [

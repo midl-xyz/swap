@@ -197,12 +197,12 @@ export const SwapForm = ({
   const { swapAsync } = useSwapMidl({
     tokenIn: inputToken,
     amountIn: parsedInputTokenAmount,
+    tokenOut: outputToken,
   });
 
   const onSubmit = async () => {
     await swapAsync({
       to: address!,
-      tokenOut: outputToken,
       deadline: BigInt(Math.floor(Date.now() / 1000) + 60 * 20),
       amountOutMin,
     });

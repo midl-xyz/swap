@@ -1820,12 +1820,6 @@ export enum PairOrderByInput {
   Token0HoldersDesc = 'token0_holders_DESC',
   Token0HoldersDescNullsFirst = 'token0_holders_DESC_NULLS_FIRST',
   Token0HoldersDescNullsLast = 'token0_holders_DESC_NULLS_LAST',
-  Token0IdAsc = 'token0_id_ASC',
-  Token0IdAscNullsFirst = 'token0_id_ASC_NULLS_FIRST',
-  Token0IdAscNullsLast = 'token0_id_ASC_NULLS_LAST',
-  Token0IdDesc = 'token0_id_DESC',
-  Token0IdDescNullsFirst = 'token0_id_DESC_NULLS_FIRST',
-  Token0IdDescNullsLast = 'token0_id_DESC_NULLS_LAST',
   Token0LastUpdatedAtBlockTimestampAsc = 'token0_lastUpdatedAtBlockTimestamp_ASC',
   Token0LastUpdatedAtBlockTimestampAscNullsFirst = 'token0_lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
   Token0LastUpdatedAtBlockTimestampAscNullsLast = 'token0_lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
@@ -1904,12 +1898,6 @@ export enum PairOrderByInput {
   Token1HoldersDesc = 'token1_holders_DESC',
   Token1HoldersDescNullsFirst = 'token1_holders_DESC_NULLS_FIRST',
   Token1HoldersDescNullsLast = 'token1_holders_DESC_NULLS_LAST',
-  Token1IdAsc = 'token1_id_ASC',
-  Token1IdAscNullsFirst = 'token1_id_ASC_NULLS_FIRST',
-  Token1IdAscNullsLast = 'token1_id_ASC_NULLS_LAST',
-  Token1IdDesc = 'token1_id_DESC',
-  Token1IdDescNullsFirst = 'token1_id_DESC_NULLS_FIRST',
-  Token1IdDescNullsLast = 'token1_id_DESC_NULLS_LAST',
   Token1LastUpdatedAtBlockTimestampAsc = 'token1_lastUpdatedAtBlockTimestamp_ASC',
   Token1LastUpdatedAtBlockTimestampAscNullsFirst = 'token1_lastUpdatedAtBlockTimestamp_ASC_NULLS_FIRST',
   Token1LastUpdatedAtBlockTimestampAscNullsLast = 'token1_lastUpdatedAtBlockTimestamp_ASC_NULLS_LAST',
@@ -2570,6 +2558,7 @@ export type TokenInPair = {
   __typename?: 'TokenInPair';
   tokenAddress: Scalars['String']['output'];
   tokenPrice?: Maybe<Scalars['String']['output']>;
+  tokenPriceUsd?: Maybe<Scalars['String']['output']>;
 };
 
 export type TokenMetrics = {
@@ -3743,11 +3732,13 @@ export type GetPairPricesQueryQuery = {
       __typename?: 'TokenInPair';
       tokenAddress: string;
       tokenPrice?: string | null;
+      tokenPriceUsd?: string | null;
     } | null;
     token1?: {
       __typename?: 'TokenInPair';
       tokenAddress: string;
       tokenPrice?: string | null;
+      tokenPriceUsd?: string | null;
     } | null;
   }>;
 };
@@ -4642,6 +4633,10 @@ export const GetPairPricesQueryDocument = {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'tokenPrice' },
                       },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'tokenPriceUsd' },
+                      },
                     ],
                   },
                 },
@@ -4658,6 +4653,10 @@ export const GetPairPricesQueryDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'tokenPrice' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'tokenPriceUsd' },
                       },
                     ],
                   },

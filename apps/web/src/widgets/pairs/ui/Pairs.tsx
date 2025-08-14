@@ -15,8 +15,8 @@ export const Pairs = () => {
     ['DOGGOTOTHEMOON', 'BUSD'],
     ['DOGECOINDOGEDOSU', 'BUSD'],
     ['BUSD', 'BTC'],
-    ['MIDLGROUNDSGEARS', 'BTC'],
-    ['BUSD', 'MIDLGROUNDSGEARS'],
+    ['MIDLGROUNDSGEARSTOKEN', 'BTC'],
+    ['BUSD', 'MIDLGROUNDSGEARSTOKEN'],
   ].reduce(
     (acc, symbols) => {
       acc.push({

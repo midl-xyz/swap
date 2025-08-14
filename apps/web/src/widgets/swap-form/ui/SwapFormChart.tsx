@@ -4,6 +4,7 @@ import { TokenLogo } from '@/features';
 import { useGetPairPrices } from '@/features/liquidity/api/subgraph/useGetPairPrices';
 import { WETHByChain } from '@/global';
 import { Button } from '@/shared';
+import { formatPrice } from '@/shared/lib/formatPrice';
 import { AiOutlineSwapVertical } from '@/shared/assets';
 import { AppPreloader } from '@/widgets/app-preloader';
 import { Chart } from '@/widgets/chart';
@@ -23,6 +24,14 @@ import { css } from '~/styled-system/css';
 import { HStack, Stack, VStack } from '~/styled-system/jsx';
 import { hstack } from '~/styled-system/patterns';
 
+const formatTokenPrice = (price: string): string => {
+  return formatPrice(parseFloat(price));
+};
+
+const formatUsdPrice = (priceUsd: string): string => {
+  return `($${formatPrice(parseFloat(priceUsd))})`;
+};
+
 interface Props {
   inputTokenInfo: {
     address: string;
@@ -39,10 +48,12 @@ interface PairPriceData {
     token0: {
       tokenAddress: string;
       tokenPrice: string;
+      tokenPriceUsd: string;
     };
     token1: {
       tokenAddress: string;
       tokenPrice: string;
+      tokenPriceUsd: string;
     };
     timestamp: string;
   }>;
@@ -86,13 +97,14 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
     from: String(fromTime * 1000),
     to: String(now * 1000),
     token0Address:
-      inputTokenInfo.address === zeroAddress
-        ? WETHByChain[midlRegtest.id]
-        : inputTokenInfo.address,
-    token1Address:
       outputTokenInfo.address === zeroAddress
         ? WETHByChain[midlRegtest.id]
         : outputTokenInfo.address,
+
+    token1Address:
+      inputTokenInfo.address === zeroAddress
+        ? WETHByChain[midlRegtest.id]
+        : inputTokenInfo.address,
   });
 
   const typedChartData = chartData as PairPriceData | undefined;
@@ -109,13 +121,11 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
 
   const rawChartList = typedChartData?.pairPrices.map(
     ({ timestamp, token0, token1 }) => {
-      // Determine which token is the input token (or WETH equivalent)
       const inputTokenAddress =
         inputTokenInfo.address === zeroAddress
           ? WETHByChain[midlRegtest.id]
           : inputTokenInfo.address;
 
-      // Return the price of the token that matches the input token
       const priceValue =
         token0.tokenAddress.toLowerCase() === inputTokenAddress.toLowerCase()
           ? parseFloat(token0.tokenPrice)
@@ -127,7 +137,28 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
       };
     },
   );
-  //.sort((a, b) => a.time - b.time);
+
+  const lastPairPrice =
+    typedChartData?.pairPrices[typedChartData.pairPrices.length - 1];
+
+  const tokenPriceUsd = lastPairPrice
+    ? (() => {
+        const inputTokenAddress =
+          inputTokenInfo.address === zeroAddress
+            ? WETHByChain[midlRegtest.id]
+            : inputTokenInfo.address;
+
+        return lastPairPrice.token0.tokenAddress.toLowerCase() ===
+          inputTokenAddress.toLowerCase()
+          ? lastPairPrice.token1.tokenPriceUsd
+          : lastPairPrice.token0.tokenPriceUsd;
+      })()
+    : undefined;
+
+  const formattedTokenPrice = lastPairPrice
+    ? formatTokenPrice(lastPairPrice.token0.tokenPrice)
+    : '';
+  const formattedUsdPrice = tokenPriceUsd ? formatUsdPrice(tokenPriceUsd) : '';
 
   return (
     <VStack
@@ -217,13 +248,11 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
                       address={inputTokenInfo?.address as Address}
                       chainId={chainId}
                       size={5}
-                      // overridePic={overrideAPic}
                     />
                     <TokenLogo
                       address={outputTokenInfo?.address as Address}
                       chainId={chainId}
                       size={5}
-                      // overridePic={overrideBPic}
                       className={css({
                         marginLeft: -2,
                       })}
@@ -236,7 +265,7 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
                       color: '#373737',
                     })}
                   >
-                    {inputTokenInfo.symbol} / {outputTokenInfo.symbol}
+                    {outputTokenInfo.symbol} / {inputTokenInfo.symbol}
                   </div>
                   <AiOutlineSwapVertical
                     width={16}
@@ -254,20 +283,10 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
                       textStyle: 'subtitle2',
                     })}
                   >
+                    1 {outputTokenInfo.symbol} ={' '}
                     {typedChartData.pairPrices.length > 0 &&
-                      (
-                        parseFloat(
-                          typedChartData.pairPrices[
-                            typedChartData.pairPrices.length - 1
-                          ].token1.tokenPrice,
-                        ) /
-                        parseFloat(
-                          typedChartData.pairPrices[
-                            typedChartData.pairPrices.length - 1
-                          ].token0.tokenPrice,
-                        )
-                      ).toFixed(6)}
-                    {'  '} {outputTokenInfo.symbol} per {inputTokenInfo.symbol}
+                      formattedTokenPrice}
+                    {inputTokenInfo.symbol} {formattedUsdPrice}
                   </HStack>
                 </HStack>
               </VStack>

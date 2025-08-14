@@ -19,14 +19,15 @@ export const useApproveWithOptionalDeposit = (chainId: number) => {
       intention: {
         ...(runeId
           ? {
-              hasRunesDeposit: true,
-              runes: [
-                {
-                  id: runeId,
-                  value: amount,
-                  address,
-                },
-              ],
+              deposit: {
+                runes: [
+                  {
+                    id: runeId,
+                    amount: amount,
+                    address,
+                  },
+                ],
+              },
             }
           : {}),
         evmTransaction: {
