@@ -17,7 +17,6 @@ type SwapDialogProps = DialogProps & {
   onSuccessfulSwap?: () => void;
   onClose: () => void;
   tokenIn: Address;
-  amountIn: bigint;
   tokenOut: Address;
 };
 
@@ -26,7 +25,6 @@ export const SwapDialog = ({
   onSuccessfulSwap,
   tokenIn,
   tokenOut,
-  amountIn,
   ...rest
 }: SwapDialogProps) => {
   const address = useEVMAddress();
