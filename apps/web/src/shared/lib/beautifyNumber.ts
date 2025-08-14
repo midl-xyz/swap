@@ -59,7 +59,7 @@ export const beautifyNumber = (
     typedValue > 0 &&
     typedValue.toFixed(overrideToFixed) === '0.00'
   ) {
-    return typedValue.toFixed(3);
+    return typedValue.toFixed(5);
   }
 
   if (overrideToFixed !== undefined) {
@@ -67,7 +67,7 @@ export const beautifyNumber = (
   }
 
   if (typedValue < 0.01) {
-    return typedValue.toFixed(4);
+    return typedValue.toFixed(5);
   }
 
   if (typedValue > 10_000_000) {

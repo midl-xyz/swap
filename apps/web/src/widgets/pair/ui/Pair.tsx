@@ -225,14 +225,14 @@ export const Pair = ({ id }: Props) => {
               <HStack>
                 <TokenLogo address={token0Address} chainId={chainId} />
                 <span>
-                  {beautifyNumber(pairData?.reserve0, 4)}{' '}
+                  {beautifyNumber(pairData?.reserve0, 5)}{' '}
                   {token0Symbol === 'WPROM' ? 'PROM' : token0Symbol}
                 </span>
               </HStack>
               <HStack>
                 <TokenLogo address={token1Address} chainId={chainId} />
                 <span>
-                  {beautifyNumber(pairData?.reserve1, 4)}{' '}
+                  {beautifyNumber(pairData?.reserve1, 5)}{' '}
                   {token1Symbol === 'WPROM' ? 'PROM' : token1Symbol}
                 </span>
               </HStack>
