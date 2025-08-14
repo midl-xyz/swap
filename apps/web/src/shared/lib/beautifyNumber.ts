@@ -1,5 +1,20 @@
 /* eslint-disable prettier/prettier */
 
+import { format } from '@/widgets/small-number/ui/SmallNumber';
+
+const superscriptMap: { [key: string]: string } = {
+  '0': '⁰',
+  '1': '¹',
+  '2': '²',
+  '3': '³',
+  '4': '⁴',
+  '5': '⁵',
+  '6': '⁶',
+  '7': '⁷',
+  '8': '⁸',
+  '9': '⁹',
+};
+
 export const beautifyNumber = (
   value: string | number | bigint | undefined | null,
   overrideToFixed?: number,
@@ -22,13 +37,37 @@ export const beautifyNumber = (
     return '0';
   }
 
-  // Show <0.01 for values less than 0.01
-  if (typedValue > 0 && typedValue < 0.01) {
-    return '<0.01';
+  const threshold = 1e-3;
+  if (typedValue < threshold) {
+    const { countZeros, significantDigits } = format(
+      Number(typedValue).toFixed(20),
+    );
+
+    if (!significantDigits) {
+      return '0';
+    }
+
+    return `0.0${superscriptMap[countZeros] || countZeros}${significantDigits}`.replace(
+      /000$/,
+      '',
+    );
+  }
+
+  // Special handling for small numbers that would round to 0.00 with overrideToFixed
+  if (
+    overrideToFixed !== undefined &&
+    typedValue > 0 &&
+    typedValue.toFixed(overrideToFixed) === '0.00'
+  ) {
+    return typedValue.toFixed(3);
   }
 
   if (overrideToFixed !== undefined) {
     return typedValue.toFixed(overrideToFixed);
+  }
+
+  if (typedValue < 0.01) {
+    return typedValue.toFixed(4);
   }
 
   if (typedValue > 10_000_000) {

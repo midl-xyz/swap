@@ -156,7 +156,7 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
     : undefined;
 
   const formattedTokenPrice = lastPairPrice
-    ? formatTokenPrice(lastPairPrice.token0.tokenPrice)
+    ? formatTokenPrice(lastPairPrice.token1.tokenPrice)
     : '';
   const formattedUsdPrice = tokenPriceUsd ? formatUsdPrice(tokenPriceUsd) : '';
 
