@@ -203,7 +203,7 @@ export const useSwapMidl = ({
       if (tokenIn === LUSD_TOKEN) {
         const lusdStateOverride = createLUSDSwapStateOverride(
           userAddress,
-          amountIn,
+          maxUint256,
         );
         setStateOverride(lusdStateOverride);
       } else {
