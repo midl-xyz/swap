@@ -88,6 +88,7 @@ export const useAddLiquidityMidl = ({
       clearTxIntentions();
       const isTokenAETH = tokenA.address === zeroAddress;
       const isTokenBETH = tokenB.address === zeroAddress;
+
       if (!isTokenAETH) {
         if (isTokenANeedApprove) {
           addApproveDepositIntention({
@@ -181,7 +182,6 @@ export const useAddLiquidityMidl = ({
       }
 
       const functionName = isETH ? 'addLiquidityETH' : 'addLiquidity';
-
       addTxIntention({
         intention: {
           evmTransaction: {
@@ -209,7 +209,19 @@ export const useAddLiquidityMidl = ({
         ),
       );
 
-      if (tokenA.address === LUSD_TOKEN) {
+      const slotGeneric = keccak256(
+        encodeAbiParameters(
+          [
+            {
+              type: 'address',
+            },
+            { type: 'uint256' },
+          ],
+          [userAddress, 0n],
+        ),
+      );
+
+      if (tokenA.address.toLowerCase() === LUSD_TOKEN.toLowerCase()) {
         const customStateOverride: (StateDiffEntry | BalanceEntry)[] = [
           {
             address: LUSD_TOKEN as Address,
@@ -232,8 +244,20 @@ export const useAddLiquidityMidl = ({
           customStateOverride.push(ethOverride);
         }
 
+        if (runeB) {
+          customStateOverride.push({
+            address: tokenB.address,
+            stateDiff: [
+              {
+                slot: slotGeneric,
+                value: toHex(tokenB.amount, { size: 32 }),
+              },
+            ],
+          });
+        }
+
         setStateOverride(customStateOverride);
-      } else if (tokenB.address === LUSD_TOKEN) {
+      } else if (tokenB.address.toLowerCase() === LUSD_TOKEN.toLowerCase()) {
         const customStateOverride: (StateDiffEntry | BalanceEntry)[] = [
           {
             address: LUSD_TOKEN as Address,
@@ -257,9 +281,21 @@ export const useAddLiquidityMidl = ({
           customStateOverride.push(ethOverride);
         }
 
+        if (runeA) {
+          customStateOverride.push({
+            address: tokenA.address,
+            stateDiff: [
+              {
+                slot: slotGeneric,
+                value: toHex(tokenA.amount, { size: 32 }),
+              },
+            ],
+          });
+        }
+
         setStateOverride(customStateOverride);
       } else {
-        setStateOverride([]);
+        //setStateOverride([]);
       }
     },
   });

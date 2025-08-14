@@ -1,9 +1,5 @@
-import { midlRegtest } from '@midl-xyz/midl-js-executor';
 import { Address } from 'viem';
 import type { Config } from 'wagmi';
-
-type UV2Library =
-  typeof import('@midl-swap/periphery/deployments/1.0.3/sepolia/UV2Library.json');
 
 type Deployments = Record<
   Config['chains'][number]['id'],
@@ -21,9 +17,9 @@ type Deployments = Record<
 export const deployments: Deployments = {
   ['777']: {
     UniswapV2Router02: {
-      address: '0xee7d81B234042AB58192E0Ef6a5004b08ca65a34',
+      address: '0xB1F1C1A72dFb4F90d3794a3496703D6cBAAC72FA',
     },
-    UniswapV2Factory: { address: '0x5B3046102F11Ac37Eea74741949bc2aF83c926E5' },
-    UV2Library: { address: '0x88bdaE217ba9782A46a02b14d51400BA5cA45a2C' },
+    UniswapV2Factory: { address: '0x7C94B93aafB0aF2F58703B56c5EF18Fd10A6Ee06' },
+    UV2Library: { address: '0x24e1aC0E5038C51A50AaDf2a4704a8eC87fE6C18' },
   },
 };

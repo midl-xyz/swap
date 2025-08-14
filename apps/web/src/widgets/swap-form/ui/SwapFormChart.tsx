@@ -255,17 +255,10 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
                     })}
                   >
                     {typedChartData.pairPrices.length > 0 &&
-                      (
-                        parseFloat(
-                          typedChartData.pairPrices[
-                            typedChartData.pairPrices.length - 1
-                          ].token1.tokenPrice,
-                        ) /
-                        parseFloat(
-                          typedChartData.pairPrices[
-                            typedChartData.pairPrices.length - 1
-                          ].token0.tokenPrice,
-                        )
+                      parseFloat(
+                        typedChartData.pairPrices[
+                          typedChartData.pairPrices.length - 1
+                        ].token0.tokenPrice,
                       ).toFixed(6)}
                     {'  '} {outputTokenInfo.symbol} per {inputTokenInfo.symbol}
                   </HStack>

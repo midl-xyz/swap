@@ -66,7 +66,6 @@ export default async function SwapPage({
     amount,
     field,
   } = await searchParams;
-  console.log(inputToken, outputToken, amount, field);
   const client = createPublicClient({
     chain: midlRegtest,
     transport: http(midlRegtest.rpcUrls.default.http[0]),
