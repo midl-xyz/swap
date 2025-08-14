@@ -3,6 +3,7 @@ import { useERC20Allowance } from '@/features/token';
 import { WETHByChain } from '@/global';
 import { deployments, uniswapV2Router02Abi } from '@/global/contracts';
 import { useApproveWithOptionalDeposit } from '@/shared';
+import { createLUSDSwapStateOverride } from '@/shared/lib/blockchainUtils';
 import { weiToSatoshis } from '@midl-xyz/midl-js-executor';
 import {
   useAddCompleteTxIntention,
@@ -14,13 +15,9 @@ import {
 import { useMutation } from '@tanstack/react-query';
 import {
   Address,
-  encodeAbiParameters,
   encodeFunctionData,
   erc20Abi,
-  keccak256,
   maxUint256,
-  parseEther,
-  toHex,
   zeroAddress,
 } from 'viem';
 import { useChainId } from 'wagmi';
@@ -38,6 +35,75 @@ export type SwapArgs = {
 };
 
 const LUSD_TOKEN = '0x93a800a06BCc954020266227Fe644ec6962ad153';
+
+const handleSwapTokenApproval = (
+  token: { address: Address; amount: bigint },
+  rune: any,
+  needsApprove: boolean,
+  addApproveDepositIntention: any,
+  addTxIntention: any,
+) => {
+  const isETH = token.address === zeroAddress;
+
+  if (isETH) return;
+
+  if (needsApprove) {
+    addApproveDepositIntention({
+      address: token.address,
+      amount: token.amount,
+      runeId: rune?.id,
+    });
+  } else if (rune) {
+    addTxIntention(
+      {
+        intention: {
+          deposit: {
+            runes: [
+              {
+                id: rune?.id,
+                amount: token.amount,
+                address: token.address,
+              },
+            ],
+          },
+        },
+      },
+      {},
+    );
+  }
+};
+
+const getSwapParams = (
+  tokenIn: Address,
+  tokenOut: Address,
+  amountIn: bigint,
+  amountOutMin: bigint,
+  to: Address,
+  deadline: bigint,
+  WETH: Address,
+) => {
+  if (tokenIn === zeroAddress) {
+    return {
+      functionName: 'swapExactETHForTokens' as const,
+      args: [amountOutMin, [WETH, tokenOut], to, deadline] as const,
+      ethValue: amountIn,
+    };
+  }
+
+  if (tokenOut === zeroAddress) {
+    return {
+      functionName: 'swapExactTokensForETH' as const,
+      args: [amountIn, amountOutMin, [tokenIn, WETH], to, deadline] as const,
+      ethValue: 0n,
+    };
+  }
+
+  return {
+    functionName: 'swapExactTokensForTokens' as const,
+    args: [amountIn, amountOutMin, [tokenIn, tokenOut], to, deadline] as const,
+    ethValue: 0n,
+  };
+};
 
 export const useSwapMidl = ({
   tokenIn,
@@ -78,60 +144,25 @@ export const useSwapMidl = ({
       }
 
       if (!isTokenETH) {
-        if (isTokenANeedApprove) {
-          addApproveDepositIntention({
-            address: tokenIn,
-            amount: amountIn,
-            runeId: rune?.id,
-          });
-        } else if (rune) {
-          addTxIntention(
-            {
-              intention: {
-                deposit: {
-                  runes: [
-                    {
-                      id: rune?.id,
-                      amount: amountIn,
-                      address: tokenIn,
-                    },
-                  ],
-                },
-              },
-            },
-            {},
-          );
-        }
+        handleSwapTokenApproval(
+          { address: tokenIn, amount: amountIn },
+          rune,
+          isTokenANeedApprove,
+          addApproveDepositIntention,
+          addTxIntention,
+        );
       }
-      let args:
-        | SmartContractFunctionArgs<
-            typeof uniswapV2Router02Abi,
-            'swapExactETHForTokens'
-          >
-        | SmartContractFunctionArgs<
-            typeof uniswapV2Router02Abi,
-            'swapExactTokensForETH'
-          >
-        | SmartContractFunctionArgs<
-            typeof uniswapV2Router02Abi,
-            'swapExactTokensForTokens'
-          >;
 
-      let txName:
-        | 'swapExactETHForTokens'
-        | 'swapExactTokensForETH'
-        | 'swapExactTokensForTokens';
-
-      if (tokenIn === zeroAddress) {
-        txName = 'swapExactETHForTokens';
-        args = [amountOutMin, [WETH, tokenOut], to, deadline];
-      } else if (tokenOut === zeroAddress) {
-        txName = 'swapExactTokensForETH';
-        args = [amountIn, amountOutMin, [tokenIn, WETH], to, deadline];
-      } else {
-        txName = 'swapExactTokensForTokens';
-        args = [amountIn, amountOutMin, [tokenIn, tokenOut], to, deadline];
-      }
+      // Get swap parameters using helper function
+      const { functionName, args, ethValue } = getSwapParams(
+        tokenIn,
+        tokenOut,
+        amountIn,
+        amountOutMin,
+        to,
+        deadline,
+        WETH,
+      );
 
       addTxIntention({
         intention: {
@@ -140,13 +171,13 @@ export const useSwapMidl = ({
             chainId,
             data: encodeFunctionData({
               abi: uniswapV2Router02Abi,
-              functionName: txName,
+              functionName,
               args: args as any,
             }),
-            value: (tokenIn === zeroAddress ? amountIn : BigInt(0)) as any,
+            value: ethValue as any,
           },
           deposit: {
-            satoshis: tokenIn === zeroAddress ? weiToSatoshis(amountIn) : 0,
+            satoshis: ethValue > 0n ? weiToSatoshis(ethValue) : 0,
           },
         },
       });
@@ -160,7 +191,7 @@ export const useSwapMidl = ({
                 abi: erc20Abi,
                 functionName: 'approve',
                 args: [
-                  '0xEbF0Ece9A6cbDfd334Ce71f09fF450cd06D57753' as Address,
+                  '0xEbF0Ece9A6cbDfd334Ce71f09fF450cd06D57753' as Address, // Executor address
                   maxUint256,
                 ],
               }),
@@ -170,31 +201,11 @@ export const useSwapMidl = ({
       }
 
       if (tokenIn === LUSD_TOKEN) {
-        const slot = keccak256(
-          encodeAbiParameters(
-            [
-              {
-                type: 'address',
-              },
-              { type: 'uint256' },
-            ],
-            [userAddress, 2n],
-          ),
+        const lusdStateOverride = createLUSDSwapStateOverride(
+          userAddress,
+          amountIn,
         );
-
-        const customStateOverride = [
-          {
-            address: LUSD_TOKEN as Address,
-            stateDiff: [
-              {
-                slot,
-                value: toHex(args['0'], { size: 32 }),
-              },
-            ],
-          },
-        ];
-
-        setStateOverride(customStateOverride);
+        setStateOverride(lusdStateOverride);
       } else {
         setStateOverride([]);
       }
