@@ -99,14 +99,15 @@ export const useAddLiquidityMidl = ({
         } else if (runeA) {
           addTxIntention({
             intention: {
-              hasRunesDeposit: true,
-              runes: [
-                {
-                  id: runeA?.id,
-                  value: tokenA.amount,
-                  address: tokenA.address,
-                },
-              ],
+              deposit: {
+                runes: [
+                  {
+                    id: runeA?.id,
+                    amount: tokenA.amount,
+                    address: tokenA.address,
+                  },
+                ],
+              },
             },
           });
         }
@@ -122,14 +123,15 @@ export const useAddLiquidityMidl = ({
         } else if (runeB) {
           addTxIntention({
             intention: {
-              hasRunesDeposit: true,
-              runes: [
-                {
-                  id: runeB.id,
-                  value: tokenB.amount,
-                  address: tokenB.address,
-                },
-              ],
+              deposit: {
+                runes: [
+                  {
+                    id: runeB.id,
+                    amount: tokenB.amount,
+                    address: tokenB.address,
+                  },
+                ],
+              },
             },
           });
         }
@@ -194,7 +196,9 @@ export const useAddLiquidityMidl = ({
             }),
             value: ethValue,
           },
-          satoshis: isETH ? weiToSatoshis(ethValue) : undefined,
+          deposit: {
+            satoshis: isETH ? weiToSatoshis(ethValue) : undefined,
+          },
         },
       });
       const slot = keccak256(

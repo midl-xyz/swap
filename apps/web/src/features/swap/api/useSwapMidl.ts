@@ -28,10 +28,10 @@ import { useChainId } from 'wagmi';
 type UseSwapMidlParams = {
   tokenIn: Address;
   amountIn: bigint;
+  tokenOut: Address;
 };
 
 export type SwapArgs = {
-  tokenOut: Address;
   amountOutMin: bigint;
   to: Address;
   deadline: bigint;
@@ -39,7 +39,11 @@ export type SwapArgs = {
 
 const LUSD_TOKEN = '0x93a800a06BCc954020266227Fe644ec6962ad153';
 
-export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
+export const useSwapMidl = ({
+  tokenIn,
+  tokenOut,
+  amountIn,
+}: UseSwapMidlParams) => {
   const address = useEVMAddress();
   const chainId = useChainId();
   const [, setStateOverride] = useStateOverride();
@@ -55,6 +59,7 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
   const { addApproveDepositIntention } = useApproveWithOptionalDeposit(chainId);
   const clearTxIntentions = useClearTxIntentions();
   const { rune } = useToken(tokenIn);
+  const { rune: runeOut } = useToken(tokenOut);
 
   const isTokenANeedApprove = allowance < amountIn && tokenIn !== zeroAddress;
 
@@ -63,7 +68,7 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
     mutateAsync: swapAsync,
     ...rest
   } = useMutation<void, Error, SwapArgs>({
-    mutationFn: async ({ to, deadline, tokenOut, amountOutMin }) => {
+    mutationFn: async ({ to, deadline, amountOutMin }) => {
       clearTxIntentions();
       const isTokenETH = tokenIn === zeroAddress;
 
@@ -83,14 +88,15 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
           addTxIntention(
             {
               intention: {
-                hasRunesDeposit: true,
-                runes: [
-                  {
-                    id: rune?.id,
-                    value: amountIn,
-                    address: tokenIn,
-                  },
-                ],
+                deposit: {
+                  runes: [
+                    {
+                      id: rune?.id,
+                      amount: amountIn,
+                      address: tokenIn,
+                    },
+                  ],
+                },
               },
             },
             {},
@@ -139,7 +145,9 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
             }),
             value: (tokenIn === zeroAddress ? amountIn : BigInt(0)) as any,
           },
-          satoshis: tokenIn === zeroAddress ? weiToSatoshis(amountIn) : 0,
+          deposit: {
+            satoshis: tokenIn === zeroAddress ? weiToSatoshis(amountIn) : 0,
+          },
         },
       });
 
@@ -190,9 +198,22 @@ export const useSwapMidl = ({ tokenIn, amountIn }: UseSwapMidlParams) => {
       } else {
         setStateOverride([]);
       }
+
+      const assetsToWithdraw =
+        tokenOut !== zeroAddress
+          ? !!runeOut
+            ? [
+                {
+                  id: runeOut?.id,
+                  amount: maxUint256,
+                  address: tokenOut,
+                },
+              ]
+            : []
+          : [];
       try {
         await addCompleteTxIntentionAsync({
-          assetsToWithdraw: tokenOut !== zeroAddress ? ([tokenOut] as any) : [],
+          runes: assetsToWithdraw,
         });
       } catch (e) {
         console.error(e);
