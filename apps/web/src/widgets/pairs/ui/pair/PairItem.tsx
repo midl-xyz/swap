@@ -100,11 +100,13 @@ export const PairItem = ({
           {(() => {
             const priceToShow =
               pair.token0.name === 'BUSD'
-                ? pair.token1.tokenMetrics.priceUSD
-                : pair.token0.tokenMetrics.priceUSD;
+                ? pair.reserve0 / pair.reserve1
+                : pair.token1.name === 'BUSD'
+                  ? pair.reserve1 / pair.reserve0 // TODO: Remove once backend is ready to return correct prices
+                  : pair.token0.tokenMetrics.priceUSD;
 
             return Boolean(Number.parseFloat(priceToShow))
-              ? `${beautifyNumber(priceToShow, 2)}$`
+              ? `${beautifyNumber(priceToShow)}$`
               : '0$';
           })()}
         </div>
