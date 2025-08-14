@@ -86,13 +86,14 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
     from: String(fromTime * 1000),
     to: String(now * 1000),
     token0Address:
-      inputTokenInfo.address === zeroAddress
-        ? WETHByChain[midlRegtest.id]
-        : inputTokenInfo.address,
-    token1Address:
       outputTokenInfo.address === zeroAddress
         ? WETHByChain[midlRegtest.id]
         : outputTokenInfo.address,
+
+    token1Address:
+      inputTokenInfo.address === zeroAddress
+        ? WETHByChain[midlRegtest.id]
+        : inputTokenInfo.address,
   });
 
   const typedChartData = chartData as PairPriceData | undefined;
@@ -115,7 +116,7 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
           ? WETHByChain[midlRegtest.id]
           : inputTokenInfo.address;
 
-      // Return the price of the token that matches the input token
+      // Swap: Return the price of the token that matches the input token
       const priceValue =
         token0.tokenAddress.toLowerCase() === inputTokenAddress.toLowerCase()
           ? parseFloat(token0.tokenPrice)
@@ -254,13 +255,20 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
                       textStyle: 'subtitle2',
                     })}
                   >
+                    1 {inputTokenInfo.symbol} ={' '}
                     {typedChartData.pairPrices.length > 0 &&
-                      parseFloat(
-                        typedChartData.pairPrices[
-                          typedChartData.pairPrices.length - 1
-                        ].token0.tokenPrice,
-                      ).toFixed(6)}
-                    {'  '} {outputTokenInfo.symbol} per {inputTokenInfo.symbol}
+                      (() => {
+                        const price = parseFloat(
+                          typedChartData.pairPrices[
+                            typedChartData.pairPrices.length - 1
+                          ].token0.tokenPrice,
+                        );
+                        const fixedPrice = price.toFixed(6);
+                        return fixedPrice.endsWith('.000000')
+                          ? Math.floor(price).toString()
+                          : fixedPrice;
+                      })()}{' '}
+                    {outputTokenInfo.symbol} ()
                   </HStack>
                 </HStack>
               </VStack>
