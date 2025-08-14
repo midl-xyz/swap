@@ -447,6 +447,7 @@ export const SwapForm = ({
               open={isDialogOpen}
               tokenOut={outputToken}
               tokenIn={inputToken}
+              amountIn={parsedInputTokenAmount.toString()}
               onClose={() => {
                 setDialogOpen(false);
               }}

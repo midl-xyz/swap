@@ -3,6 +3,7 @@ import { useERC20Allowance } from '@/features/token';
 import { WETHByChain } from '@/global';
 import { deployments, uniswapV2Router02Abi } from '@/global/contracts';
 import { useApproveWithOptionalDeposit } from '@/shared';
+import { getSwapParams } from '../lib/swapUtils';
 import { weiToSatoshis } from '@midl-xyz/midl-js-executor';
 import {
   useAddCompleteTxIntention,
@@ -61,7 +62,9 @@ export const useSwapMidl = ({
   const { rune } = useToken(tokenIn);
   const { rune: runeOut } = useToken(tokenOut);
 
-  const isTokenANeedApprove = allowance < amountIn && tokenIn !== zeroAddress;
+  const isTokenANeedApprove = amountIn
+    ? allowance < amountIn && tokenIn !== zeroAddress
+    : false;
 
   const {
     mutate: swap,
@@ -103,35 +106,16 @@ export const useSwapMidl = ({
           );
         }
       }
-      let args:
-        | SmartContractFunctionArgs<
-            typeof uniswapV2Router02Abi,
-            'swapExactETHForTokens'
-          >
-        | SmartContractFunctionArgs<
-            typeof uniswapV2Router02Abi,
-            'swapExactTokensForETH'
-          >
-        | SmartContractFunctionArgs<
-            typeof uniswapV2Router02Abi,
-            'swapExactTokensForTokens'
-          >;
-
-      let txName:
-        | 'swapExactETHForTokens'
-        | 'swapExactTokensForETH'
-        | 'swapExactTokensForTokens';
-
-      if (tokenIn === zeroAddress) {
-        txName = 'swapExactETHForTokens';
-        args = [amountOutMin, [WETH, tokenOut], to, deadline];
-      } else if (tokenOut === zeroAddress) {
-        txName = 'swapExactTokensForETH';
-        args = [amountIn, amountOutMin, [tokenIn, WETH], to, deadline];
-      } else {
-        txName = 'swapExactTokensForTokens';
-        args = [amountIn, amountOutMin, [tokenIn, tokenOut], to, deadline];
-      }
+      // Get swap parameters using helper function
+      const { functionName, args, ethValue } = getSwapParams(
+        tokenIn,
+        tokenOut,
+        amountIn,
+        amountOutMin,
+        to,
+        deadline,
+        WETH,
+      );
 
       addTxIntention({
         intention: {
@@ -140,13 +124,13 @@ export const useSwapMidl = ({
             chainId,
             data: encodeFunctionData({
               abi: uniswapV2Router02Abi,
-              functionName: txName,
+              functionName,
               args: args as any,
             }),
-            value: (tokenIn === zeroAddress ? amountIn : BigInt(0)) as any,
+            value: ethValue,
           },
           deposit: {
-            satoshis: tokenIn === zeroAddress ? weiToSatoshis(amountIn) : 0,
+            satoshis: ethValue > 0n ? weiToSatoshis(ethValue) : 0,
           },
         },
       });
