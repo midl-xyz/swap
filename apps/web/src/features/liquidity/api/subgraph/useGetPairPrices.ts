@@ -6,10 +6,12 @@ type PairPricePoint = {
   token0: {
     tokenAddress: string;
     tokenPrice: string;
+    tokenPriceUsd: string;
   };
   token1: {
     tokenAddress: string;
     tokenPrice: string;
+    tokenPriceUsd: string;
   };
   timestamp: string;
 };
@@ -40,10 +42,12 @@ const GetPairPrices = graphql(/* GraphQL */ `
       token0 {
         tokenAddress
         tokenPrice
+        tokenPriceUsd
       }
       token1 {
         tokenAddress
         tokenPrice
+        tokenPriceUsd
       }
       timestamp
     }

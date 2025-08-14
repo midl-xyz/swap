@@ -6,7 +6,7 @@ import {
   SeriesOptionsCommon,
   TimeChartOptions,
 } from 'lightweight-charts';
-import { format } from '@/widgets';
+import { formatUsdPrice } from '@/shared/lib/formatPrice';
 
 export const chartOptions: DeepPartial<ChartOptions> = {
   layout: {
@@ -63,32 +63,10 @@ export const areaOptions: DeepPartial<AreaStyleOptions & SeriesOptionsCommon> =
     priceLineVisible: true,
     lineType: LineType.Curved,
     pointMarkersVisible: false,
-    // priceFormat: {
-    //   type: 'custom',
-    //   minMove: 0.000000001,
-    //   formatter: (price: number) => price,
-    // },
     priceFormat: {
       type: 'custom',
       minMove: 0.000000001,
-      formatter: (price: number) => {
-        const threshold = 1e-3;
-        if (price < threshold) {
-          const { countZeros, significantDigits } = format(
-            Number(price).toFixed(20),
-          );
-
-          if (!significantDigits) {
-            return '$0';
-          }
-
-          return `0.0${superscriptMap[countZeros] || countZeros}${significantDigits}`.replace(
-            /000$/,
-            '',
-          );
-        }
-        return `${price.toFixed(2)}`;
-      },
+      formatter: (price: number) => formatUsdPrice(price),
     },
   };
 
