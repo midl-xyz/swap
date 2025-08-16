@@ -15,15 +15,22 @@
     "incremental": true,
     "plugins": [
       {
-        "name": "next",
-      },
+        "name": "next"
+      }
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "~/styled-system/*": ["./styled-system/*"],
+      "~/styled-system/*": ["./styled-system/*"]
     },
-    "typeRoots": ["./node_modules/@types", "./types"],
+    "typeRoots": ["./node_modules/@types", "./types"]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/app/(app-layout)/swap/page.tsx",
+    "src/app/(app-layout)/swap/page.tsx"
+  ],
+  "exclude": ["node_modules"]
 }
