@@ -1,6 +1,5 @@
-import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
-import { Address } from 'viem';
+import { Address, StateOverride } from 'viem';
 
 /**
  *       const slot = keccak256(
@@ -41,7 +40,7 @@ export type BalanceEntry = {
   balance: bigint; // use `bigint` (the primitive) rather than `BigInt`
 };
 
-export const stateOverride = atomWithStorage<(StateDiffEntry | BalanceEntry)[]>(
+export const stateOverride = atomWithStorage<StateOverride>(
   'stateOverride',
   [],
 );

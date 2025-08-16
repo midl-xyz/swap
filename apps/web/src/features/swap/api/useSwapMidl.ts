@@ -21,6 +21,7 @@ import {
   keccak256,
   maxUint256,
   parseEther,
+  StateOverride,
   toHex,
   zeroAddress,
 } from 'viem';
@@ -88,22 +89,19 @@ export const useSwapMidl = ({
             runeId: rune?.id,
           });
         } else if (rune) {
-          addTxIntention(
-            {
-              intention: {
-                deposit: {
-                  runes: [
-                    {
-                      id: rune?.id,
-                      amount: amountIn,
-                      address: tokenIn,
-                    },
-                  ],
-                },
+          addTxIntention({
+            intention: {
+              deposit: {
+                runes: [
+                  {
+                    id: rune?.id,
+                    amount: amountIn,
+                    address: tokenIn,
+                  },
+                ],
               },
             },
-            {},
-          );
+          });
         }
       }
       // Get swap parameters using helper function
@@ -166,7 +164,7 @@ export const useSwapMidl = ({
           ),
         );
 
-        let customStateOverride = [
+        let customStateOverride: StateOverride = [
           {
             address: LUSD_TOKEN as Address,
             stateDiff: [
@@ -181,7 +179,7 @@ export const useSwapMidl = ({
         customStateOverride.push({
           address: userAddress,
           balance: parseEther('0.1'),
-        } as any);
+        });
 
         setStateOverride(customStateOverride);
       } else {

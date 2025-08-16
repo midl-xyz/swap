@@ -1,5 +1,4 @@
-import { stateOverride, useStateOverride } from '@/features/state-override';
-import { deployments } from '@/global';
+import { useStateOverride } from '@/features/state-override';
 import { Button } from '@/shared';
 import {
   useAddTxIntention,
@@ -10,7 +9,6 @@ import {
 import { useConfig, useWaitForTransaction } from '@midl-xyz/midl-js-react';
 import toast from 'react-hot-toast';
 import { Address } from 'viem';
-import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
 
@@ -128,9 +126,7 @@ export const IntentionSigner = ({
           <p>Sign BTC transaction</p>
           <Button
             onClick={() => {
-              const params: any = {
-                assetsToWithdrawSize: assetsToWithdraw?.length || 0,
-              };
+              const params: Parameters<typeof finalizeBTCTransaction>[0] = {};
 
               if (customStateOverride && customStateOverride.length > 0) {
                 params.stateOverride = customStateOverride;

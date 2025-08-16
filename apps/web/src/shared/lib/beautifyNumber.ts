@@ -70,13 +70,29 @@ export const beautifyNumber = (
     return typedValue.toFixed(5);
   }
 
-  if (typedValue > 10_000_000) {
-    return typedValue.toFixed(1);
+  if (typedValue >= 10_000) {
+    return Math.round(typedValue).toLocaleString('en-US');
   }
 
-  if (typedValue > 10_000) {
+  if (typedValue > 1_000) {
+    const formatted = typedValue.toFixed(1);
+    return Number(formatted).toLocaleString('en-US', {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    });
+  }
+
+  if (typedValue > 100) {
     return typedValue.toFixed(2);
   }
 
-  return typedValue.toFixed(6);
+  if (typedValue > 10) {
+    return typedValue.toFixed(2);
+  }
+
+  if (typedValue > 1) {
+    return typedValue.toFixed(3);
+  }
+
+  return typedValue.toFixed(4);
 };

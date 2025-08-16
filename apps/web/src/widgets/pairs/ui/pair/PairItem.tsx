@@ -85,13 +85,13 @@ export const PairItem = ({
         <div className={css({ display: 'table-cell' })}>
           {/* biome-ignore lint/complexity/noExtraBooleanCast: <explanation> */}
           {Boolean(Number.parseFloat(pair.tradeVolumeUSD24h))
-            ? `${beautifyNumber(pair.tradeVolumeUSD24h, 2)}$`
+            ? `${beautifyNumber(pair.tradeVolumeUSD24h)}$`
             : '0$'}
         </div>
         <div className={css({ display: 'table-cell' })}>
           {/* biome-ignore lint/complexity/noExtraBooleanCast: <explanation> */}
           {Boolean(Number.parseFloat(pair.liquidityUSD))
-            ? `${beautifyNumber(pair.liquidityUSD, 2)}$`
+            ? `${beautifyNumber(pair.liquidityUSD)}$`
             : '0$'}
         </div>
 
