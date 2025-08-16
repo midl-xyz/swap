@@ -12,37 +12,37 @@ import { hstack } from '~/styled-system/patterns';
 export default function LiquidityPage() {
   const router = useRouter();
 
-  return (
-    <>
-      <div
-        className={hstack({
-          gap: 24,
-          justifyContent: 'space-between',
-        })}
-      >
-        <h1
-          className={css({
-            textStyle: 'h2',
-          })}
-        >
-          My Liquidity
-        </h1>
-        {/* Imperatively navigate to "/liquidity/new" when the button is clicked */}
-        <Button
-          appearance="tertiary"
-          onClick={() =>
-            startTransition(() => {
-              router.push('/liquidity/new');
-            })
-          }
-        >
-          Add Liquidity
-        </Button>
-      </div>
+  // return (
+  //   <>
+  //     <div
+  //       className={hstack({
+  //         gap: 24,
+  //         justifyContent: 'space-between',
+  //       })}
+  //     >
+  //       <h1
+  //         className={css({
+  //           textStyle: 'h2',
+  //         })}
+  //       >
+  //         My Liquidity
+  //       </h1>
+  //       {/* Imperatively navigate to "/liquidity/new" when the button is clicked */}
+  //       <Button
+  //         appearance="tertiary"
+  //         onClick={() =>
+  //           startTransition(() => {
+  //             router.push('/liquidity/new');
+  //           })
+  //         }
+  //       >
+  //         Add Liquidity
+  //       </Button>
+  //     </div>
 
-      <Suspense fallback={<AppPreloader />}>
-        <Liquidity />
-      </Suspense>
-    </>
-  );
+  //     <Suspense fallback={<AppPreloader />}>
+  //       <Liquidity />
+  //     </Suspense>
+  //   </>
+  // );
 }
