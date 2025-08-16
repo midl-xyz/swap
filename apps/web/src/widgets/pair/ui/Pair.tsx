@@ -90,6 +90,8 @@ export const Pair = ({ id }: Props) => {
     },
   ];
 
+  console.log('delta: ', pairData?.tradeVolume24hDelta);
+
   return (
     <Stack background="white" padding={{ base: 2, md: 7 }}>
       <VStack
@@ -178,9 +180,9 @@ export const Pair = ({ id }: Props) => {
                 justifyContent: 'space-between',
               })}
             >
-              <span>${beautifyNumber(pairData?.liquidityUSD, 2)}</span>
+              <span>${beautifyNumber(pairData?.liquidityUSD)}</span>
               <span className={css({ fontWeight: 500, color: '#51935C' })}>
-                {beautifyNumber(pairData?.liquidity24hDelta, 2)}%
+                {beautifyNumber(pairData?.liquidity24hDelta)}%
               </span>
             </HStack>
           </PairField>
@@ -193,10 +195,10 @@ export const Pair = ({ id }: Props) => {
                 justifyContent: 'space-between',
               })}
             >
-              <span>${beautifyNumber(pairData?.tradeVolumeUSD24h, 2)}</span>
-              <span className={css({ fontWeight: 500, color: '#51935C' })}>
-                {beautifyNumber(pairData?.tradeVolume24hDelta, 2)}%
-              </span>
+              <span>${beautifyNumber(pairData?.tradeVolumeUSD24h)}</span>
+              {/* <span className={css({ fontWeight: 500, color: '#51935C' })}>
+                {beautifyNumber(pairData?.tradeVolume24hDelta)}%
+              </span> */}
             </HStack>
           </PairField>
         </Stack>
@@ -214,10 +216,10 @@ export const Pair = ({ id }: Props) => {
                 justifyContent: 'space-between',
               })}
             >
-              <span>{beautifyNumber(pairData?.feesUSD24h, 2)}</span>
-              <span className={css({ fontWeight: 500, color: '#51935C' })}>
-                {beautifyNumber(pairData?.fees24hDelta, 2)}%
-              </span>
+              <span>{beautifyNumber(pairData?.feesUSD24h)}</span>
+              {/* <span className={css({ fontWeight: 500, color: '#51935C' })}>
+                {beautifyNumber(pairData?.fees24hDelta)}%
+              </span> */}
             </HStack>
           </PairField>
           <PairField name="Pooled Tokens">
@@ -225,14 +227,14 @@ export const Pair = ({ id }: Props) => {
               <HStack>
                 <TokenLogo address={token0Address} chainId={chainId} />
                 <span>
-                  {beautifyNumber(pairData?.reserve0, 5)}{' '}
+                  {beautifyNumber(pairData?.reserve0)}{' '}
                   {token0Symbol === 'WPROM' ? 'PROM' : token0Symbol}
                 </span>
               </HStack>
               <HStack>
                 <TokenLogo address={token1Address} chainId={chainId} />
                 <span>
-                  {beautifyNumber(pairData?.reserve1, 5)}{' '}
+                  {beautifyNumber(pairData?.reserve1)}{' '}
                   {token1Symbol === 'WPROM' ? 'PROM' : token1Symbol}
                 </span>
               </HStack>
