@@ -81,18 +81,14 @@ export default async function SwapPage({
         }),
       )}
     >
-      <ErrorScreen
-        name="Just a minute!"
-        description="We are performing some updates. Please come back in 10 minutes"
-      />
-      {/* <Suspense fallback={<AppPreloader />}>
+      <Suspense fallback={<AppPreloader />}>
         <SwapForm
           inputToken={await getRuneOrAddress(inputToken, client)}
           outputToken={await getRuneOrAddress(outputToken, client)}
           amount={amount}
           field={field}
         />
-      </Suspense> */}
+      </Suspense>
     </main>
   );
 }
