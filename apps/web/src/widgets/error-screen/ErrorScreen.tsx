@@ -1,12 +1,8 @@
 'use client';
 
-import { type FC, useEffect, useRef } from 'react';
-import { Button } from '@/shared';
-import { gsap } from 'gsap';
-import BackgroundSvg from './assets/background.svg';
-import Link from 'next/link';
-import { VStack } from '~/styled-system/jsx';
+import { type FC } from 'react';
 import { css } from '~/styled-system/css';
+import { VStack } from '~/styled-system/jsx';
 
 type Props = {
   name: string;
