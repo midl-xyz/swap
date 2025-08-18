@@ -1,4 +1,5 @@
 import { AppPreloader, SwapForm } from '@/widgets';
+import { ErrorScreen } from '@/widgets/error-screen/ErrorScreen';
 import { createConfig, getRune, regtest } from '@midl-xyz/midl-js-core';
 import {
   executorAbi,
@@ -80,14 +81,18 @@ export default async function SwapPage({
         }),
       )}
     >
-      <Suspense fallback={<AppPreloader />}>
+      <ErrorScreen
+        name="Just a minute!"
+        description="We are performing some updates. Please come back in 10 minutes"
+      />
+      {/* <Suspense fallback={<AppPreloader />}>
         <SwapForm
           inputToken={await getRuneOrAddress(inputToken, client)}
           outputToken={await getRuneOrAddress(outputToken, client)}
           amount={amount}
           field={field}
         />
-      </Suspense>
+      </Suspense> */}
     </main>
   );
 }
