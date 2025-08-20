@@ -2,8 +2,6 @@ import { useStateOverride } from '@/features/state-override';
 import { useERC20Allowance } from '@/features/token';
 import { WETHByChain } from '@/global';
 import { deployments, uniswapV2Router02Abi } from '@/global/contracts';
-import { useApproveWithOptionalDeposit } from '@/shared';
-import { getSwapParams } from '../lib/swapUtils';
 import { weiToSatoshis } from '@midl-xyz/midl-js-executor';
 import {
   useAddCompleteTxIntention,
@@ -26,6 +24,7 @@ import {
   zeroAddress,
 } from 'viem';
 import { useChainId } from 'wagmi';
+import { getSwapParams } from '../lib/swapUtils';
 
 type UseSwapMidlParams = {
   tokenIn: Address;
@@ -58,7 +57,6 @@ export const useSwapMidl = ({
 
   const { addTxIntention } = useAddTxIntention();
   const { addCompleteTxIntentionAsync } = useAddCompleteTxIntention();
-  const { addApproveDepositIntention } = useApproveWithOptionalDeposit(chainId);
   const clearTxIntentions = useClearTxIntentions();
   const { rune } = useToken(tokenIn);
   const { rune: runeOut } = useToken(tokenOut);
@@ -83,22 +81,18 @@ export const useSwapMidl = ({
 
       if (!isTokenETH) {
         if (isTokenANeedApprove) {
-          addApproveDepositIntention({
-            address: tokenIn,
-            amount: amountIn,
-            runeId: rune?.id,
-          });
-        } else if (rune) {
           addTxIntention({
             intention: {
-              deposit: {
-                runes: [
-                  {
-                    id: rune?.id,
-                    amount: amountIn,
-                    address: tokenIn,
-                  },
-                ],
+              evmTransaction: {
+                to: tokenIn,
+                data: encodeFunctionData({
+                  abi: erc20Abi,
+                  functionName: 'approve',
+                  args: [
+                    deployments[chainId].UniswapV2Router02.address,
+                    maxUint256 - 1n,
+                  ],
+                }),
               },
             },
           });
@@ -129,6 +123,9 @@ export const useSwapMidl = ({
           },
           deposit: {
             satoshis: ethValue > 0n ? weiToSatoshis(ethValue) : 0,
+            runes: rune
+              ? [{ id: rune.id, amount: amountIn, address: tokenIn }]
+              : [],
           },
         },
       });
