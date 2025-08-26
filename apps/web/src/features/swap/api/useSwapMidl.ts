@@ -1,5 +1,5 @@
 import { useStateOverride } from '@/features/state-override';
-import { useERC20Allowance } from '@/features/token';
+import { useERC20Allowance, useTokenBalance } from '@/features/token';
 import { WETHByChain } from '@/global';
 import { deployments, uniswapV2Router02Abi } from '@/global/contracts';
 import { weiToSatoshis } from '@midl-xyz/midl-js-executor';
@@ -60,6 +60,9 @@ export const useSwapMidl = ({
   const clearTxIntentions = useClearTxIntentions();
   const { rune } = useToken(tokenIn);
   const { rune: runeOut } = useToken(tokenOut);
+
+  const { data } = useTokenBalance(tokenIn);
+  const evmOnlyTokenInBalance = data.evmOnlyBalance;
 
   const isTokenANeedApprove = amountIn
     ? allowance < amountIn && tokenIn !== zeroAddress
@@ -124,7 +127,13 @@ export const useSwapMidl = ({
           deposit: {
             satoshis: ethValue > 0n ? weiToSatoshis(ethValue) : 0,
             runes: rune
-              ? [{ id: rune.id, amount: amountIn, address: tokenIn }]
+              ? [
+                  {
+                    id: rune.id,
+                    amount: amountIn - (evmOnlyTokenInBalance || 0n),
+                    address: tokenIn,
+                  },
+                ]
               : [],
           },
         },
