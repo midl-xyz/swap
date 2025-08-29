@@ -5,6 +5,7 @@ import {
   TokenDialogProvider,
   Web3Provider,
 } from '@/global';
+import { ErrorScreen } from '@/widgets/error-screen';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { ReactNode } from 'react';
@@ -58,6 +59,11 @@ export const metadata: Metadata = {
   },
 };
 
+const envMaintenance = (process.env.NEXT_PUBLIC_IS_MAINTENANCE ?? '') as string;
+const isMaintenance = ['1', 'true', 'yes', 'on'].includes(
+  envMaintenance.toLowerCase(),
+);
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -84,47 +90,55 @@ export default function RootLayout({
           }),
         )}
       >
-        <Web3Provider cookie={cookie}>
-          <FiatQuotesProvider>
-            <TokenDialogProvider />
-            <SettingsDialogProvider />
-            <RemoveLiquidityProvider />
-            <RPCStatus />
-            <Header
-              leftSlot={
+        {isMaintenance ? (
+          <ErrorScreen
+            buttonHref="https://midl.xyz/"
+            name="Maintenance"
+            description="Please wait for 15 minutes - we'll be back soon"
+          />
+        ) : (
+          <Web3Provider cookie={cookie}>
+            <FiatQuotesProvider>
+              <TokenDialogProvider />
+              <SettingsDialogProvider />
+              <RemoveLiquidityProvider />
+              <RPCStatus />
+              <Header
+                leftSlot={
+                  <div
+                    className={hstack({
+                      gap: 24,
+                    })}
+                  >
+                    <Link href="/">
+                      <Logo />
+                    </Link>
+                  </div>
+                }
+                centerSlot={<AppMenu />}
+                rightSlot={
+                  <div className={hstack({ gap: 4 })}>
+                    <AccountButton />
+                  </div>
+                }
+              />
+              <Toaster position="bottom-right" />
+              <ErrorBoundary fallback={renderErrorMessage}>
                 <div
-                  className={hstack({
-                    gap: 24,
+                  className={css({
+                    paddingBlock: 4,
+                    flexGrow: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
                   })}
                 >
-                  <Link href="/">
-                    <Logo />
-                  </Link>
+                  {children}
                 </div>
-              }
-              centerSlot={<AppMenu />}
-              rightSlot={
-                <div className={hstack({ gap: 4 })}>
-                  <AccountButton />
-                </div>
-              }
-            />
-            <Toaster position="bottom-right" />
-            <ErrorBoundary fallback={renderErrorMessage}>
-              <div
-                className={css({
-                  paddingBlock: 4,
-                  flexGrow: 1,
-                  display: 'flex',
-                  flexDirection: 'column',
-                })}
-              >
-                {children}
-              </div>
-              <Footer />
-            </ErrorBoundary>
-          </FiatQuotesProvider>
-        </Web3Provider>
+                <Footer />
+              </ErrorBoundary>
+            </FiatQuotesProvider>
+          </Web3Provider>
+        )}
       </body>
     </html>
   );

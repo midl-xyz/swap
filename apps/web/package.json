@@ -28,6 +28,7 @@
     "evm-maths": "^6.2.0",
     "graphql": "^16.8.1",
     "graphql-request": "5",
+    "gsap": "^3.13.0",
     "jotai": "^2.6.4",
     "lucide-react": "^0.336.0",
     "millify": "^6.1.0",
