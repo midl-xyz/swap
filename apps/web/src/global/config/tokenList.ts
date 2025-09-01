@@ -15,7 +15,7 @@ export const tokenList: Token[] = [
   {
     symbol: 'MIDL•RUNE•STABLECOIN',
     name: 'MIDL•RUNE•STABLECOIN',
-    address: '0x93a800a06BCc954020266227Fe644ec6962ad153',
+    address: '0x96CF4e1F1FE0364f9Ae6C760adDc9a0160d3a3A5',
     chainId: midlRegtest.id,
     decimals: 18,
     logoURI: '/images/stablecoin.png',
