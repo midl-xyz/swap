@@ -21,6 +21,7 @@ export const useTokenBalance = (
   const userAddress = useEVMAddress();
   const { ordinalsAccount } = useAccounts();
   const { balance: btcBalance } = useBTCBalance({});
+  const evmNativeTokenBalance = useBalance();
 
   const convertedBTCBalance = btcBalance * 10 ** 10;
   const contracts: any[] = [
@@ -98,6 +99,7 @@ export const useTokenBalance = (
     totalSupply?: bigint;
     balance?: bigint;
     formattedBalance?: string;
+    evmOnlyBalance?: bigint;
   } = useMemo(
     () => ({
       decimals: rune?.divisibility ?? (data?.[0]?.result as number),
@@ -105,6 +107,7 @@ export const useTokenBalance = (
       symbol: rune?.symbol ?? (data?.[2]?.result as string),
       totalSupply: data?.[3]?.result as bigint,
       balance: combinedBalance,
+      evmOnlyBalance: (data?.[4]?.result as bigint) || 0n,
       formattedBalance:
         decimals > 0
           ? formatUnits(combinedBalance, decimals)
@@ -122,6 +125,7 @@ export const useTokenBalance = (
         totalSupply: 0,
         balance: BigInt(convertedBTCBalance ?? 0),
         formattedBalance: formatUnits(BigInt(convertedBTCBalance ?? 0), 18),
+        evmOnlyBalance: evmNativeTokenBalance.data?.value || 0n,
       },
       ...restBalance,
     };

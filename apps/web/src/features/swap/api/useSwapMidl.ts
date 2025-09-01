@@ -1,9 +1,7 @@
 import { useStateOverride } from '@/features/state-override';
-import { useERC20Allowance } from '@/features/token';
+import { useERC20Allowance, useTokenBalance } from '@/features/token';
 import { WETHByChain } from '@/global';
 import { deployments, uniswapV2Router02Abi } from '@/global/contracts';
-import { useApproveWithOptionalDeposit } from '@/shared';
-import { createLUSDSwapStateOverride } from '@/shared/lib/blockchainUtils';
 import { weiToSatoshis } from '@midl-xyz/midl-js-executor';
 import {
   useAddCompleteTxIntention,
@@ -15,12 +13,18 @@ import {
 import { useMutation } from '@tanstack/react-query';
 import {
   Address,
+  encodeAbiParameters,
   encodeFunctionData,
   erc20Abi,
+  keccak256,
   maxUint256,
+  parseEther,
+  StateOverride,
+  toHex,
   zeroAddress,
 } from 'viem';
 import { useChainId } from 'wagmi';
+import { getSwapParams } from '../lib/swapUtils';
 
 type UseSwapMidlParams = {
   tokenIn: Address;
@@ -35,75 +39,6 @@ export type SwapArgs = {
 };
 
 const LUSD_TOKEN = '0x93a800a06BCc954020266227Fe644ec6962ad153';
-
-const handleSwapTokenApproval = (
-  token: { address: Address; amount: bigint },
-  rune: any,
-  needsApprove: boolean,
-  addApproveDepositIntention: any,
-  addTxIntention: any,
-) => {
-  const isETH = token.address === zeroAddress;
-
-  if (isETH) return;
-
-  if (needsApprove) {
-    addApproveDepositIntention({
-      address: token.address,
-      amount: token.amount,
-      runeId: rune?.id,
-    });
-  } else if (rune) {
-    addTxIntention(
-      {
-        intention: {
-          deposit: {
-            runes: [
-              {
-                id: rune?.id,
-                amount: token.amount,
-                address: token.address,
-              },
-            ],
-          },
-        },
-      },
-      {},
-    );
-  }
-};
-
-const getSwapParams = (
-  tokenIn: Address,
-  tokenOut: Address,
-  amountIn: bigint,
-  amountOutMin: bigint,
-  to: Address,
-  deadline: bigint,
-  WETH: Address,
-) => {
-  if (tokenIn === zeroAddress) {
-    return {
-      functionName: 'swapExactETHForTokens' as const,
-      args: [amountOutMin, [WETH, tokenOut], to, deadline] as const,
-      ethValue: amountIn,
-    };
-  }
-
-  if (tokenOut === zeroAddress) {
-    return {
-      functionName: 'swapExactTokensForETH' as const,
-      args: [amountIn, amountOutMin, [tokenIn, WETH], to, deadline] as const,
-      ethValue: 0n,
-    };
-  }
-
-  return {
-    functionName: 'swapExactTokensForTokens' as const,
-    args: [amountIn, amountOutMin, [tokenIn, tokenOut], to, deadline] as const,
-    ethValue: 0n,
-  };
-};
 
 export const useSwapMidl = ({
   tokenIn,
@@ -122,12 +57,16 @@ export const useSwapMidl = ({
 
   const { addTxIntention } = useAddTxIntention();
   const { addCompleteTxIntentionAsync } = useAddCompleteTxIntention();
-  const { addApproveDepositIntention } = useApproveWithOptionalDeposit(chainId);
   const clearTxIntentions = useClearTxIntentions();
   const { rune } = useToken(tokenIn);
   const { rune: runeOut } = useToken(tokenOut);
 
-  const isTokenANeedApprove = allowance < amountIn && tokenIn !== zeroAddress;
+  const { data } = useTokenBalance(tokenIn);
+  const evmOnlyTokenInBalance = data.evmOnlyBalance;
+
+  const isTokenANeedApprove = amountIn
+    ? allowance < amountIn && tokenIn !== zeroAddress
+    : false;
 
   const {
     mutate: swap,
@@ -144,15 +83,24 @@ export const useSwapMidl = ({
       }
 
       if (!isTokenETH) {
-        handleSwapTokenApproval(
-          { address: tokenIn, amount: amountIn },
-          rune,
-          isTokenANeedApprove,
-          addApproveDepositIntention,
-          addTxIntention,
-        );
+        if (isTokenANeedApprove) {
+          addTxIntention({
+            intention: {
+              evmTransaction: {
+                to: tokenIn,
+                data: encodeFunctionData({
+                  abi: erc20Abi,
+                  functionName: 'approve',
+                  args: [
+                    deployments[chainId].UniswapV2Router02.address,
+                    maxUint256 - 1n,
+                  ],
+                }),
+              },
+            },
+          });
+        }
       }
-
       // Get swap parameters using helper function
       const { functionName, args, ethValue } = getSwapParams(
         tokenIn,
@@ -174,10 +122,19 @@ export const useSwapMidl = ({
               functionName,
               args: args as any,
             }),
-            value: ethValue as any,
+            value: ethValue,
           },
           deposit: {
             satoshis: ethValue > 0n ? weiToSatoshis(ethValue) : 0,
+            runes: rune
+              ? [
+                  {
+                    id: rune.id,
+                    amount: amountIn - (evmOnlyTokenInBalance || 0n),
+                    address: tokenIn,
+                  },
+                ]
+              : [],
           },
         },
       });
@@ -191,7 +148,7 @@ export const useSwapMidl = ({
                 abi: erc20Abi,
                 functionName: 'approve',
                 args: [
-                  '0xEbF0Ece9A6cbDfd334Ce71f09fF450cd06D57753' as Address, // Executor address
+                  '0xEbF0Ece9A6cbDfd334Ce71f09fF450cd06D57753' as Address,
                   maxUint256,
                 ],
               }),
@@ -201,11 +158,36 @@ export const useSwapMidl = ({
       }
 
       if (tokenIn === LUSD_TOKEN) {
-        const lusdStateOverride = createLUSDSwapStateOverride(
-          userAddress,
-          amountIn,
+        const slot = keccak256(
+          encodeAbiParameters(
+            [
+              {
+                type: 'address',
+              },
+              { type: 'uint256' },
+            ],
+            [userAddress, 2n],
+          ),
         );
-        setStateOverride(lusdStateOverride);
+
+        let customStateOverride: StateOverride = [
+          {
+            address: LUSD_TOKEN as Address,
+            stateDiff: [
+              {
+                slot,
+                value: toHex(args['0'], { size: 32 }),
+              },
+            ],
+          },
+        ];
+
+        customStateOverride.push({
+          address: userAddress,
+          balance: parseEther('0.1'),
+        });
+
+        setStateOverride(customStateOverride);
       } else {
         setStateOverride([]);
       }

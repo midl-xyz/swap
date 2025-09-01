@@ -21,6 +21,9 @@ const shortenName = (name: string | undefined) => {
   if (name.length <= 8) return name; // no need to shorten
   return `${name.slice(0, 4)}...${name.slice(-4)}`;
 };
+const isBUSD = (symbol: string) => symbol === 'BUSD';
+const getDisplayName = (tokenSymbol: string, tokenName: string) =>
+  isBUSD(tokenSymbol) ? 'MIDLRUNESTABLECOIN' : tokenName;
 
 interface Props {
   id: string;
@@ -40,14 +43,35 @@ export const Pair = ({ id }: Props) => {
 
   const token0Address = pairData?.token0.id as Address;
   const token1Address = pairData?.token1.id as Address;
-  const token0Symbol =
-    pairData?.token0.symbol === 'BUSD'
-      ? 'MIDLRUNESTABLECOIN'
-      : pairData?.token0.name;
-  const token1Symbol =
-    pairData?.token1.symbol === 'BUSD'
-      ? 'MIDLRUNESTABLECOIN'
-      : pairData?.token1.name;
+
+  const isToken0BUSD = isBUSD(pairData?.token0.symbol || '');
+  const isToken1BUSD = isBUSD(pairData?.token1.symbol || '');
+  const isPairedWithBUSD = isToken0BUSD || isToken1BUSD;
+
+  const token0Symbol = getDisplayName(
+    pairData?.token0.symbol || '',
+    pairData?.token0.name || '',
+  );
+  const token1Symbol = getDisplayName(
+    pairData?.token1.symbol || '',
+    pairData?.token1.name || '',
+  );
+
+  // Business requested to do manual mapping of prices and show reserves as an actual price
+  const getTokenUSDPrice = (
+    tokenMetrics: any,
+    tokenPrice: number,
+    isTokenBUSD: boolean,
+    isOtherTokenBUSD: boolean,
+  ) => {
+    if (isTokenBUSD) {
+      return tokenMetrics?.priceUSD || 1;
+    }
+    if (isOtherTokenBUSD && isPairedWithBUSD) {
+      return tokenPrice;
+    }
+    return tokenMetrics?.priceUSD;
+  };
 
   const pairInformation = [
     {
@@ -78,7 +102,12 @@ export const Pair = ({ id }: Props) => {
       tokenSymbol: token0Symbol,
       priceInToken: pairData?.token1Price || 0,
       secondTokenSymbol: token1Symbol,
-      priceUsd: pairData?.token0?.tokenMetrics.priceUSD,
+      priceUsd: getTokenUSDPrice(
+        pairData?.token0?.tokenMetrics,
+        pairData?.token1Price || 0,
+        isToken0BUSD,
+        isToken1BUSD,
+      ),
     },
     {
       address: token1Address,
@@ -86,9 +115,16 @@ export const Pair = ({ id }: Props) => {
       tokenSymbol: token1Symbol,
       priceInToken: pairData?.token0Price || 0,
       secondTokenSymbol: token0Symbol,
-      priceUsd: pairData?.token1?.tokenMetrics.priceUSD,
+      priceUsd: getTokenUSDPrice(
+        pairData?.token1?.tokenMetrics,
+        pairData?.token0Price || 0,
+        isToken1BUSD,
+        isToken0BUSD,
+      ),
     },
   ];
+
+  console.log('delta: ', pairData?.tradeVolume24hDelta);
 
   return (
     <Stack background="white" padding={{ base: 2, md: 7 }}>
@@ -112,13 +148,15 @@ export const Pair = ({ id }: Props) => {
                 textTransform: 'uppercase',
               })}
             >
-              {pairData?.token0.name === 'BUSD'
-                ? 'MIDLRUNESTABLECOIN'
-                : pairData?.token0.name}
+              {getDisplayName(
+                pairData?.token0.symbol || '',
+                pairData?.token0.name || '',
+              )}
               -
-              {pairData?.token1.symbol === 'BUSD'
-                ? 'MIDLRUNESTABLECOIN'
-                : pairData?.token1.name}
+              {getDisplayName(
+                pairData?.token1.symbol || '',
+                pairData?.token1.name || '',
+              )}
             </span>
             <span
               className={css({
@@ -178,9 +216,9 @@ export const Pair = ({ id }: Props) => {
                 justifyContent: 'space-between',
               })}
             >
-              <span>${beautifyNumber(pairData?.liquidityUSD, 2)}</span>
+              <span>${beautifyNumber(pairData?.liquidityUSD)}</span>
               <span className={css({ fontWeight: 500, color: '#51935C' })}>
-                {beautifyNumber(pairData?.liquidity24hDelta, 2)}%
+                {beautifyNumber(pairData?.liquidity24hDelta)}%
               </span>
             </HStack>
           </PairField>
@@ -193,10 +231,10 @@ export const Pair = ({ id }: Props) => {
                 justifyContent: 'space-between',
               })}
             >
-              <span>${beautifyNumber(pairData?.tradeVolumeUSD24h, 2)}</span>
-              <span className={css({ fontWeight: 500, color: '#51935C' })}>
-                {beautifyNumber(pairData?.tradeVolume24hDelta, 2)}%
-              </span>
+              <span>${beautifyNumber(pairData?.tradeVolumeUSD24h)}</span>
+              {/* <span className={css({ fontWeight: 500, color: '#51935C' })}>
+                {beautifyNumber(pairData?.tradeVolume24hDelta)}%
+              </span> */}
             </HStack>
           </PairField>
         </Stack>
@@ -214,10 +252,10 @@ export const Pair = ({ id }: Props) => {
                 justifyContent: 'space-between',
               })}
             >
-              <span>{beautifyNumber(pairData?.feesUSD24h, 2)}</span>
-              <span className={css({ fontWeight: 500, color: '#51935C' })}>
-                {beautifyNumber(pairData?.fees24hDelta, 2)}%
-              </span>
+              <span>{beautifyNumber(pairData?.feesUSD24h)}</span>
+              {/* <span className={css({ fontWeight: 500, color: '#51935C' })}>
+                {beautifyNumber(pairData?.fees24hDelta)}%
+              </span> */}
             </HStack>
           </PairField>
           <PairField name="Pooled Tokens">
@@ -225,15 +263,13 @@ export const Pair = ({ id }: Props) => {
               <HStack>
                 <TokenLogo address={token0Address} chainId={chainId} />
                 <span>
-                  {beautifyNumber(pairData?.reserve0, 4)}{' '}
-                  {token0Symbol === 'WPROM' ? 'PROM' : token0Symbol}
+                  {beautifyNumber(pairData?.reserve0)} {token0Symbol}
                 </span>
               </HStack>
               <HStack>
                 <TokenLogo address={token1Address} chainId={chainId} />
                 <span>
-                  {beautifyNumber(pairData?.reserve1, 4)}{' '}
-                  {token1Symbol === 'WPROM' ? 'PROM' : token1Symbol}
+                  {beautifyNumber(pairData?.reserve1)} {token1Symbol}
                 </span>
               </HStack>
             </HStack>

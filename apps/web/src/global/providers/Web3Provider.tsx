@@ -8,6 +8,10 @@ import { SatoshiKitProvider } from '@midl-xyz/satoshi-kit';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { http } from 'viem';
 
+(BigInt.prototype as any).toJSON = function () {
+  return this.toString();
+};
+
 export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   return (
     <MidlProvider config={config}>

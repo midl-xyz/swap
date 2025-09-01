@@ -17,7 +17,7 @@ type SwapDialogProps = DialogProps & {
   onSuccessfulSwap?: () => void;
   onClose: () => void;
   tokenIn: Address;
-  amountIn: bigint;
+  amountIn: string; // Changed from bigint to string to avoid serialization issues
   tokenOut: Address;
 };
 
@@ -30,6 +30,9 @@ export const SwapDialog = ({
   ...rest
 }: SwapDialogProps) => {
   const address = useEVMAddress();
+
+  // Convert amountIn back to bigint if needed in the future
+  const amountInBigint = BigInt(amountIn);
 
   const { rune } = useToken(tokenOut);
   const slot = keccak256(

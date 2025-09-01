@@ -5,7 +5,7 @@ export const useSlippage = () => {
   const [value, updateValue] = useAtom(slippage);
 
   if (value < 0 || value > 1) {
-    updateValue(0.005);
+    updateValue(0.015);
   }
 
   return [value, updateValue] as const;

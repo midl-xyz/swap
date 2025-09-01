@@ -1,3 +1,4 @@
+import { formatPrice } from '@/shared/lib/formatPrice';
 import {
   AreaStyleOptions,
   ChartOptions,
@@ -6,7 +7,6 @@ import {
   SeriesOptionsCommon,
   TimeChartOptions,
 } from 'lightweight-charts';
-import { formatUsdPrice } from '@/shared/lib/formatPrice';
 
 export const chartOptions: DeepPartial<ChartOptions> = {
   layout: {
@@ -66,7 +66,7 @@ export const areaOptions: DeepPartial<AreaStyleOptions & SeriesOptionsCommon> =
     priceFormat: {
       type: 'custom',
       minMove: 0.000000001,
-      formatter: (price: number) => formatUsdPrice(price),
+      formatter: (price: number) => formatPrice(price),
     },
   };
 

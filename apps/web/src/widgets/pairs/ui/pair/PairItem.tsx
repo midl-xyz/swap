@@ -85,21 +85,30 @@ export const PairItem = ({
         <div className={css({ display: 'table-cell' })}>
           {/* biome-ignore lint/complexity/noExtraBooleanCast: <explanation> */}
           {Boolean(Number.parseFloat(pair.tradeVolumeUSD24h))
-            ? `${beautifyNumber(pair.tradeVolumeUSD24h, 2)}$`
+            ? `${beautifyNumber(pair.tradeVolumeUSD24h)}$`
             : '0$'}
         </div>
         <div className={css({ display: 'table-cell' })}>
           {/* biome-ignore lint/complexity/noExtraBooleanCast: <explanation> */}
           {Boolean(Number.parseFloat(pair.liquidityUSD))
-            ? `${beautifyNumber(pair.liquidityUSD, 2)}$`
+            ? `${beautifyNumber(pair.liquidityUSD)}$`
             : '0$'}
         </div>
 
         <div className={css({ display: 'table-cell' })}>
           {/* biome-ignore lint/complexity/noExtraBooleanCast: <explanation> */}
-          {Boolean(Number.parseFloat(pair.token0.tokenMetrics.priceUSD))
-            ? `${beautifyNumber(pair.token0.tokenMetrics.priceUSD, 2)}$`
-            : '0$'}
+          {(() => {
+            const priceToShow =
+              pair.token0.name === 'BUSD'
+                ? pair.reserve0 / pair.reserve1
+                : pair.token1.name === 'BUSD'
+                  ? pair.reserve1 / pair.reserve0 // TODO: Remove once backend is ready to return correct prices
+                  : pair.token0.tokenMetrics.priceUSD;
+
+            return Boolean(Number.parseFloat(priceToShow))
+              ? `${beautifyNumber(priceToShow)}$`
+              : '0$';
+          })()}
         </div>
       </a>
     </Link>

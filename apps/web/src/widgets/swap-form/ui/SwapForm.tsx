@@ -441,16 +441,18 @@ export const SwapForm = ({
             />
           ) : null}
 
-          <SwapDialog
-            onSuccessfulSwap={onSwapSuccess}
-            open={isDialogOpen}
-            tokenOut={outputToken}
-            tokenIn={inputToken}
-            amountIn={parsedInputTokenAmount}
-            onClose={() => {
-              setDialogOpen(false);
-            }}
-          />
+          {isDialogOpen && (
+            <SwapDialog
+              onSuccessfulSwap={onSwapSuccess}
+              open={isDialogOpen}
+              tokenOut={outputToken}
+              tokenIn={inputToken}
+              amountIn={parsedInputTokenAmount.toString()}
+              onClose={() => {
+                setDialogOpen(false);
+              }}
+            />
+          )}
         </form>
       </FormProvider>
     </Stack>

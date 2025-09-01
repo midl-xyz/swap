@@ -1,4 +1,5 @@
 import { AppPreloader, SwapForm } from '@/widgets';
+import { ErrorScreen } from '@/widgets/error-screen/ErrorScreen';
 import { createConfig, getRune, regtest } from '@midl-xyz/midl-js-core';
 import {
   executorAbi,
