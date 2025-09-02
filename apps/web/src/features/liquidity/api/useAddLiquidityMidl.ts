@@ -2,7 +2,6 @@ import { usePoolShare } from '@/features/liquidity/api';
 import { useStateOverride } from '@/features/state-override';
 import { deployments, uniswapV2Router02Abi } from '@/global/contracts';
 import { useApproveWithOptionalDeposit } from '@/shared';
-import { createLUSDStateOverride } from '@/shared/lib/blockchainUtils';
 import { weiToSatoshis } from '@midl-xyz/midl-js-executor';
 import {
   useAddTxIntention,
@@ -196,17 +195,6 @@ export const useAddLiquidityMidl = ({
           },
         },
       });
-
-      const stateOverride = createLUSDStateOverride(
-        tokenA,
-        tokenB,
-        userAddress,
-        balance,
-        chainId,
-        runeA,
-        runeB,
-      );
-      setStateOverride(stateOverride);
     },
   });
 

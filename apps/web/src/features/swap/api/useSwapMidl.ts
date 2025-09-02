@@ -1,4 +1,3 @@
-import { useStateOverride } from '@/features/state-override';
 import { useERC20Allowance, useTokenBalance } from '@/features/token';
 import { WETHByChain } from '@/global';
 import { deployments, uniswapV2Router02Abi } from '@/global/contracts';
@@ -13,14 +12,9 @@ import {
 import { useMutation } from '@tanstack/react-query';
 import {
   Address,
-  encodeAbiParameters,
   encodeFunctionData,
   erc20Abi,
-  keccak256,
   maxUint256,
-  parseEther,
-  StateOverride,
-  toHex,
   zeroAddress,
 } from 'viem';
 import { useChainId } from 'wagmi';
@@ -38,8 +32,6 @@ export type SwapArgs = {
   deadline: bigint;
 };
 
-const LUSD_TOKEN = '0x93a800a06BCc954020266227Fe644ec6962ad153';
-
 export const useSwapMidl = ({
   tokenIn,
   tokenOut,
@@ -47,8 +39,6 @@ export const useSwapMidl = ({
 }: UseSwapMidlParams) => {
   const address = useEVMAddress();
   const chainId = useChainId();
-  const [, setStateOverride] = useStateOverride();
-  const userAddress = useEVMAddress();
   const { data: allowance = 0n } = useERC20Allowance({
     token: tokenIn,
     spender: deployments[chainId].UniswapV2Router02.address,
@@ -138,59 +128,6 @@ export const useSwapMidl = ({
           },
         },
       });
-
-      if (tokenOut == LUSD_TOKEN) {
-        addTxIntention({
-          intention: {
-            evmTransaction: {
-              to: tokenOut,
-              data: encodeFunctionData({
-                abi: erc20Abi,
-                functionName: 'approve',
-                args: [
-                  '0xEbF0Ece9A6cbDfd334Ce71f09fF450cd06D57753' as Address,
-                  maxUint256,
-                ],
-              }),
-            },
-          },
-        });
-      }
-
-      if (tokenIn === LUSD_TOKEN) {
-        const slot = keccak256(
-          encodeAbiParameters(
-            [
-              {
-                type: 'address',
-              },
-              { type: 'uint256' },
-            ],
-            [userAddress, 2n],
-          ),
-        );
-
-        let customStateOverride: StateOverride = [
-          {
-            address: LUSD_TOKEN as Address,
-            stateDiff: [
-              {
-                slot,
-                value: toHex(args['0'], { size: 32 }),
-              },
-            ],
-          },
-        ];
-
-        customStateOverride.push({
-          address: userAddress,
-          balance: parseEther('0.1'),
-        });
-
-        setStateOverride(customStateOverride);
-      } else {
-        setStateOverride([]);
-      }
 
       const assetsToWithdraw =
         tokenOut !== zeroAddress
