@@ -124,8 +124,6 @@ export const Pair = ({ id }: Props) => {
     },
   ];
 
-  console.log('delta: ', pairData?.tradeVolume24hDelta);
-
   return (
     <Stack background="white" padding={{ base: 2, md: 7 }}>
       <VStack

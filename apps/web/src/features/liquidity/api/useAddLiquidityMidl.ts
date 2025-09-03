@@ -132,15 +132,6 @@ export const useAddLiquidityMidl = ({
     allowances.tokenA < tokenA.amount && tokenA.address !== zeroAddress;
   const isTokenBNeedApprove =
     allowances.tokenB < tokenB.amount && tokenB.address !== zeroAddress;
-
-  console.log(
-    'RUNESSSSS:',
-    runeA,
-    runeB,
-    isTokenANeedApprove,
-    isTokenBNeedApprove,
-  );
-
   const {
     mutate: addLiquidity,
     mutateAsync: addLiquidityAsync,
@@ -193,8 +184,6 @@ export const useAddLiquidityMidl = ({
           address: tokenB.address,
         });
       }
-
-      console.log('DEPS: ', runeDeposits);
 
       addTxIntention({
         intention: {
