@@ -23,7 +23,7 @@ const shortenName = (name: string | undefined) => {
 };
 const isBUSD = (symbol: string) => symbol === 'BUSD';
 const getDisplayName = (tokenSymbol: string, tokenName: string) =>
-  isBUSD(tokenSymbol) ? 'MIDLRUNESTABLECOIN' : tokenName;
+  isBUSD(tokenSymbol) ? 'MIDLRUNESSTABLECOIN' : tokenName;
 
 interface Props {
   id: string;
