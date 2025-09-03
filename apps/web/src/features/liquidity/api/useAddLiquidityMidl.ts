@@ -11,7 +11,7 @@ import {
 } from '@midl-xyz/midl-js-executor-react';
 import { useBalance, useDefaultAccount } from '@midl-xyz/midl-js-react';
 import { useMutation } from '@tanstack/react-query';
-import { Address, encodeFunctionData, zeroAddress } from 'viem';
+import { Address, encodeFunctionData, erc20Abi, zeroAddress } from 'viem';
 import { useChainId } from 'wagmi';
 
 type UseAddLiquidityParams = {
@@ -34,9 +34,8 @@ export type AddLiquidityVariables = {
 
 const handleTokenApprovals = (
   token: { address: Address; amount: bigint },
-  rune: any,
   needsApprove: boolean,
-  addApproveDepositIntention: any,
+  uniswapRouterAddress: Address,
   addTxIntention: any,
 ) => {
   const isETH = token.address === zeroAddress;
@@ -44,22 +43,15 @@ const handleTokenApprovals = (
   if (isETH) return;
 
   if (needsApprove) {
-    addApproveDepositIntention({
-      address: token.address,
-      runeId: rune?.id,
-      amount: token.amount,
-    });
-  } else if (rune) {
     addTxIntention({
       intention: {
-        deposit: {
-          runes: [
-            {
-              id: rune.id,
-              amount: token.amount,
-              address: token.address,
-            },
-          ],
+        evmTransaction: {
+          to: token.address,
+          data: encodeFunctionData({
+            abi: erc20Abi,
+            functionName: 'approve',
+            args: [uniswapRouterAddress, token.amount],
+          }),
         },
       },
     });
@@ -135,15 +127,19 @@ export const useAddLiquidityMidl = ({
   const clearTxIntentions = useClearTxIntentions();
   const { rune: runeA } = useToken(tokenA.address);
   const { rune: runeB } = useToken(tokenB.address);
-  const userAddress = useEVMAddress();
-  const account = useDefaultAccount();
-  const [, setStateOverride] = useStateOverride();
-  const { balance } = useBalance({ address: account?.address });
 
   const isTokenANeedApprove =
     allowances.tokenA < tokenA.amount && tokenA.address !== zeroAddress;
   const isTokenBNeedApprove =
     allowances.tokenB < tokenB.amount && tokenB.address !== zeroAddress;
+
+  console.log(
+    'RUNESSSSS:',
+    runeA,
+    runeB,
+    isTokenANeedApprove,
+    isTokenBNeedApprove,
+  );
 
   const {
     mutate: addLiquidity,
@@ -155,17 +151,15 @@ export const useAddLiquidityMidl = ({
 
       handleTokenApprovals(
         tokenA,
-        runeA,
         isTokenANeedApprove,
-        addApproveDepositIntention,
+        deployments[chainId].UniswapV2Router02.address,
         addTxIntention,
       );
 
       handleTokenApprovals(
         tokenB,
-        runeB,
         isTokenBNeedApprove,
-        addApproveDepositIntention,
+        deployments[chainId].UniswapV2Router02.address,
         addTxIntention,
       );
 
@@ -177,6 +171,30 @@ export const useAddLiquidityMidl = ({
         to,
         deadline,
       );
+
+      const runeDeposits: {
+        id: string;
+        amount: bigint;
+        address: `0x${string}`;
+      }[] = [];
+
+      if (runeA) {
+        runeDeposits.push({
+          id: runeA.id,
+          amount: tokenA.amount,
+          address: tokenA.address,
+        });
+      }
+
+      if (runeB) {
+        runeDeposits.push({
+          id: runeB.id,
+          amount: tokenB.amount,
+          address: tokenB.address,
+        });
+      }
+
+      console.log('DEPS: ', runeDeposits);
 
       addTxIntention({
         intention: {
@@ -191,7 +209,8 @@ export const useAddLiquidityMidl = ({
             value: ethValue,
           },
           deposit: {
-            satoshis: ethValue > 0n ? weiToSatoshis(ethValue) : undefined,
+            satoshis: weiToSatoshis(ethValue),
+            runes: runeDeposits,
           },
         },
       });
