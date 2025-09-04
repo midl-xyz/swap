@@ -7,7 +7,6 @@ export const config = createMidlConfig({
   networks: [regtest],
   persist: true,
   provider: new MempoolSpaceProvider({
-    regtest:
-      process.env.NEXT_PUBLIC_MEMPOOL_RPC || 'https://mempool.regtest.midl.xyz',
+    regtest: process.env.NEXT_PUBLIC_EVM_RPC || 'https://rpc.regtest.midl.xyz',
   } as any),
 });
