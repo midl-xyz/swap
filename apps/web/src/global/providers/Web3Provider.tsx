@@ -20,7 +20,10 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
           config={{
             chains: [midlRegtest],
             transports: {
-              [midlRegtest.id]: http('https://rpc.staging.midl.xyz'),
+              [midlRegtest.id]: http(
+                process.env.NEXT_PUBLIC_MEMPOOL_RPC ||
+                  'https://mempool.regtest.midl.xyz',
+              ),
             },
           }}
         >
