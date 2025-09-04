@@ -75,7 +75,7 @@ export const SwapForm = ({
 }: SwapFormProps) => {
   const outputTokenDefault =
     customOutputToken ||
-    tokenList.find((it) => it.name === 'MIDL•RUNE•STABLECOIN')?.address ||
+    tokenList.find((it) => it.name === 'MIDL•RUNES•STABLECOIN')?.address ||
     ('' as Address);
 
   const inputTokenDefault = customInputToken || zeroAddress;

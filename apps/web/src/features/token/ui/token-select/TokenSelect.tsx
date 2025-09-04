@@ -41,7 +41,7 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
   const { open } = useRuneDialog();
 
   const { rune, erc20Address } = useERC20Rune(searchQuery, {
-    //query: { retry: false, enabled: !!searchQuery },
+    query: { retry: false, enabled: !!searchQuery },
   });
 
   const onSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
