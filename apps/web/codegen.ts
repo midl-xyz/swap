@@ -1,7 +1,10 @@
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
-  schema: ['https://swap-squid.sa.midl.xyz/graphql'],
+  schema: [
+    process.env.NEXT_PUBLIC_GRAPHQL_URL ||
+      'https://squid.regtest.midl.xyz/graphql',
+  ],
   documents: 'src/features/liquidity/api/**/*.ts',
   ignoreNoDocuments: true,
   generates: {
