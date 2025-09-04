@@ -43,7 +43,7 @@ export const IntentionSigner = ({
 
         if (error.message === 'No ordinals UTXOs') {
           error.message =
-            'MIDL•RUNE•STABLECOIN balance is not enough to cover tx';
+            'MIDL•RUNES•STABLECOIN balance is not enough to cover tx';
         }
         if (error.message === 'Insufficient funds') {
           error.message = 'Wallet balance is not enough';

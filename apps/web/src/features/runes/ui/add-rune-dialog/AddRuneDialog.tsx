@@ -81,7 +81,7 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
           amount: Number(edictFee ?? 546n),
         },
         {
-          runeId: rune!.id,
+          runeId: rune?.id!,
           amount: 1n,
           receiver: multisigAddress[network!.id],
         },

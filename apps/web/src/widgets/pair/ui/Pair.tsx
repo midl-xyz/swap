@@ -23,7 +23,7 @@ const shortenName = (name: string | undefined) => {
 };
 const isBUSD = (symbol: string) => symbol === 'BUSD';
 const getDisplayName = (tokenSymbol: string, tokenName: string) =>
-  isBUSD(tokenSymbol) ? 'MIDLRUNESTABLECOIN' : tokenName;
+  isBUSD(tokenSymbol) ? 'MIDLRUNESSTABLECOIN' : tokenName;
 
 interface Props {
   id: string;
@@ -123,8 +123,6 @@ export const Pair = ({ id }: Props) => {
       ),
     },
   ];
-
-  console.log('delta: ', pairData?.tradeVolume24hDelta);
 
   return (
     <Stack background="white" padding={{ base: 2, md: 7 }}>

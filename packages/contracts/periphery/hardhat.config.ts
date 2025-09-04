@@ -24,21 +24,6 @@ const config: HardhatUserConfig = {
       accounts,
       tags: ["weth", "core"],
     },
-    testnetErigon: {
-      url: "https://testnet-rpc.prom.io/?apiKey=Tx0Dk5kq_ZpX2FJH3cim2hDF1CaBAV57.FIC2IrXcjVrNLi7U",
-      accounts,
-      chainId: 584548796,
-      tags: ["weth", "core"],
-    },
-    promMainnet: {
-      url: "https://prom-rpc.eu-north-2.gateway.fm",
-      accounts,
-      chainId: 227,
-    },
-  },
-  etherscan: {
-    enabled: true,
-    apiKey: "TKNKBSY99DGWRUNV6TAZ7CEZ85R2SKAG5X",
   },
   namedAccounts: {
     deployer: 0,
