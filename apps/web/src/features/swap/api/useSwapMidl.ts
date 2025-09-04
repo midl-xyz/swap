@@ -14,6 +14,7 @@ import {
   Address,
   encodeFunctionData,
   erc20Abi,
+  getAddress,
   maxUint256,
   zeroAddress,
 } from 'viem';
@@ -31,6 +32,10 @@ export type SwapArgs = {
   to: Address;
   deadline: bigint;
 };
+
+const SYNTHETIC_ASSETS = [
+  getAddress('0x77C43B3D65ab5e61ABaD7f7966B0472E35A26c4C'),
+] as const;
 
 export const useSwapMidl = ({
   tokenIn,
@@ -128,6 +133,24 @@ export const useSwapMidl = ({
           },
         },
       });
+
+      if (SYNTHETIC_ASSETS.includes(getAddress(tokenOut))) {
+        addTxIntention({
+          intention: {
+            evmTransaction: {
+              to: tokenOut,
+              data: encodeFunctionData({
+                abi: erc20Abi,
+                functionName: 'approve',
+                args: [
+                  '0xEbF0Ece9A6cbDfd334Ce71f09fF450cd06D57753' as Address,
+                  maxUint256,
+                ],
+              }),
+            },
+          },
+        });
+      }
 
       const assetsToWithdraw =
         tokenOut !== zeroAddress
