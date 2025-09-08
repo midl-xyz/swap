@@ -82,15 +82,12 @@ export const useTokenBalance = (
     },
   });
 
-  const parsedRuneBalance = parseUnits(
-    runeBalance?.balance ?? '0',
-    rune?.divisibility ?? 0,
-  );
+  const parsedRuneBalance = runeBalance?.balance ?? 0n;
 
   const combinedBalance =
     ((data?.[4]?.result as bigint) || 0n) + parsedRuneBalance;
 
-  const decimals = rune?.divisibility ?? (data?.[0]?.result as number) ?? 0;
+  const decimals = rune?.divisibility ?? (data?.[0]?.result as number) ?? 18;
 
   const parsedData: {
     decimals?: number;
