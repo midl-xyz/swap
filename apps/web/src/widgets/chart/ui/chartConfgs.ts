@@ -125,5 +125,6 @@ export const timeChartOptions: DeepPartial<TimeChartOptions> = {
   rightPriceScale: {
     autoScale: true,
     borderColor: 'transparent',
+    mode: 0,
   },
 };
