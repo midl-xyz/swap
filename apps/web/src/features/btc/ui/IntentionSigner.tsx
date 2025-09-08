@@ -127,11 +127,9 @@ export const IntentionSigner = ({
           <Button
             onClick={() => {
               const params: Parameters<typeof finalizeBTCTransaction>[0] = {};
-
               if (customStateOverride && customStateOverride.length > 0) {
                 params.stateOverride = customStateOverride;
               }
-
               finalizeBTCTransaction(params);
             }}
             disabled={isFinalizingBTC}

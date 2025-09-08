@@ -6,7 +6,7 @@ import { useRemoveLiquidityMidl } from '@/features/liquidity/api/useRemoveLiquid
 import { removeLiquidityDialogAtom } from '@/features/liquidity/model';
 import { useSlippage } from '@/features/slippage';
 import { TokenLogo, TokenValue } from '@/features/token';
-import { WETHByChain } from '@/global';
+
 import {
   Button,
   Dialog,
@@ -143,11 +143,11 @@ export const RemoveLiquidityDialog = ({
       tokenB,
       liquidity: parsedLPToken,
       amountAMin: parseUnits(
-        tokenAAmountWithSlippage.toString(),
+        parseNumberInput(tokenAAmountWithSlippage.toString()),
         tokenAInfo.decimals,
       ),
       amountBMin: parseUnits(
-        tokenBAmountWithSlippage.toString(),
+        parseNumberInput(tokenBAmountWithSlippage.toString()),
         tokenBInfo.decimals,
       ),
       to: userAddress as Address,
@@ -296,7 +296,7 @@ export const RemoveLiquidityDialog = ({
                   address={tokenA}
                   chainId={chainId}
                   value={parseUnits(
-                    tokenAAmountWithSlippage.toString(),
+                    parseNumberInput(tokenAAmountWithSlippage.toString()),
                     tokenAInfo.decimals,
                   )}
                   hideLogo
@@ -321,7 +321,7 @@ export const RemoveLiquidityDialog = ({
                   address={tokenB}
                   chainId={chainId}
                   value={parseUnits(
-                    tokenBAmountWithSlippage.toString(),
+                    parseNumberInput(tokenBAmountWithSlippage.toString()),
                     tokenBInfo.decimals,
                   )}
                   hideLogo
