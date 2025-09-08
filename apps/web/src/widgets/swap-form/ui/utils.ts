@@ -46,3 +46,9 @@ export const getTokenSymbol = (address: Address) => {
 export const correctNumber = (value: string = '') => {
   return value.replaceAll(/\s/g, '');
 };
+
+export function toPlainString(num: number, decimals: number = 18): string {
+  if (num === 0) return '0';
+  let str = num.toFixed(decimals + 2);
+  return str.replace(/\.?0+$/, '');
+}

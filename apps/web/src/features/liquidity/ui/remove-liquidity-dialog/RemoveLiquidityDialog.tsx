@@ -16,6 +16,7 @@ import {
   parseNumberInput,
 } from '@/shared';
 import { SlippageControl } from '@/widgets';
+import { toPlainString } from '@/widgets/swap-form/ui/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEVMAddress, useToken } from '@midl-xyz/midl-js-executor-react';
 import { DialogProps } from '@radix-ui/react-dialog';
@@ -143,11 +144,11 @@ export const RemoveLiquidityDialog = ({
       tokenB,
       liquidity: parsedLPToken,
       amountAMin: parseUnits(
-        parseNumberInput(tokenAAmountWithSlippage.toString()),
+        toPlainString(tokenAAmountWithSlippage),
         tokenAInfo.decimals,
       ),
       amountBMin: parseUnits(
-        parseNumberInput(tokenBAmountWithSlippage.toString()),
+        toPlainString(tokenBAmountWithSlippage),
         tokenBInfo.decimals,
       ),
       to: userAddress as Address,
@@ -296,7 +297,7 @@ export const RemoveLiquidityDialog = ({
                   address={tokenA}
                   chainId={chainId}
                   value={parseUnits(
-                    parseNumberInput(tokenAAmountWithSlippage.toString()),
+                    toPlainString(tokenAAmountWithSlippage),
                     tokenAInfo.decimals,
                   )}
                   hideLogo
@@ -321,7 +322,7 @@ export const RemoveLiquidityDialog = ({
                   address={tokenB}
                   chainId={chainId}
                   value={parseUnits(
-                    parseNumberInput(tokenBAmountWithSlippage.toString()),
+                    toPlainString(tokenBAmountWithSlippage),
                     tokenBInfo.decimals,
                   )}
                   hideLogo
