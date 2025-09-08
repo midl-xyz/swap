@@ -126,15 +126,16 @@ export const useSwapMidl = ({
           },
           deposit: {
             satoshis: ethValue > 0n ? weiToSatoshis(ethValue) : 0,
-            runes: rune
-              ? [
-                  {
-                    id: rune.id,
-                    amount: amountIn - (evmOnlyTokenInBalance || 0n),
-                    address: tokenIn,
-                  },
-                ]
-              : [],
+            runes:
+              rune && amountIn - (evmOnlyTokenInBalance || 0n) > 0n
+                ? [
+                    {
+                      id: rune.id,
+                      amount: amountIn - (evmOnlyTokenInBalance || 0n),
+                      address: tokenIn,
+                    },
+                  ]
+                : [],
           },
         },
       });
