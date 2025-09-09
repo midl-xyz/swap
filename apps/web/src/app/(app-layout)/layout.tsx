@@ -12,9 +12,6 @@ import { AppMenuList, AppPreloader, Header, Logo } from '@/widgets';
 import { MobileAppMenu } from '@/widgets/app-menu/ui/MobileAppMenu';
 import { renderErrorMessage } from '@/widgets/error-message';
 import { Footer } from '@/widgets/footer/ui';
-import { xverseConnector } from '@midl-xyz/midl-js-connectors';
-import { useAddNetwork, useConfig } from '@midl-xyz/midl-js-react';
-import { ConnectButton } from '@midl-xyz/satoshi-kit';
 import '@midl-xyz/satoshi-kit/styles.css';
 import Link from 'next/link';
 import { Suspense, type ReactNode } from 'react';
@@ -23,31 +20,7 @@ import { css } from '~/styled-system/css';
 import { HStack, Stack } from '~/styled-system/jsx';
 import { hstack } from '~/styled-system/patterns';
 import '../globals.css';
-
-const Wallet = () => {
-  const { addNetworkAsync } = useAddNetwork();
-  const { network } = useConfig();
-
-  return (
-    <ConnectButton
-      beforeConnect={async (connectorId) => {
-        if (connectorId !== xverseConnector().id) {
-          return;
-        }
-
-        await addNetworkAsync({
-          connectorId,
-          networkConfig: {
-            name: 'MIDL Regtest',
-            network: network.id,
-            rpcUrl: 'https://mempool.regtest.midl.xyz/api',
-            indexerUrl: 'https://api-regtest-midl.xverse.app',
-          },
-        });
-      }}
-    />
-  );
-};
+import { Wallet } from '@/widgets/wallet';
 
 export default function AppLayout({
   children,
