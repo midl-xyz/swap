@@ -124,12 +124,12 @@ export const RemoveLiquidityDialog = ({
   const tokenAAmountWithSlippage =
     (parseFloat(formatUnits(tokenAAmount ?? BigInt(0), tokenAInfo.decimals)) ??
       0) *
-    (1 - (slippage ?? 0));
+    (1 - (slippage || 0));
 
   const tokenBAmountWithSlippage =
     (parseFloat(formatUnits(tokenBAmount ?? BigInt(0), tokenBInfo.decimals)) ??
       0) *
-    (1 - (slippage ?? 0));
+    (1 - (slippage || 0));
 
   const { removeLiquidity, isSuccess, reset } = useRemoveLiquidityMidl({
     lpToken: {
