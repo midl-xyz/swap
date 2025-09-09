@@ -304,7 +304,19 @@ export const LiquidityForm = () => {
                     color: 'neutral.600',
                   })}
                 >
-                  {tokenAInfo.symbol} per {tokenBInfo.symbol}
+                  <span
+                    className={css({
+                      display: 'inline-block',
+                      maxWidth: '140px',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      verticalAlign: 'bottom',
+                    })}
+                    title={`${tokenAInfo.name ?? tokenAInfo.symbol} per ${tokenBInfo.name ?? tokenBInfo.symbol}`}
+                  >
+                    {tokenAInfo.symbol} per {tokenBInfo.symbol}
+                  </span>
                 </div>
               </div>
 
@@ -322,7 +334,19 @@ export const LiquidityForm = () => {
                     color: 'neutral.600',
                   })}
                 >
-                  {tokenBInfo.symbol} per {tokenAInfo.symbol}
+                  <span
+                    className={css({
+                      display: 'inline-block',
+                      maxWidth: '140px',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      verticalAlign: 'bottom',
+                    })}
+                    title={`${tokenBInfo.name ?? tokenBInfo.symbol} per ${tokenAInfo.name ?? tokenAInfo.symbol}`}
+                  >
+                    {tokenBInfo.symbol} per {tokenAInfo.symbol}
+                  </span>
                 </div>
               </div>
 
