@@ -20,15 +20,17 @@ import { schema } from '@/widgets/liquidity-form/ui/schema';
 import { correctNumber } from '@/widgets/swap-form/ui/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useQueryClient } from '@tanstack/react-query';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useDebouncedCallback } from 'use-debounce';
 import { Address, formatUnits, parseUnits, zeroAddress } from 'viem';
 import { useChainId } from 'wagmi';
+import { useEVMAddress } from '@midl-xyz/midl-js-executor-react';
 
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
+import { Wallet } from '@/widgets/wallet';
 
 type FormData = {
   tokenAAmount: string;
@@ -156,6 +158,7 @@ export const LiquidityForm = () => {
   }, [update, balanceA, balanceB, minAmountA, minAmountB, minValues]);
 
   const lpToken = useGetLPTokenAddress({ tokenA, tokenB });
+  const address = useEVMAddress();
 
   const onSubmit = () => {
     setIsDialogOpen(true);
@@ -371,21 +374,25 @@ export const LiquidityForm = () => {
           </div>
         )}
 
-        <Button
-          type="submit"
-          disabled={
-            !formState.isValid ||
-            !tokenAAmount ||
-            !tokenBAmount ||
-            !isBalanceBigEnough
-          }
-        >
-          {tokenAAmount && tokenBAmount && !isBalanceBigEnough
-            ? 'Insufficient Balance'
-            : !tokenA || !tokenB
-              ? 'Select token'
-              : 'Supply'}
-        </Button>
+        {address === zeroAddress ? (
+          <Wallet />
+        ) : (
+          <Button
+            type="submit"
+            disabled={
+              !formState.isValid ||
+              !tokenAAmount ||
+              !tokenBAmount ||
+              !isBalanceBigEnough
+            }
+          >
+            {tokenAAmount && tokenBAmount && !isBalanceBigEnough
+              ? 'Insufficient Balance'
+              : !tokenA || !tokenB
+                ? 'Select token'
+                : 'Supply'}
+          </Button>
+        )}
 
         <SupplyLiquidityDialog
           open={isDialogOpen}

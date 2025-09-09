@@ -12,10 +12,8 @@ import { removePercentage } from '@/shared/lib/removePercentage';
 import { SlippageControl, SwapFormChart } from '@/widgets';
 import { SwapDetails } from '@/widgets/swap-form/ui/SwapDetails';
 import { getCorrectToken } from '@/widgets/swap-form/ui/utils';
-import { xverseConnector } from '@midl-xyz/midl-js-connectors';
+import { Wallet } from '@/widgets/wallet';
 import { useEVMAddress } from '@midl-xyz/midl-js-executor-react';
-import { useAddNetwork, useConfig } from '@midl-xyz/midl-js-react';
-import { ConnectButton } from '@midl-xyz/satoshi-kit';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -33,31 +31,6 @@ type FormData = {
   outputToken: Address;
   inputTokenAmount: string;
   outputTokenAmount: string;
-};
-
-const Wallet = () => {
-  const { addNetworkAsync } = useAddNetwork();
-  const { network } = useConfig();
-
-  return (
-    <ConnectButton
-      beforeConnect={async (connectorId) => {
-        if (connectorId !== xverseConnector().id) {
-          return;
-        }
-
-        await addNetworkAsync({
-          connectorId,
-          networkConfig: {
-            name: 'MIDL Regtest',
-            network: network.id,
-            rpcUrl: 'https://mempool.regtest.midl.xyz/api',
-            indexerUrl: 'https://api-regtest-midl.xverse.app',
-          },
-        });
-      }}
-    />
-  );
 };
 
 type SwapFormProps = {
@@ -391,7 +364,7 @@ export const SwapForm = ({
           </div>
           <SlippageControl />
           <VStack gap={4}>
-            {!address ? (
+            {address === zeroAddress ? (
               <Wallet />
             ) : (
               <Button
