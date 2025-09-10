@@ -29,7 +29,6 @@
     "@midl-xyz/midl-js-executor-react": "npm:@midl/executor-react@2.0.5",
     "@midl-xyz/midl-js-react": "npm:@midl/react@2.0.5",
     "@midl-xyz/satoshi-kit": "npm:@midl/satoshi-kit@2.0.5",
-    "@midl/core": "^2.0.4",
     "@radix-ui/react-accordion": "^1.2.1",
     "@radix-ui/react-collapsible": "^1.0.3",
     "@radix-ui/react-dialog": "^1.0.5",
