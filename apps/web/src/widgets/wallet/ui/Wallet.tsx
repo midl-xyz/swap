@@ -21,14 +21,19 @@ export const Wallet = () => {
         if (connectorId !== xverseConnector().id) {
           return;
         }
-
+        console.log('ENV: ', process.env.NEXT_PUBLIC_MEMPOOL_RPC);
         await addNetworkAsync({
           connectorId,
           networkConfig: {
             name: 'MIDL Regtest',
             network: network.id,
-            rpcUrl: 'https://mempool.regtest.midl.xyz/api',
-            indexerUrl: 'https://api-regtest-midl.xverse.app',
+            rpcUrl: `${
+              process.env.NEXT_PUBLIC_MEMPOOL_RPC ||
+              'https://mempool.regtest.midl.xyz'
+            }/api`,
+            indexerUrl:
+              process.env.NEXT_PUBLIC_INDEXER_URL ||
+              'https://api-regtest-midl.xverse.app',
           },
         });
       }}
