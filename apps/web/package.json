@@ -90,8 +90,7 @@
     "happy-dom": "^18.0.1",
     "jsdom": "^24.1.1",
     "typescript": "^5",
-    "vite-tsconfig-paths": "^4.3.2",
-    "vitest": "^2.0.5"
+    "vite-tsconfig-paths": "^4.3.2"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
