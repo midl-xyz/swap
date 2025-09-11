@@ -1,4 +1,5 @@
 import { tokenList } from '@/global';
+import { satoshisToWei } from '@midl-xyz/midl-js-executor';
 import { useEVMAddress, useToken } from '@midl-xyz/midl-js-executor-react';
 import {
   useAccounts,
@@ -23,7 +24,7 @@ export const useTokenBalance = (
   const { balance: btcBalance } = useBTCBalance({});
   const evmNativeTokenBalance = useBalance();
 
-  const convertedBTCBalance = btcBalance * 10 ** 10;
+  const convertedBTCBalance = satoshisToWei(btcBalance);
   const contracts: any[] = [
     {
       address: contract,

@@ -10,6 +10,7 @@ import { formatUnits, zeroAddress } from 'viem';
 import { useChainId } from 'wagmi';
 import { css, cx } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
+import { useBTCFeeRate } from '@midl-xyz/midl-js-executor-react';
 
 type SwapInputProps = {
   amountName: string;
@@ -34,13 +35,19 @@ export const SwapInput = ({
   const token = watch(tokenName);
   const tokenInfo = useToken(token, chainId);
   const balance = useTokenBalance(token);
+  const { data: feeRate = 2n } = useBTCFeeRate();
 
   const triggerValidation = useDebouncedCallback(trigger, 0);
 
   const applyMax = () => {
     const rawBalance = balance.data?.balance ?? 0n;
 
-    const feeWei = satoshisToWei(900);
+    console.log('Applying max balance:', { rawBalance, token });
+
+    const MIDL_FEE = 3516;
+    const BTC_TX_SIZE = feeRate * 1000n;
+
+    const feeWei = satoshisToWei(MIDL_FEE + Number(feeRate * BTC_TX_SIZE));
     const isBTC = token === zeroAddress;
     const adjustedBalance = isBTC
       ? rawBalance > feeWei
@@ -48,6 +55,12 @@ export const SwapInput = ({
         : 0n
       : rawBalance;
 
+    console.log('Adjusted balance after fee:', {
+      feeWei,
+
+      adjustedBalance,
+      isBTC,
+    });
     const formatted = formatUnits(adjustedBalance, tokenInfo.decimals);
 
     setValue(amountName, formatted, {
