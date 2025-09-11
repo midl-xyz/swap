@@ -23,7 +23,6 @@
       "~/styled-system/*": ["./styled-system/*"]
     },
     "typeRoots": ["./node_modules/@types", "./types"],
-    "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
   "include": [
     "next-env.d.ts",
