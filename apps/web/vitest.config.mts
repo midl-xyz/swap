@@ -9,14 +9,8 @@ export default defineConfig({
     }),
     react(),
   ],
-  resolve: {
-    alias: {
-      'tiny-secp256k1': '@bitcoinerlab/secp256k1',
-      secp256k1: '@bitcoinerlab/secp256k1',
-    },
-  },
   test: {
-    environment: 'jsdom',
+    environment: 'happy-dom',
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],

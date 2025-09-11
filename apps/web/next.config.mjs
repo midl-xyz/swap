@@ -11,14 +11,6 @@ const config = {
       topLevelAwait: true,
     };
 
-    // Ensure bitcoinjs-lib gets a valid ECC implementation
-    config.resolve = config.resolve || {};
-    config.resolve.alias = {
-      ...(config.resolve.alias || {}),
-      'tiny-secp256k1': '@bitcoinerlab/secp256k1',
-      secp256k1: '@bitcoinerlab/secp256k1',
-    };
-
     return config;
   },
   eslint: {
