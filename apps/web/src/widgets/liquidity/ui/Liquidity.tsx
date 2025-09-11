@@ -2,7 +2,7 @@
 
 import { useLiquidityPositions } from '@/features/liquidity';
 import { LiquidityItem } from '@/features/liquidity/ui/liquidity';
-import { AppPreloader } from '@/widgets';
+import { AppPreloader } from '@/widgets/app-preloader';
 import { useEVMAddress } from '@midl-xyz/midl-js-executor-react';
 import { getAddress } from 'viem';
 import { css } from '~/styled-system/css';
