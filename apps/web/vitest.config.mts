@@ -16,7 +16,11 @@ export default defineConfig({
       reporter: ['text', 'html', 'lcov'],
       reportsDirectory: './coverage',
       // Tip: limit to this widget during development, or remove include to cover all
-      include: ['src/widgets/liquidity/ui/Liquidity.tsx', 'src/widgets/liquidity/ui/**/*.tsx'],
+      include: [
+        'src/widgets/liquidity/ui/Liquidity.tsx',
+        'src/widgets/liquidity/ui/**/*.tsx',
+        'src/shared/ui/swap-input/**/*.tsx',
+      ],
     },
   },
 });

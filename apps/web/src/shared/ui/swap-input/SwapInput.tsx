@@ -5,7 +5,8 @@ import millify from 'millify';
 import { ChangeEventHandler, InputHTMLAttributes } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useDebouncedCallback } from 'use-debounce';
-import { formatUnits } from 'viem';
+import { satoshisToWei } from '@midl-xyz/midl-js-executor';
+import { formatUnits, zeroAddress } from 'viem';
 import { useChainId } from 'wagmi';
 import { css, cx } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
@@ -37,23 +38,28 @@ export const SwapInput = ({
   const triggerValidation = useDebouncedCallback(trigger, 0);
 
   const applyMax = () => {
-    setValue(
-      amountName,
-      formatUnits(balance.data?.balance ?? BigInt(0), tokenInfo.decimals),
-      {
-        shouldValidate: true,
-        shouldTouch: true,
-        shouldDirty: true,
-      },
-    );
+    const rawBalance = balance.data?.balance ?? 0n;
+
+    const feeWei = satoshisToWei(900);
+    const isBTC = token === zeroAddress;
+    const adjustedBalance = isBTC
+      ? rawBalance > feeWei
+        ? rawBalance - feeWei
+        : 0n
+      : rawBalance;
+
+    const formatted = formatUnits(adjustedBalance, tokenInfo.decimals);
+
+    setValue(amountName, formatted, {
+      shouldValidate: true,
+      shouldTouch: true,
+      shouldDirty: true,
+    });
 
     if (onMax) {
       onMax({
         target: {
-          value: formatUnits(
-            balance.data?.balance ?? BigInt(0),
-            tokenInfo.decimals,
-          ),
+          value: formatted,
         },
       } as unknown as ChangeEventHandler);
     }
@@ -116,7 +122,9 @@ export const SwapInput = ({
             control={control}
             name={tokenName}
             render={({ field }) => {
-              return <TokenButton {...field} chainId={chainId} />;
+              // Avoid passing ref to function component to prevent React warning
+              const { ref: _ref, ...restField } = field as any;
+              return <TokenButton {...restField} chainId={chainId} />;
             }}
           />
 
