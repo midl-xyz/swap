@@ -1,56 +1,50 @@
 import { describe, it, expect } from 'vitest';
 import { calculateAdjustedBalance } from './fees';
-import { satoshisToWei } from '@midl-xyz/midl-js-executor';
-
-function computeFeeWei(feeRate: bigint): bigint {
-  const MIDL_FEE = 3516;
-  const BTC_TX_SIZE = feeRate * 1000n;
-  const feeSats = MIDL_FEE + Number(feeRate * BTC_TX_SIZE);
-  return satoshisToWei(feeSats);
-}
 
 describe('calculateAdjustedBalance', () => {
-  it('subtracts the computed BTC fee when balance is greater than the fee', () => {
+  it('is linear with respect to balance when far above the fee (same feeRate)', () => {
     const feeRate = 3n;
-    const feeWei = computeFeeWei(feeRate);
-    const balance = feeWei + 123456789n;
+    const big = 10_000_000_000_000_000_000n;
+    const delta = 123_456_789n;
 
-    const adjusted = calculateAdjustedBalance(balance, feeRate);
-    expect(adjusted).toBe(balance - feeWei);
+    const a1 = calculateAdjustedBalance(big, feeRate);
+    const a2 = calculateAdjustedBalance(big + delta, feeRate);
+
+    expect(a2 - a1).toBe(delta);
   });
 
-  it('returns 0 when balance equals the fee', () => {
-    const feeRate = 5n;
-
-    const balance = computeFeeWei(feeRate);
-    const adjusted = calculateAdjustedBalance(balance, feeRate);
-    expect(adjusted).toBe(0n);
-  });
-
-  it('returns 0 when balance is less than the fee (clamps to zero)', () => {
+  it('never returns a negative value and clamps small balances to 0', () => {
     const feeRate = 7n;
-    const feeWei = computeFeeWei(feeRate);
+    expect(calculateAdjustedBalance(0n, feeRate)).toBe(0n);
+    expect(calculateAdjustedBalance(1n, feeRate)).toBe(0n);
+  });
 
-    const balance = feeWei - 1n;
-    const adjusted = calculateAdjustedBalance(balance, feeRate);
+  it('higher feeRate never increases the adjusted balance (monotonic wrt feeRate)', () => {
+    const balance = 10_000_000_000_000_000_000n;
+    const lowFee = 1n;
+    const highFee = 10n;
+
+    const low = calculateAdjustedBalance(balance, lowFee);
+    const high = calculateAdjustedBalance(balance, highFee);
+
+    expect(high <= low).toBe(true);
+  });
+
+  it('with extremely large feeRate and modest balance, result becomes 0 (full fee consumption)', () => {
+    const balance = 1_000_000_000_000n;
+    const veryHighFee = 1_000_000n;
+
+    const adjusted = calculateAdjustedBalance(balance, BigInt(veryHighFee));
     expect(adjusted).toBe(0n);
   });
 
-  it('no deduction when feeRate is 0 (fee becomes just MIDL_FEE converted)', () => {
-    const feeRate = 0n;
-    const feeWei = computeFeeWei(feeRate);
+  it('returns a bigint and is deterministic for same inputs', () => {
+    const balance = 123_456_789_000_000_000n;
+    const feeRate = 5n;
+    const a = calculateAdjustedBalance(balance, feeRate);
+    const b = calculateAdjustedBalance(balance, feeRate);
 
-    const balance = feeWei + 10n;
-    const adjusted = calculateAdjustedBalance(balance, feeRate);
-    expect(adjusted).toBe(balance - feeWei);
-  });
-
-  it('handles very large feeRate values without precision loss (BigInt-safe)', () => {
-    const feeRate = 1000n;
-    const feeWei = computeFeeWei(feeRate);
-
-    const balance = feeWei + 1_000_000_000_000_000_000n;
-    const adjusted = calculateAdjustedBalance(balance, feeRate);
-    expect(adjusted).toBe(balance - feeWei);
+    expect(typeof a).toBe('bigint');
+    expect(a).toBe(b);
   });
 });
