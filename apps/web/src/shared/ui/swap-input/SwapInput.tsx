@@ -5,7 +5,7 @@ import millify from 'millify';
 import { ChangeEventHandler, InputHTMLAttributes } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useDebouncedCallback } from 'use-debounce';
-import { satoshisToWei } from '@midl-xyz/midl-js-executor';
+import { calculateAdjustedBalance } from '@/shared/lib/fees';
 import { formatUnits, zeroAddress } from 'viem';
 import { useChainId } from 'wagmi';
 import { css, cx } from '~/styled-system/css';
@@ -23,6 +23,7 @@ type SwapInputProps = {
  * SwapInput component.
  * Works only with the `useForm` hook from `react-hook-form`.
  */
+
 export const SwapInput = ({
   amountName,
   tokenName,
@@ -44,23 +45,13 @@ export const SwapInput = ({
 
     console.log('Applying max balance:', { rawBalance, token });
 
-    const MIDL_FEE = 3516;
-    const BTC_TX_SIZE = feeRate * 1000n;
-
-    const feeWei = satoshisToWei(MIDL_FEE + Number(feeRate * BTC_TX_SIZE));
     const isBTC = token === zeroAddress;
-    const adjustedBalance = isBTC
-      ? rawBalance > feeWei
-        ? rawBalance - feeWei
-        : 0n
-      : rawBalance;
-
-    console.log('Adjusted balance after fee:', {
-      feeWei,
-
-      adjustedBalance,
+    const adjustedBalance = calculateAdjustedBalance(
       isBTC,
-    });
+      rawBalance,
+      feeRate,
+    );
+
     const formatted = formatUnits(adjustedBalance, tokenInfo.decimals);
 
     setValue(amountName, formatted, {

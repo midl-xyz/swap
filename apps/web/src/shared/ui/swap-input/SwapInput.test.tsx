@@ -11,6 +11,7 @@ import {
 import { FormProvider, useForm } from 'react-hook-form';
 import { zeroAddress, formatUnits } from 'viem';
 import { satoshisToWei } from '@midl-xyz/midl-js-executor';
+import { calculateAdjustedBalance } from '@/shared/lib/fees';
 
 // Stub problematic external UI kit to avoid ESM directory import issues in tests
 vi.mock('@midl-xyz/satoshi-kit', async () => ({
@@ -25,6 +26,7 @@ let mockDecimals = 18;
 let mockBalance = 0n as bigint;
 let mockFormattedBalance = '0';
 let mockChainId = 0;
+let mockFeeRate = 3n as bigint; // sats/vB
 
 vi.mock('@/entities', async () => {
   return {
@@ -51,6 +53,10 @@ vi.mock('wagmi', async () => {
   } as any;
 });
 
+vi.mock('@midl-xyz/midl-js-executor-react', async () => ({
+  useBTCFeeRate: () => ({ data: mockFeeRate }),
+}));
+
 function renderWithForm(ui: React.ReactElement, defaultValues: any) {
   const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const methods = useForm({ defaultValues });
@@ -66,8 +72,7 @@ describe('SwapInput applyMax', () => {
     mockChainId = 0;
   });
 
-  it('deducts a fixed 900 satoshis fee for BTC (zeroAddress)', async () => {
-    const feeWei = satoshisToWei(900);
+  it('deducts BTC network fee for BTC (zeroAddress) using current feeRate', async () => {
     const startingBalance = 10_000_000_000_000_000_000n;
     mockBalance = startingBalance;
     mockFormattedBalance = formatUnits(mockBalance, mockDecimals);
@@ -87,7 +92,11 @@ describe('SwapInput applyMax', () => {
 
     const input = screen.getByRole('textbox');
 
-    const expected = startingBalance - feeWei;
+    const expected = calculateAdjustedBalance(
+      true,
+      startingBalance,
+      mockFeeRate,
+    );
     await waitFor(() =>
       expect((input as HTMLInputElement).value).toBe(
         formatUnits(expected, mockDecimals),
@@ -100,7 +109,8 @@ describe('SwapInput applyMax', () => {
   });
 
   it('clamps to 0 when BTC balance is less than or equal to the fee', async () => {
-    const feeWei = satoshisToWei(900);
+    const feeSats = 3516 + Number(mockFeeRate * (mockFeeRate * 1000n));
+    const feeWei = satoshisToWei(feeSats);
     mockBalance = feeWei - 1n; // less than fee
     mockFormattedBalance = formatUnits(mockBalance, mockDecimals);
 
