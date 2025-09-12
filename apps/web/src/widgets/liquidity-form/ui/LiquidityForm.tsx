@@ -26,11 +26,12 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useDebouncedCallback } from 'use-debounce';
 import { Address, formatUnits, parseUnits, zeroAddress } from 'viem';
 import { useChainId } from 'wagmi';
-import { useEVMAddress } from '@midl-xyz/midl-js-executor-react';
+import { useBTCFeeRate, useEVMAddress } from '@midl-xyz/midl-js-executor-react';
 
 import { css } from '~/styled-system/css';
 import { hstack, vstack } from '~/styled-system/patterns';
 import { Wallet } from '@/widgets/wallet';
+import { calculateAdjustedBalance } from '@/shared/lib/fees';
 
 type FormData = {
   tokenAAmount: string;
@@ -225,13 +226,20 @@ export const LiquidityForm = () => {
     }
   }, []);
 
-  const isBalanceABigEnough =
-    parsedTokenAAmount <=
-    parseUnits(balanceA?.formattedBalance!, tokenAInfo.decimals);
+  const { data: feeRate = 2n } = useBTCFeeRate();
+  const rawBalanceA = balanceA?.balance ?? 0n;
+  const rawBalanceB = balanceB?.balance ?? 0n;
+  const isTokenABTC = tokenA === zeroAddress;
+  const isTokenBBTC = tokenB === zeroAddress;
+  const effectiveBalanceA = isTokenABTC
+    ? calculateAdjustedBalance(rawBalanceA, feeRate)
+    : rawBalanceA;
+  const effectiveBalanceB = isTokenBBTC
+    ? calculateAdjustedBalance(rawBalanceB, feeRate)
+    : rawBalanceB;
 
-  const isBalanceBBigEnough =
-    parsedTokenBAmount <=
-    parseUnits(balanceB?.formattedBalance!, tokenBInfo.decimals);
+  const isBalanceABigEnough = parsedTokenAAmount <= effectiveBalanceA;
+  const isBalanceBBigEnough = parsedTokenBAmount <= effectiveBalanceB;
 
   const isBalanceBigEnough = isBalanceABigEnough && isBalanceBBigEnough;
 
