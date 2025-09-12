@@ -11,8 +11,8 @@ export const calculateAdjustedBalance = (
   rawBalance: bigint,
   feeRate: bigint,
 ): bigint => {
-  const MIDL_FEE = 3516;
-  const BTC_TX_SIZE = feeRate * 1000n;
-  const feeWei = satoshisToWei(MIDL_FEE + Number(feeRate * BTC_TX_SIZE));
+  const MIDL_FEE = 1758n * feeRate;
+  const BTC_TX_FEE = feeRate * 1000n;
+  const feeWei = satoshisToWei(Number(MIDL_FEE + BTC_TX_FEE));
   return rawBalance > feeWei ? rawBalance - feeWei : 0n;
 };
