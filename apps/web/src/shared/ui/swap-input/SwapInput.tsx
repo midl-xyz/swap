@@ -43,14 +43,10 @@ export const SwapInput = ({
   const applyMax = () => {
     const rawBalance = balance.data?.balance ?? 0n;
 
-    console.log('Applying max balance:', { rawBalance, token });
-
     const isBTC = token === zeroAddress;
-    const adjustedBalance = calculateAdjustedBalance(
-      isBTC,
-      rawBalance,
-      feeRate,
-    );
+    const adjustedBalance = isBTC
+      ? calculateAdjustedBalance(rawBalance, feeRate)
+      : rawBalance;
 
     const formatted = formatUnits(adjustedBalance, tokenInfo.decimals);
 

@@ -92,11 +92,7 @@ describe('SwapInput applyMax', () => {
 
     const input = screen.getByRole('textbox');
 
-    const expected = calculateAdjustedBalance(
-      true,
-      startingBalance,
-      mockFeeRate,
-    );
+    const expected = calculateAdjustedBalance(startingBalance, mockFeeRate);
     await waitFor(() =>
       expect((input as HTMLInputElement).value).toBe(
         formatUnits(expected, mockDecimals),
