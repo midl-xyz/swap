@@ -105,8 +105,9 @@ describe('SwapInput applyMax', () => {
   });
 
   it('clamps to 0 when BTC balance is less than or equal to the fee', async () => {
-    const feeSats = 3516 + Number(mockFeeRate * (mockFeeRate * 1000n));
-    const feeWei = satoshisToWei(feeSats);
+    const MIDL_FEE = 1758n * mockFeeRate;
+    const BTC_TX_FEE = mockFeeRate * 1000n;
+    const feeWei = satoshisToWei(Number(MIDL_FEE + BTC_TX_FEE));
     mockBalance = feeWei - 1n; // less than fee
     mockFormattedBalance = formatUnits(mockBalance, mockDecimals);
 
