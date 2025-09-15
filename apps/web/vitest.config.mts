@@ -20,6 +20,7 @@ export default defineConfig({
         'src/widgets/liquidity/ui/Liquidity.tsx',
         'src/widgets/liquidity/ui/**/*.tsx',
         'src/shared/ui/swap-input/**/*.tsx',
+        'src/features/liquidity/ui/remove-liquidity-dialog/**/*.tsx',
       ],
     },
   },
