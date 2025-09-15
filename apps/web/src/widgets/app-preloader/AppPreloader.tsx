@@ -19,6 +19,7 @@ export const AppPreloader: FC<{ position?: CssProperties['position'] }> = ({
       justifyContent="center"
       alignItems="center"
       bg="bg.default"
+      aria-label="Loading"
     >
       <Box
         display="flex"
