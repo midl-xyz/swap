@@ -143,110 +143,106 @@ describe('RemoveLiquidityDialog', () => {
     mockReset = vi.fn();
     mockRunePresent = true;
     cleanup();
-    it('renders initial remove form with title and quick percentage buttons', () => {
-      renderWithClient(<RemoveLiquidityDialog open onClose={() => {}} />);
+  });
 
-      expect(
-        screen.getByRole('heading', { name: 'Remove Liquidity' }),
-      ).toBeInTheDocument();
+  it('renders initial remove form with title and quick percentage buttons', () => {
+    renderWithClient(<RemoveLiquidityDialog open onClose={() => {}} />);
 
-      expect(
-        screen.getByPlaceholderText('Enter amount (%)'),
-      ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Remove Liquidity' }),
+    ).toBeInTheDocument();
 
-      expect(screen.getByText('25%')).toBeInTheDocument();
-      expect(screen.getByText('50%')).toBeInTheDocument();
-      expect(screen.getByText('75%')).toBeInTheDocument();
-      expect(screen.getByText('Max')).toBeInTheDocument();
-    });
+    expect(screen.getByPlaceholderText('Enter amount (%)')).toBeInTheDocument();
 
-    it('quick buttons set value and enable submit; submit calls removeLiquidity with correct params', async () => {
-      renderWithClient(<RemoveLiquidityDialog open onClose={() => {}} />);
+    expect(screen.getByText('25%')).toBeInTheDocument();
+    expect(screen.getByText('50%')).toBeInTheDocument();
+    expect(screen.getByText('75%')).toBeInTheDocument();
+    expect(screen.getByText('Max')).toBeInTheDocument();
+  });
 
-      const submit = screen.getByRole('button', { name: 'Remove Liquidity' });
-      expect(submit).toBeDisabled();
+  it('quick buttons set value and enable submit; submit calls removeLiquidity with correct params', async () => {
+    renderWithClient(<RemoveLiquidityDialog open onClose={() => {}} />);
 
-      fireEvent.click(screen.getByText('25%'));
+    const submit = screen.getByRole('button', { name: 'Remove Liquidity' });
+    expect(submit).toBeDisabled();
 
-      await waitFor(() => expect(submit).not.toBeDisabled());
+    fireEvent.click(screen.getByText('25%'));
 
-      fireEvent.click(submit);
+    await waitFor(() => expect(submit).not.toBeDisabled());
 
-      await waitFor(() => expect(mockRemoveLiquidity).toHaveBeenCalled());
+    fireEvent.click(submit);
 
-      const arg = mockRemoveLiquidity.mock.calls[0][0];
+    await waitFor(() => expect(mockRemoveLiquidity).toHaveBeenCalled());
 
-      expect(arg.liquidity).toEqual(250000000000000000n);
-      expect(arg.to).toEqual(USER);
+    const arg = mockRemoveLiquidity.mock.calls[0][0];
 
-      const expectedA = parseUnits('0.495', 18);
-      const expectedB = parseUnits('0.99', 18);
-      expect(
-        arg.amountAMin - expectedA <= 1000n &&
-          expectedA - arg.amountAMin <= 1000n,
-      ).toBe(true);
-      expect(
-        arg.amountBMin - expectedB <= 1000n &&
-          expectedB - arg.amountBMin <= 1000n,
-      ).toBe(true);
-    });
+    expect(arg.liquidity).toEqual(250000000000000000n);
+    expect(arg.to).toEqual(USER);
 
-    it('shows price lines computed from reserves', () => {
-      renderWithClient(<RemoveLiquidityDialog open onClose={() => {}} />);
+    const expectedA = parseUnits('0.495', 18);
+    const expectedB = parseUnits('0.99', 18);
+    expect(
+      arg.amountAMin - expectedA <= 1000n &&
+        expectedA - arg.amountAMin <= 1000n,
+    ).toBe(true);
+    expect(
+      arg.amountBMin - expectedB <= 1000n &&
+        expectedB - arg.amountBMin <= 1000n,
+    ).toBe(true);
+  });
 
-      expect(
-        screen.getByText((_, el) => el?.textContent === '1 BBB = 0.5 AAA'),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText((_, el) => el?.textContent === '1 AAA = 2 BBB'),
-      ).toBeInTheDocument();
-    });
+  it('shows price lines computed from reserves', () => {
+    renderWithClient(<RemoveLiquidityDialog open onClose={() => {}} />);
 
-    it('validation: >100 invalid keeps submit disabled; 0 and 100 valid', async () => {
-      renderWithClient(<RemoveLiquidityDialog open onClose={() => {}} />);
+    expect(
+      screen.getByText((_, el) => el?.textContent === '1 BBB = 0.5 AAA'),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText((_, el) => el?.textContent === '1 AAA = 2 BBB'),
+    ).toBeInTheDocument();
+  });
 
-      const input = screen.getByPlaceholderText(
-        'Enter amount (%)',
-      ) as HTMLInputElement;
-      const submit = screen.getByRole('button', { name: 'Remove Liquidity' });
+  it('validation: >100 invalid keeps submit disabled; 0 and 100 valid', async () => {
+    renderWithClient(<RemoveLiquidityDialog open onClose={() => {}} />);
 
-      fireEvent.change(input, { target: { value: '150%' } });
-      await waitFor(() => expect(submit).toBeDisabled());
+    const input = screen.getByPlaceholderText(
+      'Enter amount (%)',
+    ) as HTMLInputElement;
+    const submit = screen.getByRole('button', { name: 'Remove Liquidity' });
 
-      fireEvent.change(input, { target: { value: '0%' } });
-      await waitFor(() => expect(submit).not.toBeDisabled());
+    fireEvent.change(input, { target: { value: '150%' } });
+    await waitFor(() => expect(submit).toBeDisabled());
 
-      fireEvent.change(input, { target: { value: '100%' } });
-      await waitFor(() => expect(submit).not.toBeDisabled());
-    });
+    fireEvent.change(input, { target: { value: '0%' } });
+    await waitFor(() => expect(submit).not.toBeDisabled());
 
-    it('after success shows BTC signing step with proper header and zeroAddress for assets when rune missing; and close triggers reset and invalidation', async () => {
-      mockIsSuccess = true;
-      mockRunePresent = false;
+    fireEvent.change(input, { target: { value: '100%' } });
+    await waitFor(() => expect(submit).not.toBeDisabled());
+  });
 
-      const spyInvalidate = vi.spyOn(
-        QueryClient.prototype,
-        'invalidateQueries',
-      );
-      const onClose = vi.fn();
+  it('after success shows BTC signing step with proper header and zeroAddress for assets when rune missing; and close triggers reset and invalidation', async () => {
+    mockIsSuccess = true;
+    mockRunePresent = false;
 
-      renderWithClient(<RemoveLiquidityDialog open onClose={onClose} />);
+    const spyInvalidate = vi.spyOn(QueryClient.prototype, 'invalidateQueries');
+    const onClose = vi.fn();
 
-      expect(
-        screen.getByText('Sign intentions to remove liquidity'),
-      ).toBeInTheDocument();
+    renderWithClient(<RemoveLiquidityDialog open onClose={onClose} />);
 
-      const signer = screen.getByTestId('intention-signer');
-      const assets = JSON.parse(signer.getAttribute('data-assets') || '[]');
-      expect(assets).toEqual([zeroAddress, zeroAddress]);
+    expect(
+      screen.getByText('Sign intentions to remove liquidity'),
+    ).toBeInTheDocument();
 
-      fireEvent.click(screen.getByText('Close'));
+    const signer = screen.getByTestId('intention-signer');
+    const assets = JSON.parse(signer.getAttribute('data-assets') || '[]');
+    expect(assets).toEqual([zeroAddress, zeroAddress]);
 
-      await waitFor(() => expect(onClose).toHaveBeenCalled());
-      expect(mockReset).toHaveBeenCalled();
-      expect(spyInvalidate).toHaveBeenCalled();
+    fireEvent.click(screen.getByText('Close'));
 
-      spyInvalidate.mockRestore();
-    });
+    await waitFor(() => expect(onClose).toHaveBeenCalled());
+    expect(mockReset).toHaveBeenCalled();
+    expect(spyInvalidate).toHaveBeenCalled();
+
+    spyInvalidate.mockRestore();
   });
 });
