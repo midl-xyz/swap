@@ -40,12 +40,14 @@ export const useSwapRates = () => {
         args: [value, pair],
       });
 
+      setIsFetching(false);
+
       return result;
     } catch (error: any) {
       setError(error);
-    } finally {
-      setIsFetching(false);
     }
+
+    setIsFetching(false);
   };
 
   return {
