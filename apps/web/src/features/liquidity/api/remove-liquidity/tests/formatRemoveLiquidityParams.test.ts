@@ -1,8 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { formatRemoveLiquidityParams } from '../utils/formatRemoveLiquidityParams';
-import { Address, maxUint256 } from 'viem';
+import { Address, maxUint256, parseEther } from 'viem';
 
-// Mock the global objects that the function uses
 vi.mock('@/global', () => ({
   WETHByChain: {
     1: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' as Address,
@@ -10,7 +9,7 @@ vi.mock('@/global', () => ({
   uniswapV2Router02Abi: [],
 }));
 
-describe('formatRemoveLiquidityParams', () => {
+describe('formatRemoveLiquidityParams:', () => {
   const mockChainId = 1;
   const mockWETHAddress =
     '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' as Address;
@@ -22,15 +21,15 @@ describe('formatRemoveLiquidityParams', () => {
   const defaultParams = {
     tokenA: mockTokenA,
     tokenB: mockTokenB,
-    liquidity: BigInt('500000000000000000'), // 0.5 token
-    amountAMin: BigInt('100000000000000000'), // 0.1 token
-    amountBMin: BigInt('200000000000000000'), // 0.2 token
+    liquidity: parseEther('0.5'),
+    amountAMin: parseEther('0.1'),
+    amountBMin: parseEther('0.2'),
     to: mockUserAddress,
-    deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
+    deadline: BigInt(Math.floor(Date.now() / 1000) + 3600),
     chainId: mockChainId,
   };
 
-  describe('ETH branch scenarios', () => {
+  describe('ETH branch scenarios:', () => {
     it('should return ETH parameters when tokenA is WETH and tokenB has rune', () => {
       const params = {
         ...defaultParams,
@@ -44,10 +43,10 @@ describe('formatRemoveLiquidityParams', () => {
       expect(result.isETH).toBe(true);
       expect(result.functionName).toBe('removeLiquidityETH');
       expect(result.args).toEqual([
-        mockTokenB, // erc20TokenAddress
+        mockTokenB,
         params.liquidity,
-        params.amountBMin, // erc20Min
-        params.amountAMin, // ethMin
+        params.amountBMin,
+        params.amountAMin,
         params.to,
         params.deadline,
       ]);
@@ -73,10 +72,10 @@ describe('formatRemoveLiquidityParams', () => {
       expect(result.isETH).toBe(true);
       expect(result.functionName).toBe('removeLiquidityETH');
       expect(result.args).toEqual([
-        mockTokenA, // erc20TokenAddress
+        mockTokenA,
         params.liquidity,
-        params.amountAMin, // erc20Min
-        params.amountBMin, // ethMin
+        params.amountAMin,
+        params.amountBMin,
         params.to,
         params.deadline,
       ]);
@@ -84,7 +83,7 @@ describe('formatRemoveLiquidityParams', () => {
     });
   });
 
-  describe('non-ETH scenarios', () => {
+  describe('non-ETH scenarios:', () => {
     it('should return regular parameters when neither token is WETH', () => {
       const params = {
         ...defaultParams,
