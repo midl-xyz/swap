@@ -189,13 +189,24 @@ export const RemoveLiquidityDialog = ({
         })}
       >
         {isSuccess && (
-          <IntentionSigner
-            onClose={handleClose}
-            assetsToWithdraw={[
-              runeA.rune?.id ? tokenA : zeroAddress,
-              runeB.rune?.id ? tokenB : zeroAddress,
-            ]}
-          />
+          <div className={vstack({ gap: 4, alignItems: 'center' })}>
+            <h3
+              className={css({
+                textStyle: 'h3',
+                textAlign: 'center',
+              })}
+            >
+              Sign intentions to remove liquidity
+            </h3>
+
+            <IntentionSigner
+              onClose={handleClose}
+              assetsToWithdraw={[
+                runeA.rune?.id ? tokenA : zeroAddress,
+                runeB.rune?.id ? tokenB : zeroAddress,
+              ]}
+            />
+          </div>
         )}
         {!isSuccess && (
           <form
