@@ -9,8 +9,19 @@ export default defineConfig({
     }),
     react(),
   ],
+  build: {
+    sourcemap: false,
+  },
+  esbuild: {
+    sourcemap: false,
+  },
+  optimizeDeps: {
+    include: ['@midl/executor', '@midl/core'],
+  },
+  logLevel: 'error',
   test: {
     environment: 'happy-dom',
+    silent: false,
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],

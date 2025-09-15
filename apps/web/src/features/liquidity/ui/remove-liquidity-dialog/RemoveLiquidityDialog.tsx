@@ -1,8 +1,10 @@
 import { useToken as useLocalToken } from '@/entities';
 import { IntentionSigner } from '@/features/btc/ui/IntentionSigner';
-import { useEstimateLiquidityPair } from '@/features/liquidity';
+import {
+  useEstimateLiquidityPair,
+  useRemoveLiquidityMidl,
+} from '@/features/liquidity';
 import { useGetPairStats } from '@/features/liquidity/api';
-import { useRemoveLiquidityMidl } from '@/features/liquidity/api/useRemoveLiquidityMidl';
 import { removeLiquidityDialogAtom } from '@/features/liquidity/model';
 import { useSlippage } from '@/features/slippage';
 import { TokenLogo, TokenValue } from '@/features/token';
@@ -136,12 +138,12 @@ export const RemoveLiquidityDialog = ({
       address,
       amount: parsedLPToken,
     },
+    tokenA,
+    tokenB,
   });
 
   const onSubmit = () => {
     removeLiquidity({
-      tokenA,
-      tokenB,
       liquidity: parsedLPToken,
       amountAMin: parseUnits(
         toPlainString(tokenAAmountWithSlippage),
