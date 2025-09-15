@@ -46,6 +46,7 @@
     "from-exponential": "^1.1.1",
     "graphql": "^16.8.1",
     "graphql-request": "5",
+    "gsap": "^3.13.0",
     "jotai": "^2.6.4",
     "lightweight-charts": "^5.0.8",
     "lucide-react": "^0.336.0",
