@@ -109,7 +109,6 @@ vi.mock('wagmi', () => ({
   useChainId: () => 1,
 }));
 
-// Stub IntentionSigner to avoid complex hooks, but expose received assets
 vi.mock('@/features/btc/ui/IntentionSigner', () => ({
   IntentionSigner: ({
     onClose,
@@ -128,7 +127,6 @@ vi.mock('@/features/btc/ui/IntentionSigner', () => ({
   ),
 }));
 
-// Import after mocks so that mocks take effect
 import { RemoveLiquidityDialog } from './RemoveLiquidityDialog';
 
 function renderWithClient(ui: React.ReactElement) {
@@ -165,26 +163,22 @@ describe('RemoveLiquidityDialog', () => {
   it('quick buttons set value and enable submit; submit calls removeLiquidity with correct params', async () => {
     renderWithClient(<RemoveLiquidityDialog open onClose={() => {}} />);
 
-    // Initially disabled
     const submit = screen.getByRole('button', { name: 'Remove Liquidity' });
     expect(submit).toBeDisabled();
 
-    // Click 25%
     fireEvent.click(screen.getByText('25%'));
 
-    // Should enable submit
     await waitFor(() => expect(submit).not.toBeDisabled());
 
-    // Submit
     fireEvent.click(submit);
 
     await waitFor(() => expect(mockRemoveLiquidity).toHaveBeenCalled());
 
     const arg = mockRemoveLiquidity.mock.calls[0][0];
-    // 25% of 1 LP with 18 decimals
+
     expect(arg.liquidity).toEqual(250000000000000000n);
     expect(arg.to).toEqual(USER);
-    // amounts with 1% slippage from 0.5 and 1 => ~0.495 and ~0.99 (allow tiny float rounding)
+
     const expectedA = parseUnits('0.495', 18);
     const expectedB = parseUnits('0.99', 18);
     expect(
@@ -200,7 +194,6 @@ describe('RemoveLiquidityDialog', () => {
   it('shows price lines computed from reserves', () => {
     renderWithClient(<RemoveLiquidityDialog open onClose={() => {}} />);
 
-    // Find elements by their full text content
     expect(
       screen.getByText((_, el) => el?.textContent === '1 BBB = 0.5 AAA'),
     ).toBeInTheDocument();
@@ -217,15 +210,12 @@ describe('RemoveLiquidityDialog', () => {
     ) as HTMLInputElement;
     const submit = screen.getByRole('button', { name: 'Remove Liquidity' });
 
-    // >100 invalid
     fireEvent.change(input, { target: { value: '150%' } });
     await waitFor(() => expect(submit).toBeDisabled());
 
-    // 0 valid
     fireEvent.change(input, { target: { value: '0%' } });
     await waitFor(() => expect(submit).not.toBeDisabled());
 
-    // 100 valid
     fireEvent.change(input, { target: { value: '100%' } });
     await waitFor(() => expect(submit).not.toBeDisabled());
   });
@@ -234,7 +224,6 @@ describe('RemoveLiquidityDialog', () => {
     mockIsSuccess = true;
     mockRunePresent = false;
 
-    // Spy on invalidateQueries on any QueryClient instance
     const spyInvalidate = vi.spyOn(QueryClient.prototype, 'invalidateQueries');
     const onClose = vi.fn();
 
@@ -248,7 +237,6 @@ describe('RemoveLiquidityDialog', () => {
     const assets = JSON.parse(signer.getAttribute('data-assets') || '[]');
     expect(assets).toEqual([zeroAddress, zeroAddress]);
 
-    // Click Close button
     fireEvent.click(screen.getByText('Close'));
 
     await waitFor(() => expect(onClose).toHaveBeenCalled());
