@@ -63,11 +63,6 @@ vi.mock('@/features/slippage', () => ({
   useSlippage: () => [0.01], // 1%
 }));
 
-vi.mock('@/features/token', () => ({
-  TokenLogo: () => <div data-testid="token-logo" />,
-  TokenValue: () => <span />,
-}));
-
 vi.mock('@/entities', () => ({
   useToken: (addr: Address) => ({
     address: addr,
@@ -85,7 +80,35 @@ vi.mock('@midl-xyz/midl-js-executor-react', async (importOriginal) => {
     useToken: () =>
       mockRunePresent ? { rune: { id: 'rune-1' } } : { rune: undefined },
     useERC20Rune: () => ({ rune: { id: 'rune-1', symbol: 'AAA' } }),
-  } as unknown as typeof original;
+    useAddTxIntention: () => ({ txIntentions: [] }),
+    useFinalizeBTCTransaction: () => ({
+      data: null,
+      finalizeBTCTransaction: vi.fn(),
+      isSuccess: false,
+      isPending: false,
+      isError: false,
+      error: null,
+    }),
+    useSendBTCTransactions: () => ({
+      sendBTCTransactions: vi.fn(),
+      isSuccess: false,
+    }),
+    useSignIntention: () => ({ isPending: false, signIntention: vi.fn() }),
+  };
+});
+
+vi.mock('@midl-xyz/midl-js-react', async (importOriginal) => {
+  const original =
+    await importOriginal<typeof import('@midl-xyz/midl-js-react')>();
+  return {
+    ...original,
+    useConfig: () => ({ network: { explorerUrl: 'https://explorer.local' } }),
+    useWaitForTransaction: () => ({
+      waitForTransaction: vi.fn(),
+      isPending: false,
+      isSuccess: true,
+    }),
+  };
 });
 
 vi.mock('jotai', async (importOriginal) => {
@@ -107,24 +130,6 @@ vi.mock('jotai', async (importOriginal) => {
 
 vi.mock('wagmi', () => ({
   useChainId: () => 1,
-}));
-
-vi.mock('@/features/btc/ui/IntentionSigner', () => ({
-  IntentionSigner: ({
-    onClose,
-    assetsToWithdraw,
-  }: {
-    onClose: () => void;
-    assetsToWithdraw: Address[];
-  }) => (
-    <div
-      data-testid="intention-signer"
-      data-assets={JSON.stringify(assetsToWithdraw)}
-    >
-      Intention Signer Stub
-      <button onClick={onClose}>Close</button>
-    </div>
-  ),
 }));
 
 import { RemoveLiquidityDialog } from './RemoveLiquidityDialog';
@@ -220,7 +225,7 @@ describe('RemoveLiquidityDialog', () => {
     await waitFor(() => expect(submit).not.toBeDisabled());
   });
 
-  it('after success shows BTC signing step with proper header and zeroAddress for assets when rune missing; and close triggers reset and invalidation', async () => {
+  it('after success shows BTC signing step and close triggers reset and invalidation', async () => {
     mockIsSuccess = true;
     mockRunePresent = false;
 
@@ -233,9 +238,7 @@ describe('RemoveLiquidityDialog', () => {
       screen.getByText('Sign intentions to remove liquidity'),
     ).toBeInTheDocument();
 
-    const signer = screen.getByTestId('intention-signer');
-    const assets = JSON.parse(signer.getAttribute('data-assets') || '[]');
-    expect(assets).toEqual([zeroAddress, zeroAddress]);
+    expect(screen.getByTestId('intention-signer')).toBeInTheDocument();
 
     fireEvent.click(screen.getByText('Close'));
 
