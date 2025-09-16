@@ -94,7 +94,6 @@ describe('RemoveLiquidityDialog', () => {
     mockRemoveLiquidity = vi.fn();
     mockReset = vi.fn();
     mockRunePresent = true;
-    cleanup();
   });
 
   it('renders initial remove form with title and quick percentage buttons', () => {
