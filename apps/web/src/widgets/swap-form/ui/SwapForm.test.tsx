@@ -1,13 +1,7 @@
 import React from 'react';
 import { Address, zeroAddress, parseUnits } from 'viem';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import {
-  render,
-  screen,
-  fireEvent,
-  cleanup,
-  waitFor,
-} from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 
 vi.mock('next/navigation', () => ({
@@ -39,9 +33,8 @@ vi.mock('@midl-xyz/midl-js-executor-react', () => ({
 const mockToastSuccess = vi.fn();
 vi.mock('react-hot-toast', () => ({
   default: {
-    success: (
-      ...args: Parameters<typeof mockToastSuccess>
-    ) => mockToastSuccess(...args),
+    success: (...args: Parameters<typeof mockToastSuccess>) =>
+      mockToastSuccess(...args),
   },
 }));
 
@@ -94,14 +87,16 @@ const mockUseTokenBalance = vi.fn().mockReturnValue({
 });
 vi.mock('@/features', () => ({
   useLastUsedTokens: () => ({
-    selectTokens: (
-      ...args: Parameters<typeof mockSelectTokens>
-    ) => mockSelectTokens(...args),
+    selectTokens: (...args: Parameters<typeof mockSelectTokens>) =>
+      mockSelectTokens(...args),
   }),
-  useTokenBalance: (
-    ...args: Parameters<typeof mockUseTokenBalance>
-  ) => mockUseTokenBalance(...args),
+  useTokenBalance: (...args: Parameters<typeof mockUseTokenBalance>) =>
+    mockUseTokenBalance(...args),
   useSlippage: () => [0],
+  // Minimal TokenButton to satisfy SwapInput rendering
+  TokenButton: (props: any) => (
+    <button type="button" data-testid="token-button" {...props} />
+  ),
 }));
 
 const mockReadSwapRates = vi.fn();
@@ -109,9 +104,8 @@ let mockIsFetching = false;
 let mockError: any = null;
 vi.mock('@/features/swap/api/useSwapRates', () => ({
   useSwapRates: () => ({
-    read: (
-      ...args: Parameters<typeof mockReadSwapRates>
-    ) => mockReadSwapRates(...args),
+    read: (...args: Parameters<typeof mockReadSwapRates>) =>
+      mockReadSwapRates(...args),
     error: mockError,
     isFetching: mockIsFetching,
   }),
@@ -120,43 +114,14 @@ vi.mock('@/features/swap/api/useSwapRates', () => ({
 const mockSwapAsync = vi.fn(async () => {});
 vi.mock('@/features/swap/api/useSwapMidl', () => ({
   useSwapMidl: () => ({
-    swapAsync: (
-      ...args: Parameters<typeof mockSwapAsync>
-    ) => mockSwapAsync(...args),
+    swapAsync: (...args: Parameters<typeof mockSwapAsync>) =>
+      mockSwapAsync(...args),
   }),
 }));
-
-vi.mock('@/shared', async () => {
-  const { useFormContext } = await import('react-hook-form');
-  return {
-    Button: ({ children, type = 'button', ...props }: any) => (
-      <button type={type} {...props}>
-        {children}
-      </button>
-    ),
-    parseNumberInput: (v: string) => v,
-    SwapInput: ({ amountName, onChange, ...rest }: any) => {
-      const form = useFormContext();
-      const value = form.watch(amountName);
-      return (
-        <input
-          data-testid={amountName}
-          value={value ?? ''}
-          onChange={(e) => {
-            form.setValue(amountName, (e.target as HTMLInputElement).value);
-            onChange && onChange(e);
-          }}
-          {...rest}
-        />
-      );
-    },
-  };
-});
 
 import { SwapForm } from './SwapForm';
 
 describe('SwapForm', () => {
-  afterEach(() => cleanup());
   beforeEach(() => {
     mockReadSwapRates.mockReset();
     mockSwapAsync.mockReset();
@@ -186,7 +151,7 @@ describe('SwapForm', () => {
       'textbox',
     ) as HTMLInputElement[];
 
-    fireEvent.change(input, { target: { value: '1.5' } });
+    fireEvent.input(input, { target: { value: '1.5' } });
 
     await waitFor(() => {
       expect(mockReadSwapRates).toHaveBeenCalledTimes(1);
@@ -206,7 +171,7 @@ describe('SwapForm', () => {
       'textbox',
     ) as HTMLInputElement[];
 
-    fireEvent.change(output, { target: { value: '2' } });
+    fireEvent.input(output, { target: { value: '2' } });
 
     await waitFor(() => {
       expect(mockReadSwapRates).toHaveBeenCalledTimes(1);
@@ -242,7 +207,7 @@ describe('SwapForm', () => {
 
     const [input] = screen.getAllByRole('textbox') as HTMLInputElement[];
 
-    fireEvent.change(input, { target: { value: '101' } });
+    fireEvent.input(input, { target: { value: '101' } });
 
     await waitFor(() => {
       const btn = screen.getByRole('button', { name: 'Insufficient Balance' });
@@ -262,7 +227,7 @@ describe('SwapForm', () => {
 
     const [input] = screen.getAllByRole('textbox') as HTMLInputElement[];
 
-    fireEvent.change(input, { target: { value: '1' } });
+    fireEvent.input(input, { target: { value: '1' } });
 
     await waitFor(() => {
       const btn = screen.getByRole('button', {
@@ -282,7 +247,7 @@ describe('SwapForm', () => {
 
     const [input] = screen.getAllByRole('textbox') as HTMLInputElement[];
 
-    fireEvent.change(input, { target: { value: '1' } });
+    fireEvent.input(input, { target: { value: '1' } });
 
     await waitFor(() => {
       const btn = screen.getByRole('button', { name: 'Swap' });

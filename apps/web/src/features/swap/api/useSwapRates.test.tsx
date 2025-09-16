@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { renderHook, act, waitFor, cleanup } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 
 import { useSwapRates } from './useSwapRates';
@@ -27,7 +27,6 @@ vi.mock('@/global', () => ({
 describe('useSwapRates (renderHook)', () => {
   beforeEach(() => {
     readContractMock.mockReset();
-    cleanup();
   });
 
   it('calls getAmountsOut by default and returns result', async () => {
