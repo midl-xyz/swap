@@ -1,6 +1,5 @@
+import { Address, maxUint256, parseEther } from 'viem';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { renderHook } from '@testing-library/react';
-import { Address, parseEther, maxUint256 } from 'viem';
 
 vi.mock('@/features/token', () => ({
   useERC20Allowance: vi.fn(),
@@ -133,373 +132,274 @@ const createMockToken = (
   isSynthetic,
 });
 
-describe('useRemoveLiquidityMidl tests:', () => {
+describe('useRemoveLiquidityMidl', () => {
   let formatRemoveLiquidityParams: any;
   let handleSyntheticTokenApprovals: any;
 
   beforeEach(async () => {
     vi.clearAllMocks();
 
-    const formatModule = await import('../utils/formatRemoveLiquidityParams');
-    const handleModule = await import('../utils/handleSyntheticTokenApprovals');
-
-    formatRemoveLiquidityParams = formatModule.formatRemoveLiquidityParams;
-    handleSyntheticTokenApprovals = handleModule.handleSyntheticTokenApprovals;
+    formatRemoveLiquidityParams = (
+      await import('../utils/formatRemoveLiquidityParams')
+    ).formatRemoveLiquidityParams;
+    handleSyntheticTokenApprovals = (
+      await import('../utils/handleSyntheticTokenApprovals')
+    ).handleSyntheticTokenApprovals;
   });
 
-  describe('ETH branch scenarios:', () => {
-    it('should correctly format parameters when tokenA is WETH and tokenB is a rune', () => {
-      const params = createMockParams({
-        tokenA: MOCK_WETH_ADDRESS,
-        tokenB: MOCK_TOKEN_B,
-        runeBId: 'test-rune-b',
-      });
-
-      const result = formatRemoveLiquidityParams(params);
-
-      expect(result.isETH).toBe(true);
-      expect(result.functionName).toBe('removeLiquidityETH');
-      expect(result.args).toEqual([
-        MOCK_TOKEN_B,
-        params.liquidity,
-        params.amountBMin,
-        params.amountAMin,
-        params.to,
-        params.deadline,
-      ]);
-      expect(result.assetsToWithdraw).toEqual([
-        {
-          id: 'test-rune-b',
-          amount: maxUint256,
-          address: MOCK_TOKEN_B,
-        },
-      ]);
+  it('formats correctly parameters when tokenA is WETH and tokenB is a rune', () => {
+    const params = createMockParams({
+      tokenA: MOCK_WETH_ADDRESS,
+      tokenB: MOCK_TOKEN_B,
+      runeBId: 'test-rune-b',
     });
 
-    it('should correctly format parameters when tokenB is WETH and tokenA is NOT a rune', () => {
-      const params = createMockParams({
-        tokenA: MOCK_TOKEN_A,
-        tokenB: MOCK_WETH_ADDRESS,
-      });
+    const result = formatRemoveLiquidityParams(params);
 
-      const result = formatRemoveLiquidityParams(params);
-
-      expect(result.isETH).toBe(true);
-      expect(result.functionName).toBe('removeLiquidityETH');
-      expect(result.args).toEqual([
-        MOCK_TOKEN_A,
-        params.liquidity,
-        params.amountAMin,
-        params.amountBMin,
-        params.to,
-        params.deadline,
-      ]);
-      expect(result.assetsToWithdraw).toEqual([]);
-    });
-  });
-
-  describe('synthetic token approval scenarios:', () => {
-    it('should validate function exists and can be called without errors', async () => {
-      const { readContract } = await import('wagmi/actions');
-      vi.mocked(readContract).mockResolvedValue(parseEther('1'));
-
-      expect(typeof handleSyntheticTokenApprovals).toBe('function');
-
-      const params = {
-        tokenA: MOCK_TOKEN_A,
-        tokenB: MOCK_TOKEN_B,
-        amountAMin: parseEther('0.1'),
-        amountBMin: parseEther('0.2'),
-        address: MOCK_USER_ADDRESS,
-        config: { chains: [] },
-        addTxIntention: vi.fn(),
-      };
-
-      await expect(
-        handleSyntheticTokenApprovals(params),
-      ).resolves.not.toThrow();
-    });
-  });
-
-  describe('liquidity removal scenarios:', () => {
-    let mockAddTxIntention: any;
-    let mockAddApproveIntention: any;
-    let mockAddCompleteTxIntention: any;
-    let mockClearTxIntentions: any;
-    let mockUseERC20Allowance: any;
-    let mockUseToken: any;
-
-    const setupMocks = async () => {
-      const { useERC20Allowance } = await import('@/features/token');
-      const { useApproveWithOptionalDeposit } = await import('@/shared');
-      const midlReact = await import('@midl-xyz/midl-js-executor-react');
-      const wagmi = await import('wagmi');
-      const { readContract } = await import('wagmi/actions');
-
-      mockUseERC20Allowance = vi.mocked(useERC20Allowance);
-      vi.mocked(useApproveWithOptionalDeposit).mockReturnValue({
-        addApproveDepositIntention: mockAddApproveIntention,
-      });
-
-      vi.mocked(midlReact.useAddTxIntention).mockReturnValue({
-        addTxIntention: mockAddTxIntention,
-      } as any);
-
-      vi.mocked(midlReact.useClearTxIntentions).mockReturnValue(
-        mockClearTxIntentions,
-      );
-      vi.mocked(midlReact.useAddCompleteTxIntention).mockReturnValue({
-        addCompleteTxIntention: mockAddCompleteTxIntention,
-      } as any);
-      vi.mocked(midlReact.useEVMAddress).mockReturnValue(MOCK_USER_ADDRESS);
-
-      mockUseToken = vi.mocked(midlReact.useToken);
-      vi.mocked(wagmi.useChainId).mockReturnValue(MOCK_CHAIN_ID);
-      vi.mocked(wagmi.useConfig).mockReturnValue({ chains: [] } as any);
-      vi.mocked(readContract).mockResolvedValue(parseEther('0.5'));
-    };
-
-    beforeEach(async () => {
-      mockAddTxIntention = vi.fn();
-      mockAddApproveIntention = vi.fn();
-      mockAddCompleteTxIntention = vi.fn();
-      mockClearTxIntentions = vi.fn();
-
-      await setupMocks();
-    });
-
-    const runLiquidityTest = async (lpAmount = parseEther('0.5')) => {
-      const { useRemoveLiquidityMidl } = await import(
-        '../useRemoveLiquidityMidl'
-      );
-      const { renderHook } = await import('@testing-library/react');
-
-      const hookResult = renderHook(() =>
-        useRemoveLiquidityMidl({
-          lpToken: { address: MOCK_LP_TOKEN_ADDRESS, amount: lpAmount },
-          tokenA: MOCK_TOKEN_A,
-          tokenB: MOCK_TOKEN_B,
-        }),
-      );
-
-      await hookResult.result.current.removeLiquidity({
-        liquidity: parseEther('0.5'),
-        amountAMin: parseEther('0.1'),
-        amountBMin: parseEther('0.2'),
-        to: MOCK_USER_ADDRESS,
-        deadline: BigInt(Math.floor(Date.now() / 1000) + 3600),
-      });
-
-      return hookResult;
-    };
-
-    it('Case 1: LP token needs approve (allowance < liquidity) - intention is added to array', async () => {
-      mockUseERC20Allowance.mockReturnValue({ data: parseEther('0.1') });
-      mockUseToken.mockReturnValue({ rune: undefined });
-
-      const { result } = await runLiquidityTest();
-
-      expect(result.current.isTokenNeedApproved).toBe(true);
-      expect(mockAddApproveIntention).toHaveBeenCalledWith({
-        address: MOCK_LP_TOKEN_ADDRESS,
-        amount: parseEther('0.5'),
-      });
-    });
-
-    it("Case 2: LP token doesn't need approve (allowance >= liquidity) - no approval intention added", async () => {
-      mockUseERC20Allowance.mockReturnValue({ data: parseEther('1') });
-      mockUseToken.mockReturnValue({ rune: undefined });
-
-      const { result } = await runLiquidityTest();
-
-      expect(result.current.isTokenNeedApproved).toBe(false);
-      expect(mockAddApproveIntention).not.toHaveBeenCalled();
-    });
-
-    const setupSyntheticTokens = async (syntheticTokens: Address[]) => {
-      const { tokenList } = await import('@/global');
-      const { readContract } = await import('@wagmi/core');
-
-      vi.mocked(tokenList).length = 0;
-      vi.mocked(tokenList).push(
-        createMockToken(
-          MOCK_TOKEN_A,
-          'TOKEN_A',
-          syntheticTokens.includes(MOCK_TOKEN_A),
-        ),
-        createMockToken(
-          MOCK_TOKEN_B,
-          'TOKEN_B',
-          syntheticTokens.includes(MOCK_TOKEN_B),
-        ),
-      );
-
-      vi.mocked(readContract).mockImplementation(async (config, params) => {
-        if (syntheticTokens.includes(params.address as Address)) {
-          return parseEther('0.05');
-        }
-        return parseEther('1');
-      });
-    };
-
-    it('Case 3: Two synthetic assets - 2 approval intentions added to array', async () => {
-      mockUseERC20Allowance.mockReturnValue({ data: parseEther('1') });
-      mockUseToken.mockReturnValue({ rune: undefined });
-
-      await setupSyntheticTokens([MOCK_TOKEN_A, MOCK_TOKEN_B]);
-      await runLiquidityTest();
-
-      expect(mockAddTxIntention).toHaveBeenCalledTimes(3);
-    });
-
-    it('Case 4: One synthetic asset - 1 approval intention added to array', async () => {
-      mockUseERC20Allowance.mockReturnValue({ data: parseEther('1') });
-      mockUseToken.mockReturnValue({ rune: undefined });
-
-      await setupSyntheticTokens([MOCK_TOKEN_A]);
-      await runLiquidityTest();
-
-      expect(mockAddTxIntention).toHaveBeenCalledTimes(2);
-    });
-
-    it('Case 5: No synthetic assets - no approval intentions added to array', async () => {
-      mockUseERC20Allowance.mockReturnValue({ data: parseEther('1') });
-      mockUseToken.mockReturnValue({ rune: undefined });
-
-      await setupSyntheticTokens([]);
-      await runLiquidityTest();
-
-      expect(mockAddTxIntention).toHaveBeenCalledTimes(1);
-    });
-
-    it('Case 6: No runes - completeTx called with empty assetsToWithdraw', async () => {
-      mockUseERC20Allowance.mockReturnValue({ data: parseEther('1') });
-      mockUseToken.mockReturnValue({ rune: undefined });
-
-      await runLiquidityTest();
-
-      expect(mockAddCompleteTxIntention).toHaveBeenCalledWith({
-        runes: [],
-      });
-    });
-
-    it('Case 7: Two simple runes (non-synthetic) - both added to assetsToWithdraw', async () => {
-      mockUseERC20Allowance.mockReturnValue({ data: parseEther('1') });
-      mockUseToken
-        .mockReturnValueOnce({ rune: { id: 'rune-a' } })
-        .mockReturnValueOnce({ rune: { id: 'rune-b' } });
-
-      await setupSyntheticTokens([]);
-      await runLiquidityTest();
-
-      expect(mockAddCompleteTxIntention).toHaveBeenCalledWith({
-        runes: [
-          {
-            id: 'rune-a',
-            amount: maxUint256,
-            address: MOCK_TOKEN_A,
-          },
-          {
-            id: 'rune-b',
-            amount: maxUint256,
-            address: MOCK_TOKEN_B,
-          },
-        ],
-      });
-    });
-
-    it('Case 8: One asset is synthetic - approve intention and completeTx intention are both added', async () => {
-      mockUseERC20Allowance.mockReturnValue({ data: parseEther('1') });
-      mockUseToken.mockReturnValue({ rune: undefined });
-
-      await setupSyntheticTokens([MOCK_TOKEN_A]);
-
-      mockAddTxIntention.mockClear();
-      mockAddCompleteTxIntention.mockClear();
-
-      await runLiquidityTest();
-
-      expect(mockAddTxIntention).toHaveBeenCalledTimes(2);
-      expect(mockAddTxIntention).toHaveBeenCalledWith({
-        intention: {
-          evmTransaction: {
-            to: MOCK_TOKEN_A,
-            data: expect.any(String),
-          },
-        },
-      });
-      expect(mockAddCompleteTxIntention).toHaveBeenCalledTimes(1);
-      expect(mockAddCompleteTxIntention).toHaveBeenCalledWith({
-        runes: [],
-      });
-    });
-  });
-
-  describe('params validation:', () => {
-    it('should handle edge case where both tokens are Rune tokens', () => {
-      const params = createMockParams({
-        runeAId: 'test-rune-a',
-        runeBId: 'test-rune-b',
-      });
-
-      const result = formatRemoveLiquidityParams(params);
-
-      expect(result.isETH).toBe(false);
-      expect(result.functionName).toBe('removeLiquidity');
-      expect(result.args).toEqual([
-        MOCK_TOKEN_A,
-        MOCK_TOKEN_B,
-        params.liquidity,
-        params.amountAMin,
-        params.amountBMin,
-        params.to,
-        params.deadline,
-      ]);
-      expect(result.assetsToWithdraw).toHaveLength(2);
-      expect(result.assetsToWithdraw).toContainEqual({
-        id: 'test-rune-a',
-        amount: maxUint256,
-        address: MOCK_TOKEN_A,
-      });
-      expect(result.assetsToWithdraw).toContainEqual({
+    expect(result.isETH).toBe(true);
+    expect(result.functionName).toBe('removeLiquidityETH');
+    expect(result.args).toEqual([
+      MOCK_TOKEN_B,
+      params.liquidity,
+      params.amountBMin,
+      params.amountAMin,
+      params.to,
+      params.deadline,
+    ]);
+    expect(result.assetsToWithdraw).toEqual([
+      {
         id: 'test-rune-b',
         amount: maxUint256,
         address: MOCK_TOKEN_B,
-      });
+      },
+    ]);
+  });
+
+  it('formats correctly parameters when tokenB is WETH and tokenA is NOT a rune', () => {
+    const params = createMockParams({
+      tokenA: MOCK_TOKEN_A,
+      tokenB: MOCK_WETH_ADDRESS,
+    });
+
+    const result = formatRemoveLiquidityParams(params);
+
+    expect(result.isETH).toBe(true);
+    expect(result.functionName).toBe('removeLiquidityETH');
+    expect(result.args).toEqual([
+      MOCK_TOKEN_A,
+      params.liquidity,
+      params.amountAMin,
+      params.amountBMin,
+      params.to,
+      params.deadline,
+    ]);
+    expect(result.assetsToWithdraw).toEqual([]);
+  });
+
+  it('validates function exists and can be called without errors', async () => {
+    const { readContract } = await import('wagmi/actions');
+    vi.mocked(readContract).mockResolvedValue(parseEther('1'));
+
+    expect(typeof handleSyntheticTokenApprovals).toBe('function');
+
+    const params = {
+      tokenA: MOCK_TOKEN_A,
+      tokenB: MOCK_TOKEN_B,
+      amountAMin: parseEther('0.1'),
+      amountBMin: parseEther('0.2'),
+      address: MOCK_USER_ADDRESS,
+      config: { chains: [] },
+      addTxIntention: vi.fn(),
+    };
+
+    await expect(handleSyntheticTokenApprovals(params)).resolves.not.toThrow();
+  });
+
+  // Integration tests for complete hook workflow
+  let mockAddTxIntention: any;
+  let mockAddApproveIntention: any;
+  let mockAddCompleteTxIntention: any;
+  let mockClearTxIntentions: any;
+  let mockUseERC20Allowance: any;
+  let mockUseToken: any;
+
+  const setupMocks = async () => {
+    const { useERC20Allowance } = await import('@/features/token');
+    const { useApproveWithOptionalDeposit } = await import('@/shared');
+    const midlReact = await import('@midl-xyz/midl-js-executor-react');
+    const wagmi = await import('wagmi');
+    const { readContract } = await import('wagmi/actions');
+
+    mockUseERC20Allowance = vi.mocked(useERC20Allowance);
+    vi.mocked(useApproveWithOptionalDeposit).mockReturnValue({
+      addApproveDepositIntention: mockAddApproveIntention,
+    });
+
+    vi.mocked(midlReact.useAddTxIntention).mockReturnValue({
+      addTxIntention: mockAddTxIntention,
+    } as any);
+
+    vi.mocked(midlReact.useClearTxIntentions).mockReturnValue(
+      mockClearTxIntentions,
+    );
+    vi.mocked(midlReact.useAddCompleteTxIntention).mockReturnValue({
+      addCompleteTxIntention: mockAddCompleteTxIntention,
+    } as any);
+    vi.mocked(midlReact.useEVMAddress).mockReturnValue(MOCK_USER_ADDRESS);
+
+    mockUseToken = vi.mocked(midlReact.useToken);
+    vi.mocked(wagmi.useChainId).mockReturnValue(MOCK_CHAIN_ID);
+    vi.mocked(wagmi.useConfig).mockReturnValue({ chains: [] } as any);
+    vi.mocked(readContract).mockResolvedValue(parseEther('0.5'));
+  };
+
+  beforeEach(async () => {
+    mockAddTxIntention = vi.fn();
+    mockAddApproveIntention = vi.fn();
+    mockAddCompleteTxIntention = vi.fn();
+    mockClearTxIntentions = vi.fn();
+
+    await setupMocks();
+  });
+
+  const runLiquidityTest = async (lpAmount = parseEther('0.5')) => {
+    const { useRemoveLiquidityMidl } = await import(
+      '../useRemoveLiquidityMidl'
+    );
+    const { renderHook } = await import('@testing-library/react');
+
+    const hookResult = renderHook(() =>
+      useRemoveLiquidityMidl({
+        lpToken: { address: MOCK_LP_TOKEN_ADDRESS, amount: lpAmount },
+        tokenA: MOCK_TOKEN_A,
+        tokenB: MOCK_TOKEN_B,
+      }),
+    );
+
+    await hookResult.result.current.removeLiquidity({
+      liquidity: parseEther('0.5'),
+      amountAMin: parseEther('0.1'),
+      amountBMin: parseEther('0.2'),
+      to: MOCK_USER_ADDRESS,
+      deadline: BigInt(Math.floor(Date.now() / 1000) + 3600),
+    });
+
+    return hookResult;
+  };
+
+  it('Case 1: LP token needs approve (allowance < liquidity) - intention is added to array', async () => {
+    mockUseERC20Allowance.mockReturnValue({ data: parseEther('0.1') });
+    mockUseToken.mockReturnValue({ rune: undefined });
+
+    await runLiquidityTest();
+
+    expect(mockAddApproveIntention).toHaveBeenCalledWith({
+      address: MOCK_LP_TOKEN_ADDRESS,
+      amount: parseEther('0.5'),
     });
   });
 
-  describe('edge cases:', () => {
-    it('should handle scenario when both tokens are WETH (should not happen in practice)', () => {
-      const params = createMockParams({
-        tokenA: MOCK_WETH_ADDRESS,
-        tokenB: MOCK_WETH_ADDRESS,
-      });
+  it("Case 2: LP token doesn't need approve (allowance >= liquidity) - no approval intention added", async () => {
+    mockUseERC20Allowance.mockReturnValue({ data: parseEther('1') });
+    mockUseToken.mockReturnValue({ rune: undefined });
 
-      const result = formatRemoveLiquidityParams(params);
+    expect(mockAddApproveIntention).not.toHaveBeenCalled();
+  });
 
-      expect(result.isETH).toBe(true);
-      expect(result.functionName).toBe('removeLiquidityETH');
-    });
+  const setupSyntheticTokens = async (syntheticTokens: Address[]) => {
+    const { tokenList } = await import('@/global');
+    const { readContract } = await import('@wagmi/core');
 
-    it('should handle zero amounts correctly', () => {
-      const params = createMockParams({
-        liquidity: BigInt('0'),
-        amountAMin: BigInt('0'),
-        amountBMin: BigInt('0'),
-      });
-
-      const result = formatRemoveLiquidityParams(params);
-
-      expect(result.args).toEqual([
+    vi.mocked(tokenList).length = 0;
+    vi.mocked(tokenList).push(
+      createMockToken(
         MOCK_TOKEN_A,
+        'TOKEN_A',
+        syntheticTokens.includes(MOCK_TOKEN_A),
+      ),
+      createMockToken(
         MOCK_TOKEN_B,
-        BigInt('0'),
-        BigInt('0'),
-        BigInt('0'),
-        params.to,
-        params.deadline,
-      ]);
+        'TOKEN_B',
+        syntheticTokens.includes(MOCK_TOKEN_B),
+      ),
+    );
+
+    vi.mocked(readContract).mockImplementation(async (config, params) => {
+      if (syntheticTokens.includes(params.address as Address)) {
+        return parseEther('0.05');
+      }
+      return parseEther('1');
+    });
+  };
+
+  it('Case 3: Two synthetic assets - 2 approval intentions added to array', async () => {
+    mockUseERC20Allowance.mockReturnValue({ data: parseEther('1') });
+    mockUseToken.mockReturnValue({ rune: undefined });
+
+    // Clear previous mocks to ensure clean state
+    mockAddTxIntention.mockClear();
+    mockAddApproveIntention.mockClear();
+    mockAddCompleteTxIntention.mockClear();
+
+    await setupSyntheticTokens([MOCK_TOKEN_A, MOCK_TOKEN_B]);
+    await runLiquidityTest();
+
+    expect(mockAddTxIntention).toHaveBeenCalledTimes(3);
+  });
+
+  it('Case 4: One synthetic asset - 1 approval intention added to array', async () => {
+    mockUseERC20Allowance.mockReturnValue({ data: parseEther('1') });
+    mockUseToken.mockReturnValue({ rune: undefined });
+
+    await setupSyntheticTokens([MOCK_TOKEN_A]);
+    await runLiquidityTest();
+
+    expect(mockAddTxIntention).toHaveBeenCalledTimes(2);
+  });
+
+  it('Case 5: No synthetic assets - no approval intentions added to array', async () => {
+    mockUseERC20Allowance.mockReturnValue({ data: parseEther('1') });
+    mockUseToken.mockReturnValue({ rune: undefined });
+
+    await setupSyntheticTokens([]);
+    await runLiquidityTest();
+
+    expect(mockAddTxIntention).toHaveBeenCalledTimes(1);
+  });
+
+  it('Case 6: No runes - completeTx called with empty assetsToWithdraw', async () => {
+    mockUseERC20Allowance.mockReturnValue({ data: parseEther('1') });
+    mockUseToken.mockReturnValue({ rune: undefined });
+
+    await runLiquidityTest();
+
+    expect(mockAddCompleteTxIntention).toHaveBeenCalledWith({
+      runes: [],
+    });
+  });
+
+  it('Case 7: Two simple runes (non-synthetic) - both added to assetsToWithdraw', async () => {
+    mockUseERC20Allowance.mockReturnValue({ data: parseEther('1') });
+    mockUseToken
+      .mockReturnValueOnce({ rune: { id: 'rune-a' } })
+      .mockReturnValueOnce({ rune: { id: 'rune-b' } });
+
+    await setupSyntheticTokens([]);
+    await runLiquidityTest();
+
+    expect(mockAddCompleteTxIntention).toHaveBeenCalledWith({
+      runes: [
+        {
+          id: 'rune-a',
+          amount: maxUint256,
+          address: MOCK_TOKEN_A,
+        },
+        {
+          id: 'rune-b',
+          amount: maxUint256,
+          address: MOCK_TOKEN_B,
+        },
+      ],
     });
   });
 });

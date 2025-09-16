@@ -212,19 +212,40 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
           {rune?.id && customToken.symbol === 'N/A' && (
             <div className={vstack({ gap: 2, alignItems: 'start' })}>
               <div>Not added to the MIDL ecosystem yet. </div>
-              <div className={hstack()}>
-                <TokenLogo runeId={rune.id} size={12} />
-                <div className={vstack({ gap: 0, alignItems: 'start' })}>
-                  <div>{rune.spaced_name}</div>
-                  <div>{rune.symbol}</div>
+              <div
+                className={hstack({
+                  justifyContent: 'space-between',
+                  width: 'full',
+                })}
+              >
+                <div className={hstack({ gap: 2, justifyContent: 'start' })}>
+                  <TokenLogo runeId={rune.id} size={12} />
+                  <div
+                    className={vstack({
+                      gap: 0,
+                      justifyContent: 'start',
+                      alignItems: 'start',
+                      maxWidth: '100px',
+                    })}
+                  >
+                    <div
+                      style={{
+                        width: 120,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}
+                    >
+                      {rune.spaced_name}
+                    </div>
+                    <div>{rune.symbol}</div>
+                  </div>
                 </div>
-
                 <Button
                   onClick={() => {
                     open(rune.id);
                   }}
                 >
-                  Add rune
+                  Add token
                 </Button>
               </div>
             </div>

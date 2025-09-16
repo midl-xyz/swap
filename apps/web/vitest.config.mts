@@ -4,24 +4,15 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   plugins: [
-    tsconfigPaths({
-      ignoreConfigErrors: true,
-    }),
+    tsconfigPaths(),
     react(),
   ],
-  build: {
-    sourcemap: false,
-  },
-  esbuild: {
-    sourcemap: false,
-  },
-  optimizeDeps: {
-    include: ['@midl/executor', '@midl/core'],
-  },
-  logLevel: 'error',
+ 
   test: {
     environment: 'happy-dom',
-    silent: false,
+    deps: {
+      inline: ['@midl/satoshi-kit'], // ensure vite resolves it (not Node)
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],

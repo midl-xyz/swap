@@ -29,8 +29,8 @@ describe('formatRemoveLiquidityParams:', () => {
     chainId: mockChainId,
   };
 
-  describe('ETH branch scenarios:', () => {
-    it('should return ETH parameters when tokenA is WETH and tokenB has rune', () => {
+  describe('ETH branch scenarios', () => {
+    it('returns ETH parameters when tokenA is WETH and tokenB is a rune', () => {
       const params = {
         ...defaultParams,
         tokenA: mockWETHAddress,
@@ -59,7 +59,7 @@ describe('formatRemoveLiquidityParams:', () => {
       ]);
     });
 
-    it('should return ETH parameters when tokenB is WETH and no runes', () => {
+    it('returns ETH parameters when tokenB is WETH and no runes', () => {
       const params = {
         ...defaultParams,
         tokenB: mockWETHAddress,
@@ -118,7 +118,7 @@ describe('formatRemoveLiquidityParams:', () => {
       ]);
     });
 
-    it('should return regular parameters with no runes when tokens have no rune IDs', () => {
+    it('returns regular parameters with no runes when tokens have no rune IDs', () => {
       const params = {
         ...defaultParams,
         runeAId: undefined,

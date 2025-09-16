@@ -45,7 +45,7 @@ export const useRemoveLiquidityMidl = ({
   const { data: allowance = 0n } = useERC20Allowance({
     token: lpToken.address,
     spender: deployments[chainId].UniswapV2Router02.address,
-    user: address as Address,
+    user: address,
   });
 
   const { addTxIntention } = useAddTxIntention();
@@ -116,7 +116,7 @@ export const useRemoveLiquidityMidl = ({
             tokenB,
             amountAMin,
             amountBMin,
-            address: address as Address,
+            address,
             config,
             addTxIntention,
           });
@@ -142,7 +142,6 @@ export const useRemoveLiquidityMidl = ({
 
   return {
     removeLiquidity,
-    isTokenNeedApproved,
     ...rest,
   };
 };

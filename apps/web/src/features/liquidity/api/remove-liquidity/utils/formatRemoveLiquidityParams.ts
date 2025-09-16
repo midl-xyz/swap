@@ -19,21 +19,21 @@ type FormatRemoveLiquidityParamsInput = {
   runeBId?: string;
 };
 
-type FormatRemoveLiquidityParamsOutput = {
+type FormatRemoveLiquidityParamsOutput = Readonly<{
   args:
     | SmartContractFunctionArgs<
         typeof uniswapV2Router02Abi,
         'removeLiquidityETH'
       >
     | SmartContractFunctionArgs<typeof uniswapV2Router02Abi, 'removeLiquidity'>;
-  isETH: boolean;
+  isETH: boolean; // this value shows if the function involves removeLiquidityETH function or not. Set in a separate field for better readability
   assetsToWithdraw: Array<{
     id: string;
     amount: bigint;
     address: Address;
   }>;
   functionName: 'removeLiquidityETH' | 'removeLiquidity';
-};
+}>;
 
 export const formatRemoveLiquidityParams = ({
   tokenA,
@@ -49,12 +49,13 @@ export const formatRemoveLiquidityParams = ({
 }: FormatRemoveLiquidityParamsInput): FormatRemoveLiquidityParamsOutput => {
   const WETHAddr = WETHByChain[chainId];
 
-  const ethValue =
-    tokenA === WETHAddr
-      ? amountAMin
-      : tokenB === WETHAddr
-        ? amountBMin
-        : undefined;
+  let ethValue: bigint | undefined;
+
+  if (tokenA === WETHAddr) {
+    ethValue = amountAMin;
+  } else if (tokenB === WETHAddr) {
+    ethValue = amountBMin;
+  }
 
   const isETH = Boolean(ethValue);
   let assetsToWithdraw: Array<{
@@ -71,23 +72,45 @@ export const formatRemoveLiquidityParams = ({
     | SmartContractFunctionArgs<typeof uniswapV2Router02Abi, 'removeLiquidity'>;
 
   if (isETH) {
-    const erc20TokenAddress = tokenA === WETHAddr ? tokenB : tokenA;
-    const runeId = tokenA === erc20TokenAddress ? runeAId : runeBId;
+    if (tokenA === WETHAddr) {
+      const runeId = runeBId;
 
-    const erc20Min = tokenA === WETHAddr ? amountBMin : amountAMin;
-    const ethMin = tokenA === WETHAddr ? amountAMin : amountBMin;
+      assetsToWithdraw = runeId
+        ? [
+            {
+              id: runeId,
+              amount: maxUint256,
+              address: tokenB,
+            },
+          ]
+        : [];
 
-    args = [erc20TokenAddress, liquidity, erc20Min, ethMin, to, deadline];
+      return {
+        args: [tokenB, liquidity, amountBMin, amountAMin, to, deadline],
+        isETH,
+        assetsToWithdraw,
+        functionName: 'removeLiquidityETH',
+      };
+    } else {
+      const runeId = runeAId;
 
-    assetsToWithdraw = runeId
-      ? [
-          {
-            id: runeId,
-            amount: maxUint256,
-            address: erc20TokenAddress,
-          },
-        ]
-      : [];
+      assetsToWithdraw = runeId
+        ? [
+            {
+              id: runeId,
+              amount: maxUint256,
+              address: tokenB,
+            },
+          ]
+        : [];
+
+      return {
+        args: [tokenA, liquidity, amountAMin, amountBMin, to, deadline],
+        isETH,
+        assetsToWithdraw,
+        functionName: 'removeLiquidityETH',
+      };
+    }
   } else {
     args = [tokenA, tokenB, liquidity, amountAMin, amountBMin, to, deadline];
 
@@ -108,12 +131,10 @@ export const formatRemoveLiquidityParams = ({
     }
   }
 
-  const functionName = isETH ? 'removeLiquidityETH' : 'removeLiquidity';
-
   return {
     args,
     isETH,
     assetsToWithdraw,
-    functionName,
+    functionName: 'removeLiquidity',
   };
 };
