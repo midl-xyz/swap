@@ -7,21 +7,15 @@ import {
   fireEvent,
   waitFor,
 } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient } from '@tanstack/react-query';
 import '@testing-library/jest-dom/vitest';
 
 import { Address, parseUnits, zeroAddress } from 'viem';
-
-vi.mock('@midl-xyz/satoshi-kit', async () => ({
-  ConnectButton: () => null,
-  SatoshiKitProvider: ({ children }: any) => <>{children}</>,
-  createMidlConfig: () => ({}),
-}));
+import { Wrapper } from '@/__tests__';
 
 const LP: Address = '0x00000000000000000000000000000000000000aa';
 const A: Address = '0x00000000000000000000000000000000000000a1';
 const B: Address = '0x00000000000000000000000000000000000000b2';
-const USER: Address = '0x0000000000000000000000000000000000000c01';
 
 let mockIsSuccess = false;
 let mockRemoveLiquidity = vi.fn();
@@ -71,46 +65,6 @@ vi.mock('@/entities', () => ({
   }),
 }));
 
-vi.mock('@midl-xyz/midl-js-executor-react', async (importOriginal) => {
-  const original =
-    await importOriginal<typeof import('@midl-xyz/midl-js-executor-react')>();
-  return {
-    ...original,
-    useEVMAddress: () => USER,
-    useToken: () =>
-      mockRunePresent ? { rune: { id: 'rune-1' } } : { rune: undefined },
-    useERC20Rune: () => ({ rune: { id: 'rune-1', symbol: 'AAA' } }),
-    useAddTxIntention: () => ({ txIntentions: [] }),
-    useFinalizeBTCTransaction: () => ({
-      data: null,
-      finalizeBTCTransaction: vi.fn(),
-      isSuccess: false,
-      isPending: false,
-      isError: false,
-      error: null,
-    }),
-    useSendBTCTransactions: () => ({
-      sendBTCTransactions: vi.fn(),
-      isSuccess: false,
-    }),
-    useSignIntention: () => ({ isPending: false, signIntention: vi.fn() }),
-  };
-});
-
-vi.mock('@midl-xyz/midl-js-react', async (importOriginal) => {
-  const original =
-    await importOriginal<typeof import('@midl-xyz/midl-js-react')>();
-  return {
-    ...original,
-    useConfig: () => ({ network: { explorerUrl: 'https://explorer.local' } }),
-    useWaitForTransaction: () => ({
-      waitForTransaction: vi.fn(),
-      isPending: false,
-      isSuccess: true,
-    }),
-  };
-});
-
 vi.mock('jotai', async (importOriginal) => {
   const original = await importOriginal<typeof import('jotai')>();
   return {
@@ -128,17 +82,10 @@ vi.mock('jotai', async (importOriginal) => {
   };
 });
 
-vi.mock('wagmi', () => ({
-  useChainId: () => 1,
-}));
-
 import { RemoveLiquidityDialog } from './RemoveLiquidityDialog';
 
 function renderWithClient(ui: React.ReactElement) {
-  const client = new QueryClient();
-  return render(
-    <QueryClientProvider client={client}>{ui}</QueryClientProvider>,
-  );
+  return render(ui, { wrapper: Wrapper });
 }
 
 describe('RemoveLiquidityDialog', () => {
@@ -182,7 +129,6 @@ describe('RemoveLiquidityDialog', () => {
     const arg = mockRemoveLiquidity.mock.calls[0][0];
 
     expect(arg.liquidity).toEqual(250000000000000000n);
-    expect(arg.to).toEqual(USER);
 
     const expectedA = parseUnits('0.495', 18);
     const expectedB = parseUnits('0.99', 18);

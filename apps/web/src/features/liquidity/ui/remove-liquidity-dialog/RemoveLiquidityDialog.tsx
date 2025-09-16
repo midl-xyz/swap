@@ -19,7 +19,7 @@ import { SlippageControl } from '@/widgets';
 import { toPlainString } from '@/widgets/swap-form/ui/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEVMAddress, useToken } from '@midl-xyz/midl-js-executor-react';
-import { DialogProps } from '@radix-ui/react-dialog';
+import { DialogProps, DialogTitle } from '@radix-ui/react-dialog';
 import { useQueryClient } from '@tanstack/react-query';
 import fromExponential from 'from-exponential';
 import { useAtom } from 'jotai';
@@ -183,6 +183,7 @@ export const RemoveLiquidityDialog = ({
       <DialogOverlay onClick={onClose} />
       <DialogContent
         onEscapeKeyDown={onClose}
+        aria-describedby={undefined}
         className={css({
           width: 'full',
           maxWidth: 450,
@@ -190,14 +191,16 @@ export const RemoveLiquidityDialog = ({
       >
         {isSuccess && (
           <div className={vstack({ gap: 4, alignItems: 'center' })}>
-            <h3
-              className={css({
-                textStyle: 'h3',
-                textAlign: 'center',
-              })}
-            >
-              Sign intentions to remove liquidity
-            </h3>
+            <DialogTitle asChild>
+              <h3
+                className={css({
+                  textStyle: 'h3',
+                  textAlign: 'center',
+                })}
+              >
+                Sign intentions to remove liquidity
+              </h3>
+            </DialogTitle>
 
             <IntentionSigner
               onClose={handleClose}
@@ -206,6 +209,8 @@ export const RemoveLiquidityDialog = ({
                 runeB.rune?.id ? tokenB : zeroAddress,
               ]}
             />
+
+            <Button onClick={handleClose}>Close</Button>
           </div>
         )}
         {!isSuccess && (
@@ -216,13 +221,15 @@ export const RemoveLiquidityDialog = ({
               gap: 4,
             })}
           >
-            <h3
-              className={css({
-                textStyle: 'h3',
-              })}
-            >
-              Remove Liquidity
-            </h3>
+            <DialogTitle asChild>
+              <h3
+                className={css({
+                  textStyle: 'h3',
+                })}
+              >
+                Remove Liquidity
+              </h3>
+            </DialogTitle>
             <div
               className={css({
                 borderWidth: 1,
