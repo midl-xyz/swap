@@ -185,14 +185,14 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
                   textStyle: 'h3',
                 })}
               >
-                Add rune to the MIDL ecosystem
+                Add token to the MIDL ecosystem
               </h1>
             </DialogTitle>
 
             <TokenLogo runeId={rune?.id} size={12} />
 
-            <p>
-              To add the rune, please transfer the minimum amount (e.g 1{' '}
+            <p style={{ wordBreak: 'break-all' }}>
+              To add the token, please transfer the minimum amount (e.g 1{' '}
               {rune?.symbol}) of <b>{rune?.spaced_name}</b> and validator's fee
               ({formatUnits(BigInt(edictFee ?? 546), 8)} BTC) to the following
               address:
@@ -205,7 +205,7 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
               disabled={isTransactionBeingFormed}
               onClick={onConfirm}
             >
-              {isTransactionBeingFormed ? 'Confirming...' : 'Add rune'}
+              {isTransactionBeingFormed ? 'Confirming...' : 'Add token'}
             </Button>
           </div>
         )}
