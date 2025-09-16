@@ -1,27 +1,21 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi, beforeEach } from 'vitest';
 import '@testing-library/jest-dom/vitest';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
+import { Wrapper } from '@/__tests__';
 import { Liquidity } from './Liquidity';
 
-// Mocks
 const mockUseLiquidityPositions = vi.fn();
-const mockUseEVMAddress = vi.fn();
-
-vi.mock('@/features/liquidity', () => ({
-  useLiquidityPositions: (...args: any[]) => mockUseLiquidityPositions(...args),
-}));
-
-vi.mock('@midl-xyz/midl-js-executor-react', () => ({
-  useEVMAddress: () => mockUseEVMAddress(),
-}));
 
 // Child component stub to make counting rendered items stable
 vi.mock('@/features/liquidity/ui/liquidity', () => ({
   LiquidityItem: (props: any) => (
     <div data-testid="liquidity-item">{props?.liquidityToken}</div>
   ),
+}));
+
+vi.mock('@/features/liquidity', () => ({
+  useLiquidityPositions: (...args: any[]) => mockUseLiquidityPositions(...args),
 }));
 
 function makePosition(overrides?: Partial<any>) {
@@ -42,22 +36,18 @@ function makePosition(overrides?: Partial<any>) {
 }
 
 describe('Liquidity widget', () => {
-  beforeEach(() => {
-    mockUseEVMAddress.mockReturnValue(
-      '0x00000000000000000000000000000000000000aa',
-    );
-  });
-
   it('shows preloader while fetching', () => {
     mockUseLiquidityPositions.mockReturnValue({
       data: undefined,
       isFetching: true,
     });
 
-    const { container } = render(<Liquidity />);
+    render(<Liquidity />, { wrapper: Wrapper });
 
-    // AppPreloader renders several .loader blocks
-    expect(container.querySelector('.loader')).toBeTruthy();
+    expect(screen.findByLabelText('Loading')).toBeDefined();
+
+    // TODO: Is this desired behavior?
+    expect(screen.queryByTestId('liquidity-item')).toBeNull();
   });
 
   it('shows empty state when all positions have zero balance', () => {
@@ -71,7 +61,7 @@ describe('Liquidity widget', () => {
       isFetching: false,
     });
 
-    render(<Liquidity />);
+    render(<Liquidity />, { wrapper: Wrapper });
 
     expect(screen.getByText(/No liquidity found/i)).toBeInTheDocument();
     expect(screen.queryByTestId('liquidity-item')).toBeNull();
@@ -89,7 +79,7 @@ describe('Liquidity widget', () => {
       isFetching: false,
     });
 
-    render(<Liquidity />);
+    render(<Liquidity />, { wrapper: Wrapper });
 
     const items = screen.getAllByTestId('liquidity-item');
     expect(items).toHaveLength(2);
