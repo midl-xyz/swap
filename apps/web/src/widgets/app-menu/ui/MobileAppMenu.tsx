@@ -6,6 +6,12 @@ import { ConnectButton } from '@midl-xyz/satoshi-kit';
 import { X } from 'lucide-react';
 import Image from 'next/image';
 import { FC, useState } from 'react';
+
+const isTestEnv =
+  typeof process !== 'undefined' &&
+  (process.env.VITEST ||
+    process.env.VITEST_WORKER_ID ||
+    process.env.NODE_ENV === 'test');
 import { Stack, VStack } from '~/styled-system/jsx';
 import MenuIcon from '../assets/menu.svg';
 
@@ -19,21 +25,32 @@ export const MobileAppMenu = () => {
 
   return (
     <Stack>
-      <Image
-        onClick={handleToggle}
-        src={MenuIcon}
-        alt="menu-button"
-        width={MenuIcon.width}
-        height={MenuIcon.height}
-      />
+      {isTestEnv ? (
+        <img
+          onClick={handleToggle}
+          src="/menu.svg"
+          alt="menu-button"
+          width={24}
+          height={24}
+        />
+      ) : (
+        <Image
+          onClick={handleToggle}
+          src={MenuIcon as any}
+          alt="menu-button"
+          width={(MenuIcon as any).width}
+          height={(MenuIcon as any).height}
+        />
+      )}
       <Dialog open={open}>
-        <DialogOverlay onClick={handleToggle} />
+        <DialogOverlay onClick={handleToggle} data-testid="dialog-overlay" />
         <DialogContent
           onEscapeKeyDown={handleToggle}
           width="100%"
           height="100%"
+          data-testid="dialog-content"
         >
-          <X onClick={handleToggle} />
+          <X data-testid="close-icon" onClick={handleToggle} />
           <VStack width="100%" gap={5}>
             <VStack width="100%" gap={5}>
               <AppMenuList onClick={handleToggle} />

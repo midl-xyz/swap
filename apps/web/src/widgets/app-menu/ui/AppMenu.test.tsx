@@ -5,21 +5,10 @@ import '@testing-library/jest-dom/vitest';
 
 import { AppMenuList } from './AppMenu';
 
-vi.mock('next/link', () => ({
-  default: ({ href, children, ...rest }: any) => (
-    <a href={href as string} {...rest}>
-      {children}
-    </a>
-  ),
-}));
-
+// Minimal mocking: only mock usePathname which is read by AppMenuLink
 const mockUsePathname = vi.fn();
 vi.mock('next/navigation', () => ({
   usePathname: () => mockUsePathname(),
-}));
-
-vi.mock('~/styled-system/css', () => ({
-  css: () => 'css-mock',
 }));
 
 beforeEach(() => {
