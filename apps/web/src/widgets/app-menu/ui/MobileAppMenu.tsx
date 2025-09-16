@@ -7,11 +7,6 @@ import { X } from 'lucide-react';
 import Image from 'next/image';
 import { FC, useState } from 'react';
 
-const isTestEnv =
-  typeof process !== 'undefined' &&
-  (process.env.VITEST ||
-    process.env.VITEST_WORKER_ID ||
-    process.env.NODE_ENV === 'test');
 import { Stack, VStack } from '~/styled-system/jsx';
 import MenuIcon from '../assets/menu.svg';
 
@@ -25,23 +20,13 @@ export const MobileAppMenu = () => {
 
   return (
     <Stack>
-      {isTestEnv ? (
-        <img
-          onClick={handleToggle}
-          src="/menu.svg"
-          alt="menu-button"
-          width={24}
-          height={24}
-        />
-      ) : (
-        <Image
-          onClick={handleToggle}
-          src={MenuIcon as any}
-          alt="menu-button"
-          width={(MenuIcon as any).width}
-          height={(MenuIcon as any).height}
-        />
-      )}
+      <Image
+        onClick={handleToggle}
+        src={MenuIcon}
+        alt="menu-button"
+        width={24}
+        height={24}
+      />
       <Dialog open={open}>
         <DialogOverlay onClick={handleToggle} data-testid="dialog-overlay" />
         <DialogContent

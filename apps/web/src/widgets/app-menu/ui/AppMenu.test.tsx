@@ -5,7 +5,6 @@ import '@testing-library/jest-dom/vitest';
 
 import { AppMenuList } from './AppMenu';
 
-// Minimal mocking: only mock usePathname which is read by AppMenuLink
 const mockUsePathname = vi.fn();
 vi.mock('next/navigation', () => ({
   usePathname: () => mockUsePathname(),

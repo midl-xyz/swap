@@ -8,23 +8,9 @@ import {
   type AppMenuLink,
 } from './AppMenuLink';
 
-vi.mock('next/link', () => ({
-  default: ({ href, children, ...rest }: any) => (
-    <a href={href as string} {...rest}>
-      {children}
-    </a>
-  ),
-}));
-
 const mockUsePathname = vi.fn();
 vi.mock('next/navigation', () => ({
   usePathname: () => mockUsePathname(),
-}));
-
-vi.mock('~/styled-system/css', () => ({
-  css: (styles: any) => {
-    return `css-mock color-${styles?.color ?? 'unset'}`;
-  },
 }));
 
 function renderLink(link: AppMenuLink, onClick = vi.fn()) {
@@ -53,7 +39,7 @@ describe('AppMenuLink', () => {
     expect(anchor.getAttribute('href')).toBe('/swap');
   });
 
-  it('applies active color and dot when pathname matches exactly if isExact', () => {
+  it('marks link active and shows dot when pathname matches exactly if isExact', () => {
     mockUsePathname.mockReturnValue('/swap');
     const { container } = renderLink({
       label: 'Swap',
@@ -62,10 +48,10 @@ describe('AppMenuLink', () => {
     });
 
     const anchors = getAnchorsByLabelFrom(container, 'Swap');
-    expect(anchors.some((a) => a.className.includes('color-#5107FF'))).toBe(
+    expect(anchors.some((a) => a.getAttribute('data-active') === 'true')).toBe(
       true,
     );
-    const active = anchors.find((a) => a.className.includes('color-#5107FF'))!;
+    const active = anchors.find((a) => a.getAttribute('data-active') === 'true')!;
     expect(active.querySelector('span')).toBeTruthy();
   });
 
@@ -77,7 +63,7 @@ describe('AppMenuLink', () => {
     });
 
     const anchors = getAnchorsByLabelFrom(container, 'My Liquidity');
-    expect(anchors.some((a) => a.className.includes('color-#5107FF'))).toBe(
+    expect(anchors.some((a) => a.getAttribute('data-active') === 'true')).toBe(
       true,
     );
   });
@@ -91,7 +77,7 @@ describe('AppMenuLink', () => {
     });
 
     const anchors = getAnchorsByLabelFrom(container, 'Swap');
-    expect(anchors.every((a) => !a.className.includes('color-#5107FF'))).toBe(
+    expect(anchors.every((a) => a.getAttribute('data-active') !== 'true')).toBe(
       true,
     );
     anchors.forEach((a) => expect(a.querySelector('span')).toBeNull());

@@ -35,6 +35,8 @@ export const AppMenuLink = ({
         fontWeight: 'medium',
         position: 'relative',
       })}
+      data-active={isPathMatch ? 'true' : 'false'}
+      aria-current={isPathMatch ? 'page' : undefined}
       onClick={onClick}
       target={openOnSeparateTab ? '_blank' : '_self'}
       rel={openOnSeparateTab ? 'noopener noreferrer' : ''}
