@@ -67,12 +67,12 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
 
   const hasBroadcast = Boolean(data?.tx?.id);
 
-  // Start polling EVM result only after BTC is confirmed and tx is broadcasted
-  const shouldPollEvm = hasBroadcast && isBtcConfirmed;
+  // Start polling ERC result only after BTC is confirmed and tx is broadcasted
+  const shouldPollErc = hasBroadcast && isBtcConfirmed;
 
   const { erc20Address, erc20State } = useERC20Rune(rune?.id || '', {
     query: {
-      enabled: shouldPollEvm,
+      enabled: shouldPollErc,
       refetchInterval: 2000,
     },
   });
@@ -86,7 +86,7 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
   const lastUpdatedAtRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (!shouldPollEvm) {
+    if (!shouldPollErc) {
       setRefetchCount(0);
       lastUpdatedAtRef.current = null;
       return;
@@ -100,10 +100,10 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
         setRefetchCount(0);
       }
     }
-  }, [shouldPollEvm, erc20State?.dataUpdatedAt, erc20Address]);
+  }, [shouldPollErc, erc20State?.dataUpdatedAt, erc20Address]);
 
   const retriesExhaustedNoAddress =
-    shouldPollEvm && refetchCount >= 6 && erc20Address === zeroAddress;
+    shouldPollErc && refetchCount >= 6 && erc20Address === zeroAddress;
 
   const errorMessage =
     erc20Error?.message ||
