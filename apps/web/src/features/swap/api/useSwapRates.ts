@@ -1,58 +1,30 @@
-import { deployments, uniswapV2Router02Abi } from '@/global';
-import { readContract } from '@wagmi/core';
-import { useState } from 'react';
-import { useChainId, useConfig } from 'wagmi';
+import { useQuery } from '@tanstack/react-query';
+import { Address } from 'viem';
+import { useChainId } from 'wagmi';
 
-type GetAmountsOutArgs = SmartContractReadFunctionArgs<
-  typeof uniswapV2Router02Abi,
-  'getAmountsOut'
->;
-
-export const useSwapRates = () => {
+export const useSwapRates = ({
+  tokenIn,
+  tokenOut,
+  value,
+  type,
+}: {
+  tokenIn?: Address;
+  tokenOut?: Address;
+  value?: bigint;
+  type?: 'exactIn' | 'exactOut';
+} = {}) => {
   const chainId = useChainId();
-  const [isFetching, setIsFetching] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-  const config = useConfig();
 
-  const read = async ({
-    value,
-    pair,
-    reverse,
-  }: {
-    value: GetAmountsOutArgs['0'];
-    pair: GetAmountsOutArgs['1'];
-    reverse?: boolean;
-  }) => {
-    setIsFetching(true);
-    setError(null);
+  const requestUrl = `https://l880r1g2zk.execute-api.us-east-2.amazonaws.com/prod/quote?tokenInAddress=${tokenIn}&tokenInChainId=${chainId}&tokenOutAddress=${tokenOut}&tokenOutChainId=${chainId}&amount=${value}&type=${type}`;
 
-    let method: 'getAmountsIn' | 'getAmountsOut' = 'getAmountsOut';
+  return useQuery({
+    queryKey: ['swapRates', tokenIn, tokenOut, value, type],
+    queryFn: async () => {
+      const response = (await fetch(requestUrl)).json();
 
-    if (reverse) {
-      method = 'getAmountsIn';
-    }
-
-    try {
-      const result = await readContract(config as any, {
-        abi: uniswapV2Router02Abi,
-        address: deployments[chainId].UniswapV2Router02.address,
-        functionName: method,
-        args: [value, pair],
-      });
-
-      setIsFetching(false);
-
-      return result;
-    } catch (error: any) {
-      setError(error);
-    }
-
-    setIsFetching(false);
-  };
-
-  return {
-    read,
-    error,
-    isFetching,
-  };
+      return response;
+    },
+    enabled: !!tokenIn && !!tokenOut && !!value && !!chainId,
+    staleTime: 1000 * 60 * 5,
+  });
 };
