@@ -226,6 +226,10 @@ describe('AddRuneDialog', () => {
       rerender(<AddRuneDialog open onClose={onClose} />);
     }
 
-    expect(screen.getByText(/Rune addition error/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /Failed to add the token. Please try doing it once again./i,
+      ),
+    ).toBeInTheDocument();
   });
 });

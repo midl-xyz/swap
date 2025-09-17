@@ -108,7 +108,9 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
   const errorMessage =
     erc20Error?.message ||
     error?.message ||
-    (retriesExhaustedNoAddress ? 'Rune addition error' : null);
+    (retriesExhaustedNoAddress
+      ? 'Failed to add the token. Please try doing it once again.'
+      : null);
 
   const { data: edictFee } = useQuery({
     queryKey: ['edictFee'],
