@@ -68,8 +68,8 @@ export const TokenName = ({
           {tags.map((tag) => {
             return (
               <Image
-                key={COMMUNITY_LOGO_BY_TAG[tag]}
-                src={CommunityTag}
+                key={tag}
+                src={COMMUNITY_LOGO_BY_TAG[tag]}
                 alt="tag"
                 width={showName ? 16 : 24}
                 height={showName ? 16 : 24}

@@ -3,13 +3,11 @@ import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
-  plugins: [
-    tsconfigPaths(),
-    react(),
-  ],
- 
+  plugins: [tsconfigPaths(), react()],
+
   test: {
     environment: 'happy-dom',
+    globals: true,
     deps: {
       inline: ['@midl/satoshi-kit'], // ensure vite resolves it (not Node)
     },
