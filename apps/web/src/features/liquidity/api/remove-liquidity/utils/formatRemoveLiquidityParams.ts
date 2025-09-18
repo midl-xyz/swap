@@ -50,14 +50,14 @@ export const formatRemoveLiquidityParams = ({
   const WETHAddr = WETHByChain[chainId];
 
   let ethValue: bigint | undefined;
-  let isEth = false;
+  let isETH = false;
 
   if (tokenA === WETHAddr) {
     ethValue = amountAMin;
-    isEth = true;
+    isETH = true;
   } else if (tokenB === WETHAddr) {
     ethValue = amountBMin;
-    isEth = true;
+    isETH = true;
   }
 
   let assetsToWithdraw: Array<{
