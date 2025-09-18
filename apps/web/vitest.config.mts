@@ -3,13 +3,11 @@ import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
-  plugins: [
-    tsconfigPaths(),
-    react(),
-  ],
- 
+  plugins: [tsconfigPaths(), react()],
+
   test: {
     environment: 'happy-dom',
+    globals: true,
     deps: {
       inline: ['@midl/satoshi-kit'], // ensure vite resolves it (not Node)
     },
@@ -22,6 +20,7 @@ export default defineConfig({
         'src/widgets/liquidity/ui/Liquidity.tsx',
         'src/widgets/liquidity/ui/**/*.tsx',
         'src/shared/ui/swap-input/**/*.tsx',
+        'src/features/liquidity/ui/remove-liquidity-dialog/**/*.tsx',
       ],
     },
   },

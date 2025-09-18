@@ -1,5 +1,5 @@
 import { useToken } from '@/entities';
-import { TokenLogo } from '@/features';
+import { TokenLogo } from '@/features/token';
 import { HTMLAttributes } from 'react';
 import { Address, formatUnits } from 'viem';
 import { css, cx } from '~/styled-system/css';
