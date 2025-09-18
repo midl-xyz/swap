@@ -45,15 +45,10 @@ interface Props {
 }
 
 export const AppMenuList = ({ onClick }: Props) => {
-  const handleClick = () => {
-    if (onClick) {
-      onClick();
-    }
-  };
   return (
     <>
       {appMenuLinks.map((link) => (
-        <AppMenuLink link={link} key={link.label} onClick={handleClick} />
+        <AppMenuLink link={link} key={link.label} onClick={onClick} />
       ))}
     </>
   );

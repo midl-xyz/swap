@@ -11,7 +11,7 @@ export type AppMenuLink = {
 
 type AppMenuLinkProps = {
   link: AppMenuLink;
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 export const AppMenuLink = ({
