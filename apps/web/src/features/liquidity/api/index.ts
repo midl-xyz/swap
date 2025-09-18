@@ -10,3 +10,4 @@ export * from './useMinAmount';
 export * from './usePoolShare';
 export * from './useRemoveLiquidity';
 export * from './useAddLiquidityMidl';
+export * from './remove-liquidity';

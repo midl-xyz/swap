@@ -19,6 +19,7 @@ export const tokenList: Token[] = [
     chainId: midlRegtest.id,
     decimals: 18,
     logoURI: '/images/stablecoin.png',
+    isSynthetic: true,
   },
   {
     symbol: 'DOG•GO•TO•THE•MOON',

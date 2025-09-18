@@ -8,4 +8,5 @@ export type Token = {
   decimals: number;
   logoURI: string;
   isPopular?: boolean;
+  isSynthetic?: boolean;
 };
