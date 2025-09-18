@@ -7,7 +7,7 @@ import { getAddress } from 'viem';
 import { css } from '~/styled-system/css';
 
 const COMMUNITY_PAIRS = [
-  ['MIDLRUNESTABLECOIN', 'WARTOK'],
+  ['BUSD', 'WARTOK'],
   ['WARTOK', 'BTC'],
 ];
 export const Pairs = () => {
