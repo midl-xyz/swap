@@ -30,6 +30,7 @@ type UseSwapMidlParams = {
   tokenIn: Address;
   amountIn: bigint;
   tokenOut: Address;
+  tokenRoute?: Address[];
 };
 
 export type SwapArgs = {
@@ -44,7 +45,9 @@ export const useSwapMidl = ({
   tokenIn,
   tokenOut,
   amountIn,
+  tokenRoute = [],
 }: UseSwapMidlParams) => {
+  console.log('tokenRoute in useSwapMidl: ', tokenRoute);
   const address = useEVMAddress();
   const chainId = useChainId();
   const [, setStateOverride] = useStateOverride();
@@ -110,6 +113,7 @@ export const useSwapMidl = ({
         to,
         deadline,
         WETH,
+        tokenRoute,
       );
 
       addTxIntention({

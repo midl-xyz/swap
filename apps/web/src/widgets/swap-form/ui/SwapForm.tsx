@@ -7,14 +7,14 @@ import { useSwapRates } from '@/features/swap/api/useSwapRates';
 import { SwapDialog } from '@/features/swap/ui/swap-dialog/SwapDialog';
 import { tokenList } from '@/global';
 import { Button, SwapInput, parseNumberInput } from '@/shared';
-import { calculateAdjustedBalance } from '@/shared/lib/fees';
 import { AiOutlineSwapVertical } from '@/shared/assets';
+import { calculateAdjustedBalance } from '@/shared/lib/fees';
 import { removePercentage } from '@/shared/lib/removePercentage';
 import { SlippageControl, SwapFormChart } from '@/widgets';
 import { SwapDetails } from '@/widgets/swap-form/ui/SwapDetails';
 import { getCorrectToken } from '@/widgets/swap-form/ui/utils';
 import { Wallet } from '@/widgets/wallet';
-import { useEVMAddress, useBTCFeeRate } from '@midl-xyz/midl-js-executor-react';
+import { useBTCFeeRate, useEVMAddress } from '@midl-xyz/midl-js-executor-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -77,12 +77,38 @@ export const SwapForm = ({
     watch();
   const inputTokenInfo = useToken(inputToken, chainId);
   const outputTokenInfo = useToken(outputToken, chainId);
+  const swapParams = useRef<{
+    type: 'exactOut' | 'exactIn';
+    value: bigint;
+  }>({
+    type: 'exactOut',
+    value: 0n,
+  });
 
   const {
-    read: readSwapRates,
+    data: swapRoute,
+    refetch: readSwapRates,
     error: swapRatesError,
     isFetching: isSwapRatesFetching,
-  } = useSwapRates();
+  } = useSwapRates({
+    tokenIn: getCorrectToken({ token: inputToken, chainId }) as Address,
+    tokenOut: getCorrectToken({ token: outputToken, chainId }) as Address,
+    ...swapParams.current,
+  });
+
+  useEffect(() => {
+    if (!swapRoute) {
+      return;
+    }
+
+    if (swapParams.current.type === 'exactIn') {
+      setValue('outputTokenAmount', swapRoute.quoteDecimals);
+    }
+
+    if (swapParams.current.type === 'exactOut') {
+      setValue('inputTokenAmount', swapRoute.quoteDecimals);
+    }
+  }, [swapRoute]);
 
   const onInputTokenAmountChange = useDebouncedCallback(async (e) => {
     if (!e.target) {
@@ -90,28 +116,16 @@ export const SwapForm = ({
     }
 
     lastChangedInput.current = true;
+
     const value = parseUnits(
       parseNumberInput(e.target.value),
       inputTokenInfo.decimals,
     );
 
-    const swapRates = await readSwapRates({
-      value,
-      pair: [
-        getCorrectToken({ token: inputToken, chainId }) as Address,
-        getCorrectToken({ token: outputToken, chainId }) as Address,
-      ],
-    });
-    if (!swapRates) {
-      return;
-    }
+    swapParams.current.type = 'exactIn';
+    swapParams.current.value = value;
 
-    const [, outputAmount] = swapRates;
-
-    setValue(
-      'outputTokenAmount',
-      formatUnits(outputAmount, outputTokenInfo.decimals),
-    );
+    await readSwapRates();
   }, 0);
 
   const onOutputTokenAmountChange = useDebouncedCallback(async (e) => {
@@ -121,26 +135,10 @@ export const SwapForm = ({
     );
 
     lastChangedInput.current = false;
+    swapParams.current.type = 'exactOut';
+    swapParams.current.value = value;
 
-    const swapRates = await readSwapRates({
-      value,
-      pair: [
-        getCorrectToken({ token: inputToken, chainId }) as Address,
-        getCorrectToken({ token: outputToken, chainId }) as Address,
-      ],
-      reverse: true,
-    });
-
-    if (!swapRates) {
-      return;
-    }
-
-    const [inputAmount] = swapRates;
-
-    setValue(
-      'inputTokenAmount',
-      formatUnits(inputAmount, inputTokenInfo.decimals),
-    );
+    await readSwapRates();
   }, 0);
 
   const address = useEVMAddress();
@@ -168,10 +166,21 @@ export const SwapForm = ({
 
   const [isDialogOpen, setDialogOpen] = useState(false);
 
+  const pools = swapRoute?.route?.[0] ?? [];
+
+  console.log('pools: ', pools, 'swapRoute: ', swapRoute);
+
   const { swapAsync } = useSwapMidl({
     tokenIn: inputToken,
     amountIn: parsedInputTokenAmount,
     tokenOut: outputToken,
+    tokenRoute:
+      pools.length > 0
+        ? ([
+            pools[0]?.tokenIn?.address,
+            ...pools?.map((p: any) => p.tokenOut?.address),
+          ] as Address[])
+        : undefined,
   });
 
   const onSubmit = async () => {

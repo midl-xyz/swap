@@ -45,11 +45,12 @@ export const getSwapParams = (
   to: Address,
   deadline: bigint,
   WETH: Address,
+  tokenRoute: Address[],
 ) => {
   if (tokenIn === zeroAddress) {
     return {
       functionName: 'swapExactETHForTokens' as const,
-      args: [amountOutMin, [WETH, tokenOut], to, deadline] as const,
+      args: [amountOutMin, tokenRoute, to, deadline] as const,
       ethValue: amountIn,
     };
   }
@@ -57,14 +58,14 @@ export const getSwapParams = (
   if (tokenOut === zeroAddress) {
     return {
       functionName: 'swapExactTokensForETH' as const,
-      args: [amountIn, amountOutMin, [tokenIn, WETH], to, deadline] as const,
+      args: [amountIn, amountOutMin, tokenRoute, to, deadline] as const,
       ethValue: 0n,
     };
   }
 
   return {
     functionName: 'swapExactTokensForTokens' as const,
-    args: [amountIn, amountOutMin, [tokenIn, tokenOut], to, deadline] as const,
+    args: [amountIn, amountOutMin, tokenRoute, to, deadline] as const,
     ethValue: 0n,
   };
 };
