@@ -13,3 +13,9 @@ pnpm install
 ```bash
 pnpm web dev
 ```
+
+### Production build
+
+```bash
+pnpm web build
+```
