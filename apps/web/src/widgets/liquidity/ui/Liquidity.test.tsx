@@ -63,7 +63,7 @@ describe('Liquidity widget', () => {
 
     render(<Liquidity />, { wrapper: Wrapper });
 
-    expect(screen.getByText(/No liquidity found/i)).toBeInTheDocument();
+    expect(screen.getByText(/No liquidity found/i)).toBeTruthy();
     expect(screen.queryByTestId('liquidity-item')).toBeNull();
   });
 

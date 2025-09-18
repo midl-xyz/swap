@@ -1,11 +1,10 @@
 import React from 'react';
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import {
   render,
   screen,
   fireEvent,
-  cleanup,
   waitFor,
 } from '@testing-library/react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -66,7 +65,6 @@ function renderWithForm(ui: React.ReactElement, defaultValues: any) {
 }
 
 describe('SwapInput applyMax', () => {
-  afterEach(() => cleanup());
   beforeEach(() => {
     mockDecimals = 18;
     mockChainId = 0;

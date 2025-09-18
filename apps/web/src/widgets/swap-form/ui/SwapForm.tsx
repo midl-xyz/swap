@@ -342,6 +342,7 @@ export const SwapForm = ({
               amountName="inputTokenAmount"
               onChange={onInputTokenAmountChange}
               onMax={onInputTokenAmountChange}
+              disabled={isSwapRatesFetching}
             />
 
             <Button
@@ -366,6 +367,7 @@ export const SwapForm = ({
               amountName="outputTokenAmount"
               onChange={onOutputTokenAmountChange}
               onMax={onOutputTokenAmountChange}
+              disabled={isSwapRatesFetching}
             />
           </div>
           <SlippageControl />
@@ -376,6 +378,7 @@ export const SwapForm = ({
               <Button
                 type="submit"
                 appearance="primary"
+                minWidth="204px"
                 disabled={
                   isSwapRatesFetching ||
                   Boolean(swapRatesError) ||
