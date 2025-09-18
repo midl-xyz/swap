@@ -18,8 +18,12 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],
       reportsDirectory: './coverage',
-      // Tip: limit to this widget during development, or remove include to cover all
+      // Include app-menu files for this task (and others already configured)
       include: [
+        'src/widgets/app-menu/ui/AppMenuLink.tsx',
+        'src/widgets/app-menu/ui/AppMenu.tsx',
+        'src/widgets/app-menu/ui/MobileAppMenu.tsx',
+        'src/widgets/app-menu/ui/**/*.tsx',
         'src/widgets/liquidity/ui/Liquidity.tsx',
         'src/widgets/liquidity/ui/**/*.tsx',
         'src/shared/ui/swap-input/**/*.tsx',
