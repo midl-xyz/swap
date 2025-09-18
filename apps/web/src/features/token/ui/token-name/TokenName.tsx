@@ -1,5 +1,6 @@
+'use client';
 /* eslint-disable @next/next/no-img-element */
-import { useToken } from '@/entities';
+import { TokenTag, useToken } from '@/entities';
 import { TokenLogo } from '@/features';
 import { tokenList } from '@/global';
 import { useToken as useMidlToken } from '@midl-xyz/midl-js-executor-react';
@@ -11,6 +12,7 @@ import { hstack, vstack } from '~/styled-system/patterns';
 import CommunityTag from '@/features/token/assets/community-tag.svg';
 import BagWarsTag from '@/features/token/assets/bag-wars-tag.svg';
 import Image from 'next/image';
+import { Tooltip } from '@/shared/ui/tooltip/Tooltip';
 
 type TokenNameProps = {
   address: Address;
@@ -23,6 +25,11 @@ type TokenNameProps = {
 const COMMUNITY_LOGO_BY_TAG = {
   COMMUNITY: CommunityTag,
   BAG_WARS: BagWarsTag,
+};
+
+const TAG_LABEL_BY_TAG: Record<TokenTag, string> = {
+  COMMUNITY: 'COMMUNITY',
+  BAG_WARS: 'BAG WARS',
 };
 
 export const TokenName = ({
@@ -66,27 +73,29 @@ export const TokenName = ({
         <HStack>
           {displayLabel}
           {tags.map((tag) => {
+            const label = TAG_LABEL_BY_TAG[tag] ?? tag;
             return (
-              <Image
-                key={tag}
-                src={COMMUNITY_LOGO_BY_TAG[tag]}
-                alt="tag"
-                width={showName ? 16 : 24}
-                height={showName ? 16 : 24}
-              />
+              <Tooltip key={tag} content={label} side="right">
+                <span>
+                  <Image
+                    src={COMMUNITY_LOGO_BY_TAG[tag]}
+                    alt="tag"
+                    width={showName ? 16 : 24}
+                    height={showName ? 16 : 24}
+                  />
+                </span>
+              </Tooltip>
             );
           })}
         </HStack>
         {showName && (
-          <>
-            <span
-              className={css({
-                textStyle: 'caption',
-              })}
-            >
-              {rune?.spaced_name ?? name}
-            </span>
-          </>
+          <span
+            className={css({
+              textStyle: 'caption',
+            })}
+          >
+            {rune?.spaced_name ?? name}
+          </span>
         )}
       </span>
     </span>
