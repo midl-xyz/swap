@@ -1,5 +1,7 @@
 import { Address } from 'viem';
 
+export type TokenTag = 'BAG_WARS' | 'COMMUNITY';
+
 export type Token = {
   symbol: string;
   name: string;
@@ -8,4 +10,5 @@ export type Token = {
   decimals: number;
   logoURI: string;
   isPopular?: boolean;
+  tags?: TokenTag[];
 };
