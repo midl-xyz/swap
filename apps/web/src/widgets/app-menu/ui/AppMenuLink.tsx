@@ -44,6 +44,7 @@ export const AppMenuLink = ({
       {label}
       {isPathMatch && (
         <span
+          data-testid="active-indicator"
           className={css({
             w: 1,
             h: 1,

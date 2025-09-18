@@ -1,7 +1,6 @@
-import React from 'react';
-import { render, fireEvent, within } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import '@testing-library/jest-dom/vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AppMenuList } from './AppMenu';
 
@@ -16,7 +15,7 @@ beforeEach(() => {
 
 describe('AppMenuList', () => {
   it('renders all menu items', () => {
-    const { container } = render(<AppMenuList />);
+    render(<AppMenuList />);
 
     const labels = [
       'Swap',
@@ -28,31 +27,15 @@ describe('AppMenuList', () => {
     ];
 
     for (const label of labels) {
-      expect(within(container).getAllByText(label)[0]).toBeTruthy();
+      expect(screen.getByText(label)).toBeTruthy();
     }
   });
 
   it('external links open in a new tab', () => {
-    const { container } = render(<AppMenuList />);
+    render(<AppMenuList />);
 
-    {
-      const el = within(container)
-        .getAllByText('Stable')[0]
-        .closest('a') as HTMLAnchorElement;
-      expect(el).toBeTruthy();
-      expect(el.getAttribute('target')).toBe('_blank');
-    }
-    {
-      const el = within(container)
-        .getAllByText('Guide')[0]
-        .closest('a') as HTMLAnchorElement;
-      expect(el).toBeTruthy();
-      expect(el.getAttribute('target')).toBe('_blank');
-    }
-    {
-      const el = within(container)
-        .getAllByText('Earn Midl')[0]
-        .closest('a') as HTMLAnchorElement;
+    for (const label of ['Stable', 'Guide', 'Earn Midl']) {
+      const el = screen.getByText(label).closest('a') as HTMLAnchorElement;
       expect(el).toBeTruthy();
       expect(el.getAttribute('target')).toBe('_blank');
     }
@@ -60,14 +43,14 @@ describe('AppMenuList', () => {
 
   it('calls onClick handler when a menu item is clicked', () => {
     const onClick = vi.fn();
-    const { container } = render(<AppMenuList onClick={onClick} />);
+    render(<AppMenuList onClick={onClick} />);
 
-    fireEvent.click(within(container).getAllByText('Swap')[0]);
+    fireEvent.click(screen.getByText('Swap'));
     expect(onClick).toHaveBeenCalled();
   });
 
   it('does not fail without onClick', () => {
-    const { container } = render(<AppMenuList />);
-    fireEvent.click(within(container).getAllByText('Swap')[0]);
+    render(<AppMenuList />);
+    fireEvent.click(screen.getByText('Swap'));
   });
 });
