@@ -16,7 +16,7 @@ import {
   useWaitForTransaction,
 } from '@midl-xyz/midl-js-react';
 import { DialogProps, DialogTitle } from '@radix-ui/react-dialog';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Loader2Icon } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -82,12 +82,12 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
   const isErc20Ready = !!erc20Address && erc20Address !== zeroAddress;
 
   // Track refetch attempts by observing dataUpdatedAt; after 6 updates with zero address -> error
-  const [refetchCount, setRefetchCount] = useState(0);
+  const refetchCountRef = useRef(0);
   const lastUpdatedAtRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!shouldPollErc) {
-      setRefetchCount(0);
+      refetchCountRef.current = 0;
       lastUpdatedAtRef.current = null;
       return;
     }
@@ -95,15 +95,17 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
     if (updatedAt && updatedAt !== lastUpdatedAtRef.current) {
       lastUpdatedAtRef.current = updatedAt;
       if (erc20Address === zeroAddress) {
-        setRefetchCount((c) => c + 1);
+        refetchCountRef.current += 1;
       } else {
-        setRefetchCount(0);
+        refetchCountRef.current = 0;
       }
     }
   }, [shouldPollErc, erc20State?.dataUpdatedAt, erc20Address]);
 
   const retriesExhaustedNoAddress =
-    shouldPollErc && refetchCount >= 6 && erc20Address === zeroAddress;
+    shouldPollErc &&
+    refetchCountRef.current >= 6 &&
+    erc20Address === zeroAddress;
 
   const errorMessage =
     erc20Error?.message ||
