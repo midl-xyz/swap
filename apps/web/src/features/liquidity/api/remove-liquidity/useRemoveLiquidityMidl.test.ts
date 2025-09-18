@@ -140,10 +140,10 @@ describe('useRemoveLiquidityMidl', () => {
     vi.clearAllMocks();
 
     formatRemoveLiquidityParams = (
-      await import('../utils/formatRemoveLiquidityParams')
+      await import('./utils/formatRemoveLiquidityParams')
     ).formatRemoveLiquidityParams;
     handleSyntheticTokenApprovals = (
-      await import('../utils/handleSyntheticTokenApprovals')
+      await import('./utils/handleSyntheticTokenApprovals')
     ).handleSyntheticTokenApprovals;
   });
 
@@ -263,9 +263,7 @@ describe('useRemoveLiquidityMidl', () => {
   });
 
   const runLiquidityTest = async (lpAmount = parseEther('0.5')) => {
-    const { useRemoveLiquidityMidl } = await import(
-      '../useRemoveLiquidityMidl'
-    );
+    const { useRemoveLiquidityMidl } = await import('./useRemoveLiquidityMidl');
     const { renderHook } = await import('@testing-library/react');
 
     const hookResult = renderHook(() =>
