@@ -1,5 +1,13 @@
+import type { useERC20Allowance } from '@/features/token';
+import type { useApproveWithOptionalDeposit } from '@/shared';
+import type {
+  useAddCompleteTxIntention,
+  useAddTxIntention,
+  useClearTxIntentions,
+  useToken,
+} from '@midl-xyz/midl-js-executor-react';
 import { Address, maxUint256, parseEther } from 'viem';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, MockedFunction, vi } from 'vitest';
 
 vi.mock('@/features/token', () => ({
   useERC20Allowance: vi.fn(),
@@ -36,8 +44,8 @@ vi.mock('@/shared', () => ({
 }));
 
 vi.mock('@midl-xyz/midl-js-executor-react', () => ({
-  useAddCompleteTxIntention: vi.fn(),
   useAddTxIntention: vi.fn(),
+  useAddCompleteTxIntention: vi.fn(),
   useClearTxIntentions: vi.fn(),
   useEVMAddress: vi.fn(),
   useToken: vi.fn(),
@@ -65,20 +73,9 @@ vi.mock('@tanstack/react-query', () => ({
         await config.mutationFn(args);
       }
     }),
-    data: undefined,
-    error: null,
     isError: false,
-    isIdle: true,
     isPending: false,
     isSuccess: false,
-    status: 'idle',
-    variables: undefined,
-    reset: vi.fn(),
-    context: undefined,
-    failureCount: 0,
-    failureReason: null,
-    isPaused: false,
-    submittedAt: 0,
   })),
 }));
 
@@ -87,10 +84,6 @@ vi.mock('viem', async (importOriginal) => {
   return {
     ...actual,
     encodeFunctionData: vi.fn(() => '0xmockeddata'),
-    parseUnits: vi.fn(
-      (value: string, decimals: number) =>
-        BigInt(value) * BigInt(10 ** decimals),
-    ),
   };
 });
 
@@ -133,95 +126,63 @@ const createMockToken = (
 });
 
 describe('useRemoveLiquidityMidl', () => {
-  let formatRemoveLiquidityParams: any;
-  let handleSyntheticTokenApprovals: any;
-
   beforeEach(async () => {
     vi.clearAllMocks();
-
-    formatRemoveLiquidityParams = (
-      await import('./utils/formatRemoveLiquidityParams')
-    ).formatRemoveLiquidityParams;
-    handleSyntheticTokenApprovals = (
-      await import('./utils/handleSyntheticTokenApprovals')
-    ).handleSyntheticTokenApprovals;
   });
 
-  it('formats correctly parameters when tokenA is WETH and tokenB is a rune', () => {
-    const params = createMockParams({
-      tokenA: MOCK_WETH_ADDRESS,
-      tokenB: MOCK_TOKEN_B,
-      runeBId: 'test-rune-b',
-    });
+  // Minimal mock helpers
+  const query = <T>(data: T) =>
+    ({
+      data,
+      error: null,
+      isError: false,
+      isPending: false,
+      isLoading: false,
+      isSuccess: true,
+      refetch: vi.fn(),
+    }) as any;
 
-    const result = formatRemoveLiquidityParams(params);
+  const token = (
+    rune?: Partial<{
+      id: string;
+      name: string;
+      spaced_name: string;
+      divisibility: number;
+      symbol: string;
+    }>,
+  ) =>
+    ({
+      state: query(undefined),
+      bytes32State: query(undefined),
+      bytes32RuneId: undefined,
+      rune: rune
+        ? {
+            id: rune.id!,
+            name: rune.name ?? 'TEST_RUNE',
+            spaced_name: rune.spaced_name ?? 'TEST RUNE',
+            divisibility: rune.divisibility ?? 8,
+            symbol: rune.symbol ?? 'TR',
+          }
+        : undefined,
+    }) as ReturnType<typeof useToken>;
 
-    expect(result.isETH).toBe(true);
-    expect(result.functionName).toBe('removeLiquidityETH');
-    expect(result.args).toEqual([
-      MOCK_TOKEN_B,
-      params.liquidity,
-      params.amountBMin,
-      params.amountAMin,
-      params.to,
-      params.deadline,
-    ]);
-    expect(result.assetsToWithdraw).toEqual([
-      {
-        id: 'test-rune-b',
-        amount: maxUint256,
-        address: MOCK_TOKEN_B,
-      },
-    ]);
-  });
-
-  it('formats correctly parameters when tokenB is WETH and tokenA is NOT a rune', () => {
-    const params = createMockParams({
-      tokenA: MOCK_TOKEN_A,
-      tokenB: MOCK_WETH_ADDRESS,
-    });
-
-    const result = formatRemoveLiquidityParams(params);
-
-    expect(result.isETH).toBe(true);
-    expect(result.functionName).toBe('removeLiquidityETH');
-    expect(result.args).toEqual([
-      MOCK_TOKEN_A,
-      params.liquidity,
-      params.amountAMin,
-      params.amountBMin,
-      params.to,
-      params.deadline,
-    ]);
-    expect(result.assetsToWithdraw).toEqual([]);
-  });
-
-  it('validates function exists and can be called without errors', async () => {
-    const { readContract } = await import('wagmi/actions');
-    vi.mocked(readContract).mockResolvedValue(parseEther('1'));
-
-    expect(typeof handleSyntheticTokenApprovals).toBe('function');
-
-    const params = {
-      tokenA: MOCK_TOKEN_A,
-      tokenB: MOCK_TOKEN_B,
-      amountAMin: parseEther('0.1'),
-      amountBMin: parseEther('0.2'),
-      address: MOCK_USER_ADDRESS,
-      config: { chains: [] },
-      addTxIntention: vi.fn(),
-    };
-
-    await expect(handleSyntheticTokenApprovals(params)).resolves.not.toThrow();
-  });
-
-  // Integration tests for complete hook workflow
-  let mockAddTxIntention: any;
-  let mockAddApproveIntention: any;
-  let mockAddCompleteTxIntention: any;
-  let mockClearTxIntentions: any;
-  let mockUseERC20Allowance: any;
-  let mockUseToken: any;
+  // Direct mock function declarations
+  let mockAddTxIntention: MockedFunction<
+    ReturnType<typeof useAddTxIntention>['addTxIntention']
+  >;
+  let mockAddApproveIntention: MockedFunction<
+    ReturnType<
+      typeof useApproveWithOptionalDeposit
+    >['addApproveDepositIntention']
+  >;
+  let mockAddCompleteTxIntention: MockedFunction<
+    ReturnType<typeof useAddCompleteTxIntention>['addCompleteTxIntention']
+  >;
+  let mockClearTxIntentions: MockedFunction<
+    ReturnType<typeof useClearTxIntentions>
+  >;
+  let mockUseERC20Allowance: MockedFunction<typeof useERC20Allowance>;
+  let mockUseToken: MockedFunction<typeof useToken>;
 
   const setupMocks = async () => {
     const { useERC20Allowance } = await import('@/features/token');
@@ -239,12 +200,12 @@ describe('useRemoveLiquidityMidl', () => {
       addTxIntention: mockAddTxIntention,
     } as any);
 
-    vi.mocked(midlReact.useClearTxIntentions).mockReturnValue(
-      mockClearTxIntentions,
-    );
     vi.mocked(midlReact.useAddCompleteTxIntention).mockReturnValue({
       addCompleteTxIntention: mockAddCompleteTxIntention,
     } as any);
+    vi.mocked(midlReact.useClearTxIntentions).mockReturnValue(
+      mockClearTxIntentions,
+    );
     vi.mocked(midlReact.useEVMAddress).mockReturnValue(MOCK_USER_ADDRESS);
 
     mockUseToken = vi.mocked(midlReact.useToken);
@@ -286,8 +247,8 @@ describe('useRemoveLiquidityMidl', () => {
   };
 
   it('Case 1: LP token needs approve (allowance < liquidity) - intention is added to array', async () => {
-    mockUseERC20Allowance.mockReturnValue({ data: parseEther('0.1') });
-    mockUseToken.mockReturnValue({ rune: undefined });
+    mockUseERC20Allowance.mockReturnValue(query(parseEther('0.1')));
+    mockUseToken.mockReturnValue(token());
 
     await runLiquidityTest();
 
@@ -298,8 +259,8 @@ describe('useRemoveLiquidityMidl', () => {
   });
 
   it("Case 2: LP token doesn't need approve (allowance >= liquidity) - no approval intention added", async () => {
-    mockUseERC20Allowance.mockReturnValue({ data: parseEther('1') });
-    mockUseToken.mockReturnValue({ rune: undefined });
+    mockUseERC20Allowance.mockReturnValue(query(parseEther('1')));
+    mockUseToken.mockReturnValue(token());
 
     expect(mockAddApproveIntention).not.toHaveBeenCalled();
   });
@@ -331,10 +292,9 @@ describe('useRemoveLiquidityMidl', () => {
   };
 
   it('Case 3: Two synthetic assets - 2 approval intentions added to array', async () => {
-    mockUseERC20Allowance.mockReturnValue({ data: parseEther('1') });
-    mockUseToken.mockReturnValue({ rune: undefined });
+    mockUseERC20Allowance.mockReturnValue(query(parseEther('1')));
+    mockUseToken.mockReturnValue(token());
 
-    // Clear previous mocks to ensure clean state
     mockAddTxIntention.mockClear();
     mockAddApproveIntention.mockClear();
     mockAddCompleteTxIntention.mockClear();
@@ -346,8 +306,8 @@ describe('useRemoveLiquidityMidl', () => {
   });
 
   it('Case 4: One synthetic asset - 1 approval intention added to array', async () => {
-    mockUseERC20Allowance.mockReturnValue({ data: parseEther('1') });
-    mockUseToken.mockReturnValue({ rune: undefined });
+    mockUseERC20Allowance.mockReturnValue(query(parseEther('1')));
+    mockUseToken.mockReturnValue(token());
 
     await setupSyntheticTokens([MOCK_TOKEN_A]);
     await runLiquidityTest();
@@ -355,9 +315,9 @@ describe('useRemoveLiquidityMidl', () => {
     expect(mockAddTxIntention).toHaveBeenCalledTimes(2);
   });
 
-  it('Case 5: No synthetic assets - no approval intentions added to array', async () => {
-    mockUseERC20Allowance.mockReturnValue({ data: parseEther('1') });
-    mockUseToken.mockReturnValue({ rune: undefined });
+  it('Case 5: Multiple runes - complete transaction intentions added', async () => {
+    mockUseERC20Allowance.mockReturnValue(query(parseEther('1')));
+    mockUseToken.mockReturnValue(token());
 
     await setupSyntheticTokens([]);
     await runLiquidityTest();
@@ -366,8 +326,8 @@ describe('useRemoveLiquidityMidl', () => {
   });
 
   it('Case 6: No runes - completeTx called with empty assetsToWithdraw', async () => {
-    mockUseERC20Allowance.mockReturnValue({ data: parseEther('1') });
-    mockUseToken.mockReturnValue({ rune: undefined });
+    mockUseERC20Allowance.mockReturnValue(query(parseEther('1')));
+    mockUseToken.mockReturnValue(token());
 
     await runLiquidityTest();
 
@@ -377,10 +337,26 @@ describe('useRemoveLiquidityMidl', () => {
   });
 
   it('Case 7: Two simple runes (non-synthetic) - both added to assetsToWithdraw', async () => {
-    mockUseERC20Allowance.mockReturnValue({ data: parseEther('1') });
+    mockUseERC20Allowance.mockReturnValue(query(parseEther('1')));
     mockUseToken
-      .mockReturnValueOnce({ rune: { id: 'rune-a' } })
-      .mockReturnValueOnce({ rune: { id: 'rune-b' } });
+      .mockReturnValueOnce(
+        token({
+          id: 'rune-a',
+          name: 'Rune A',
+          spaced_name: 'Rune A',
+          divisibility: 8,
+          symbol: 'RA',
+        }),
+      )
+      .mockReturnValueOnce(
+        token({
+          id: 'rune-b',
+          name: 'Rune B',
+          spaced_name: 'Rune B',
+          divisibility: 8,
+          symbol: 'RB',
+        }),
+      );
 
     await setupSyntheticTokens([]);
     await runLiquidityTest();

@@ -1,6 +1,5 @@
 import { tokenList } from '@/global';
 import { executorAddress } from '@midl-xyz/midl-js-executor';
-import { useAddTxIntention } from '@midl-xyz/midl-js-executor-react';
 import { readContract } from '@wagmi/core';
 import {
   Address,
@@ -18,16 +17,23 @@ type HandleSyntheticTokenApprovalsInput = {
   amountBMin: bigint;
   address: Address;
   config: Config;
-  addTxIntention: ReturnType<typeof useAddTxIntention>['addTxIntention'];
 };
 
-const handleExecutorApproval = async (
+type TxIntentionParams = {
+  intention: {
+    evmTransaction: {
+      to: Address;
+      data: `0x${string}`;
+    };
+  };
+};
+
+const createExecutorApprovalIntention = async (
   tokenAddress: Address,
   minAmount: bigint,
   userAddress: Address,
   config: Config,
-  addTxIntention: ReturnType<typeof useAddTxIntention>['addTxIntention'],
-) => {
+): Promise<TxIntentionParams | null> => {
   const allowance = await readContract(config, {
     address: tokenAddress,
     abi: erc20Abi,
@@ -36,7 +42,7 @@ const handleExecutorApproval = async (
   });
 
   if (allowance < minAmount) {
-    addTxIntention({
+    return {
       intention: {
         evmTransaction: {
           to: tokenAddress,
@@ -47,10 +53,18 @@ const handleExecutorApproval = async (
           }),
         },
       },
-    });
+    };
   }
+
+  return null;
 };
 
+/**
+ * @notice Checks if synthetic token approvals are needed for liquidity removal and returns intentions to execute
+ * @dev Checks if tokens are synthetic and returns approval intentions if needed
+ * @param params Input parameters including token addresses and amounts
+ * @returns Promise resolving to array of transaction intention parameters
+ */
 export const handleSyntheticTokenApprovals = async ({
   tokenA,
   tokenB,
@@ -58,20 +72,36 @@ export const handleSyntheticTokenApprovals = async ({
   amountBMin,
   address,
   config,
-  addTxIntention,
-}: HandleSyntheticTokenApprovalsInput) => {
+}: HandleSyntheticTokenApprovalsInput): Promise<TxIntentionParams[]> => {
+  if (!address || !config) {
+    console.error(
+      'Parameters in handleSyntheticTokenApprovals are undefined:',
+      {
+        address: !!address,
+        config: !!config,
+      },
+    );
+    throw new Error(
+      'An error occurred with configuration. Please contact support.',
+    );
+  }
+
+  const intentions: TxIntentionParams[] = [];
+
   const tokenAInList = tokenList.find(
     (token) => getAddress(token.address) === getAddress(tokenA),
   );
 
   if (tokenAInList?.isSynthetic) {
-    await handleExecutorApproval(
+    const intention = await createExecutorApprovalIntention(
       tokenA,
       amountAMin,
       address,
       config,
-      addTxIntention,
     );
+    if (intention) {
+      intentions.push(intention);
+    }
   }
 
   const tokenBInList = tokenList.find(
@@ -79,12 +109,16 @@ export const handleSyntheticTokenApprovals = async ({
   );
 
   if (tokenBInList?.isSynthetic) {
-    await handleExecutorApproval(
+    const intention = await createExecutorApprovalIntention(
       tokenB,
       amountBMin,
       address,
       config,
-      addTxIntention,
     );
+    if (intention) {
+      intentions.push(intention);
+    }
   }
+
+  return intentions;
 };

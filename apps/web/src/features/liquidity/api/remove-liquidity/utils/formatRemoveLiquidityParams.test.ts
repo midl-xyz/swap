@@ -1,6 +1,6 @@
+import { Address, maxUint256, parseEther } from 'viem';
 import { describe, expect, it, vi } from 'vitest';
 import { formatRemoveLiquidityParams } from '../utils/formatRemoveLiquidityParams';
-import { Address, maxUint256, parseEther } from 'viem';
 
 vi.mock('@/global', () => ({
   WETHByChain: {
@@ -9,7 +9,7 @@ vi.mock('@/global', () => ({
   uniswapV2Router02Abi: [],
 }));
 
-describe('formatRemoveLiquidityParams:', () => {
+describe('formatRemoveLiquidityParams', () => {
   const mockChainId = 1;
   const mockWETHAddress =
     '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' as Address;
@@ -83,8 +83,8 @@ describe('formatRemoveLiquidityParams:', () => {
     });
   });
 
-  describe('non-ETH scenarios:', () => {
-    it('should return regular parameters when neither token is WETH', () => {
+  describe('non-ETH scenarios', () => {
+    it('returns regular parameters when neither token is WETH', () => {
       const params = {
         ...defaultParams,
         runeAId: 'test-rune-a',

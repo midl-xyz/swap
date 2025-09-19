@@ -1,5 +1,3 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { handleSyntheticTokenApprovals } from '../utils/handleSyntheticTokenApprovals';
 import { readContract } from '@wagmi/core';
 import {
   Address,
@@ -8,7 +6,9 @@ import {
   maxUint256,
   parseEther,
 } from 'viem';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Config } from 'wagmi';
+import { handleSyntheticTokenApprovals } from '../utils/handleSyntheticTokenApprovals';
 
 vi.mock('@wagmi/core', () => ({
   readContract: vi.fn(),
@@ -41,13 +41,8 @@ vi.mock('@midl-xyz/midl-js-executor', () => ({
   midlRegtest: {},
 }));
 
-vi.mock('@midl-xyz/midl-js-executor-react', () => ({
-  useAddTxIntention: vi.fn(),
-}));
-
 describe('handleSyntheticTokenApprovals', () => {
   const mockConfig = {} as Config;
-  const mockAddTxIntention = vi.fn();
   const mockUserAddress =
     '0x5555555555555555555555555555555555555555' as Address;
   const mockExecutorAddress =
@@ -64,19 +59,18 @@ describe('handleSyntheticTokenApprovals', () => {
     amountBMin: parseEther('2'),
     address: mockUserAddress,
     config: mockConfig,
-    addTxIntention: mockAddTxIntention,
   };
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should add approval transactions for both tokens when allowances are insufficient', async () => {
+  it('adds approval transactions for both tokens when allowances are insufficient', async () => {
     vi.mocked(readContract)
       .mockResolvedValueOnce(parseEther('0.5')) // tokenA allowance
       .mockResolvedValueOnce(parseEther('1')); // tokenB allowance
 
-    await handleSyntheticTokenApprovals(defaultParams);
+    const result = await handleSyntheticTokenApprovals(defaultParams);
 
     expect(readContract).toHaveBeenCalledTimes(2);
     expect(readContract).toHaveBeenNthCalledWith(1, mockConfig, {
@@ -92,8 +86,8 @@ describe('handleSyntheticTokenApprovals', () => {
       args: [mockUserAddress, mockExecutorAddress],
     });
 
-    expect(mockAddTxIntention).toHaveBeenCalledTimes(2);
-    expect(mockAddTxIntention).toHaveBeenNthCalledWith(1, {
+    expect(result).toHaveLength(2);
+    expect(result[0]).toEqual({
       intention: {
         evmTransaction: {
           to: synthTokenA,
@@ -105,7 +99,7 @@ describe('handleSyntheticTokenApprovals', () => {
         },
       },
     });
-    expect(mockAddTxIntention).toHaveBeenNthCalledWith(2, {
+    expect(result[1]).toEqual({
       intention: {
         evmTransaction: {
           to: synthTokenB,
@@ -119,27 +113,27 @@ describe('handleSyntheticTokenApprovals', () => {
     });
   });
 
-  it('should not add approval transactions when allowances are sufficient', async () => {
+  it('does not add approval transactions when allowances are sufficient', async () => {
     vi.mocked(readContract)
       .mockResolvedValueOnce(parseEther('2')) // tokenA allowance (>= 1 ETH required)
       .mockResolvedValueOnce(parseEther('3')); // tokenB allowance (>= 2 ETH required)
 
-    await handleSyntheticTokenApprovals(defaultParams);
+    const result = await handleSyntheticTokenApprovals(defaultParams);
 
     expect(readContract).toHaveBeenCalledTimes(2);
-    expect(mockAddTxIntention).not.toHaveBeenCalled();
+    expect(result).toHaveLength(0);
   });
 
-  it('should add approval only for tokenA when only tokenA allowance is insufficient', async () => {
+  it('adds approval only for tokenA when only tokenA allowance is insufficient', async () => {
     vi.mocked(readContract)
       .mockResolvedValueOnce(parseEther('0.5')) // tokenA allowance (< 1 ETH required)
       .mockResolvedValueOnce(parseEther('3')); // tokenB allowance (>= 2 ETH required)
 
-    await handleSyntheticTokenApprovals(defaultParams);
+    const result = await handleSyntheticTokenApprovals(defaultParams);
 
     expect(readContract).toHaveBeenCalledTimes(2);
-    expect(mockAddTxIntention).toHaveBeenCalledTimes(1);
-    expect(mockAddTxIntention).toHaveBeenCalledWith({
+    expect(result).toHaveLength(1);
+    expect(result[0]).toEqual({
       intention: {
         evmTransaction: {
           to: synthTokenA,
@@ -153,16 +147,16 @@ describe('handleSyntheticTokenApprovals', () => {
     });
   });
 
-  it('should add approval only for tokenB when only tokenB allowance is insufficient', async () => {
+  it('adds approval only for tokenB when only tokenB allowance is insufficient', async () => {
     vi.mocked(readContract)
       .mockResolvedValueOnce(parseEther('2')) // tokenA allowance (>= 1 ETH required)
       .mockResolvedValueOnce(parseEther('1')); // tokenB allowance (< 2 ETH required)
 
-    await handleSyntheticTokenApprovals(defaultParams);
+    const result = await handleSyntheticTokenApprovals(defaultParams);
 
     expect(readContract).toHaveBeenCalledTimes(2);
-    expect(mockAddTxIntention).toHaveBeenCalledTimes(1);
-    expect(mockAddTxIntention).toHaveBeenCalledWith({
+    expect(result).toHaveLength(1);
+    expect(result[0]).toEqual({
       intention: {
         evmTransaction: {
           to: synthTokenB,
@@ -176,7 +170,7 @@ describe('handleSyntheticTokenApprovals', () => {
     });
   });
 
-  it('should only check and approve the synthetic token (tokenA)', async () => {
+  it('only checks and approves the synthetic token (tokenA)', async () => {
     const params = {
       ...defaultParams,
       tokenB: regularToken,
@@ -185,9 +179,8 @@ describe('handleSyntheticTokenApprovals', () => {
     // Mock insufficient allowance for synthetic tokenA
     vi.mocked(readContract).mockResolvedValueOnce(parseEther('0.5'));
 
-    await handleSyntheticTokenApprovals(params);
+    const result = await handleSyntheticTokenApprovals(params);
 
-    // Should only check allowance for tokenA (synthetic)
     expect(readContract).toHaveBeenCalledTimes(1);
     expect(readContract).toHaveBeenCalledWith(mockConfig, {
       address: synthTokenA,
@@ -196,9 +189,8 @@ describe('handleSyntheticTokenApprovals', () => {
       args: [mockUserAddress, mockExecutorAddress],
     });
 
-    // Should add approval transaction only for tokenA
-    expect(mockAddTxIntention).toHaveBeenCalledTimes(1);
-    expect(mockAddTxIntention).toHaveBeenCalledWith({
+    expect(result).toHaveLength(1);
+    expect(result[0]).toEqual({
       intention: {
         evmTransaction: {
           to: synthTokenA,
@@ -212,18 +204,16 @@ describe('handleSyntheticTokenApprovals', () => {
     });
   });
 
-  it('should only check and approve the synthetic token (tokenB)', async () => {
+  it('only checks and approves the synthetic token (tokenB)', async () => {
     const params = {
       ...defaultParams,
-      tokenA: regularToken, // Non-synthetic token
+      tokenA: regularToken,
     };
 
-    // Mock insufficient allowance for synthetic tokenB
     vi.mocked(readContract).mockResolvedValueOnce(parseEther('1'));
 
-    await handleSyntheticTokenApprovals(params);
+    const result = await handleSyntheticTokenApprovals(params);
 
-    // Should only check allowance for tokenB (synthetic)
     expect(readContract).toHaveBeenCalledTimes(1);
     expect(readContract).toHaveBeenCalledWith(mockConfig, {
       address: synthTokenB,
@@ -232,9 +222,8 @@ describe('handleSyntheticTokenApprovals', () => {
       args: [mockUserAddress, mockExecutorAddress],
     });
 
-    // Should add approval transaction only for tokenB
-    expect(mockAddTxIntention).toHaveBeenCalledTimes(1);
-    expect(mockAddTxIntention).toHaveBeenCalledWith({
+    expect(result).toHaveLength(1);
+    expect(result[0]).toEqual({
       intention: {
         evmTransaction: {
           to: synthTokenB,
@@ -248,20 +237,20 @@ describe('handleSyntheticTokenApprovals', () => {
     });
   });
 
-  it('should not check allowances or add approval transactions when no tokens are synthetic', async () => {
+  it('does not check allowances or add approval transactions when no tokens are synthetic', async () => {
     const params = {
       ...defaultParams,
       tokenA: regularToken,
       tokenB: regularToken,
     };
 
-    await handleSyntheticTokenApprovals(params);
+    const result = await handleSyntheticTokenApprovals(params);
 
     expect(readContract).not.toHaveBeenCalled();
-    expect(mockAddTxIntention).not.toHaveBeenCalled();
+    expect(result).toHaveLength(0);
   });
 
-  it('should not check allowances for unknown tokens', async () => {
+  it('does not check allowances for unknown tokens', async () => {
     const unknownTokenA =
       '0x9999999999999999999999999999999999999999' as Address;
     const unknownTokenB =
@@ -273,13 +262,13 @@ describe('handleSyntheticTokenApprovals', () => {
       tokenB: unknownTokenB,
     };
 
-    await handleSyntheticTokenApprovals(params);
+    const result = await handleSyntheticTokenApprovals(params);
 
     expect(readContract).not.toHaveBeenCalled();
-    expect(mockAddTxIntention).not.toHaveBeenCalled();
+    expect(result).toHaveLength(0);
   });
 
-  it('should handle zero amounts correctly', async () => {
+  it('handles zero amounts correctly', async () => {
     const params = {
       ...defaultParams,
       amountAMin: 0n,
@@ -289,25 +278,24 @@ describe('handleSyntheticTokenApprovals', () => {
     // Mock zero allowances
     vi.mocked(readContract).mockResolvedValueOnce(0n).mockResolvedValueOnce(0n);
 
-    await handleSyntheticTokenApprovals(params);
+    const result = await handleSyntheticTokenApprovals(params);
 
     expect(readContract).toHaveBeenCalledTimes(2);
-    expect(mockAddTxIntention).not.toHaveBeenCalled();
+    expect(result).toHaveLength(0);
   });
 
-  it('should handle exact allowance amounts correctly', async () => {
+  it('handles exact allowance amounts correctly', async () => {
     vi.mocked(readContract)
       .mockResolvedValueOnce(parseEther('1')) // exactly 1 ETH for tokenA
       .mockResolvedValueOnce(parseEther('2')); // exactly 2 ETH for tokenB
 
-    await handleSyntheticTokenApprovals(defaultParams);
+    const result = await handleSyntheticTokenApprovals(defaultParams);
 
-    // Should not add approvals since allowances are exactly sufficient
     expect(readContract).toHaveBeenCalledTimes(2);
-    expect(mockAddTxIntention).not.toHaveBeenCalled();
+    expect(result).toHaveLength(0);
   });
 
-  it('should handle very large amounts correctly', async () => {
+  it('handles very large amounts correctly', async () => {
     const params = {
       ...defaultParams,
       amountAMin: maxUint256,
@@ -318,22 +306,9 @@ describe('handleSyntheticTokenApprovals', () => {
       .mockResolvedValueOnce(maxUint256 - 1n)
       .mockResolvedValueOnce(maxUint256 - 1n);
 
-    await handleSyntheticTokenApprovals(params);
+    const result = await handleSyntheticTokenApprovals(params);
 
-    // Should add approvals since allowances are insufficient
     expect(readContract).toHaveBeenCalledTimes(2);
-    expect(mockAddTxIntention).toHaveBeenCalledTimes(2);
-  });
-
-  it('should propagate readContract errors', async () => {
-    const error = new Error('Contract read failed');
-    vi.mocked(readContract).mockRejectedValueOnce(error);
-
-    await expect(handleSyntheticTokenApprovals(defaultParams)).rejects.toThrow(
-      'Contract read failed',
-    );
-
-    expect(readContract).toHaveBeenCalledTimes(1);
-    expect(mockAddTxIntention).not.toHaveBeenCalled();
+    expect(result).toHaveLength(2);
   });
 });

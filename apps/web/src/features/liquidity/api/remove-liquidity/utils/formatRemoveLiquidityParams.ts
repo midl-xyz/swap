@@ -6,6 +6,12 @@ type SmartContractFunctionArgs<
   functionName extends string,
 > = any[];
 
+type RunesToWithdraw = Array<{
+  id: string;
+  amount: bigint;
+  address: Address;
+}>;
+
 type FormatRemoveLiquidityParamsInput = {
   tokenA: Address;
   tokenB: Address;
@@ -19,22 +25,27 @@ type FormatRemoveLiquidityParamsInput = {
   runeBId?: string;
 };
 
-type FormatRemoveLiquidityParamsOutput = Readonly<{
-  args:
-    | SmartContractFunctionArgs<
+type FormatRemoveLiquidityParamsOutput<T extends boolean = boolean> = Readonly<{
+  isETH: T;
+  assetsToWithdraw: RunesToWithdraw;
+  args: T extends true
+    ? SmartContractFunctionArgs<
         typeof uniswapV2Router02Abi,
         'removeLiquidityETH'
       >
-    | SmartContractFunctionArgs<typeof uniswapV2Router02Abi, 'removeLiquidity'>;
-  isETH: boolean; // this value shows if the function involves removeLiquidityETH function or not. Set in a separate field for better readability
-  assetsToWithdraw: Array<{
-    id: string;
-    amount: bigint;
-    address: Address;
-  }>;
-  functionName: 'removeLiquidityETH' | 'removeLiquidity';
+    : SmartContractFunctionArgs<typeof uniswapV2Router02Abi, 'removeLiquidity'>;
+  functionName: T extends true ? 'removeLiquidityETH' : 'removeLiquidity';
 }>;
 
+/**
+ * @notice Formats parameters for UniswapV2 liquidity removal operations
+ * @dev Determines whether to use removeLiquidityETH or removeLiquidity based on WETH presence
+ *
+ * @returns params.args - Function arguments array for the appropriate UniswapV2Router method
+ * @returns params.isETH - Boolean indicating if native token is involved (true for removeLiquidityETH)
+ * @returns params.assetsToWithdraw - Array of runes to withdraw with their IDs and addresses
+ * @returns params.functionName - Specific UniswapV2Router withdraw function name to call
+ */
 export const formatRemoveLiquidityParams = ({
   tokenA,
   tokenB,
@@ -60,27 +71,14 @@ export const formatRemoveLiquidityParams = ({
     isETH = true;
   }
 
-  let assetsToWithdraw: Array<{
-    id: string;
-    amount: bigint;
-    address: Address;
-  }> = [];
-
-  let args:
-    | SmartContractFunctionArgs<
-        typeof uniswapV2Router02Abi,
-        'removeLiquidityETH'
-      >
-    | SmartContractFunctionArgs<typeof uniswapV2Router02Abi, 'removeLiquidity'>;
+  let assetsToWithdraw: RunesToWithdraw = [];
 
   if (isETH) {
     if (tokenA === WETHAddr) {
-      const runeId = runeBId;
-
-      assetsToWithdraw = runeId
+      assetsToWithdraw = runeBId
         ? [
             {
-              id: runeId,
+              id: runeBId,
               amount: maxUint256,
               address: tokenB,
             },
@@ -89,48 +87,54 @@ export const formatRemoveLiquidityParams = ({
 
       return {
         args: [tokenB, liquidity, amountBMin, amountAMin, to, deadline],
-        isETH,
+        isETH: true,
         assetsToWithdraw,
         functionName: 'removeLiquidityETH',
-      };
-    } else {
-      const runeId = runeAId;
-
-      assetsToWithdraw = runeId
-        ? [
-            {
-              id: runeId,
-              amount: maxUint256,
-              address: tokenB,
-            },
-          ]
-        : [];
-
-      return {
-        args: [tokenA, liquidity, amountAMin, amountBMin, to, deadline],
-        isETH,
-        assetsToWithdraw,
-        functionName: 'removeLiquidityETH',
-      };
-    }
-  } else {
-    args = [tokenA, tokenB, liquidity, amountAMin, amountBMin, to, deadline];
-
-    if (runeAId) {
-      assetsToWithdraw.push({
-        id: runeAId,
-        amount: maxUint256,
-        address: tokenA,
-      });
+      } as const;
     }
 
-    if (runeBId) {
-      assetsToWithdraw.push({
-        id: runeBId,
-        amount: maxUint256,
-        address: tokenB,
-      });
-    }
+    assetsToWithdraw = runeAId
+      ? [
+          {
+            id: runeAId,
+            amount: maxUint256,
+            address: tokenA,
+          },
+        ]
+      : [];
+
+    return {
+      args: [tokenA, liquidity, amountAMin, amountBMin, to, deadline],
+      isETH: true,
+      assetsToWithdraw,
+      functionName: 'removeLiquidityETH',
+    } as const;
+  }
+
+  const args = [
+    tokenA,
+    tokenB,
+    liquidity,
+    amountAMin,
+    amountBMin,
+    to,
+    deadline,
+  ];
+
+  if (runeAId) {
+    assetsToWithdraw.push({
+      id: runeAId,
+      amount: maxUint256,
+      address: tokenA,
+    });
+  }
+
+  if (runeBId) {
+    assetsToWithdraw.push({
+      id: runeBId,
+      amount: maxUint256,
+      address: tokenB,
+    });
   }
 
   return {
@@ -138,5 +142,5 @@ export const formatRemoveLiquidityParams = ({
     isETH,
     assetsToWithdraw,
     functionName: 'removeLiquidity',
-  };
+  } as const;
 };

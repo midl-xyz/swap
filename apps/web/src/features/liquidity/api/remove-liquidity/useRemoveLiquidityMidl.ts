@@ -65,78 +65,65 @@ export const useRemoveLiquidityMidl = ({
     RemoveLiquidityArgs
   >({
     mutationFn: async ({ liquidity, amountAMin, amountBMin, to, deadline }) => {
-      try {
-        clearTxIntentions();
+      clearTxIntentions();
 
-        if (isTokenNeedApproved) {
-          try {
-            addApproveIntention({
-              address: lpToken.address,
-              amount: lpToken.amount,
-            });
-          } catch (e) {
-            console.error('Error adding lpToken approve intention:', e);
-          }
-        }
-        const { args, assetsToWithdraw, functionName } =
-          formatRemoveLiquidityParams({
-            tokenA,
-            tokenB,
-            liquidity,
-            amountAMin,
-            amountBMin,
-            to,
-            deadline,
-            chainId,
-            runeAId,
-            runeBId,
-          });
-
-        try {
-          addTxIntention({
-            intention: {
-              evmTransaction: {
-                to: deployments[chainId].UniswapV2Router02.address,
-                chainId,
-                data: encodeFunctionData({
-                  abi: uniswapV2Router02Abi,
-                  functionName,
-                  args: args as any,
-                }),
-              },
-            },
-          });
-        } catch (e) {
-          console.error('Error adding removeLiq intention:', e);
-        }
-
-        try {
-          await handleSyntheticTokenApprovals({
-            tokenA,
-            tokenB,
-            amountAMin,
-            amountBMin,
-            address,
-            config,
-            addTxIntention,
-          });
-        } catch (e) {
-          console.error(
-            'Error adding complete transaction intention approvals for synth assets:',
-            e,
-          );
-        }
-
-        try {
-          addCompleteTxIntention({
-            runes: assetsToWithdraw,
-          });
-        } catch (e) {
-          console.error('Error adding complete transaction intention:', e);
-        }
-      } catch (e) {
-        console.error('Error in removeLiquidity mutation:', e);
+      if (isTokenNeedApproved) {
+        addApproveIntention({
+          address: lpToken.address,
+          amount: lpToken.amount,
+        });
       }
+      const { args, assetsToWithdraw, functionName } =
+        formatRemoveLiquidityParams({
+          tokenA,
+          tokenB,
+          liquidity,
+          amountAMin,
+          amountBMin,
+          to,
+          deadline,
+          chainId,
+          runeAId,
+          runeBId,
+        });
+
+      if (!deployments[chainId]?.UniswapV2Router02.address) {
+        console.error('UniswapV2Router02 deployment not found');
+        throw new Error(
+          'Network configuration not available. Please contact support.',
+        );
+      }
+
+      addTxIntention({
+        intention: {
+          evmTransaction: {
+            to: deployments[chainId]?.UniswapV2Router02.address,
+            chainId,
+            data: encodeFunctionData({
+              abi: uniswapV2Router02Abi,
+              functionName,
+              args: args as any,
+            }),
+          },
+        },
+      });
+
+      const syntheticApprovals = await handleSyntheticTokenApprovals({
+        tokenA,
+        tokenB,
+        amountAMin,
+        amountBMin,
+        address,
+        config,
+      });
+
+      syntheticApprovals.forEach((intentionParams) => {
+        addTxIntention(intentionParams);
+      });
+
+      addCompleteTxIntention({
+        runes: assetsToWithdraw,
+      });
     },
   });
 
