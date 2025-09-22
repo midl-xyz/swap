@@ -272,7 +272,7 @@ export const SwapForm = ({
     if (isSwapRatesFetching) {
       return <>Getting the best rate...</>;
     }
-    if (!isBalanceBigEnough) {
+    if (!isBalanceBigEnough && !isSwapRatesFetching) {
       return <>Insufficient Balance</>;
     }
     if (!isSwapRatesFetching && !swapRatesError && isBalanceBigEnough) {
@@ -342,7 +342,6 @@ export const SwapForm = ({
               amountName="inputTokenAmount"
               onChange={onInputTokenAmountChange}
               onMax={onInputTokenAmountChange}
-              disabled={isSwapRatesFetching}
             />
 
             <Button
@@ -367,7 +366,6 @@ export const SwapForm = ({
               amountName="outputTokenAmount"
               onChange={onOutputTokenAmountChange}
               onMax={onOutputTokenAmountChange}
-              disabled={isSwapRatesFetching}
             />
           </div>
           <SlippageControl />
