@@ -1,5 +1,3 @@
-'use client';
-
 import { Button } from '@/shared';
 import { AppMenuList, Header, Logo } from '@/widgets';
 import { Footer } from '@/widgets/footer/ui';
