@@ -258,6 +258,7 @@ export const SwapForm = ({
 
   const {
     data: { balance: inputTokenBalance },
+    isFetching: isInputTokenBalanceFetching,
   } = useTokenBalance(inputToken, { chainId, address });
 
   const { data: feeRate = 2n } = useBTCFeeRate();
@@ -275,16 +276,25 @@ export const SwapForm = ({
     if (!address) {
       return <>Connect wallet</>;
     }
-    if (isSwapRatesFetching) {
+    if (isSwapRatesFetching || isInputTokenBalanceFetching) {
       return <>Getting the best rate...</>;
     }
-    if (!isBalanceBigEnough) {
+    if (
+      !isBalanceBigEnough &&
+      !isSwapRatesFetching &&
+      !isInputTokenBalanceFetching
+    ) {
       return <>Insufficient Balance</>;
     }
     if (!isSwapRatesFetching && !swapRatesError && isBalanceBigEnough) {
       return 'Swap';
     }
-    if (!isSwapRatesFetching && Boolean(swapRatesError) && isFormFilled) {
+    if (
+      !isInputTokenBalanceFetching &&
+      !isSwapRatesFetching &&
+      Boolean(swapRatesError) &&
+      isFormFilled
+    ) {
       return 'Insufficient liquidity';
     }
 

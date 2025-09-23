@@ -1,5 +1,3 @@
-'use client';
-
 import { Button } from '@/shared';
 import { AppMenuList, Header, Logo } from '@/widgets';
 import { Footer } from '@/widgets/footer/ui';
@@ -26,7 +24,7 @@ export default function Home() {
               justifyContent: 'space-between',
             })}
           >
-            <Link href="/">
+            <Link href="/swap">
               <Logo />
             </Link>
             <HStack display={{ base: 'none', md: 'flex' }} gap={8} h="full">
