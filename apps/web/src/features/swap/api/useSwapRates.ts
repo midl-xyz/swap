@@ -1,56 +1,45 @@
 import { deployments, uniswapV2Router02Abi } from '@/global';
-import { readContract } from '@wagmi/core';
-import { useState } from 'react';
-import { useChainId, useConfig } from 'wagmi';
+import { Address } from 'viem';
+import { useMemo } from 'react';
+import { useChainId, useReadContract } from 'wagmi';
 
-type GetAmountsOutArgs = SmartContractReadFunctionArgs<
-  typeof uniswapV2Router02Abi,
-  'getAmountsOut'
->;
+export type UseSwapRatesArgs = {
+  tokenIn: Address | undefined;
+  tokenOut: Address | undefined;
+  type: 'exactIn' | 'exactOut';
+  value: bigint | undefined;
+};
 
-export const useSwapRates = () => {
+export const useSwapRates = ({
+  tokenIn,
+  tokenOut,
+  type,
+  value,
+}: UseSwapRatesArgs) => {
   const chainId = useChainId();
-  const [isFetching, setIsFetching] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-  const config = useConfig();
 
-  const read = async ({
-    value,
-    pair,
-    reverse,
-  }: {
-    value: GetAmountsOutArgs['0'];
-    pair: GetAmountsOutArgs['1'];
-    reverse?: boolean;
-  }) => {
-    setIsFetching(true);
-    setError(null);
+  const functionName: 'getAmountsIn' | 'getAmountsOut' =
+    type === 'exactIn' ? 'getAmountsOut' : 'getAmountsIn';
 
-    let method: 'getAmountsIn' | 'getAmountsOut' = 'getAmountsOut';
+  const args = useMemo(() => {
+    if (!tokenIn || !tokenOut || !value) return undefined;
+    return [value, [tokenIn, tokenOut]] as const;
+  }, [tokenIn, tokenOut, value]);
 
-    if (reverse) {
-      method = 'getAmountsIn';
-    }
-
-    try {
-      const result = await readContract(config as any, {
-        abi: uniswapV2Router02Abi,
-        address: deployments[chainId].UniswapV2Router02.address,
-        functionName: method,
-        args: [value, pair],
-      });
-
-      return result;
-    } catch (error: any) {
-      setError(error);
-    } finally {
-      setIsFetching(false);
-    }
-  };
+  const { data, error, isFetching, refetch } = useReadContract({
+    abi: uniswapV2Router02Abi,
+    address: deployments[chainId].UniswapV2Router02.address,
+    functionName,
+    args,
+    query: {
+      enabled: !!args && !!deployments[chainId]?.UniswapV2Router02?.address,
+    },
+  });
 
   return {
-    read,
-    error,
+    data,
+    error: error as Error | null,
     isFetching,
+    refetch,
   };
 };

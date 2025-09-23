@@ -7,14 +7,14 @@ import { useSwapRates } from '@/features/swap/api/useSwapRates';
 import { SwapDialog } from '@/features/swap/ui/swap-dialog/SwapDialog';
 import { tokenList } from '@/global';
 import { Button, SwapInput, parseNumberInput } from '@/shared';
-import { calculateAdjustedBalance } from '@/shared/lib/fees';
 import { AiOutlineSwapVertical } from '@/shared/assets';
+import { calculateAdjustedBalance } from '@/shared/lib/fees';
 import { removePercentage } from '@/shared/lib/removePercentage';
 import { SlippageControl, SwapFormChart } from '@/widgets';
 import { SwapDetails } from '@/widgets/swap-form/ui/SwapDetails';
 import { getCorrectToken } from '@/widgets/swap-form/ui/utils';
 import { Wallet } from '@/widgets/wallet';
-import { useEVMAddress, useBTCFeeRate } from '@midl-xyz/midl-js-executor-react';
+import { useBTCFeeRate, useEVMAddress } from '@midl-xyz/midl-js-executor-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -77,12 +77,46 @@ export const SwapForm = ({
     watch();
   const inputTokenInfo = useToken(inputToken, chainId);
   const outputTokenInfo = useToken(outputToken, chainId);
+  const swapParams = useRef<{
+    type: 'exactOut' | 'exactIn';
+    value: bigint;
+  }>({
+    type: 'exactOut',
+    value: 0n,
+  });
 
   const {
-    read: readSwapRates,
+    data: swapRates,
+    refetch: readSwapRates,
     error: swapRatesError,
     isFetching: isSwapRatesFetching,
-  } = useSwapRates();
+  } = useSwapRates({
+    tokenIn: getCorrectToken({ token: inputToken, chainId }) as Address,
+    tokenOut: getCorrectToken({ token: outputToken, chainId }) as Address,
+    ...swapParams.current,
+  });
+
+  useEffect(() => {
+    if (!swapRates) {
+      return;
+    }
+
+    if (swapParams.current.type === 'exactIn') {
+      const quote = swapRates[swapRates.length - 1];
+      const formatted =
+        quote !== undefined
+          ? formatUnits(quote, outputTokenInfo.decimals)
+          : '0';
+      setValue('outputTokenAmount', formatted);
+    }
+
+    if (swapParams.current.type === 'exactOut') {
+      const quote = swapRates[0];
+      const formatted =
+        quote !== undefined ? formatUnits(quote, inputTokenInfo.decimals) : '0';
+      setValue('inputTokenAmount', formatted);
+    }
+  }, [swapRates, inputTokenInfo.decimals, outputTokenInfo.decimals]);
 
   const onInputTokenAmountChange = useDebouncedCallback(async (e) => {
     if (!e.target) {
@@ -90,28 +124,16 @@ export const SwapForm = ({
     }
 
     lastChangedInput.current = true;
+
     const value = parseUnits(
       parseNumberInput(e.target.value),
       inputTokenInfo.decimals,
     );
 
-    const swapRates = await readSwapRates({
-      value,
-      pair: [
-        getCorrectToken({ token: inputToken, chainId }) as Address,
-        getCorrectToken({ token: outputToken, chainId }) as Address,
-      ],
-    });
-    if (!swapRates) {
-      return;
-    }
+    swapParams.current.type = 'exactIn';
+    swapParams.current.value = value;
 
-    const [, outputAmount] = swapRates;
-
-    setValue(
-      'outputTokenAmount',
-      formatUnits(outputAmount, outputTokenInfo.decimals),
-    );
+    readSwapRates();
   }, 0);
 
   const onOutputTokenAmountChange = useDebouncedCallback(async (e) => {
@@ -121,26 +143,10 @@ export const SwapForm = ({
     );
 
     lastChangedInput.current = false;
+    swapParams.current.type = 'exactOut';
+    swapParams.current.value = value;
 
-    const swapRates = await readSwapRates({
-      value,
-      pair: [
-        getCorrectToken({ token: inputToken, chainId }) as Address,
-        getCorrectToken({ token: outputToken, chainId }) as Address,
-      ],
-      reverse: true,
-    });
-
-    if (!swapRates) {
-      return;
-    }
-
-    const [inputAmount] = swapRates;
-
-    setValue(
-      'inputTokenAmount',
-      formatUnits(inputAmount, inputTokenInfo.decimals),
-    );
+    readSwapRates();
   }, 0);
 
   const address = useEVMAddress();
@@ -342,7 +348,6 @@ export const SwapForm = ({
               amountName="inputTokenAmount"
               onChange={onInputTokenAmountChange}
               onMax={onInputTokenAmountChange}
-              disabled={isSwapRatesFetching}
             />
 
             <Button
@@ -367,7 +372,6 @@ export const SwapForm = ({
               amountName="outputTokenAmount"
               onChange={onOutputTokenAmountChange}
               onMax={onOutputTokenAmountChange}
-              disabled={isSwapRatesFetching}
             />
           </div>
           <SlippageControl />
