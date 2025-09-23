@@ -56,7 +56,7 @@ export const tokenList: Token[] = [
     chainId: midlRegtest.id,
     decimals: 18,
     logoURI: '/images/GEARS.png',
-    tags: ['COMMUNITY'],
+    tags: [],
   },
   {
     symbol: 'WAR•TOKEN',
@@ -64,7 +64,7 @@ export const tokenList: Token[] = [
     address: '0xa3d87eE093430A73B34E33e0E1cc0a09B55fD152',
     chainId: midlRegtest.id,
     decimals: 18,
-    logoURI: '',
+    logoURI: '/images/WARTOKEN.jpg',
     tags: ['COMMUNITY'],
   },
 ];
