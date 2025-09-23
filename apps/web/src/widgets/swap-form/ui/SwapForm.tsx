@@ -270,7 +270,7 @@ export const SwapForm = ({
     if (!address) {
       return <>Connect wallet</>;
     }
-    if (isSwapRatesFetching) {
+    if (isSwapRatesFetching || isInputTokenBalanceFetching) {
       return <>Getting the best rate...</>;
     }
     if (
@@ -283,7 +283,12 @@ export const SwapForm = ({
     if (!isSwapRatesFetching && !swapRatesError && isBalanceBigEnough) {
       return 'Swap';
     }
-    if (!isSwapRatesFetching && Boolean(swapRatesError) && isFormFilled) {
+    if (
+      !isInputTokenBalanceFetching &&
+      !isSwapRatesFetching &&
+      Boolean(swapRatesError) &&
+      isFormFilled
+    ) {
       return 'Insufficient liquidity';
     }
 
