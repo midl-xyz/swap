@@ -28,12 +28,19 @@ export const SlippageControlForm = ({
     },
   });
 
+  const parsePercent = (input: string | number) => {
+    const n = typeof input === 'number' ? input : parseFloat(input);
+    if (!Number.isFinite(n) || Number.isNaN(n)) return 0;
+    return Math.max(0, n);
+  };
+
   const updateSlippage = (slippage: number) => {
     setValue('slippage', parseFloat((slippage * 100).toFixed(2)).toString());
   };
 
   const onSubmit = (value: FormData) => {
-    setSlippage(parseFloat(value.slippage) / 100);
+    const percent = parsePercent(value.slippage);
+    setSlippage(percent / 100);
     onClose();
   };
 
@@ -41,7 +48,8 @@ export const SlippageControlForm = ({
 
   useEffect(() => {
     if (autoCommit) {
-      setSlippage(parseFloat(slippageValue) / 100);
+      const percent = parsePercent(slippageValue ?? '');
+      setSlippage(percent / 100);
     }
   }, [autoCommit, slippageValue, setSlippage]);
 
@@ -70,6 +78,7 @@ export const SlippageControlForm = ({
         >
           <NumberInput
             max={100}
+            min={0}
             precision={2}
             appearance="tertiary"
             {...register('slippage')}

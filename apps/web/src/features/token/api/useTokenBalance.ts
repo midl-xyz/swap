@@ -1,4 +1,5 @@
 import { tokenList } from '@/global';
+import { satoshisToWei } from '@midl-xyz/midl-js-executor';
 import { useEVMAddress, useToken } from '@midl-xyz/midl-js-executor-react';
 import {
   useAccounts,
@@ -6,7 +7,7 @@ import {
   useRuneBalance,
 } from '@midl-xyz/midl-js-react';
 import { useMemo } from 'react';
-import { Address, erc20Abi, formatUnits, parseUnits, zeroAddress } from 'viem';
+import { Address, erc20Abi, formatUnits, zeroAddress } from 'viem';
 import { useBalance, useReadContracts } from 'wagmi';
 
 export const useTokenBalance = (
@@ -19,11 +20,17 @@ export const useTokenBalance = (
   } = {},
 ) => {
   const userAddress = useEVMAddress();
-  const { ordinalsAccount } = useAccounts();
-  const { balance: btcBalance } = useBTCBalance({});
+  const { ordinalsAccount, isConnected } = useAccounts();
+
+  const { balance: btcBalance } = useBTCBalance({
+    query: {
+      enabled: isConnected,
+    },
+  });
+
   const evmNativeTokenBalance = useBalance();
 
-  const convertedBTCBalance = btcBalance * 10 ** 10;
+  const convertedBTCBalance = satoshisToWei(btcBalance);
   const contracts: any[] = [
     {
       address: contract,

@@ -7,13 +7,14 @@ import { useSwapRates } from '@/features/swap/api/useSwapRates';
 import { SwapDialog } from '@/features/swap/ui/swap-dialog/SwapDialog';
 import { tokenList } from '@/global';
 import { Button, SwapInput, parseNumberInput } from '@/shared';
+import { calculateAdjustedBalance } from '@/shared/lib/fees';
 import { AiOutlineSwapVertical } from '@/shared/assets';
 import { removePercentage } from '@/shared/lib/removePercentage';
 import { SlippageControl, SwapFormChart } from '@/widgets';
 import { SwapDetails } from '@/widgets/swap-form/ui/SwapDetails';
 import { getCorrectToken } from '@/widgets/swap-form/ui/utils';
 import { Wallet } from '@/widgets/wallet';
-import { useEVMAddress } from '@midl-xyz/midl-js-executor-react';
+import { useEVMAddress, useBTCFeeRate } from '@midl-xyz/midl-js-executor-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -102,6 +103,7 @@ export const SwapForm = ({
       ],
     });
     if (!swapRates) {
+      setValue('outputTokenAmount', formatUnits(0n, outputTokenInfo.decimals));
       return;
     }
 
@@ -131,6 +133,7 @@ export const SwapForm = ({
     });
 
     if (!swapRates) {
+      setValue('inputTokenAmount', formatUnits(0n, inputTokenInfo.decimals));
       return;
     }
 
@@ -251,10 +254,16 @@ export const SwapForm = ({
 
   const {
     data: { balance: inputTokenBalance },
+    isFetching: isInputTokenBalanceFetching,
   } = useTokenBalance(inputToken, { chainId, address });
 
-  const isBalanceBigEnough =
-    parsedInputTokenAmount <= (inputTokenBalance ?? Infinity);
+  const { data: feeRate = 2n } = useBTCFeeRate();
+  const isBTC = inputToken === zeroAddress;
+  const effectiveBalance = isBTC
+    ? calculateAdjustedBalance(inputTokenBalance ?? 0n, feeRate)
+    : (inputTokenBalance ?? 0n);
+
+  const isBalanceBigEnough = parsedInputTokenAmount <= effectiveBalance;
 
   const isFormFilled =
     !!inputTokenAmount && !!outputTokenAmount && !!inputToken && !!outputToken;
@@ -263,16 +272,25 @@ export const SwapForm = ({
     if (!address) {
       return <>Connect wallet</>;
     }
-    if (isSwapRatesFetching) {
+    if (isSwapRatesFetching || isInputTokenBalanceFetching) {
       return <>Getting the best rate...</>;
     }
-    if (!isBalanceBigEnough) {
+    if (
+      !isBalanceBigEnough &&
+      !isSwapRatesFetching &&
+      !isInputTokenBalanceFetching
+    ) {
       return <>Insufficient Balance</>;
     }
     if (!isSwapRatesFetching && !swapRatesError && isBalanceBigEnough) {
       return 'Swap';
     }
-    if (!isSwapRatesFetching && Boolean(swapRatesError) && isFormFilled) {
+    if (
+      !isInputTokenBalanceFetching &&
+      !isSwapRatesFetching &&
+      Boolean(swapRatesError) &&
+      isFormFilled
+    ) {
       return 'Insufficient liquidity';
     }
 
@@ -370,6 +388,7 @@ export const SwapForm = ({
               <Button
                 type="submit"
                 appearance="primary"
+                minWidth="204px"
                 disabled={
                   isSwapRatesFetching ||
                   Boolean(swapRatesError) ||

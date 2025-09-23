@@ -4,12 +4,33 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   plugins: [
-    tsconfigPaths({
-      ignoreConfigErrors: true,
-    }),
+    tsconfigPaths(),
     react(),
   ],
+
   test: {
-    environment: 'jsdom',
+    environment: 'happy-dom',
+    globals: true,
+    deps: {
+      inline: ['@midl/satoshi-kit'], // ensure vite resolves it (not Node)
+    },
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html', 'lcov'],
+      reportsDirectory: './coverage',
+      // Include app-menu files for this task (and others already configured)
+      include: [
+        'src/widgets/app-menu/ui/AppMenuLink.tsx',
+        'src/widgets/app-menu/ui/AppMenu.tsx',
+        'src/widgets/app-menu/ui/MobileAppMenu.tsx',
+        'src/widgets/app-menu/ui/**/*.tsx',
+        'src/widgets/liquidity/ui/Liquidity.tsx',
+        'src/widgets/liquidity/ui/**/*.tsx',
+        'src/shared/ui/swap-input/**/*.tsx',
+        'src/features/liquidity/ui/remove-liquidity-dialog/**/*.tsx',
+        'src/widgets/swap-form/ui/SwapForm.tsx',
+        'src/features/swap/api/useSwapRates.ts',
+      ],
+    },
   },
 });

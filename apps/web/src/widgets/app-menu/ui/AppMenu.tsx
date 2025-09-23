@@ -41,14 +41,14 @@ const appMenuLinks: AppMenuLinkParams[] = [
 ];
 
 interface Props {
-  onToggleModal?: () => void;
+  onClick?: () => void;
 }
 
-export const AppMenuList = ({ onToggleModal }: Props) => {
+export const AppMenuList = ({ onClick }: Props) => {
   return (
     <>
       {appMenuLinks.map((link) => (
-        <AppMenuLink link={link} key={link.label} />
+        <AppMenuLink link={link} key={link.label} onClick={onClick} />
       ))}
     </>
   );
