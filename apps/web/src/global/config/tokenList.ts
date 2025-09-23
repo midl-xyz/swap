@@ -29,7 +29,7 @@ export const tokenList: Token[] = [
     chainId: midlRegtest.id,
     decimals: 18,
     logoURI: '/images/DOGGOTOTHEMOON.png',
-    tags: ['COMMUNITY'],
+    tags: ['BAG_WARS'],
   },
   {
     symbol: 'DOGECOIN•DOGE•DOSU',
@@ -38,7 +38,7 @@ export const tokenList: Token[] = [
     chainId: midlRegtest.id,
     decimals: 18,
     logoURI: '/images/DOGE.png',
-    tags: ['COMMUNITY'],
+    tags: ['BAG_WARS'],
   },
   {
     symbol: 'LOBO•THE•WOLF•PUP',
@@ -47,7 +47,7 @@ export const tokenList: Token[] = [
     chainId: midlRegtest.id,
     decimals: 18,
     logoURI: '/images/LOBO.png',
-    tags: ['COMMUNITY'],
+    tags: ['BAG_WARS'],
   },
   {
     symbol: 'MIDLGROUNDS•GEARS•TOKEN',
@@ -65,6 +65,6 @@ export const tokenList: Token[] = [
     chainId: midlRegtest.id,
     decimals: 18,
     logoURI: '',
-    tags: ['BAG_WARS'],
+    tags: ['COMMUNITY'],
   },
 ];
