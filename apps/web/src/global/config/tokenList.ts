@@ -11,7 +11,6 @@ export const tokenList: Token[] = [
     decimals: 18,
     logoURI:
       'https://assets-cdn.trustwallet.com/blockchains/bitcoin/info/logo.png',
-    tags: [],
   },
   {
     symbol: 'MIDL•RUNE•STABLECOIN',
@@ -20,7 +19,6 @@ export const tokenList: Token[] = [
     chainId: midlRegtest.id,
     decimals: 18,
     logoURI: '/images/stablecoin.png',
-    tags: [],
   },
   {
     symbol: 'DOG•GO•TO•THE•MOON',
@@ -56,7 +54,6 @@ export const tokenList: Token[] = [
     chainId: midlRegtest.id,
     decimals: 18,
     logoURI: '/images/GEARS.png',
-    tags: ['COMMUNITY'],
   },
   {
     symbol: 'WAR•TOKEN',
@@ -64,7 +61,7 @@ export const tokenList: Token[] = [
     address: '0xa3d87eE093430A73B34E33e0E1cc0a09B55fD152',
     chainId: midlRegtest.id,
     decimals: 18,
-    logoURI: '',
+    logoURI: '/images/WARTOKEN.jpg',
     tags: ['COMMUNITY'],
   },
 ];
