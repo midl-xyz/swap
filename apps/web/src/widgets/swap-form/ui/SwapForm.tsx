@@ -103,6 +103,7 @@ export const SwapForm = ({
       ],
     });
     if (!swapRates) {
+      setValue('outputTokenAmount', formatUnits(0n, outputTokenInfo.decimals));
       return;
     }
 
@@ -132,6 +133,7 @@ export const SwapForm = ({
     });
 
     if (!swapRates) {
+      setValue('inputTokenAmount', formatUnits(0n, inputTokenInfo.decimals));
       return;
     }
 
