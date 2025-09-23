@@ -11,7 +11,7 @@ export const tokenList: Token[] = [
     decimals: 18,
     logoURI:
       'https://assets-cdn.trustwallet.com/blockchains/bitcoin/info/logo.png',
-    tags: ['COMMUNITY'],
+    tags: [],
   },
   {
     symbol: 'MIDL•RUNE•STABLECOIN',
@@ -20,7 +20,7 @@ export const tokenList: Token[] = [
     chainId: midlRegtest.id,
     decimals: 18,
     logoURI: '/images/stablecoin.png',
-    tags: ['COMMUNITY'],
+    tags: [],
   },
   {
     symbol: 'DOG•GO•TO•THE•MOON',
@@ -29,7 +29,7 @@ export const tokenList: Token[] = [
     chainId: midlRegtest.id,
     decimals: 18,
     logoURI: '/images/DOGGOTOTHEMOON.png',
-    tags: ['COMMUNITY'],
+    tags: ['BAG_WARS'],
   },
   {
     symbol: 'DOGECOIN•DOGE•DOSU',
@@ -38,7 +38,7 @@ export const tokenList: Token[] = [
     chainId: midlRegtest.id,
     decimals: 18,
     logoURI: '/images/DOGE.png',
-    tags: ['COMMUNITY'],
+    tags: ['BAG_WARS'],
   },
   {
     symbol: 'LOBO•THE•WOLF•PUP',
@@ -47,7 +47,7 @@ export const tokenList: Token[] = [
     chainId: midlRegtest.id,
     decimals: 18,
     logoURI: '/images/LOBO.png',
-    tags: ['COMMUNITY'],
+    tags: ['BAG_WARS'],
   },
   {
     symbol: 'MIDLGROUNDS•GEARS•TOKEN',
@@ -56,6 +56,15 @@ export const tokenList: Token[] = [
     chainId: midlRegtest.id,
     decimals: 18,
     logoURI: '/images/GEARS.png',
+    tags: ['COMMUNITY'],
+  },
+  {
+    symbol: 'WAR•TOKEN',
+    name: 'WAR•TOKEN',
+    address: '0xa3d87eE093430A73B34E33e0E1cc0a09B55fD152',
+    chainId: midlRegtest.id,
+    decimals: 18,
+    logoURI: '',
     tags: ['COMMUNITY'],
   },
 ];
