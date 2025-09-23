@@ -18,6 +18,7 @@ import { useBTCFeeRate, useEVMAddress } from '@midl-xyz/midl-js-executor-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDebouncedCallback } from 'use-debounce';
@@ -77,7 +78,7 @@ export const SwapForm = ({
     watch();
   const inputTokenInfo = useToken(inputToken, chainId);
   const outputTokenInfo = useToken(outputToken, chainId);
-  const swapParams = useRef<{
+  const [swapParams, setSwapParams] = useState<{
     type: 'exactOut' | 'exactIn';
     value: bigint;
   }>({
@@ -86,37 +87,14 @@ export const SwapForm = ({
   });
 
   const {
-    data: swapRates,
     refetch: readSwapRates,
     error: swapRatesError,
     isFetching: isSwapRatesFetching,
   } = useSwapRates({
     tokenIn: getCorrectToken({ token: inputToken, chainId }) as Address,
     tokenOut: getCorrectToken({ token: outputToken, chainId }) as Address,
-    ...swapParams.current,
+    ...swapParams,
   });
-
-  useEffect(() => {
-    if (!swapRates) {
-      return;
-    }
-
-    if (swapParams.current.type === 'exactIn') {
-      const quote = swapRates[swapRates.length - 1];
-      const formatted =
-        quote !== undefined
-          ? formatUnits(quote, outputTokenInfo.decimals)
-          : '0';
-      setValue('outputTokenAmount', formatted);
-    }
-
-    if (swapParams.current.type === 'exactOut') {
-      const quote = swapRates[0];
-      const formatted =
-        quote !== undefined ? formatUnits(quote, inputTokenInfo.decimals) : '0';
-      setValue('inputTokenAmount', formatted);
-    }
-  }, [swapRates, inputTokenInfo.decimals, outputTokenInfo.decimals]);
 
   const onInputTokenAmountChange = useDebouncedCallback(async (e) => {
     if (!e.target) {
@@ -130,10 +108,13 @@ export const SwapForm = ({
       inputTokenInfo.decimals,
     );
 
-    swapParams.current.type = 'exactIn';
-    swapParams.current.value = value;
+    flushSync(() => setSwapParams({ type: 'exactIn', value }));
 
-    readSwapRates();
+    const { data } = await readSwapRates();
+    const quote = data ? data[data.length - 1] : undefined;
+    const formatted =
+      quote !== undefined ? formatUnits(quote, outputTokenInfo.decimals) : '0';
+    setValue('outputTokenAmount', formatted);
   }, 0);
 
   const onOutputTokenAmountChange = useDebouncedCallback(async (e) => {
@@ -143,10 +124,13 @@ export const SwapForm = ({
     );
 
     lastChangedInput.current = false;
-    swapParams.current.type = 'exactOut';
-    swapParams.current.value = value;
+    setSwapParams({ type: 'exactOut', value });
 
-    readSwapRates();
+    const { data } = await readSwapRates();
+    const quote = data ? data[0] : undefined;
+    const formatted =
+      quote !== undefined ? formatUnits(quote, inputTokenInfo.decimals) : '0';
+    setValue('inputTokenAmount', formatted);
   }, 0);
 
   const address = useEVMAddress();
