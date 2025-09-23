@@ -58,4 +58,13 @@ export const tokenList: Token[] = [
     logoURI: '/images/GEARS.png',
     tags: ['COMMUNITY'],
   },
+  {
+    symbol: 'WAR•TOKEN',
+    name: 'WAR•TOKEN',
+    address: '0xa3d87eE093430A73B34E33e0E1cc0a09B55fD152',
+    chainId: midlRegtest.id,
+    decimals: 18,
+    logoURI: '',
+    tags: ['BAG_WARS'],
+  },
 ];
