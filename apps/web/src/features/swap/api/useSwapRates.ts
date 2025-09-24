@@ -1,6 +1,5 @@
 import { deployments, uniswapV2Router02Abi } from '@/global';
 import { Address } from 'viem';
-import { useMemo } from 'react';
 import { useChainId, useReadContract } from 'wagmi';
 
 export type UseSwapRatesArgs = {
@@ -21,12 +20,12 @@ export const useSwapRates = ({
   const functionName: 'getAmountsIn' | 'getAmountsOut' =
     type === 'exactIn' ? 'getAmountsOut' : 'getAmountsIn';
 
-  const args = useMemo(() => {
-    if (!tokenIn || !tokenOut || !value) return undefined;
-    return [value, [tokenIn, tokenOut]] as const;
-  }, [tokenIn, tokenOut, value]);
+  const args =
+    tokenIn && tokenOut && value
+      ? ([value, [tokenIn, tokenOut]] as const)
+      : undefined;
 
-  const { data, error, isFetching, refetch } = useReadContract({
+  return useReadContract({
     abi: uniswapV2Router02Abi,
     address: deployments[chainId].UniswapV2Router02.address,
     functionName,
@@ -35,11 +34,4 @@ export const useSwapRates = ({
       enabled: !!args && !!deployments[chainId]?.UniswapV2Router02?.address,
     },
   });
-
-  return {
-    data,
-    error: error as Error | null,
-    isFetching,
-    refetch,
-  };
 };

@@ -23,7 +23,7 @@ describe('useSwapRates (useReadContract)', () => {
     useReadContractMock.mockReset();
   });
 
-  it('uses getAmountsOut for exactIn and returns raw data', async () => {
+  it('uses getAmountsOut for exactIn and exposes swapRates', async () => {
     useReadContractMock.mockReturnValue({
       data: [0n, 123n],
       error: null,
@@ -36,16 +36,16 @@ describe('useSwapRates (useReadContract)', () => {
     );
 
     // Ensure hook passed correct params
-    const call = useReadContractMock.mock.calls.at(-1)?.[0];
-    expect(call.functionName).toBe('getAmountsOut');
-    expect(call.args).toEqual([1n, ['0xA', '0xB']]);
+    const lastCall = useReadContractMock.mock.calls.at(-1)?.[0];
+    expect(lastCall.functionName).toBe('getAmountsOut');
+    expect(lastCall.args).toEqual([1n, ['0xA', '0xB']]);
 
     expect(result.current.error).toBeNull();
     expect(result.current.isFetching).toBe(false);
     expect(result.current.data).toEqual([0n, 123n]);
   });
 
-  it('uses getAmountsIn for exactOut and returns raw data', async () => {
+  it('uses getAmountsIn for exactOut and exposes swapRates', async () => {
     useReadContractMock.mockReturnValue({
       data: [456n, 0n],
       error: null,
@@ -57,14 +57,19 @@ describe('useSwapRates (useReadContract)', () => {
       useSwapRates({ tokenIn: '0xA' as any, tokenOut: '0xB' as any, type: 'exactOut', value: 2n })
     );
 
-    const call = useReadContractMock.mock.calls.at(-1)?.[0];
-    expect(call.functionName).toBe('getAmountsIn');
-    expect(call.args).toEqual([2n, ['0xA', '0xB']]);
+    const lastCall = useReadContractMock.mock.calls.at(-1)?.[0];
+    expect(lastCall.functionName).toBe('getAmountsIn');
+    expect(lastCall.args).toEqual([2n, ['0xA', '0xB']]);
 
     expect(result.current.data).toEqual([456n, 0n]);
   });
 
-  it('disables query when args are missing', async () => {
+
+  it.each([
+    ['missing tokenIn', { tokenIn: undefined, tokenOut: '0xB' as any, value: 1n }],
+    ['missing tokenOut', { tokenIn: '0xA' as any, tokenOut: undefined, value: 1n }],
+    ['missing value', { tokenIn: '0xA' as any, tokenOut: '0xB' as any, value: undefined }],
+  ])('disables query when args are missing: %s', async (_label, { tokenIn, tokenOut, value }) => {
     useReadContractMock.mockReturnValue({
       data: undefined,
       error: null,
@@ -72,10 +77,11 @@ describe('useSwapRates (useReadContract)', () => {
       refetch: vi.fn(),
     });
 
-    renderHook(() => useSwapRates({ tokenIn: undefined, tokenOut: '0xB' as any, type: 'exactIn', value: undefined }));
+    const { result } = renderHook(() => useSwapRates({ tokenIn, tokenOut, type: 'exactIn', value }));
 
-    const call = useReadContractMock.mock.calls.at(-1)?.[0];
-    expect(call.args).toBeUndefined();
-    expect(call.query?.enabled).toBe(false);
+    const lastCall = useReadContractMock.mock.calls.at(-1)?.[0];
+    expect(lastCall.args).toBeUndefined();
+    expect(lastCall.query?.enabled).toBe(false);
+    expect(result.current.error).toBeNull();
   });
 });

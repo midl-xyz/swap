@@ -110,12 +110,15 @@ export const SwapForm = ({
 
     flushSync(() => setSwapParams({ type: 'exactIn', value }));
 
-    const { data } = await readSwapRates();
-    const quote = data ? data[data.length - 1] : undefined;
-    const formatted =
-      quote !== undefined ? formatUnits(quote, outputTokenInfo.decimals) : '0';
+    const { data } = await readSwapRates({ cancelRefetch: true });
+    const [, outputAmount] = data ?? [];
+    if (outputAmount === undefined) {
+      setValue('outputTokenAmount', '0');
+      return;
+    }
+    const formatted = formatUnits(outputAmount, outputTokenInfo.decimals);
     setValue('outputTokenAmount', formatted);
-  }, 0);
+  }, 250);
 
   const onOutputTokenAmountChange = useDebouncedCallback(async (e) => {
     const value = parseUnits(
@@ -126,12 +129,15 @@ export const SwapForm = ({
     lastChangedInput.current = false;
     setSwapParams({ type: 'exactOut', value });
 
-    const { data } = await readSwapRates();
-    const quote = data ? data[0] : undefined;
-    const formatted =
-      quote !== undefined ? formatUnits(quote, inputTokenInfo.decimals) : '0';
+    const { data } = await readSwapRates({ cancelRefetch: true });
+    const [inputAmount] = data ?? [];
+    if (inputAmount === undefined) {
+      setValue('inputTokenAmount', '0');
+      return;
+    }
+    const formatted = formatUnits(inputAmount, inputTokenInfo.decimals);
     setValue('inputTokenAmount', formatted);
-  }, 0);
+  }, 250);
 
   const address = useEVMAddress();
 
