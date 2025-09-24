@@ -1,16 +1,10 @@
 import React from 'react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import {
-  render,
-  screen,
-  cleanup,
-  fireEvent,
-  waitFor,
-} from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { QueryClient } from '@tanstack/react-query';
 import '@testing-library/jest-dom/vitest';
 
-import { Address, parseUnits, zeroAddress } from 'viem';
+import { Address, parseUnits } from 'viem';
 import { Wrapper } from '@/__tests__';
 
 const LP: Address = '0x00000000000000000000000000000000000000aa';
@@ -152,7 +146,7 @@ describe('RemoveLiquidityDialog', () => {
     ).toBeInTheDocument();
   });
 
-  it('validation: >100 invalid keeps submit disabled; 0 and 100 valid', async () => {
+  it('validation: value must be > 0 and <= 100 (0 is invalid, 100 is valid)', async () => {
     renderWithClient(<RemoveLiquidityDialog open onClose={() => {}} />);
 
     const input = screen.getByPlaceholderText(
@@ -164,7 +158,7 @@ describe('RemoveLiquidityDialog', () => {
     await waitFor(() => expect(submit).toBeDisabled());
 
     fireEvent.change(input, { target: { value: '0%' } });
-    await waitFor(() => expect(submit).not.toBeDisabled());
+    await waitFor(() => expect(submit).toBeDisabled());
 
     fireEvent.change(input, { target: { value: '100%' } });
     await waitFor(() => expect(submit).not.toBeDisabled());

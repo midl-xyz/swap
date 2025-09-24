@@ -44,8 +44,7 @@ const schema = yup.object().shape({
     message: 'Value must be a percentage',
     test: (value) => {
       const parsed = parseFloat(value ?? '');
-
-      return !isNaN(parsed) && parsed >= 0 && parsed <= 100;
+      return !isNaN(parsed) && parsed > 0 && parsed <= 100;
     },
   }),
 });
