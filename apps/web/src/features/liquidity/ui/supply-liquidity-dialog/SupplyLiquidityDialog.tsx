@@ -236,12 +236,12 @@ export const SupplyLiquidityDialog = ({
             >
               <div className={vstack({ gap: 4, alignItems: 'stretch' })}>
                 <div
-                  className={hstack({
+                  className={vstack({
+                    alignItems: 'baseline',
                     gap: 4,
-                    justifyContent: 'space-between',
                   })}
                 >
-                  <span>{tokenAInfo.symbol} Deposited</span>
+                  <div>Deposited</div>
                   <TokenValue
                     address={tokenA}
                     value={tokenAAmount}
@@ -250,14 +250,6 @@ export const SupplyLiquidityDialog = ({
                       textStyle: 'h6',
                     })}
                   />
-                </div>
-                <div
-                  className={hstack({
-                    gap: 4,
-                    justifyContent: 'space-between',
-                  })}
-                >
-                  <span>{tokenBInfo.symbol} Deposited</span>
                   <TokenValue
                     address={tokenB}
                     value={tokenBAmount}

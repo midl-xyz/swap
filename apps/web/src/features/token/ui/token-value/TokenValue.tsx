@@ -29,14 +29,28 @@ export const TokenValue = ({
         css({
           display: 'flex',
           alignItems: 'center',
-          gap: '0.5',
+          gap: '5px',
         }),
         className,
       )}
     >
       {!hideLogo && <TokenLogo address={address} chainId={chainId} />}
-      {formatUnits(value, tokenInfo.decimals)}{' '}
-      {hideSymbol ? '' : tokenInfo.symbol}
+      <span>{formatUnits(value, tokenInfo.decimals)} </span>
+      {hideSymbol ? null : (
+        <span
+          title={tokenInfo.symbol}
+          className={css({
+            display: 'inline-block',
+            maxWidth: '140px',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            verticalAlign: 'bottom',
+          })}
+        >
+          {tokenInfo.symbol}
+        </span>
+      )}
     </span>
   );
 };
