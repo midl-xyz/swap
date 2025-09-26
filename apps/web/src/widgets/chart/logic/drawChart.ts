@@ -10,6 +10,14 @@ type DrawChartParams = Pick<
   chart: IChartApi;
   chartContainerRef: RefObject<HTMLDivElement>;
 };
+
+// The number 14 is the "magic" placement of ~14 bars/candles to the left. The purpose:
+//   to show a little more history on the left (to provide context),
+// or to compensate for the autofit/scrollToRealTime feature, which pushes the chart to the right edge,
+//   or simply for UX padding, so that the current candle isn't pressed against the right edge.
+
+const initialLogicalPadding = 14;
+
 export const drawChart = ({
   chart,
   data,
@@ -90,7 +98,7 @@ export const drawChart = ({
     const visibleRange = chart.timeScale().getVisibleLogicalRange();
     if (visibleRange !== null) {
       chart.timeScale().setVisibleLogicalRange({
-        from: visibleRange.from - 14,
+        from: visibleRange.from - initialLogicalPadding,
         to: visibleRange.to,
       });
     }
