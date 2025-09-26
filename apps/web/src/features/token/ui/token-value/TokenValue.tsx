@@ -38,7 +38,7 @@ export const TokenValue = ({
       <span>{formatUnits(value, tokenInfo.decimals)} </span>
       {hideSymbol ? null : (
         <span
-          title={tokenInfo.symbol}
+          title={tokenInfo.name}
           className={css({
             display: 'inline-block',
             maxWidth: '140px',
@@ -48,7 +48,7 @@ export const TokenValue = ({
             verticalAlign: 'bottom',
           })}
         >
-          {tokenInfo.symbol}
+          {tokenInfo.name}
         </span>
       )}
     </span>

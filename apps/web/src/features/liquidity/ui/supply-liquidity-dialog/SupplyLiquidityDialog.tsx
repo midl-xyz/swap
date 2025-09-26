@@ -220,9 +220,45 @@ export const SupplyLiquidityDialog = ({
                     })}
                   />
 
-                  <span className={css({ textStyle: 'caption' })}>
-                    {tokenAInfo.symbol}/{tokenBInfo.symbol} Pool Tokens
-                  </span>
+                  <div>
+                    <span className={css({ textStyle: 'caption' })}>
+                      Pool Tokens
+                    </span>
+                    <div
+                      className={css({
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '2px',
+                      })}
+                    >
+                      <span
+                        title={tokenAInfo.symbol}
+                        className={css({
+                          textOverflow: 'ellipsis',
+                          overflow: 'hidden',
+                          width: '170px',
+                          whiteSpace: 'nowrap',
+                          textStyle: 'caption',
+                        })}
+                      >
+                        {tokenAInfo.symbol}
+                      </span>
+                      <span>/</span>
+                      <span
+                        title={tokenBInfo.symbol}
+                        className={css({
+                          textOverflow: 'ellipsis',
+                          overflow: 'hidden',
+                          width: '170px',
+                          whiteSpace: 'nowrap',
+                          textStyle: 'caption',
+                        })}
+                      >
+                        {tokenBInfo.symbol}
+                      </span>{' '}
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
