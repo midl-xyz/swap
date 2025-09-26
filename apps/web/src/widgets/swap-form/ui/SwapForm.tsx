@@ -24,6 +24,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDebouncedCallback } from 'use-debounce';
@@ -83,7 +84,7 @@ export const SwapForm = ({
     watch();
   const inputTokenInfo = useToken(inputToken, chainId);
   const outputTokenInfo = useToken(outputToken, chainId);
-  const swapParams = useRef<{
+  const [swapParams, setSwapParams] = useState<{
     type: 'exactOut' | 'exactIn';
     value: bigint;
   }>({
@@ -101,12 +102,12 @@ export const SwapForm = ({
   } = useSwapRates({
     tokenIn: getCorrectToken({ token: inputToken, chainId }) as Address,
     tokenOut: getCorrectToken({ token: outputToken, chainId }) as Address,
-    ...swapParams.current,
+    ...swapParams,
   });
 
   useEffect(() => {
     if (data) {
-      if (swapParams.current.type === 'exactIn') {
+      if (swapParams.type === 'exactIn') {
         const [, outputAmount] = data ?? [];
         if (outputAmount === undefined) {
           setValue('outputTokenAmount', '0');
@@ -116,7 +117,7 @@ export const SwapForm = ({
         setValue('outputTokenAmount', formatted);
       }
 
-      if (swapParams.current.type === 'exactOut') {
+      if (swapParams.type === 'exactOut') {
         const [inputAmount] = data ?? [];
         if (inputAmount === undefined) {
           setValue('inputTokenAmount', '0');
@@ -144,8 +145,9 @@ export const SwapForm = ({
       inputTokenInfo.decimals,
     );
 
-    swapParams.current = { type: 'exactIn', value };
-    readSwapRates();
+    flushSync(() => {
+      setSwapParams({ type: 'exactIn', value });
+    });
   }, 250);
 
   const onOutputTokenAmountChange = useDebouncedCallback(async (e) => {
@@ -164,8 +166,9 @@ export const SwapForm = ({
 
     lastChangedInput.current = false;
 
-    swapParams.current = { type: 'exactOut', value };
-    readSwapRates();
+    flushSync(() => {
+      setSwapParams({ type: 'exactOut', value });
+    });
   }, 250);
 
   const address = useEVMAddress();
@@ -214,7 +217,6 @@ export const SwapForm = ({
 
     if (lastChangedInput.current) {
       setValue('outputTokenAmount', inputTokenAmount);
-
       setValue('inputTokenAmount', '');
       setValue('inputToken', outputToken);
       setValue('outputToken', inputToken);
@@ -377,6 +379,7 @@ export const SwapForm = ({
               amountName="inputTokenAmount"
               onChange={onInputTokenAmountChange}
               onMax={onInputTokenAmountChange}
+              data-testid="inputTokenAmount"
             />
 
             <Button
@@ -401,6 +404,7 @@ export const SwapForm = ({
               amountName="outputTokenAmount"
               onChange={onOutputTokenAmountChange}
               onMax={onOutputTokenAmountChange}
+              data-testid="outputTokenAmount"
             />
           </div>
           <SlippageControl />
@@ -412,6 +416,7 @@ export const SwapForm = ({
                 type="submit"
                 appearance="primary"
                 minWidth="204px"
+                data-testid="swapButton"
                 disabled={
                   isSwapRatesFetching ||
                   Boolean(swapRatesError) ||
