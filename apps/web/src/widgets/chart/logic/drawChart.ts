@@ -90,8 +90,8 @@ export const drawChart = ({
     const visibleRange = chart.timeScale().getVisibleLogicalRange();
     if (visibleRange !== null) {
       chart.timeScale().setVisibleLogicalRange({
-        from: visibleRange.from - 14,
-        to: visibleRange.to,
+        from: visibleRange.from + 0.5,
+        to: visibleRange.to - 0.45,
       });
     }
   });
