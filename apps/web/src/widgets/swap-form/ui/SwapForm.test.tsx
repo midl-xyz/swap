@@ -196,7 +196,7 @@ describe('SwapForm', () => {
     });
   });
 
-  it.only('disables submit and shows Insufficient liquidity when swapRatesError exists and form is filled', async () => {
+  it('disables submit and shows Insufficient liquidity when swapRatesError exists and form is filled', async () => {
     mockUseTokenBalance.mockReturnValue({
       data: {
         balance: 100000000000000000000000n,
