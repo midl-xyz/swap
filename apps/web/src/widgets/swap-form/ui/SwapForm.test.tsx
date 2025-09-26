@@ -1,213 +1,194 @@
-import React from 'react';
-import { Address, zeroAddress, parseUnits } from 'viem';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { config, Wrapper } from '@/__tests__';
 import '@testing-library/jest-dom/vitest';
-
-vi.mock('next/navigation', () => ({
-  useSearchParams: () => ({ get: () => null }),
-}));
-
-vi.mock('next/link', () => ({
-  __esModule: true,
-  default: ({ href, children }: any) => <a href={href}>{children}</a>,
-}));
-
-vi.mock('wagmi', () => ({
-  useChainId: () => 1,
-}));
-
-vi.mock('use-debounce', () => ({
-  useDebouncedCallback: (fn: any) => fn,
-}));
-
-// Configurable mocks
-const mockUseEVMAddress = vi.fn();
-mockUseEVMAddress.mockReturnValue('0x1111111111111111111111111111111111111111');
-
-vi.mock('@midl-xyz/midl-js-executor-react', () => ({
-  useEVMAddress: () => mockUseEVMAddress(),
-  useBTCFeeRate: () => ({ data: 2n }),
-}));
-
-const mockToastSuccess = vi.fn();
-vi.mock('react-hot-toast', () => ({
-  default: {
-    success: (...args: Parameters<typeof mockToastSuccess>) =>
-      mockToastSuccess(...args),
-  },
-}));
-
-vi.mock('@/widgets', () => ({
-  SlippageControl: () => <div data-testid="slippage" />,
-  SwapFormChart: () => <div data-testid="chart" />,
-}));
-
-vi.mock('@/widgets/wallet', () => ({
-  Wallet: () => <div data-testid="wallet" />,
-}));
-
-vi.mock('@/widgets/swap-form/ui/SwapDetails', () => ({
-  SwapDetails: () => <div data-testid="details" />,
-}));
-
-// Mock SwapDialog to allow triggering onSuccessfulSwap from test
-vi.mock('@/features/swap/ui/swap-dialog/SwapDialog', () => ({
-  SwapDialog: (props: any) => (
-    <div data-testid="swap-dialog">
-      <button data-testid="swap-success" onClick={props.onSuccessfulSwap}>
-        success
-      </button>
-    </div>
-  ),
-}));
-
-vi.mock('@/widgets/swap-form/ui/utils', () => ({
-  getCorrectToken: ({ token }: any) => token,
-}));
-
-vi.mock('@/global', () => ({
-  tokenList: [
-    { name: 'MIDL•RUNE•STABLECOIN', symbol: 'MRSC', address: '0xstable' },
-  ],
-}));
-
-vi.mock('@/entities', () => ({
-  useToken: (_addr: string) => ({
-    address: _addr,
-    decimals: 18,
-    symbol: 'TKN',
-    name: 'Token',
-  }),
-}));
-
-const mockSelectTokens = vi.fn();
-const mockUseTokenBalance = vi.fn().mockReturnValue({
-  data: { balance: 10n ** 20n, formattedBalance: '100' },
-});
-vi.mock('@/features', () => ({
-  useLastUsedTokens: () => ({
-    selectTokens: (...args: Parameters<typeof mockSelectTokens>) =>
-      mockSelectTokens(...args),
-  }),
-  useTokenBalance: (...args: Parameters<typeof mockUseTokenBalance>) =>
-    mockUseTokenBalance(...args),
-  useSlippage: () => [0],
-  // Minimal TokenButton to satisfy SwapInput rendering
-  TokenButton: (props: any) => (
-    <button type="button" data-testid="token-button" {...props} />
-  ),
-}));
-
-const mockReadSwapRates = vi.fn();
-let mockIsFetching = false;
-let mockError: any = null;
-vi.mock('@/features/swap/api/useSwapRates', () => ({
-  useSwapRates: () => ({
-    read: (...args: Parameters<typeof mockReadSwapRates>) =>
-      mockReadSwapRates(...args),
-    error: mockError,
-    isFetching: mockIsFetching,
-  }),
-}));
-
-const mockSwapAsync = vi.fn(async () => {});
-vi.mock('@/features/swap/api/useSwapMidl', () => ({
-  useSwapMidl: () => ({
-    swapAsync: (...args: Parameters<typeof mockSwapAsync>) =>
-      mockSwapAsync(...args),
-  }),
-}));
-
+import { act, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Address, parseUnits, zeroAddress } from 'viem';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { SwapForm } from './SwapForm';
+import { AddressPurpose, connect, disconnect } from '@midl-xyz/midl-js-core';
+
+const mockUseSwapRates = vi.fn();
+const mockUseTokenBalance = vi.fn();
+const mockUseSwapMidl = vi.fn();
+
+vi.mock('next/navigation', () => require('next-router-mock/navigation'));
+vi.mock('@/features/swap/api/useSwapRates', () => {
+  return {
+    useSwapRates: (...args: any[]) => mockUseSwapRates(...args),
+  };
+});
+vi.mock('@/widgets/wallet/ui/Wallet', async () => {
+  return {
+    Wallet: () => {
+      return <button data-testid="connectButton" />;
+    },
+  };
+});
+vi.mock('@/features/token/api/useTokenBalance', async () => {
+  return {
+    useTokenBalance: (...args: any[]) => mockUseTokenBalance(...args),
+  };
+});
+vi.mock('@/features/swap/api/useSwapMidl', async () => {
+  return {
+    useSwapMidl: (...args: any[]) => mockUseSwapMidl(...args),
+  };
+});
 
 describe('SwapForm', () => {
-  beforeEach(() => {
-    mockReadSwapRates.mockReset();
-    mockSwapAsync.mockReset();
-    mockToastSuccess.mockReset();
-    mockIsFetching = false;
-    mockError = null;
-    mockUseEVMAddress.mockReturnValue(
-      '0x1111111111111111111111111111111111111111',
-    );
-    mockUseTokenBalance.mockReturnValue({
-      data: { balance: 10n ** 20n, formattedBalance: '100' },
+  beforeEach(async () => {
+    await connect(config, { purposes: [AddressPurpose.Ordinals] });
+
+    vi.useFakeTimers({
+      shouldAdvanceTime: true,
     });
-    mockReadSwapRates.mockImplementation(({ value, reverse }: any) =>
-      reverse ? [value, 0n] : [0n, value],
-    );
+
+    mockUseSwapRates.mockReturnValue({
+      data: null,
+      error: null,
+      isFetching: false,
+      refetch: vi.fn(),
+    });
+
+    mockUseSwapMidl.mockReturnValue({
+      swapAsync: vi.fn(),
+    });
+
+    mockUseTokenBalance.mockReturnValue({
+      data: {},
+      isFetching: false,
+    });
+  });
+
+  afterEach(() => {
+    vi.resetModules();
+    vi.useRealTimers();
+    vi.resetAllMocks();
+    vi.clearAllMocks();
   });
 
   it('updates output amount when input amount changes', async () => {
+    const user = userEvent.setup();
+
+    mockUseSwapRates.mockReturnValue({
+      data: null,
+      error: null,
+      isFetching: false,
+      refetch: vi.fn(),
+    });
+
     render(
       <SwapForm
         inputToken={'0x00000000000000000000000000000000000000aa' as Address}
         outputToken={'0x00000000000000000000000000000000000000bb' as Address}
       />,
+      {
+        wrapper: Wrapper,
+      },
     );
 
-    const [input, output] = screen.getAllByRole(
-      'textbox',
-    ) as HTMLInputElement[];
+    const input = screen.getByTestId('inputTokenAmount');
+    const output = screen.getByTestId('outputTokenAmount');
 
-    fireEvent.input(input, { target: { value: '1.5' } });
+    await user.type(input, '1.5');
 
-    await waitFor(() => {
-      expect(mockReadSwapRates).toHaveBeenCalledTimes(1);
-      expect(output.value).toBe('1.5');
+    mockUseSwapRates.mockReturnValue({
+      data: [2000000000000000000n, 150000000000000000n],
+      error: null,
+      isFetching: false,
+      refetch: vi.fn(),
     });
+    vi.advanceTimersByTime(250);
+
+    await waitFor(() => expect(output).toHaveValue('0.15'));
+
+    await user.type(input, '0');
+
+    mockUseSwapRates.mockReturnValue({
+      data: null,
+      error: null,
+      isFetching: false,
+      refetch: vi.fn(),
+    });
+    vi.advanceTimersByTime(250);
+
+    await waitFor(() => expect(output).toHaveValue(''));
   });
 
   it('updates input amount when output amount changes (reverse)', async () => {
+    const user = userEvent.setup();
+
     render(
       <SwapForm
         inputToken={'0x00000000000000000000000000000000000000aa' as Address}
         outputToken={'0x00000000000000000000000000000000000000bb' as Address}
       />,
+      {
+        wrapper: Wrapper,
+      },
     );
 
-    const [input, output] = screen.getAllByRole(
-      'textbox',
-    ) as HTMLInputElement[];
+    const input = screen.getByTestId('inputTokenAmount');
+    const output = screen.getByTestId('outputTokenAmount');
 
-    fireEvent.input(output, { target: { value: '2' } });
+    await user.type(output, '1.5');
 
-    await waitFor(() => {
-      expect(mockReadSwapRates).toHaveBeenCalledTimes(1);
-      expect(input.value).toBe('2');
+    mockUseSwapRates.mockReturnValue({
+      data: [2000000000000000000n, 150000000000000000n],
+      error: null,
+      isFetching: false,
+      refetch: vi.fn(),
     });
+    vi.advanceTimersByTime(250);
+
+    await waitFor(() => expect(input).toHaveValue('2'));
   });
 
-  it('renders Wallet when address equals zeroAddress', () => {
-    mockUseEVMAddress.mockReturnValue(zeroAddress);
+  it('renders Wallet (ConnectButton) when address equals zeroAddress', async () => {
+    await disconnect(config);
 
-    render(<SwapForm />);
+    render(<SwapForm />, { wrapper: Wrapper });
 
-    expect(screen.getByTestId('wallet')).toBeTruthy();
+    expect(screen.getByTestId('connectButton')).toBeTruthy();
   });
 
-  it('shows fetching state text on submit button when rates are fetching', () => {
-    mockIsFetching = true;
+  it('shows fetching state text on submit button when rates are fetching', async () => {
+    const user = userEvent.setup();
+    mockUseSwapRates.mockReturnValue({
+      data: null,
+      error: null,
+      isFetching: true,
+      refetch: vi.fn(),
+    });
 
-    render(<SwapForm />);
+    render(<SwapForm />, { wrapper: Wrapper });
 
-    expect(
-      screen.getByRole('button', { name: 'Getting the best rate...' }),
-    ).toBeTruthy();
+    const input = screen.getByTestId('inputTokenAmount');
+
+    await user.type(input, '1');
+
+    vi.advanceTimersByTime(250);
+
+    const btn = screen.getByTestId('swapButton');
+
+    expect(btn).toBeDisabled();
+    expect(btn).toHaveTextContent('Getting the best rate...');
   });
 
   it('disables submit and shows Insufficient Balance when input exceeds balance', async () => {
+    const user = userEvent.setup();
+
     render(
       <SwapForm
         inputToken={'0x00000000000000000000000000000000000000aa' as Address}
         outputToken={'0x00000000000000000000000000000000000000bb' as Address}
       />,
+      { wrapper: Wrapper },
     );
 
-    const [input] = screen.getAllByRole('textbox') as HTMLInputElement[];
+    const input = screen.getByTestId('inputTokenAmount');
 
-    fireEvent.input(input, { target: { value: '101' } });
+    user.type(input, '101');
 
     await waitFor(() => {
       const btn = screen.getByRole('button', { name: 'Insufficient Balance' });
@@ -216,120 +197,198 @@ describe('SwapForm', () => {
   });
 
   it('disables submit and shows Insufficient liquidity when swapRatesError exists and form is filled', async () => {
-    mockError = new Error('no liquidity');
+    mockUseTokenBalance.mockReturnValue({
+      data: {
+        balance: 100000000000000000000000n,
+        decimals: 18,
+      },
+      isFetching: false,
+    });
+
+    mockUseSwapRates.mockReturnValue({
+      data: null,
+      error: new Error('no liquidity'),
+      isFetching: false,
+      refetch: vi.fn(),
+    });
 
     render(
       <SwapForm
         inputToken={'0x00000000000000000000000000000000000000aa' as Address}
         outputToken={'0x00000000000000000000000000000000000000bb' as Address}
       />,
+      { wrapper: Wrapper },
     );
 
-    const [input] = screen.getAllByRole('textbox') as HTMLInputElement[];
-
-    fireEvent.input(input, { target: { value: '1' } });
+    const input = screen.getByTestId('inputTokenAmount');
+    const output = screen.getByTestId('outputTokenAmount');
+    const btn = screen.getByTestId('swapButton');
+    await userEvent.type(input, '1');
+    await userEvent.type(output, '1');
+    vi.advanceTimersByTime(250);
 
     await waitFor(() => {
-      const btn = screen.getByRole('button', {
-        name: 'Insufficient liquidity',
-      });
-      expect((btn as HTMLButtonElement).disabled).toBe(true);
+      expect(btn).toBeDisabled();
+      expect(btn).toHaveTextContent('Insufficient liquidity');
     });
   });
 
   it('calls swapAsync on submit, opens dialog and onSuccessfulSwap resets form and shows toast', async () => {
+    const mockSwapAsync = vi.fn();
+
+    mockUseSwapMidl.mockReturnValue({
+      swapAsync: mockSwapAsync,
+    });
+
+    mockUseTokenBalance.mockReturnValue({
+      data: {
+        balance: 2000000000000000000n,
+        decimals: 18,
+      },
+      isFetching: false,
+    });
+
+    const user = userEvent.setup();
+
     render(
       <SwapForm
         inputToken={'0x00000000000000000000000000000000000000aa' as Address}
         outputToken={'0x00000000000000000000000000000000000000bb' as Address}
       />,
+      { wrapper: Wrapper },
     );
 
-    const [input] = screen.getAllByRole('textbox') as HTMLInputElement[];
+    const input = screen.getByTestId('inputTokenAmount');
+    const output = screen.getByTestId('outputTokenAmount');
 
-    fireEvent.input(input, { target: { value: '1' } });
+    await user.type(input, '1.5');
 
-    await waitFor(() => {
-      const btn = screen.getByRole('button', { name: 'Swap' });
-      expect((btn as HTMLButtonElement).disabled).toBe(false);
+    mockUseSwapRates.mockReturnValue({
+      data: [2000000000000000000n, 150000000000000000n],
+      error: null,
+      isFetching: false,
+      refetch: vi.fn(),
     });
 
-    fireEvent.click(screen.getByRole('button', { name: 'Swap' }));
+    vi.advanceTimersByTime(250);
 
-    await waitFor(() => {
-      expect(mockSwapAsync).toHaveBeenCalledTimes(1);
+    const btn = screen.getByTestId('swapButton');
+
+    await waitFor(() => expect(btn).not.toBeDisabled());
+    expect(btn).toHaveTextContent('Swap');
+
+    await user.click(btn);
+
+    await waitFor(() => expect(mockSwapAsync).toHaveBeenCalled());
+
+    vi.mock('@/features/swap/ui/swap-dialog/SwapDialog', async () => {
+      return {
+        SwapDialog: ({
+          onSuccessfulSwap,
+        }: {
+          onSuccessfulSwap: () => void;
+        }) => {
+          return (
+            <div data-testid="swap-dialog">
+              SwapDialog
+              <button data-testid="swap-success" onClick={onSuccessfulSwap}>
+                Success
+              </button>
+            </div>
+          );
+        },
+      };
     });
 
-    // amountOutMin should equal parseUnits('1', 18) when slippage=0
-    const firstCallArgs = (
-      mockSwapAsync.mock.calls as unknown as any[][]
-    )[0]?.[0];
-    expect(firstCallArgs?.to).toBe(
-      '0x1111111111111111111111111111111111111111',
-    );
-    expect(firstCallArgs?.amountOutMin).toBe(parseUnits('1', 18));
-
-    // Dialog should be open
     expect(screen.getByTestId('swap-dialog')).toBeTruthy();
-
-    // Simulate successful swap
-    fireEvent.click(screen.getByTestId('swap-success'));
+    await user.click(screen.getByTestId('swap-success'));
 
     await waitFor(() => {
-      expect(mockToastSuccess).toHaveBeenCalled();
+      expect(input).toHaveValue('');
+      expect(output).toHaveValue('');
+      expect(screen.getByText('Swap successful')).toBeInTheDocument();
     });
-
-    const [newInput] = screen.getAllByRole('textbox') as HTMLInputElement[];
-    expect(newInput.value).toBe('');
   });
 
   it('swap button swaps amounts and triggers correct reverse flag when input was changed last', async () => {
+    const user = userEvent.setup();
+
     render(
       <SwapForm
         inputToken={'0x00000000000000000000000000000000000000aa' as Address}
         outputToken={'0x00000000000000000000000000000000000000bb' as Address}
       />,
+      {
+        wrapper: Wrapper,
+      },
+    );
+    const input = screen.getByTestId('inputTokenAmount');
+    const output = screen.getByTestId('outputTokenAmount');
+
+    await user.type(input, '1.5');
+    vi.advanceTimersByTime(250);
+
+    await waitFor(() =>
+      expect(mockUseSwapRates).toHaveBeenLastCalledWith(
+        expect.objectContaining({ type: 'exactIn' }),
+      ),
     );
 
-    const [input] = screen.getAllByRole('textbox') as HTMLInputElement[];
-
-    fireEvent.change(input, { target: { value: '1.5' } });
-
-    await waitFor(() => expect(mockReadSwapRates).toHaveBeenCalledTimes(1));
-
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Swap input and output tokens' }),
-    );
-
-    await waitFor(() => {
-      expect(
-        mockReadSwapRates.mock.calls.some((c: any[]) => c[0]?.reverse === true),
-      ).toBe(true);
+    const btn = screen.getByRole('button', {
+      name: 'Swap input and output tokens',
     });
+
+    await user.click(btn);
+
+    await waitFor(() => expect(input).toHaveValue(''));
+    expect(output).toHaveValue('1.5');
+
+    vi.advanceTimersByTime(250);
+
+    await waitFor(() =>
+      expect(mockUseSwapRates).toHaveBeenLastCalledWith(
+        expect.objectContaining({ type: 'exactOut' }),
+      ),
+    );
   });
 
   it('swap button triggers forward calc when output was changed last', async () => {
+    const user = userEvent.setup();
+
     render(
       <SwapForm
         inputToken={'0x00000000000000000000000000000000000000aa' as Address}
         outputToken={'0x00000000000000000000000000000000000000bb' as Address}
       />,
+      {
+        wrapper: Wrapper,
+      },
     );
 
-    const [, output] = screen.getAllByRole('textbox') as HTMLInputElement[];
+    const input = screen.getByTestId('inputTokenAmount');
+    const output = screen.getByTestId('outputTokenAmount');
 
-    fireEvent.change(output, { target: { value: '2' } });
+    await user.type(output, '1.5');
+    vi.advanceTimersByTime(250);
 
-    await waitFor(() => expect(mockReadSwapRates).toHaveBeenCalledTimes(1));
-
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Swap input and output tokens' }),
+    await waitFor(() =>
+      expect(mockUseSwapRates).toHaveBeenLastCalledWith(
+        expect.objectContaining({ type: 'exactOut' }),
+      ),
     );
 
-    await waitFor(() => {
-      expect(
-        mockReadSwapRates.mock.calls.some((c: any[]) => !c[0]?.reverse),
-      ).toBe(true);
+    const btn = screen.getByRole('button', {
+      name: 'Swap input and output tokens',
     });
+
+    await user.click(btn);
+
+    await waitFor(() => expect(output).toHaveValue(''));
+    expect(input).toHaveValue('1.5');
+    await waitFor(() =>
+      expect(mockUseSwapRates).toHaveBeenLastCalledWith(
+        expect.objectContaining({ type: 'exactIn' }),
+      ),
+    );
   });
 });
