@@ -1,20 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { renderHook, act, waitFor } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 
 import { useSwapRates } from './useSwapRates';
 
-const readContractMock = vi.fn();
-
-vi.mock('@wagmi/core', () => ({
-  readContract: (
-    ...args: Parameters<typeof readContractMock>
-  ) => readContractMock(...args),
-}));
+const useReadContractMock = vi.fn();
 
 vi.mock('wagmi', () => ({
   useChainId: () => 1,
-  useConfig: () => ({}) as any,
+  useReadContract: (args: any) => useReadContractMock(args),
 }));
 
 vi.mock('@/global', () => ({
@@ -24,79 +18,92 @@ vi.mock('@/global', () => ({
   uniswapV2Router02Abi: [] as any,
 }));
 
-describe('useSwapRates (renderHook)', () => {
+describe('useSwapRates (useReadContract)', () => {
   beforeEach(() => {
-    readContractMock.mockReset();
+    useReadContractMock.mockReset();
   });
 
-  it('calls getAmountsOut by default and returns result', async () => {
-    readContractMock.mockResolvedValueOnce([0n, 123n]);
-
-    const { result } = renderHook(() => useSwapRates());
-
-    let res: any;
-    await act(async () => {
-      res = await result.current.read({
-        value: 1n as any,
-        pair: ['0xA', '0xB'] as any,
-      });
+  it('uses getAmountsOut for exactIn and exposes swapRates', async () => {
+    useReadContractMock.mockReturnValue({
+      data: [0n, 123n],
+      error: null,
+      isFetching: false,
+      refetch: vi.fn(),
     });
 
-    expect(readContractMock).toHaveBeenCalledTimes(1);
-    const firstCall = readContractMock.mock.calls[0]!;
-    const callArgs = (firstCall && firstCall[1]) as any;
-    expect(callArgs.functionName).toBe('getAmountsOut');
-    expect(callArgs.args).toEqual([1n, ['0xA', '0xB']]);
+    const { result } = renderHook(() =>
+      useSwapRates({
+        tokenIn: '0xA' as any,
+        tokenOut: '0xB' as any,
+        type: 'exactIn',
+        value: 1n,
+      }),
+    );
 
-    await waitFor(() => {
-      expect(result.current.isFetching).toBe(false);
+    const lastCall = useReadContractMock.mock.lastCall?.[0];
+    expect(lastCall.functionName).toBe('getAmountsOut');
+    expect(lastCall.args).toEqual([1n, ['0xA', '0xB']]);
+
+    expect(result.current.error).toBeNull();
+    expect(result.current.isFetching).toBe(false);
+    expect(result.current.data).toEqual([0n, 123n]);
+  });
+
+  it('uses getAmountsIn for exactOut and exposes swapRates', async () => {
+    useReadContractMock.mockReturnValue({
+      data: [456n, 0n],
+      error: null,
+      isFetching: false,
+      refetch: vi.fn(),
+    });
+
+    const { result } = renderHook(() =>
+      useSwapRates({
+        tokenIn: '0xA' as any,
+        tokenOut: '0xB' as any,
+        type: 'exactOut',
+        value: 2n,
+      }),
+    );
+
+    const lastCall = useReadContractMock.mock.lastCall?.[0];
+    expect(lastCall.functionName).toBe('getAmountsIn');
+    expect(lastCall.args).toEqual([2n, ['0xA', '0xB']]);
+
+    expect(result.current.data).toEqual([456n, 0n]);
+  });
+
+  it.each([
+    [
+      'missing tokenIn',
+      { tokenIn: undefined, tokenOut: '0xB' as any, value: 1n },
+    ],
+    [
+      'missing tokenOut',
+      { tokenIn: '0xA' as any, tokenOut: undefined, value: 1n },
+    ],
+    [
+      'missing value',
+      { tokenIn: '0xA' as any, tokenOut: '0xB' as any, value: undefined },
+    ],
+  ])(
+    'disables query when args are missing: %s',
+    async (_label, { tokenIn, tokenOut, value }) => {
+      useReadContractMock.mockReturnValue({
+        data: undefined,
+        error: null,
+        isFetching: false,
+        refetch: vi.fn(),
+      });
+
+      const { result } = renderHook(() =>
+        useSwapRates({ tokenIn, tokenOut, type: 'exactIn', value }),
+      );
+
+      const lastCall = useReadContractMock.mock.lastCall?.[0];
+      expect(lastCall.args).toBeUndefined();
+      expect(lastCall.query?.enabled).toBe(false);
       expect(result.current.error).toBeNull();
-    });
-    expect(Array.isArray(res)).toBe(true);
-    expect((res as any).map((x: any) => x.toString())).toEqual(['0', '123']);
-  });
-
-  it('calls getAmountsIn when reverse=true', async () => {
-    readContractMock.mockResolvedValueOnce([456n, 0n]);
-
-    const { result } = renderHook(() => useSwapRates());
-
-    let res: any;
-    await act(async () => {
-      res = await result.current.read({
-        value: 2n as any,
-        pair: ['0xA', '0xB'] as any,
-        reverse: true,
-      });
-    });
-
-    expect(readContractMock).toHaveBeenCalledTimes(1);
-    const firstCall = readContractMock.mock.calls[0]!;
-    const callArgs = (firstCall && firstCall[1]) as any;
-    expect(callArgs.functionName).toBe('getAmountsIn');
-    expect(callArgs.args).toEqual([2n, ['0xA', '0xB']]);
-
-    await waitFor(() => {
-      expect(result.current.error).toBeNull();
-    });
-    expect((res as any).map((x: any) => x.toString())).toEqual(['456', '0']);
-  });
-
-  it('sets error when readContract throws and resets isFetching', async () => {
-    readContractMock.mockRejectedValueOnce(new Error('boom'));
-
-    const { result } = renderHook(() => useSwapRates());
-
-    await act(async () => {
-      await result.current.read({
-        value: 1n as any,
-        pair: ['0xA', '0xB'] as any,
-      });
-    });
-
-    await waitFor(() => {
-      expect(result.current.isFetching).toBe(false);
-      expect(!!result.current.error).toBe(true);
-    });
-  });
+    },
+  );
 });

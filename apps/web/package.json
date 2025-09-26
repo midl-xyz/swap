@@ -73,6 +73,7 @@
     "@tanstack/react-query-devtools": "^5.29.2",
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -86,6 +87,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "happy-dom": "^18.0.1",
     "jsdom": "^24.1.1",
+    "next-router-mock": "^1.0.2",
     "typescript": "^5",
     "vite-tsconfig-paths": "^4.3.2"
   },
