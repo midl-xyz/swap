@@ -1,16 +1,11 @@
 import { uniswapV2Router02Abi, WETHByChain } from '@/global';
+import { RunesTransfer } from '@midl-xyz/midl-js-executor';
 import { Address, maxUint256 } from 'viem';
 
 type SmartContractFunctionArgs<
   abi extends readonly unknown[],
   functionName extends string,
 > = any[];
-
-type RunesToWithdraw = Array<{
-  id: string;
-  amount: bigint;
-  address: Address;
-}>;
 
 type FormatRemoveLiquidityParamsInput = {
   tokenA: Address;
@@ -25,16 +20,15 @@ type FormatRemoveLiquidityParamsInput = {
   runeBId?: string;
 };
 
-type FormatRemoveLiquidityParamsOutput<T extends boolean = boolean> = Readonly<{
-  isETH: T;
-  assetsToWithdraw: RunesToWithdraw;
-  args: T extends true
-    ? SmartContractFunctionArgs<
+type FormatRemoveLiquidityParamsOutput = Readonly<{
+  assetsToWithdraw: RunesTransfer[];
+  args:
+    | SmartContractFunctionArgs<
         typeof uniswapV2Router02Abi,
         'removeLiquidityETH'
       >
-    : SmartContractFunctionArgs<typeof uniswapV2Router02Abi, 'removeLiquidity'>;
-  functionName: T extends true ? 'removeLiquidityETH' : 'removeLiquidity';
+    | SmartContractFunctionArgs<typeof uniswapV2Router02Abi, 'removeLiquidity'>;
+  functionName: 'removeLiquidityETH' | 'removeLiquidity';
 }>;
 
 /**
@@ -42,7 +36,6 @@ type FormatRemoveLiquidityParamsOutput<T extends boolean = boolean> = Readonly<{
  * @dev Determines whether to use removeLiquidityETH or removeLiquidity based on WETH presence
  *
  * @returns params.args - Function arguments array for the appropriate UniswapV2Router method
- * @returns params.isETH - Boolean indicating if native token is involved (true for removeLiquidityETH)
  * @returns params.assetsToWithdraw - Array of runes to withdraw with their IDs and addresses
  * @returns params.functionName - Specific UniswapV2Router withdraw function name to call
  */
@@ -59,41 +52,25 @@ export const formatRemoveLiquidityParams = ({
   runeBId,
 }: FormatRemoveLiquidityParamsInput): FormatRemoveLiquidityParamsOutput => {
   const WETHAddr = WETHByChain[chainId];
-
-  let ethValue: bigint | undefined;
-  let isETH = false;
-
   if (tokenA === WETHAddr) {
-    ethValue = amountAMin;
-    isETH = true;
-  } else if (tokenB === WETHAddr) {
-    ethValue = amountBMin;
-    isETH = true;
+    const assetsToWithdraw = runeBId
+      ? [
+          {
+            id: runeBId,
+            amount: maxUint256,
+            address: tokenB,
+          },
+        ]
+      : [];
+
+    return {
+      args: [tokenB, liquidity, amountBMin, amountAMin, to, deadline],
+      assetsToWithdraw,
+      functionName: 'removeLiquidityETH',
+    } as const;
   }
-
-  let assetsToWithdraw: RunesToWithdraw = [];
-
-  if (isETH) {
-    if (tokenA === WETHAddr) {
-      assetsToWithdraw = runeBId
-        ? [
-            {
-              id: runeBId,
-              amount: maxUint256,
-              address: tokenB,
-            },
-          ]
-        : [];
-
-      return {
-        args: [tokenB, liquidity, amountBMin, amountAMin, to, deadline],
-        isETH: true,
-        assetsToWithdraw,
-        functionName: 'removeLiquidityETH',
-      } as const;
-    }
-
-    assetsToWithdraw = runeAId
+  if (tokenB === WETHAddr) {
+    const assetsToWithdraw = runeAId
       ? [
           {
             id: runeAId,
@@ -105,11 +82,13 @@ export const formatRemoveLiquidityParams = ({
 
     return {
       args: [tokenA, liquidity, amountAMin, amountBMin, to, deadline],
-      isETH: true,
       assetsToWithdraw,
       functionName: 'removeLiquidityETH',
     } as const;
   }
+
+  // If neither token is WETH, use removeLiquidity for erc20 assets
+  const assetsToWithdraw: RunesTransfer[] = [];
 
   const args = [
     tokenA,
@@ -139,7 +118,6 @@ export const formatRemoveLiquidityParams = ({
 
   return {
     args,
-    isETH,
     assetsToWithdraw,
     functionName: 'removeLiquidity',
   } as const;
