@@ -30,6 +30,7 @@ export const useSwapRates = ({
     address: deployments[chainId].UniswapV2Router02.address,
     functionName,
     args,
+    scopeKey: 'swapRates',
     query: {
       enabled: !!args && !!deployments[chainId]?.UniswapV2Router02?.address,
     },

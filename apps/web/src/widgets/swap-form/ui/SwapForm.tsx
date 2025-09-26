@@ -6,7 +6,12 @@ import { useSwapMidl } from '@/features/swap/api/useSwapMidl';
 import { useSwapRates } from '@/features/swap/api/useSwapRates';
 import { SwapDialog } from '@/features/swap/ui/swap-dialog/SwapDialog';
 import { tokenList } from '@/global';
-import { Button, SwapInput, parseNumberInput } from '@/shared';
+import {
+  Button,
+  SwapInput,
+  parseNumberInput,
+  scopeKeyPredicate,
+} from '@/shared';
 import { AiOutlineSwapVertical } from '@/shared/assets';
 import { calculateAdjustedBalance } from '@/shared/lib/fees';
 import { removePercentage } from '@/shared/lib/removePercentage';
@@ -15,10 +20,10 @@ import { SwapDetails } from '@/widgets/swap-form/ui/SwapDetails';
 import { getCorrectToken } from '@/widgets/swap-form/ui/utils';
 import { Wallet } from '@/widgets/wallet';
 import { useBTCFeeRate, useEVMAddress } from '@midl-xyz/midl-js-executor-react';
+import { useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { flushSync } from 'react-dom';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDebouncedCallback } from 'use-debounce';
@@ -78,7 +83,7 @@ export const SwapForm = ({
     watch();
   const inputTokenInfo = useToken(inputToken, chainId);
   const outputTokenInfo = useToken(outputToken, chainId);
-  const [swapParams, setSwapParams] = useState<{
+  const swapParams = useRef<{
     type: 'exactOut' | 'exactIn';
     value: bigint;
   }>({
@@ -86,20 +91,51 @@ export const SwapForm = ({
     value: 0n,
   });
 
+  const queryClient = useQueryClient();
+
   const {
+    data,
     refetch: readSwapRates,
     error: swapRatesError,
     isFetching: isSwapRatesFetching,
   } = useSwapRates({
     tokenIn: getCorrectToken({ token: inputToken, chainId }) as Address,
     tokenOut: getCorrectToken({ token: outputToken, chainId }) as Address,
-    ...swapParams,
+    ...swapParams.current,
   });
+
+  useEffect(() => {
+    if (data) {
+      if (swapParams.current.type === 'exactIn') {
+        const [, outputAmount] = data ?? [];
+        if (outputAmount === undefined) {
+          setValue('outputTokenAmount', '0');
+          return;
+        }
+        const formatted = formatUnits(outputAmount, outputTokenInfo.decimals);
+        setValue('outputTokenAmount', formatted);
+      }
+
+      if (swapParams.current.type === 'exactOut') {
+        const [inputAmount] = data ?? [];
+        if (inputAmount === undefined) {
+          setValue('inputTokenAmount', '0');
+          return;
+        }
+        const formatted = formatUnits(inputAmount, inputTokenInfo.decimals);
+        setValue('inputTokenAmount', formatted);
+      }
+    }
+  }, [data]);
 
   const onInputTokenAmountChange = useDebouncedCallback(async (e) => {
     if (!e.target) {
       return;
     }
+
+    await queryClient.cancelQueries({
+      predicate: scopeKeyPredicate(['swapRates']),
+    });
 
     lastChangedInput.current = true;
 
@@ -108,35 +144,28 @@ export const SwapForm = ({
       inputTokenInfo.decimals,
     );
 
-    flushSync(() => setSwapParams({ type: 'exactIn', value }));
-
-    const { data } = await readSwapRates({ cancelRefetch: true });
-    const [, outputAmount] = data ?? [];
-    if (outputAmount === undefined) {
-      setValue('outputTokenAmount', '0');
-      return;
-    }
-    const formatted = formatUnits(outputAmount, outputTokenInfo.decimals);
-    setValue('outputTokenAmount', formatted);
+    swapParams.current = { type: 'exactIn', value };
+    readSwapRates();
   }, 250);
 
   const onOutputTokenAmountChange = useDebouncedCallback(async (e) => {
+    if (!e.target) {
+      return;
+    }
+
+    await queryClient.cancelQueries({
+      predicate: scopeKeyPredicate(['swapRates']),
+    });
+
     const value = parseUnits(
       parseNumberInput(e.target.value),
       outputTokenInfo.decimals,
     );
 
     lastChangedInput.current = false;
-    setSwapParams({ type: 'exactOut', value });
 
-    const { data } = await readSwapRates({ cancelRefetch: true });
-    const [inputAmount] = data ?? [];
-    if (inputAmount === undefined) {
-      setValue('inputTokenAmount', '0');
-      return;
-    }
-    const formatted = formatUnits(inputAmount, inputTokenInfo.decimals);
-    setValue('inputTokenAmount', formatted);
+    swapParams.current = { type: 'exactOut', value };
+    readSwapRates();
   }, 250);
 
   const address = useEVMAddress();
