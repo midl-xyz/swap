@@ -17,7 +17,7 @@ import Arrow from '@/widgets/swap-form/assets/Arrow.svg';
 import { midlRegtest } from '@midl-xyz/midl-js-executor';
 import { getUnixTime, subDays, subHours, subWeeks } from 'date-fns';
 import Image from 'next/image';
-import { useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { Address, zeroAddress } from 'viem';
 import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
@@ -61,7 +61,10 @@ interface PairPriceData {
 
 const chartTabs = ['live', '4h', '1d', '1w', 'max'];
 
-export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
+export const SwapFormChartBase = ({
+  inputTokenInfo,
+  outputTokenInfo,
+}: Props) => {
   const chainId = useChainId();
   const [expand, setExpand] = useState(false);
   const [chartTime, setChartTime] = useState<
@@ -336,3 +339,6 @@ export const SwapFormChart = ({ inputTokenInfo, outputTokenInfo }: Props) => {
     </VStack>
   );
 };
+
+export const SwapFormChart = memo(SwapFormChartBase);
+SwapFormChart.displayName = 'SwapFormChart';
