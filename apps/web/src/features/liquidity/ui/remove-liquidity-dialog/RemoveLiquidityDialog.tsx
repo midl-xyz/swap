@@ -5,7 +5,7 @@ import { useGetPairStats } from '@/features/liquidity/api';
 import { useRemoveLiquidityMidl } from '@/features/liquidity/api/useRemoveLiquidityMidl';
 import { removeLiquidityDialogAtom } from '@/features/liquidity/model';
 import { useSlippage } from '@/features/slippage';
-import { TokenLogo, TokenValue } from '@/features/token';
+import { TokenValue } from '@/features/token';
 
 import {
   Button,
@@ -317,16 +317,10 @@ export const RemoveLiquidityDialog = ({
                     toPlainString(tokenAAmountWithSlippage),
                     tokenAInfo.decimals,
                   )}
-                  hideLogo
-                  hideSymbol
                   className={css({
                     textStyle: 'h6',
                   })}
                 />
-                <div className={css({ display: 'flex', gap: 1 })}>
-                  <TokenLogo address={tokenA} chainId={chainId} />
-                  {tokenAInfo.symbol}
-                </div>
               </div>
               <div
                 className={css({
@@ -342,16 +336,10 @@ export const RemoveLiquidityDialog = ({
                     toPlainString(tokenBAmountWithSlippage),
                     tokenBInfo.decimals,
                   )}
-                  hideLogo
-                  hideSymbol
                   className={css({
                     textStyle: 'h6',
                   })}
                 />
-                <div className={css({ display: 'flex', gap: 1 })}>
-                  <TokenLogo address={tokenB} chainId={chainId} />
-                  {tokenBInfo.symbol}
-                </div>
               </div>
             </div>
 
