@@ -27,7 +27,7 @@ import { useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { useDebouncedCallback } from 'use-debounce';
+import { useDebounce, useDebouncedCallback } from 'use-debounce';
 import { Address, formatUnits, parseUnits, zeroAddress } from 'viem';
 import { useChainId } from 'wagmi';
 import { css } from '~/styled-system/css';
@@ -96,7 +96,6 @@ export const SwapForm = ({
 
   const {
     data,
-    refetch: readSwapRates,
     error: swapRatesError,
     isFetching: isSwapRatesFetching,
   } = useSwapRates({
@@ -106,28 +105,30 @@ export const SwapForm = ({
   });
 
   useEffect(() => {
-    if (data) {
-      if (swapParams.type === 'exactIn') {
-        const [, outputAmount] = data ?? [];
-        if (outputAmount === undefined) {
-          setValue('outputTokenAmount', '0');
-          return;
-        }
-        const formatted = formatUnits(outputAmount, outputTokenInfo.decimals);
-        setValue('outputTokenAmount', formatted);
-      }
-
-      if (swapParams.type === 'exactOut') {
-        const [inputAmount] = data ?? [];
-        if (inputAmount === undefined) {
-          setValue('inputTokenAmount', '0');
-          return;
-        }
-        const formatted = formatUnits(inputAmount, inputTokenInfo.decimals);
-        setValue('inputTokenAmount', formatted);
-      }
+    if (isSwapRatesFetching) {
+      return;
     }
-  }, [data]);
+
+    if (swapParams.type === 'exactIn') {
+      const [, outputAmount] = data ?? [];
+      if (outputAmount === undefined) {
+        setValue('outputTokenAmount', '');
+        return;
+      }
+      const formatted = formatUnits(outputAmount, outputTokenInfo.decimals);
+      setValue('outputTokenAmount', formatted);
+    }
+
+    if (swapParams.type === 'exactOut') {
+      const [inputAmount] = data ?? [];
+      if (inputAmount === undefined) {
+        setValue('inputTokenAmount', '');
+        return;
+      }
+      const formatted = formatUnits(inputAmount, inputTokenInfo.decimals);
+      setValue('inputTokenAmount', formatted);
+    }
+  }, [data, isSwapRatesFetching]);
 
   const onInputTokenAmountChange = useDebouncedCallback(async (e) => {
     if (!e.target) {
@@ -283,6 +284,14 @@ export const SwapForm = ({
   } = useTokenBalance(inputToken, { chainId, address });
 
   const { data: feeRate = 2n } = useBTCFeeRate();
+
+  const [inputTokenAmountDebounced] = useDebounce(inputTokenAmount, 250);
+  const [outputTokenAmountDebounced] = useDebounce(outputTokenAmount, 250);
+
+  const isTyping =
+    inputTokenAmount !== inputTokenAmountDebounced ||
+    outputTokenAmount !== outputTokenAmountDebounced;
+
   const isBTC = inputToken === zeroAddress;
   const effectiveBalance = isBTC
     ? calculateAdjustedBalance(inputTokenBalance ?? 0n, feeRate)
@@ -297,20 +306,32 @@ export const SwapForm = ({
     if (!address) {
       return <>Connect wallet</>;
     }
-    if (isSwapRatesFetching || isInputTokenBalanceFetching) {
+    if (
+      (isSwapRatesFetching || isInputTokenBalanceFetching || isTyping) &&
+      (inputTokenAmount || outputTokenAmount)
+    ) {
       return <>Getting the best rate...</>;
     }
     if (
+      !isTyping &&
       !isBalanceBigEnough &&
       !isSwapRatesFetching &&
       !isInputTokenBalanceFetching
     ) {
       return <>Insufficient Balance</>;
     }
-    if (!isSwapRatesFetching && !swapRatesError && isBalanceBigEnough) {
+
+    if (
+      !isSwapRatesFetching &&
+      !swapRatesError &&
+      isBalanceBigEnough &&
+      !isTyping
+    ) {
       return 'Swap';
     }
+
     if (
+      !isTyping &&
       !isInputTokenBalanceFetching &&
       !isSwapRatesFetching &&
       Boolean(swapRatesError) &&
@@ -418,6 +439,7 @@ export const SwapForm = ({
                 minWidth="204px"
                 data-testid="swapButton"
                 disabled={
+                  isTyping ||
                   isSwapRatesFetching ||
                   Boolean(swapRatesError) ||
                   !isFormFilled ||

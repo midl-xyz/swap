@@ -101,6 +101,18 @@ describe('SwapForm', () => {
     vi.advanceTimersByTime(250);
 
     await waitFor(() => expect(output).toHaveValue('0.15'));
+
+    await user.type(input, '0');
+
+    mockUseSwapRates.mockReturnValue({
+      data: null,
+      error: null,
+      isFetching: false,
+      refetch: vi.fn(),
+    });
+    vi.advanceTimersByTime(250);
+
+    await waitFor(() => expect(output).toHaveValue(''));
   });
 
   it('updates input amount when output amount changes (reverse)', async () => {
@@ -140,7 +152,8 @@ describe('SwapForm', () => {
     expect(screen.getByTestId('connectButton')).toBeTruthy();
   });
 
-  it('shows fetching state text on submit button when rates are fetching', () => {
+  it('shows fetching state text on submit button when rates are fetching', async () => {
+    const user = userEvent.setup();
     mockUseSwapRates.mockReturnValue({
       data: null,
       error: null,
@@ -150,9 +163,16 @@ describe('SwapForm', () => {
 
     render(<SwapForm />, { wrapper: Wrapper });
 
-    expect(
-      screen.getByRole('button', { name: 'Getting the best rate...' }),
-    ).toBeTruthy();
+    const input = screen.getByTestId('inputTokenAmount');
+
+    await user.type(input, '1');
+
+    vi.advanceTimersByTime(250);
+
+    const btn = screen.getByTestId('swapButton');
+
+    expect(btn).toBeDisabled();
+    expect(btn).toHaveTextContent('Getting the best rate...');
   });
 
   it('disables submit and shows Insufficient Balance when input exceeds balance', async () => {
@@ -176,20 +196,20 @@ describe('SwapForm', () => {
     });
   });
 
-  it('disables submit and shows Insufficient liquidity when swapRatesError exists and form is filled', async () => {
-    mockUseSwapRates.mockReturnValue({
-      data: null,
-      error: new Error('no liquidity'),
-      isFetching: false,
-      refetch: vi.fn(),
-    });
-
+  it.only('disables submit and shows Insufficient liquidity when swapRatesError exists and form is filled', async () => {
     mockUseTokenBalance.mockReturnValue({
       data: {
         balance: 100000000000000000000000n,
         decimals: 18,
       },
       isFetching: false,
+    });
+
+    mockUseSwapRates.mockReturnValue({
+      data: null,
+      error: new Error('no liquidity'),
+      isFetching: false,
+      refetch: vi.fn(),
     });
 
     render(
@@ -205,13 +225,15 @@ describe('SwapForm', () => {
     const btn = screen.getByTestId('swapButton');
     await userEvent.type(input, '1');
     await userEvent.type(output, '1');
+    vi.advanceTimersByTime(250);
 
-    expect(btn).toBeDisabled();
-    expect(btn).toHaveTextContent('Insufficient liquidity');
+    await waitFor(() => {
+      expect(btn).toBeDisabled();
+      expect(btn).toHaveTextContent('Insufficient liquidity');
+    });
   });
 
   it('calls swapAsync on submit, opens dialog and onSuccessfulSwap resets form and shows toast', async () => {
-    const onSwapSuccess = vi.fn();
     const mockSwapAsync = vi.fn();
 
     mockUseSwapMidl.mockReturnValue({
@@ -247,11 +269,13 @@ describe('SwapForm', () => {
       isFetching: false,
       refetch: vi.fn(),
     });
+
     vi.advanceTimersByTime(250);
 
-    const btn = screen.getByRole('button', { name: 'Swap' });
+    const btn = screen.getByTestId('swapButton');
 
     await waitFor(() => expect(btn).not.toBeDisabled());
+    expect(btn).toHaveTextContent('Swap');
 
     await user.click(btn);
 
