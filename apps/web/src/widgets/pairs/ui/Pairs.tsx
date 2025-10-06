@@ -9,6 +9,7 @@ import { css } from '~/styled-system/css';
 const COMMUNITY_PAIRS = [
   ['BUSD', 'WARTOK'],
   ['WARTOK', 'BTC'],
+  ['FIRSTDONUTTOK', 'BTC'],
 ];
 export const Pairs = () => {
   const tokens = [

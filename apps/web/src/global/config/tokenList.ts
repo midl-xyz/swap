@@ -59,6 +59,15 @@ export const tokenList: Token[] = [
     tags: [],
   },
   {
+    symbol: 'FIRST•DONUT•TOKEN',
+    name: 'FIRST•DONUT•TOKEN',
+    address: '0xf751063b6e122f2067bEC3c769F15D73206D386d',
+    chainId: midlRegtest.id,
+    decimals: 18,
+    logoURI: '/images/DONUT_TOKEN.png',
+    tags: ['COMMUNITY'],
+  },
+  {
     symbol: 'WAR•TOKEN',
     name: 'WAR•TOKEN',
     address: '0xa3d87eE093430A73B34E33e0E1cc0a09B55fD152',
