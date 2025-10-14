@@ -59,6 +59,15 @@ export const tokenList: Token[] = [
     tags: [],
   },
   {
+    symbol: 'TRYB•FAMILY•TOKEN',
+    name: 'TRYB•FAMILY•TOKEN',
+    address: '0x029891bfdE4D6734BfeBB65f7bea0Eb93145E44d',
+    chainId: midlRegtest.id,
+    decimals: 18,
+    logoURI: '/images/tryb3.jpg',
+    tags: ['COMMUNITY'],
+  },
+  {
     symbol: 'FIRST•DONUT•TOKEN',
     name: 'FIRST•DONUT•TOKEN',
     address: '0xf751063b6e122f2067bEC3c769F15D73206D386d',
