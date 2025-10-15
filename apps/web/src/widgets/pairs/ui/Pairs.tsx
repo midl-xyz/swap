@@ -10,6 +10,7 @@ const COMMUNITY_PAIRS = [
   ['BUSD', 'WARTOK'],
   ['WARTOK', 'BTC'],
   ['FIRSTDONUTTOK', 'BTC'],
+  ['TRYBFAMILYTOK', 'BTC'],
 ];
 export const Pairs = () => {
   const tokens = [
