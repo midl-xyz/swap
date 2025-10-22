@@ -1,5 +1,5 @@
 import { tokenList } from '@/global';
-import { executorAddress } from '@midl-xyz/midl-js-executor';
+import { executorAddress, PartialIntention } from '@midl-xyz/midl-js-executor';
 import { readContract } from '@wagmi/core';
 import {
   Address,
@@ -19,13 +19,11 @@ type HandleSyntheticTokenApprovalsInput = {
   config: Config;
 };
 
+// TODO: replace with AddTxIntentionVariables type when available
 type TxIntentionParams = {
-  intention: {
-    evmTransaction: {
-      to: Address;
-      data: `0x${string}`;
-    };
-  };
+  intention: PartialIntention;
+  reset?: boolean;
+  from?: string;
 };
 
 const createExecutorApprovalIntention = async (
@@ -38,7 +36,7 @@ const createExecutorApprovalIntention = async (
     address: tokenAddress,
     abi: erc20Abi,
     functionName: 'allowance',
-    args: [userAddress, executorAddress['regtest'] as Address],
+    args: [userAddress, executorAddress.regtest],
   });
 
   if (allowance < minAmount) {
@@ -49,7 +47,7 @@ const createExecutorApprovalIntention = async (
           data: encodeFunctionData({
             abi: erc20Abi,
             functionName: 'approve',
-            args: [executorAddress['regtest'] as Address, maxUint256],
+            args: [executorAddress.regtest, maxUint256],
           }),
         },
       },

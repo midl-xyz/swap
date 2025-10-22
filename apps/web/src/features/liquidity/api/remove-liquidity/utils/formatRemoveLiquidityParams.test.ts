@@ -40,7 +40,6 @@ describe('formatRemoveLiquidityParams', () => {
 
       const result = formatRemoveLiquidityParams(params);
 
-      expect(result.isETH).toBe(true);
       expect(result.functionName).toBe('removeLiquidityETH');
       expect(result.args).toEqual([
         mockTokenB,
@@ -69,7 +68,6 @@ describe('formatRemoveLiquidityParams', () => {
 
       const result = formatRemoveLiquidityParams(params);
 
-      expect(result.isETH).toBe(true);
       expect(result.functionName).toBe('removeLiquidityETH');
       expect(result.args).toEqual([
         mockTokenA,
@@ -93,7 +91,6 @@ describe('formatRemoveLiquidityParams', () => {
 
       const result = formatRemoveLiquidityParams(params);
 
-      expect(result.isETH).toBe(false);
       expect(result.functionName).toBe('removeLiquidity');
       expect(result.args).toEqual([
         mockTokenA,
@@ -127,7 +124,6 @@ describe('formatRemoveLiquidityParams', () => {
 
       const result = formatRemoveLiquidityParams(params);
 
-      expect(result.isETH).toBe(false);
       expect(result.functionName).toBe('removeLiquidity');
       expect(result.args).toEqual([
         mockTokenA,

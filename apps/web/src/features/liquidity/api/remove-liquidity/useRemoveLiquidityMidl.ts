@@ -59,11 +59,11 @@ export const useRemoveLiquidityMidl = ({
   const runeAId = useToken(tokenA).rune?.id;
   const runeBId = useToken(tokenB).rune?.id;
 
-  const { mutate: removeLiquidity, ...rest } = useMutation<
-    void,
-    Error,
-    RemoveLiquidityArgs
-  >({
+  const {
+    mutate: removeLiquidity,
+    mutateAsync: removeLiquidityAsync,
+    ...rest
+  } = useMutation<void, Error, RemoveLiquidityArgs>({
     mutationFn: async ({ liquidity, amountAMin, amountBMin, to, deadline }) => {
       clearTxIntentions();
 
@@ -102,7 +102,7 @@ export const useRemoveLiquidityMidl = ({
             data: encodeFunctionData({
               abi: uniswapV2Router02Abi,
               functionName,
-              args: args as any,
+              args,
             }),
           },
         },
@@ -117,9 +117,9 @@ export const useRemoveLiquidityMidl = ({
         config,
       });
 
-      syntheticApprovals.forEach((intentionParams) => {
+      for (const intentionParams of syntheticApprovals) {
         addTxIntention(intentionParams);
-      });
+      }
 
       addCompleteTxIntention({
         runes: assetsToWithdraw,
@@ -129,6 +129,7 @@ export const useRemoveLiquidityMidl = ({
 
   return {
     removeLiquidity,
+    removeLiquidityAsync,
     ...rest,
   };
 };

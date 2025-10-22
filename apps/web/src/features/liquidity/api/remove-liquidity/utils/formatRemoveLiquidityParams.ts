@@ -2,11 +2,6 @@ import { uniswapV2Router02Abi, WETHByChain } from '@/global';
 import { RunesTransfer } from '@midl-xyz/midl-js-executor';
 import { Address, maxUint256 } from 'viem';
 
-type SmartContractFunctionArgs<
-  abi extends readonly unknown[],
-  functionName extends string,
-> = any[];
-
 type FormatRemoveLiquidityParamsInput = {
   tokenA: Address;
   tokenB: Address;
@@ -20,15 +15,12 @@ type FormatRemoveLiquidityParamsInput = {
   runeBId?: string;
 };
 
-type FormatRemoveLiquidityParamsOutput = Readonly<{
+type FunctionName = 'removeLiquidity' | 'removeLiquidityETH';
+
+type RemoveLiquidityOutput<F extends FunctionName = FunctionName> = Readonly<{
   assetsToWithdraw: RunesTransfer[];
-  args:
-    | SmartContractFunctionArgs<
-        typeof uniswapV2Router02Abi,
-        'removeLiquidityETH'
-      >
-    | SmartContractFunctionArgs<typeof uniswapV2Router02Abi, 'removeLiquidity'>;
-  functionName: 'removeLiquidityETH' | 'removeLiquidity';
+  args: SmartContractFunctionArgs<typeof uniswapV2Router02Abi, F>;
+  functionName: F;
 }>;
 
 /**
@@ -50,7 +42,7 @@ export const formatRemoveLiquidityParams = ({
   chainId,
   runeAId,
   runeBId,
-}: FormatRemoveLiquidityParamsInput): FormatRemoveLiquidityParamsOutput => {
+}: FormatRemoveLiquidityParamsInput): RemoveLiquidityOutput => {
   const WETHAddr = WETHByChain[chainId];
   if (tokenA === WETHAddr) {
     const assetsToWithdraw = runeBId
@@ -67,7 +59,7 @@ export const formatRemoveLiquidityParams = ({
       args: [tokenB, liquidity, amountBMin, amountAMin, to, deadline],
       assetsToWithdraw,
       functionName: 'removeLiquidityETH',
-    } as const;
+    };
   }
   if (tokenB === WETHAddr) {
     const assetsToWithdraw = runeAId
@@ -84,7 +76,7 @@ export const formatRemoveLiquidityParams = ({
       args: [tokenA, liquidity, amountAMin, amountBMin, to, deadline],
       assetsToWithdraw,
       functionName: 'removeLiquidityETH',
-    } as const;
+    };
   }
 
   // If neither token is WETH, use removeLiquidity for erc20 assets
@@ -98,7 +90,7 @@ export const formatRemoveLiquidityParams = ({
     amountBMin,
     to,
     deadline,
-  ];
+  ] as const;
 
   if (runeAId) {
     assetsToWithdraw.push({
@@ -120,5 +112,5 @@ export const formatRemoveLiquidityParams = ({
     args,
     assetsToWithdraw,
     functionName: 'removeLiquidity',
-  } as const;
+  };
 };
