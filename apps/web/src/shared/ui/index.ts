@@ -4,3 +4,4 @@ export * from './input';
 export * from './input-group';
 export * from './number-input';
 export * from './swap-input';
+export * from './tooltip';

@@ -7,7 +7,7 @@ import {
 import { useGetPairStats } from '@/features/liquidity/api';
 import { removeLiquidityDialogAtom } from '@/features/liquidity/model';
 import { useSlippage } from '@/features/slippage';
-import { TokenLogo, TokenValue } from '@/features/token';
+import { TokenValue } from '@/features/token';
 
 import {
   Button,
@@ -21,7 +21,7 @@ import { SlippageControl } from '@/widgets';
 import { toPlainString } from '@/widgets/swap-form/ui/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEVMAddress, useToken } from '@midl-xyz/midl-js-executor-react';
-import { DialogProps } from '@radix-ui/react-dialog';
+import { DialogProps, DialogTitle } from '@radix-ui/react-dialog';
 import { useQueryClient } from '@tanstack/react-query';
 import fromExponential from 'from-exponential';
 import { useAtom } from 'jotai';
@@ -46,8 +46,7 @@ const schema = yup.object().shape({
     message: 'Value must be a percentage',
     test: (value) => {
       const parsed = parseFloat(value ?? '');
-
-      return !isNaN(parsed) && parsed >= 0 && parsed <= 100;
+      return !isNaN(parsed) && parsed > 0 && parsed <= 100;
     },
   }),
 });
@@ -185,19 +184,35 @@ export const RemoveLiquidityDialog = ({
       <DialogOverlay onClick={onClose} />
       <DialogContent
         onEscapeKeyDown={onClose}
+        aria-describedby={undefined}
         className={css({
           width: 'full',
           maxWidth: 450,
         })}
       >
         {isSuccess && (
-          <IntentionSigner
-            onClose={handleClose}
-            assetsToWithdraw={[
-              runeA.rune?.id ? tokenA : zeroAddress,
-              runeB.rune?.id ? tokenB : zeroAddress,
-            ]}
-          />
+          <div className={vstack({ gap: 4, alignItems: 'center' })}>
+            <DialogTitle asChild>
+              <h3
+                className={css({
+                  textStyle: 'h3',
+                  textAlign: 'center',
+                })}
+              >
+                Sign intentions to remove liquidity
+              </h3>
+            </DialogTitle>
+
+            <IntentionSigner
+              onClose={handleClose}
+              assetsToWithdraw={[
+                runeA.rune?.id ? tokenA : zeroAddress,
+                runeB.rune?.id ? tokenB : zeroAddress,
+              ]}
+            />
+
+            <Button onClick={handleClose}>Close</Button>
+          </div>
         )}
         {!isSuccess && (
           <form
@@ -207,13 +222,15 @@ export const RemoveLiquidityDialog = ({
               gap: 4,
             })}
           >
-            <h3
-              className={css({
-                textStyle: 'h3',
-              })}
-            >
-              Remove Liquidity
-            </h3>
+            <DialogTitle asChild>
+              <h3
+                className={css({
+                  textStyle: 'h3',
+                })}
+              >
+                Remove Liquidity
+              </h3>
+            </DialogTitle>
             <div
               className={css({
                 borderWidth: 1,
@@ -302,16 +319,10 @@ export const RemoveLiquidityDialog = ({
                     toPlainString(tokenAAmountWithSlippage),
                     tokenAInfo.decimals,
                   )}
-                  hideLogo
-                  hideSymbol
                   className={css({
                     textStyle: 'h6',
                   })}
                 />
-                <div className={css({ display: 'flex', gap: 1 })}>
-                  <TokenLogo address={tokenA} chainId={chainId} />
-                  {tokenAInfo.symbol}
-                </div>
               </div>
               <div
                 className={css({
@@ -327,16 +338,10 @@ export const RemoveLiquidityDialog = ({
                     toPlainString(tokenBAmountWithSlippage),
                     tokenBInfo.decimals,
                   )}
-                  hideLogo
-                  hideSymbol
                   className={css({
                     textStyle: 'h6',
                   })}
                 />
-                <div className={css({ display: 'flex', gap: 1 })}>
-                  <TokenLogo address={tokenB} chainId={chainId} />
-                  {tokenBInfo.symbol}
-                </div>
               </div>
             </div>
 

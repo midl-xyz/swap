@@ -89,7 +89,7 @@ export const IntentionSigner = ({
     });
   };
   return (
-    <div className={vstack({ gap: 4 })}>
+    <div className={vstack({ gap: 4 })} data-testid="intention-signer">
       <div className={hstack({ gap: 4 })}>
         {new Array(toSignIntentions.length + 1).fill(0).map((_, i) => (
           <div

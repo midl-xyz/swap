@@ -6,6 +6,7 @@ import { ConnectButton } from '@midl-xyz/satoshi-kit';
 import { X } from 'lucide-react';
 import Image from 'next/image';
 import { FC, useState } from 'react';
+
 import { Stack, VStack } from '~/styled-system/jsx';
 import MenuIcon from '../assets/menu.svg';
 
@@ -23,20 +24,21 @@ export const MobileAppMenu = () => {
         onClick={handleToggle}
         src={MenuIcon}
         alt="menu-button"
-        width={MenuIcon.width}
-        height={MenuIcon.height}
+        width={24}
+        height={24}
       />
       <Dialog open={open}>
-        <DialogOverlay onClick={handleToggle} />
+        <DialogOverlay onClick={handleToggle} data-testid="dialog-overlay" />
         <DialogContent
           onEscapeKeyDown={handleToggle}
           width="100%"
           height="100%"
+          data-testid="dialog-content"
         >
-          <X onClick={handleToggle} />
+          <X data-testid="close-icon" onClick={handleToggle} />
           <VStack width="100%" gap={5}>
             <VStack width="100%" gap={5}>
-              <AppMenuList onToggleModal={handleToggle} />
+              <AppMenuList onClick={handleToggle} />
             </VStack>
 
             <Wallet onClick={() => setOpen(false)} />

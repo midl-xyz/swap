@@ -5,18 +5,22 @@ import {
   calculateTransactionsCost,
   multisigAddress,
 } from '@midl-xyz/midl-js-executor';
-import { useBTCFeeRate } from '@midl-xyz/midl-js-executor-react';
+import {
+  useAddRuneERC20,
+  useERC20Rune,
+  useBTCFeeRate,
+} from '@midl-xyz/midl-js-executor-react';
 import {
   useConfig,
-  useEdictRune,
   useRune,
   useWaitForTransaction,
 } from '@midl-xyz/midl-js-react';
 import { DialogProps, DialogTitle } from '@radix-ui/react-dialog';
+import { useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Loader2Icon } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { formatUnits } from 'viem';
+import { formatUnits, zeroAddress } from 'viem';
 import { css } from '~/styled-system/css';
 import { vstack } from '~/styled-system/patterns';
 
@@ -34,11 +38,12 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
   });
 
   const {
-    edictRune,
+    addRuneERC20,
     data,
     isPending: isTransactionBeingFormed,
+    error,
     reset,
-  } = useEdictRune({
+  } = useAddRuneERC20({
     mutation: {
       onError(error) {
         console.error(error);
@@ -53,20 +58,68 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
   });
   const {
     waitForTransaction,
-    isSuccess,
-    isPending,
+    isSuccess: isBtcConfirmed,
     reset: resetWait,
   } = useWaitForTransaction();
   const { network } = useConfig();
 
   const feeRate = useBTCFeeRate();
 
+  const hasBroadcast = Boolean(data?.tx?.id);
+
+  // Start polling ERC result only after BTC is confirmed and tx is broadcasted
+  const shouldPollErc = hasBroadcast && isBtcConfirmed;
+
+  const { erc20Address, erc20State } = useERC20Rune(rune?.id || '', {
+    query: {
+      enabled: shouldPollErc,
+      refetchInterval: 2000,
+    },
+  });
+
+  const { error: erc20Error } = erc20State;
+
+  const isErc20Ready = !!erc20Address && erc20Address !== zeroAddress;
+
+  // Track refetch attempts by observing dataUpdatedAt; after 6 updates with zero address -> error
+  const refetchCountRef = useRef(0);
+  const lastUpdatedAtRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!shouldPollErc) {
+      refetchCountRef.current = 0;
+      lastUpdatedAtRef.current = null;
+      return;
+    }
+    const updatedAt = erc20State?.dataUpdatedAt ?? null;
+    if (updatedAt && updatedAt !== lastUpdatedAtRef.current) {
+      lastUpdatedAtRef.current = updatedAt;
+      if (erc20Address === zeroAddress) {
+        refetchCountRef.current += 1;
+      } else {
+        refetchCountRef.current = 0;
+      }
+    }
+  }, [shouldPollErc, erc20State?.dataUpdatedAt, erc20Address]);
+
+  const retriesExhaustedNoAddress =
+    shouldPollErc &&
+    refetchCountRef.current >= 6 &&
+    erc20Address === zeroAddress;
+
+  const errorMessage =
+    erc20Error?.message ||
+    error?.message ||
+    (retriesExhaustedNoAddress
+      ? 'Failed to add the token. Please try doing it once again.'
+      : null);
+
   const { data: edictFee } = useQuery({
     queryKey: ['edictFee'],
     queryFn: async () => {
       const fee = calculateTransactionsCost(0n, {
         hasRunesDeposit: true,
-        feeRate: feeRate.data as any,
+        feeRate: Number(feeRate.data ?? 1n),
       });
 
       return fee > 546n ? fee : 546n;
@@ -74,18 +127,8 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
   });
 
   const onConfirm = async () => {
-    edictRune({
-      transfers: [
-        {
-          receiver: multisigAddress[network!.id],
-          amount: Number(edictFee ?? 546n),
-        },
-        {
-          runeId: rune!.id,
-          amount: 1n,
-          receiver: multisigAddress[network!.id],
-        },
-      ],
+    addRuneERC20({
+      runeId: rune!.id,
       publish: true,
     });
   };
@@ -106,7 +149,7 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
           width: '100%',
         })}
       >
-        {isSuccess && (
+        {isBtcConfirmed && isErc20Ready && (
           <div
             className={vstack({
               gap: 8,
@@ -132,7 +175,7 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
           </div>
         )}
 
-        {isPending && (
+        {hasBroadcast && (!isBtcConfirmed || !isErc20Ready) && (
           <div
             className={vstack({
               gap: 8,
@@ -149,14 +192,25 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
               </h1>
             </DialogTitle>
 
-            <Loader2Icon
-              className={css({
-                animation: 'spin 1s linear infinite',
-                display: 'inline-block',
-              })}
-            />
-
-            <p>Waiting for the transaction to be confirmed...</p>
+            {errorMessage ? (
+              <p
+                className={css({
+                  color: 'red.500',
+                })}
+              >
+                {errorMessage}
+              </p>
+            ) : (
+              <>
+                <Loader2Icon
+                  className={css({
+                    animation: 'spin 1s linear infinite',
+                    display: 'inline-block',
+                  })}
+                />
+                <p>Waiting for the transaction to be confirmed...</p>
+              </>
+            )}
 
             <a
               href={`${network?.explorerUrl}/tx/${data?.tx.id}`}
@@ -172,7 +226,7 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
           </div>
         )}
 
-        {!data?.tx.id && (
+        {!hasBroadcast && (
           <div
             className={vstack({
               gap: 8,
@@ -199,7 +253,6 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
               <br />
               <i>{multisigAddress[network!.id]}</i>
             </p>
-
             <Button
               width="full"
               disabled={isTransactionBeingFormed}

@@ -6,6 +6,12 @@ import { PairItem } from '@/widgets/pairs/ui/pair/PairItem';
 import { getAddress } from 'viem';
 import { css } from '~/styled-system/css';
 
+const COMMUNITY_PAIRS = [
+  ['BUSD', 'WARTOK'],
+  ['WARTOK', 'BTC'],
+  ['FIRSTDONUTTOK', 'BTC'],
+  ['TRYBFAMILYTOK', 'BTC'],
+];
 export const Pairs = () => {
   const tokens = [
     ['LOBOTHEWOLFPUP', 'BTC'],
@@ -17,6 +23,7 @@ export const Pairs = () => {
     ['BUSD', 'BTC'],
     ['MIDLGROUNDSGEARSTOKEN', 'BTC'],
     ['BUSD', 'MIDLGROUNDSGEARSTOKEN'],
+    ...COMMUNITY_PAIRS,
   ].reduce(
     (acc, symbols) => {
       acc.push({

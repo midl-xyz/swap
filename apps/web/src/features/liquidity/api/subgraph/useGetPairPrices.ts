@@ -63,7 +63,7 @@ export const useGetPairPrices = ({
 }: GetPairPricesVariables) => {
   return useQuery({
     queryFn: async () => {
-      return await graphqlClient.request(GetPairPrices as any, {
+      return graphqlClient.request(GetPairPrices as any, {
         maxPoints,
         from,
         to,
@@ -79,7 +79,6 @@ export const useGetPairPrices = ({
       token0Address,
       token1Address,
     ],
-    enabled: !!token0Address && !!token1Address && !!from && !!to,
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
     retry: 3, // Built-in retry mechanism

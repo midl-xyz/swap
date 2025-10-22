@@ -11,10 +11,12 @@ export type AppMenuLink = {
 
 type AppMenuLinkProps = {
   link: AppMenuLink;
+  onClick?: () => void;
 };
 
 export const AppMenuLink = ({
   link: { label, href, isExact, openOnSeparateTab },
+  onClick,
 }: AppMenuLinkProps) => {
   const pathname = usePathname();
 
@@ -33,12 +35,16 @@ export const AppMenuLink = ({
         fontWeight: 'medium',
         position: 'relative',
       })}
+      data-active={isPathMatch ? 'true' : 'false'}
+      aria-current={isPathMatch ? 'page' : undefined}
+      onClick={onClick}
       target={openOnSeparateTab ? '_blank' : '_self'}
       rel={openOnSeparateTab ? 'noopener noreferrer' : ''}
     >
       {label}
       {isPathMatch && (
         <span
+          data-testid="active-indicator"
           className={css({
             w: 1,
             h: 1,

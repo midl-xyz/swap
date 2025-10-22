@@ -5,6 +5,7 @@ import { MidlProvider } from '@midl-xyz/midl-js-react';
 import { SatoshiKitProvider } from '@midl-xyz/satoshi-kit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { keyPairConnector } from '@midl/node';
+import { Toaster } from 'react-hot-toast';
 
 export const config = createConfig({
   networks: [regtest],
@@ -23,7 +24,10 @@ export const Wrapper = ({ children }: { children: React.ReactNode }) => {
       <QueryClientProvider client={queryClient}>
         <WagmiMidlProvider>
           <SatoshiKitProvider>
-            <LastUsedTokensProvider>{children}</LastUsedTokensProvider>
+            <LastUsedTokensProvider>
+              {children}
+              <Toaster position="bottom-right" />
+            </LastUsedTokensProvider>
           </SatoshiKitProvider>
         </WagmiMidlProvider>
       </QueryClientProvider>

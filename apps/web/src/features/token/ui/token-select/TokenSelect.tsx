@@ -151,7 +151,7 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
                 onSubmit(address, chainId);
               }}
             >
-              <TokenName address={address} chainId={chainId} />
+              <TokenName address={address} chainId={chainId} showTags />
             </Button>
           ))}
         </div>
@@ -178,7 +178,12 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
                   textAlign: 'left',
                 })}
               >
-                <TokenName address={address} chainId={chainId} showName />
+                <TokenName
+                  address={address}
+                  chainId={chainId}
+                  showName
+                  showTags
+                />
               </Button>
             ))}
           </div>

@@ -71,25 +71,44 @@ export const LiquidityItem = ({
               })}
             />
           </div>
-          {tokenASymbol === 'WPROM' ? 'PROM' : tokenAInfo.name} —{' '}
-          {tokenBSymbol === 'WPROM' ? 'PROM' : tokenBInfo.name}
+          <div>
+            <span>{tokenASymbol === 'WPROM' ? 'PROM' : tokenAInfo.name}</span> —{' '}
+            <span>{tokenBSymbol === 'WPROM' ? 'PROM' : tokenBInfo.name}</span>
+          </div>
         </div>
       </Collapsible.Trigger>
       <Collapsible.Content>
         <div className={vstack({ gap: 2, alignItems: 'stretch', pt: 4 })}>
           <div className={hstack({ gap: 2, justifyContent: 'space-between' })}>
-            <span>
-              Pooled {tokenASymbol === 'WPROM' ? 'PROM' : tokenAInfo.name}
-            </span>
-            <span>
-              {beautifyNumber(reserveA)}{' '}
-              {tokenASymbol === 'WPROM' ? 'PROM' : tokenASymbol}
-            </span>
+            <div className={css({ gap: '10px', display: 'flex' })}>
+              <span>Pooled</span>
+              <span
+                className={css({
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                  width: '190px',
+                  whiteSpace: 'nowrap',
+                })}
+              >
+                {tokenASymbol === 'WPROM' ? 'PROM' : tokenAInfo.name}
+              </span>
+            </div>
+            <span>{beautifyNumber(reserveA)} </span>
           </div>
           <div className={hstack({ gap: 2, justifyContent: 'space-between' })}>
-            <span>
-              Pooled {tokenBSymbol === 'WPROM' ? 'PROM' : tokenBInfo.name}
-            </span>
+            <div className={css({ gap: '10px', display: 'flex' })}>
+              <span>Pooled</span>
+              <span
+                className={css({
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                  width: '190px',
+                  whiteSpace: 'nowrap',
+                })}
+              >
+                {tokenBSymbol === 'WPROM' ? 'PROM' : tokenBInfo.name}
+              </span>
+            </div>
             <span>
               {beautifyNumber(reserveB)}{' '}
               {tokenBSymbol === 'WPROM' ? 'PROM' : tokenBSymbol}
