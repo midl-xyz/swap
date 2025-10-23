@@ -77,6 +77,15 @@ export const tokenList: Token[] = [
     tags: ['COMMUNITY'],
   },
   {
+    symbol: 'NETO•BLISS•BITCOIN',
+    name: 'NETO•BLISS•BITCOIN',
+    address: '0x729C19Cf55671289cC12B1d2Db49995EF82a4384',
+    chainId: midlRegtest.id,
+    decimals: 18,
+    logoURI: '/images/NB.png',
+    tags: ['COMMUNITY'],
+  },
+  {
     symbol: 'WAR•TOKEN',
     name: 'WAR•TOKEN',
     address: '0xa3d87eE093430A73B34E33e0E1cc0a09B55fD152',
