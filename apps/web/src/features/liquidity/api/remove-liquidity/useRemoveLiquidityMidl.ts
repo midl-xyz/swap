@@ -1,25 +1,31 @@
 import { useERC20Allowance } from '@/features/token';
-import { deployments, uniswapV2Router02Abi, WETHByChain } from '@/global';
+import { deployments, uniswapV2Router02Abi } from '@/global';
 import { useApproveWithOptionalDeposit } from '@/shared';
 import {
+  useAddCompleteTxIntention,
   useAddTxIntention,
   useClearTxIntentions,
   useEVMAddress,
+  useToken,
 } from '@midl-xyz/midl-js-executor-react';
 import { useMutation } from '@tanstack/react-query';
-import { Address, encodeFunctionData, erc20Abi } from 'viem';
-import { useChainId } from 'wagmi';
+import { Address, encodeFunctionData } from 'viem';
+import { useChainId, useConfig } from 'wagmi';
+import {
+  formatRemoveLiquidityParams,
+  handleSyntheticTokenApprovals,
+} from './utils';
 
 type UseRemoveLiquidityParams = {
   lpToken: {
     address: Address;
     amount: bigint;
   };
+  tokenA: Address;
+  tokenB: Address;
 };
 
 type RemoveLiquidityArgs = {
-  tokenA: Address;
-  tokenB: Address;
   liquidity: bigint;
   amountAMin: bigint;
   amountBMin: bigint;
@@ -29,36 +35,36 @@ type RemoveLiquidityArgs = {
 
 export const useRemoveLiquidityMidl = ({
   lpToken,
+  tokenA,
+  tokenB,
 }: UseRemoveLiquidityParams) => {
   const chainId = useChainId();
   const address = useEVMAddress();
+  const config = useConfig();
 
   const { data: allowance = 0n } = useERC20Allowance({
     token: lpToken.address,
     spender: deployments[chainId].UniswapV2Router02.address,
-    user: address as Address,
+    user: address,
   });
+
   const { addTxIntention } = useAddTxIntention();
   const { addApproveDepositIntention: addApproveIntention } =
     useApproveWithOptionalDeposit(chainId);
   const clearTxIntentions = useClearTxIntentions();
+  const { addCompleteTxIntention } = useAddCompleteTxIntention();
 
   const isTokenNeedApproved = allowance < lpToken.amount;
 
-  const { mutate: removeLiquidity, ...rest } = useMutation<
-    void,
-    Error,
-    RemoveLiquidityArgs
-  >({
-    mutationFn: async ({
-      tokenA,
-      tokenB,
-      liquidity,
-      amountAMin,
-      amountBMin,
-      to,
-      deadline,
-    }) => {
+  const runeAId = useToken(tokenA).rune?.id;
+  const runeBId = useToken(tokenB).rune?.id;
+
+  const {
+    mutate: removeLiquidity,
+    mutateAsync: removeLiquidityAsync,
+    ...rest
+  } = useMutation<void, Error, RemoveLiquidityArgs>({
+    mutationFn: async ({ liquidity, amountAMin, amountBMin, to, deadline }) => {
       clearTxIntentions();
 
       if (isTokenNeedApproved) {
@@ -67,37 +73,8 @@ export const useRemoveLiquidityMidl = ({
           amount: lpToken.amount,
         });
       }
-
-      const WETHAddr = WETHByChain[chainId];
-
-      const ethValue =
-        tokenA === WETHAddr
-          ? amountAMin
-          : tokenB === WETHAddr
-            ? amountBMin
-            : undefined;
-
-      const isETH = Boolean(ethValue);
-
-      let args:
-        | SmartContractFunctionArgs<
-            typeof uniswapV2Router02Abi,
-            'removeLiquidityETH'
-          >
-        | SmartContractFunctionArgs<
-            typeof uniswapV2Router02Abi,
-            'removeLiquidity'
-          >;
-
-      if (isETH) {
-        const erc20TokenAddress = tokenA === WETHAddr ? tokenB : tokenA;
-
-        const erc20Min = tokenA === WETHAddr ? amountBMin : amountAMin;
-        const ethMin = tokenA === WETHAddr ? amountAMin : amountBMin;
-
-        args = [erc20TokenAddress, liquidity, erc20Min, ethMin, to, deadline];
-      } else {
-        args = [
+      const { args, assetsToWithdraw, functionName } =
+        formatRemoveLiquidityParams({
           tokenA,
           tokenB,
           liquidity,
@@ -105,30 +82,54 @@ export const useRemoveLiquidityMidl = ({
           amountBMin,
           to,
           deadline,
-        ];
-      }
+          chainId,
+          runeAId,
+          runeBId,
+        });
 
-      const functionName = isETH ? 'removeLiquidityETH' : 'removeLiquidity';
+      if (!deployments[chainId]?.UniswapV2Router02.address) {
+        console.error('UniswapV2Router02 deployment not found');
+        throw new Error(
+          'Network configuration not available. Please contact support.',
+        );
+      }
 
       addTxIntention({
         intention: {
           evmTransaction: {
-            to: deployments[chainId].UniswapV2Router02.address,
+            to: deployments[chainId]?.UniswapV2Router02.address,
             chainId,
             data: encodeFunctionData({
               abi: uniswapV2Router02Abi,
               functionName,
-              args: args as any,
+              args,
             }),
           },
         },
+      });
+
+      const syntheticApprovals = await handleSyntheticTokenApprovals({
+        tokenA,
+        tokenB,
+        amountAMin,
+        amountBMin,
+        address,
+        config,
+      });
+
+      for (const intentionParams of syntheticApprovals) {
+        addTxIntention(intentionParams);
+      }
+
+      addCompleteTxIntention({
+        runes: assetsToWithdraw,
       });
     },
   });
 
   return {
     removeLiquidity,
-    isTokenNeedApproved,
+    removeLiquidityAsync,
     ...rest,
   };
 };

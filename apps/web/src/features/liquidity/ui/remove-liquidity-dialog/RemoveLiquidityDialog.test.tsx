@@ -1,26 +1,27 @@
-import React from 'react';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { Wrapper } from '@/__tests__';
 import { QueryClient } from '@tanstack/react-query';
 import '@testing-library/jest-dom/vitest';
-
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Address, parseUnits } from 'viem';
-import { Wrapper } from '@/__tests__';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const LP: Address = '0x00000000000000000000000000000000000000aa';
-const A: Address = '0x00000000000000000000000000000000000000a1';
-const B: Address = '0x00000000000000000000000000000000000000b2';
-
+const LP = '0x00000000000000000000000000000000000000aa' as Address;
+const A = '0x00000000000000000000000000000000000000a1' as Address;
+const B = '0x00000000000000000000000000000000000000b2' as Address;
 let mockIsSuccess = false;
 let mockRemoveLiquidity = vi.fn();
 let mockReset = vi.fn();
 let mockRunePresent = true;
 
-vi.mock('@/features/liquidity/api/useRemoveLiquidityMidl', () => ({
+vi.mock('@/features/liquidity', () => ({
   useRemoveLiquidityMidl: () => ({
     removeLiquidity: mockRemoveLiquidity,
     isSuccess: mockIsSuccess,
     reset: mockReset,
+  }),
+  useEstimateLiquidityPair: () => ({
+    tokenAAmount: 500000000000000000n, // 0.5 A
+    tokenBAmount: 1000000000000000000n, // 1 B
   }),
 }));
 
@@ -40,27 +41,20 @@ vi.mock('@/features/liquidity/api/useGetPairStats', () => ({
   }),
 }));
 
-vi.mock('@/features/liquidity', () => ({
-  useEstimateLiquidityPair: () => ({
-    tokenAAmount: 500000000000000000n, // 0.5 A
-    tokenBAmount: 1000000000000000000n, // 1 B
-  }),
-}));
-
 vi.mock('@/features/slippage', () => ({
   useSlippage: () => [0.01], // 1%
 }));
 
 vi.mock('@/entities', () => ({
-  useToken: (addr: Address) => ({
+  useToken: (addr: import('viem').Address) => ({
     address: addr,
     symbol: addr === A ? 'AAA' : addr === B ? 'BBB' : 'LP',
     decimals: 18,
   }),
 }));
 
-vi.mock('jotai', async (importOriginal) => {
-  const original = await importOriginal<typeof import('jotai')>();
+vi.mock('jotai', async (importOriginal: any) => {
+  const original = await importOriginal();
   return {
     ...original,
     useAtom: () => [
