@@ -11,6 +11,7 @@ const B = '0x00000000000000000000000000000000000000b2' as Address;
 let mockIsSuccess = false;
 let mockRemoveLiquidity = vi.fn();
 let mockReset = vi.fn();
+let mockRunePresent = true;
 
 vi.mock('@/features/liquidity', () => ({
   useRemoveLiquidityMidl: () => ({
