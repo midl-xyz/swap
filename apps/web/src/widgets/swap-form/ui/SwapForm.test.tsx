@@ -1,11 +1,11 @@
 import { config, Wrapper } from '@/__tests__';
+import { AddressPurpose, connect, disconnect } from '@midl-xyz/midl-js-core';
 import '@testing-library/jest-dom/vitest';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Address, parseUnits, zeroAddress } from 'viem';
+import { Address } from 'viem';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { SwapForm } from './SwapForm';
-import { AddressPurpose, connect, disconnect } from '@midl-xyz/midl-js-core';
 
 const mockUseSwapRates = vi.fn();
 const mockUseTokenBalance = vi.fn();
@@ -34,6 +34,10 @@ vi.mock('@/features/swap/api/useSwapMidl', async () => {
     useSwapMidl: (...args: any[]) => mockUseSwapMidl(...args),
   };
 });
+
+vi.mock('@/widgets/swap-form/ui/SwapFormChart', () => ({
+  SwapFormChart: () => <div data-testid="mockChart" />,
+}));
 
 describe('SwapForm', () => {
   beforeEach(async () => {
@@ -90,27 +94,32 @@ describe('SwapForm', () => {
     const input = screen.getByTestId('inputTokenAmount');
     const output = screen.getByTestId('outputTokenAmount');
 
-    await user.type(input, '1.5');
-
-    mockUseSwapRates.mockReturnValue({
-      data: [2000000000000000000n, 150000000000000000n],
-      error: null,
-      isFetching: false,
-      refetch: vi.fn(),
+    await act(async () => {
+      await user.type(input, '1.5');
+      mockUseSwapRates.mockReturnValue({
+        data: [2000000000000000000n, 150000000000000000n],
+        error: null,
+        isFetching: false,
+        refetch: vi.fn(),
+      });
+      vi.runAllTimers();
+      await act(() => Promise.resolve());
     });
-    vi.advanceTimersByTime(250);
 
     await waitFor(() => expect(output).toHaveValue('0.15'));
 
-    await user.type(input, '0');
-
-    mockUseSwapRates.mockReturnValue({
-      data: null,
-      error: null,
-      isFetching: false,
-      refetch: vi.fn(),
+    await act(async () => {
+      await user.clear(input);
+      await user.type(input, '0');
+      mockUseSwapRates.mockReturnValue({
+        data: null,
+        error: null,
+        isFetching: false,
+        refetch: vi.fn(),
+      });
+      vi.runAllTimers();
+      await act(() => Promise.resolve());
     });
-    vi.advanceTimersByTime(250);
 
     await waitFor(() => expect(output).toHaveValue(''));
   });
@@ -139,7 +148,9 @@ describe('SwapForm', () => {
       isFetching: false,
       refetch: vi.fn(),
     });
-    vi.advanceTimersByTime(250);
+    await act(() => {
+      vi.advanceTimersByTime(250);
+    });
 
     await waitFor(() => expect(input).toHaveValue('2'));
   });
@@ -167,7 +178,9 @@ describe('SwapForm', () => {
 
     await user.type(input, '1');
 
-    vi.advanceTimersByTime(250);
+    await act(() => {
+      vi.advanceTimersByTime(250);
+    });
 
     const btn = screen.getByTestId('swapButton');
 
@@ -188,7 +201,7 @@ describe('SwapForm', () => {
 
     const input = screen.getByTestId('inputTokenAmount');
 
-    user.type(input, '101');
+    await user.type(input, '101');
 
     await waitFor(() => {
       const btn = screen.getByRole('button', { name: 'Insufficient Balance' });
@@ -225,7 +238,9 @@ describe('SwapForm', () => {
     const btn = screen.getByTestId('swapButton');
     await userEvent.type(input, '1');
     await userEvent.type(output, '1');
-    vi.advanceTimersByTime(250);
+    await act(() => {
+      vi.advanceTimersByTime(250);
+    });
 
     await waitFor(() => {
       expect(btn).toBeDisabled();
@@ -261,23 +276,33 @@ describe('SwapForm', () => {
     const input = screen.getByTestId('inputTokenAmount');
     const output = screen.getByTestId('outputTokenAmount');
 
-    await user.type(input, '1.5');
-
-    mockUseSwapRates.mockReturnValue({
-      data: [2000000000000000000n, 150000000000000000n],
-      error: null,
-      isFetching: false,
-      refetch: vi.fn(),
+    await act(async () => {
+      await user.type(input, '1.5');
+      mockUseSwapRates.mockReturnValue({
+        data: [2000000000000000000n, 150000000000000000n],
+        error: null,
+        isFetching: false,
+        refetch: vi.fn(),
+      });
+      vi.runAllTimers();
+      await act(() => Promise.resolve());
     });
 
-    vi.advanceTimersByTime(250);
+    await act(async () => {
+      vi.runAllTimers();
+      await act(() => Promise.resolve());
+    });
+
+    await waitFor(() => {
+      const btn = screen.getByTestId('swapButton');
+      expect(btn).not.toBeDisabled();
+      expect(btn).toHaveTextContent('Swap');
+    });
 
     const btn = screen.getByTestId('swapButton');
-
-    await waitFor(() => expect(btn).not.toBeDisabled());
-    expect(btn).toHaveTextContent('Swap');
-
-    await user.click(btn);
+    await act(async () => {
+      await user.click(btn);
+    });
 
     await waitFor(() => expect(mockSwapAsync).toHaveBeenCalled());
 
@@ -326,7 +351,9 @@ describe('SwapForm', () => {
     const output = screen.getByTestId('outputTokenAmount');
 
     await user.type(input, '1.5');
-    vi.advanceTimersByTime(250);
+    await act(() => {
+      vi.advanceTimersByTime(250);
+    });
 
     await waitFor(() =>
       expect(mockUseSwapRates).toHaveBeenLastCalledWith(
@@ -369,7 +396,9 @@ describe('SwapForm', () => {
     const output = screen.getByTestId('outputTokenAmount');
 
     await user.type(output, '1.5');
-    vi.advanceTimersByTime(250);
+    await act(() => {
+      vi.advanceTimersByTime(250);
+    });
 
     await waitFor(() =>
       expect(mockUseSwapRates).toHaveBeenLastCalledWith(
