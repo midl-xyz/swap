@@ -60,6 +60,15 @@ export const tokenList: Token[] = [
     tags: [],
   },
   {
+    symbol: 'NETO•BLISS•BITCOIN',
+    name: 'NETO•BLISS•BITCOIN',
+    address: '0x729C19Cf55671289cC12B1d2Db49995EF82a4384',
+    chainId: midlRegtest.id,
+    decimals: 18,
+    logoURI: '/images/NB.png',
+    tags: ['COMMUNITY'],
+  },
+  {
     symbol: 'TRYB•FAMILY•TOKEN',
     name: 'TRYB•FAMILY•TOKEN',
     address: '0x029891bfdE4D6734BfeBB65f7bea0Eb93145E44d',
