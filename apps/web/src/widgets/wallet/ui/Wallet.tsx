@@ -29,7 +29,7 @@ export const Wallet = () => {
             network: network.id,
             rpcUrl: `${
               process.env.NEXT_PUBLIC_MEMPOOL_RPC ||
-              'https://mempool.regtest.midl.xyz'
+              'https://mempool.staging.midl.xyz'
             }/api`,
             indexerUrl:
               process.env.NEXT_PUBLIC_INDEXER_URL ||

@@ -326,7 +326,7 @@ export const Pair = ({ id }: Props) => {
                 width: 'max-content',
               })}
               target="_blank"
-              href={`https://blockscout.regtest.midl.xyz/address/${id}`}
+              href={`https://blockscout.staging.midl.xyz/address/${id}`}
             >
               <Button
                 appearance="secondary"

@@ -1,12 +1,15 @@
 import { useStateOverride } from '@/features/state-override';
 import { Button } from '@/shared';
+import { xverseConnector } from '@midl-xyz/midl-js-connectors';
 import {
   useAddTxIntention,
   useFinalizeBTCTransaction,
   useSendBTCTransactions,
   useSignIntention,
+  useSignIntentions,
 } from '@midl-xyz/midl-js-executor-react';
 import { useConfig, useWaitForTransaction } from '@midl-xyz/midl-js-react';
+import { useCallback, useEffect, useRef, type ReactNode } from 'react';
 import toast from 'react-hot-toast';
 import { Address } from 'viem';
 import { css } from '~/styled-system/css';
@@ -15,11 +18,13 @@ import { hstack, vstack } from '~/styled-system/patterns';
 type IntentionSignerProps = {
   onClose: () => void;
   assetsToWithdraw?: [Address] | [Address, Address];
+  children?: ReactNode;
 };
 
 export const IntentionSigner = ({
   assetsToWithdraw,
   onClose,
+  children,
 }: IntentionSignerProps) => {
   const { txIntentions } = useAddTxIntention();
 
@@ -28,9 +33,6 @@ export const IntentionSigner = ({
     finalizeBTCTransaction,
     isSuccess: isFinalizedBTC,
     isPending: isFinalizingBTC,
-    // signIntentionState, Notice: Now retrieved from useIntentionSigner
-    isError,
-    error,
   } = useFinalizeBTCTransaction({
     mutation: {
       onError: (error) => {
@@ -62,13 +64,17 @@ export const IntentionSigner = ({
   });
   const [customStateOverride, setStateOverride] = useStateOverride();
 
+  const { network, connection } = useConfig();
+  const isXverse = connection?.id === xverseConnector().id;
+
   const signIntentionState = useSignIntention({});
-  const { network } = useConfig();
+  const signIntentionsState = useSignIntentions();
 
   const { waitForTransaction, isPending, isSuccess } = useWaitForTransaction();
 
   const toSignIntentions = txIntentions.filter((it) => it.evmTransaction);
   const txToSign = toSignIntentions.find((it) => !it.signedEvmTransaction);
+
   const { sendBTCTransactions, isSuccess: isBroadcasted } =
     useSendBTCTransactions({
       mutation: {
@@ -77,49 +83,114 @@ export const IntentionSigner = ({
         },
       },
     });
-  const onPublish = async () => {
-    const txIntentionsToPublish = txIntentions
-      .filter((it) => it.signedEvmTransaction)
-      .map((it) => it.signedEvmTransaction);
 
-    // Notice now get intention.signedEvmTransaction! into an array and pass to serializedTransactions & btcTransaction?.tx.hex! to btcTransaction
+  const onPublish = useCallback(async () => {
+    let serializedTransactions: `0x${string}`[];
+
+    if (isXverse && signIntentionsState.data) {
+      serializedTransactions = signIntentionsState.data;
+    } else {
+      serializedTransactions = txIntentions
+        .filter((it) => it.signedEvmTransaction)
+        .map((it) => it.signedEvmTransaction!);
+    }
+
     sendBTCTransactions({
-      serializedTransactions: txIntentionsToPublish as [],
+      serializedTransactions,
       btcTransaction: btcTransaction?.tx.hex!,
     });
+  }, [
+    txIntentions,
+    btcTransaction,
+    sendBTCTransactions,
+    isXverse,
+    signIntentionsState.data,
+  ]);
+
+  const allIntentionsSigned = isXverse
+    ? signIntentionsState.isSuccess
+    : !txToSign;
+
+  // Auto-publish transaction after all signatures are complete
+  const hasAutoPublished = useRef(false);
+  useEffect(() => {
+    if (
+      isFinalizedBTC &&
+      allIntentionsSigned &&
+      btcTransaction &&
+      !isBroadcasted &&
+      !hasAutoPublished.current
+    ) {
+      hasAutoPublished.current = true;
+      onPublish();
+    }
+  }, [
+    isFinalizedBTC,
+    allIntentionsSigned,
+    btcTransaction,
+    isBroadcasted,
+    onPublish,
+  ]);
+
+  const currentSignState = isXverse ? signIntentionsState : signIntentionState;
+  const showSignButton =
+    isFinalizedBTC && btcTransaction && !allIntentionsSigned;
+
+  const stepCount = isXverse ? 2 : toSignIntentions.length + 1;
+
+  const getStepState = (i: number) => {
+    if (isXverse) {
+      if (i === 0) return isFinalizedBTC ? 'completed' : 'active';
+      return signIntentionsState.isSuccess
+        ? 'completed'
+        : isFinalizedBTC
+          ? 'active'
+          : 'pending';
+    }
+    if (i === 0) return isFinalizedBTC ? 'completed' : 'active';
+    if (toSignIntentions[i - 1]?.signedEvmTransaction) return 'completed';
+    return isFinalizedBTC &&
+      i - 1 === toSignIntentions.findIndex((it) => !it.signedEvmTransaction)
+      ? 'active'
+      : 'pending';
   };
+
   return (
     <div className={vstack({ gap: 4 })} data-testid="intention-signer">
-      <div className={hstack({ gap: 4 })}>
-        {new Array(toSignIntentions.length + 1).fill(0).map((_, i) => (
-          <div
-            key={i}
-            className={css({
-              borderRadius: 'full',
-              border: '1px solid',
-              borderColor: 'neutral.400',
-              color: 'neutral.400',
-              width: 8,
-              height: 8,
+      {!(isPending || isSuccess) && (
+        <div className={hstack({ gap: 4, justifyContent: 'center' })}>
+          {new Array(stepCount).fill(0).map((_, i) => {
+            const state = getStepState(i);
+            return (
+              <div
+                key={i}
+                className={css({
+                  borderRadius: 'full',
+                  border: '1px solid',
+                  borderColor: 'neutral.400',
+                  color: 'neutral.400',
+                  width: 8,
+                  height: 8,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  ...(state === 'completed' && {
+                    backgroundColor: 'neutral.800',
+                    color: 'white',
+                  }),
+                  ...(state === 'active' && {
+                    borderColor: 'neutral.800',
+                  }),
+                })}
+              >
+                {i + 1}
+              </div>
+            );
+          })}
+        </div>
+      )}
 
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              ...(i === 0 &&
-                isFinalizedBTC && {
-                  backgroundColor: 'neutral.800',
-                  color: 'white',
-                }),
-              ...(toSignIntentions[i - 1]?.signedEvmTransaction && {
-                backgroundColor: 'neutral.800',
-                color: 'white',
-              }),
-            })}
-          >
-            {i + 1}
-          </div>
-        ))}
-      </div>
+      {children}
 
       {!isFinalizedBTC && (
         <>
@@ -140,29 +211,26 @@ export const IntentionSigner = ({
         </>
       )}
 
-      {isFinalizedBTC && txToSign && btcTransaction && (
+      {showSignButton && (
         <>
           <p>Sign transaction intention</p>
           <Button
-            disabled={signIntentionState.isPending}
+            disabled={currentSignState.isPending}
             onClick={() => {
-              signIntentionState.signIntention({
-                intention: txToSign,
-                txId: btcTransaction.tx.id,
-              });
+              if (isXverse) {
+                signIntentionsState.signIntentions({
+                  txId: btcTransaction.tx.id,
+                });
+              } else {
+                signIntentionState.signIntention({
+                  intention: txToSign!,
+                  txId: btcTransaction.tx.id,
+                });
+              }
             }}
             appearance="primary"
           >
-            {signIntentionState.isPending ? 'Confirming...' : 'Confirm'}
-          </Button>
-        </>
-      )}
-
-      {isFinalizedBTC && !txToSign && btcTransaction && !isBroadcasted && (
-        <>
-          <p>Intention signing completed</p>
-          <Button onClick={onPublish} appearance="primary">
-            Publish transaction
+            {currentSignState.isPending ? 'Confirming...' : 'Confirm'}
           </Button>
         </>
       )}

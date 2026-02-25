@@ -1,12 +1,12 @@
 import '@testing-library/jest-dom/vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { Wrapper } from '@/__tests__';
 import { AddRuneDialog } from './AddRuneDialog';
 
-const mockAddRune = vi.fn();
-const mockWaitForTx = vi.fn();
+const mockAddRuneAsync = vi.fn();
+const mockClearIntentions = vi.fn();
 
 const RUNE = {
   id: 'RUNE123',
@@ -19,11 +19,6 @@ vi.mock('@midl-xyz/midl-js-react', async (importActual) => {
   return {
     ...actual,
     useRune: () => ({ rune: RUNE }),
-    useWaitForTransaction: () => ({
-      waitForTransaction: mockWaitForTx,
-      isSuccess: false,
-      reset: vi.fn(),
-    }),
   };
 });
 
@@ -31,26 +26,56 @@ vi.mock('@midl-xyz/midl-js-executor-react', async (importActual) => {
   const actual = await importActual<any>();
   return {
     ...actual,
-    useAddRuneERC20: () => ({
-      addRuneERC20: mockAddRune,
-      data: undefined,
+    useAddRuneERC20Intention: () => ({
+      addRuneERC20Async: mockAddRuneAsync,
       isPending: false,
       error: undefined,
-      reset: vi.fn(),
+    }),
+    useClearTxIntentions: () => mockClearIntentions,
+    useAddTxIntention: () => ({ txIntentions: [] }),
+    useFinalizeBTCTransaction: () => ({
+      data: undefined,
+      finalizeBTCTransaction: vi.fn(),
+      isSuccess: false,
+      isPending: false,
+    }),
+    useSignIntention: () => ({
+      signIntention: vi.fn(),
+      isPending: false,
+      isSuccess: false,
+    }),
+    useSignIntentions: () => ({
+      signIntentions: vi.fn(),
+      data: undefined,
+      isPending: false,
+      isSuccess: false,
+    }),
+    useSendBTCTransactions: () => ({
+      sendBTCTransactions: vi.fn(),
+      isSuccess: false,
     }),
     useERC20Rune: () => ({ erc20Address: undefined, erc20State: {} }),
     useBTCFeeRate: () => ({ data: 1n }),
   };
 });
 
+vi.mock('@midl-xyz/midl-js-connectors', async (importActual) => {
+  const actual = await importActual<any>();
+  return {
+    ...actual,
+    xverseConnector: () => ({ id: 'xverse' }),
+  };
+});
+
 describe('AddRuneDialog', () => {
   beforeEach(() => {
-    mockAddRune.mockReset();
-    mockWaitForTx.mockReset();
+    mockAddRuneAsync.mockReset();
+    mockClearIntentions.mockReset();
   });
 
   it('renders initial state and allows to start adding token', async () => {
     const onClose = vi.fn();
+    mockAddRuneAsync.mockResolvedValue({});
 
     render(<AddRuneDialog open onClose={onClose} />, { wrapper: Wrapper });
 
@@ -62,174 +87,62 @@ describe('AddRuneDialog', () => {
     expect(btn).toBeEnabled();
 
     expect(screen.getByText(/RU NE/i)).toBeInTheDocument();
-    expect(screen.getByText(/BTC\)/i)).toBeInTheDocument();
 
     fireEvent.click(btn);
-    expect(mockAddRune).toHaveBeenCalledWith({
+    expect(mockAddRuneAsync).toHaveBeenCalledWith({
       runeId: RUNE.id,
-      publish: true,
     });
   });
 
-  it('shows confirming state after broadcast and provides explorer link', async () => {
+  it('switches to intention signer mode after intention is created', async () => {
     const onClose = vi.fn();
-
-    const modExec = await import('@midl-xyz/midl-js-executor-react');
-    vi.spyOn(modExec, 'useAddRuneERC20').mockReturnValue({
-      addRuneERC20: mockAddRune,
-      data: { tx: { id: 'abcd' } },
-      isPending: false,
-      error: undefined,
-      reset: vi.fn(),
-    } as any);
-
-    const modReact = await import('@midl-xyz/midl-js-react');
-    vi.spyOn(modReact, 'useWaitForTransaction').mockReturnValue({
-      waitForTransaction: mockWaitForTx,
-      isSuccess: false,
-      reset: vi.fn(),
-    } as any);
-
-    const modExec2 = await import('@midl-xyz/midl-js-executor-react');
-    vi.spyOn(modExec2, 'useERC20Rune').mockReturnValue({
-      erc20Address: '0x0000000000000000000000000000000000000000',
-      erc20State: { dataUpdatedAt: Date.now() },
-    } as any);
+    mockAddRuneAsync.mockResolvedValue({});
 
     render(<AddRuneDialog open onClose={onClose} />, { wrapper: Wrapper });
 
-    expect(
-      screen.getByRole('heading', { name: /Confirming transaction/i }),
-    ).toBeInTheDocument();
+    const btn = screen.getByRole('button', { name: /Add token/i });
+    fireEvent.click(btn);
 
-    expect(
-      screen.getByText(/Waiting for the transaction to be confirmed/i),
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.getByRole('heading', { name: /Sign add rune intentions/i }),
+      ).toBeInTheDocument();
+    });
 
-    const link = screen.getByRole('link', { name: /View transaction/i });
-    expect(link).toHaveAttribute('href');
-    expect(link.getAttribute('href')).toMatch(/\/tx\/abcd$/);
+    expect(screen.getByTestId('intention-signer')).toBeInTheDocument();
   });
 
-  it('shows success message when BTC confirmed and ERC20 ready and can be closed', async () => {
+  it('stays on initial screen when intention creation fails', async () => {
     const onClose = vi.fn();
-
-    const modExec = await import('@midl-xyz/midl-js-executor-react');
-    vi.spyOn(modExec, 'useAddRuneERC20').mockReturnValue({
-      addRuneERC20: mockAddRune,
-      data: { tx: { id: 'abcd' } },
-      isPending: false,
-      error: undefined,
-      reset: vi.fn(),
-    } as any);
-
-    const modReact = await import('@midl-xyz/midl-js-react');
-    vi.spyOn(modReact, 'useWaitForTransaction').mockReturnValue({
-      waitForTransaction: mockWaitForTx,
-      isSuccess: true,
-      reset: vi.fn(),
-    } as any);
-
-    vi.spyOn(modExec, 'useERC20Rune').mockReturnValue({
-      erc20Address: '0x0000000000000000000000000000000000000001',
-      erc20State: { dataUpdatedAt: Date.now() },
-    } as any);
+    mockAddRuneAsync.mockRejectedValue(new Error('Failed'));
 
     render(<AddRuneDialog open onClose={onClose} />, { wrapper: Wrapper });
 
-    expect(
-      screen.getByRole('heading', { name: /Transaction confirmed/i }),
-    ).toBeInTheDocument();
+    const btn = screen.getByRole('button', { name: /Add token/i });
+    fireEvent.click(btn);
 
-    const closeBtn = screen.getByRole('button', { name: /Close/i });
-    fireEvent.click(closeBtn);
+    await waitFor(() => {
+      expect(
+        screen.getByRole('heading', {
+          name: /Add token to the MIDL ecosystem/i,
+        }),
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('clears intentions on close via escape key', async () => {
+    const onClose = vi.fn();
+
+    render(<AddRuneDialog open onClose={onClose} />, { wrapper: Wrapper });
+
+    const content = screen
+      .getByRole('heading', { name: /Add token/i })
+      .closest('[role="dialog"]');
+
+    expect(content).not.toBeNull();
+    fireEvent.keyDown(content!, { key: 'Escape' });
+
+    expect(mockClearIntentions).toHaveBeenCalled();
     expect(onClose).toHaveBeenCalled();
-  });
-
-  it('shows error message from mutation while confirming', async () => {
-    const onClose = vi.fn();
-
-    const modExec = await import('@midl-xyz/midl-js-executor-react');
-    vi.spyOn(modExec, 'useAddRuneERC20').mockReturnValue({
-      addRuneERC20: mockAddRune,
-      data: { tx: { id: 'errtx' } },
-      isPending: false,
-      error: new Error('Boom goes the tx'),
-      reset: vi.fn(),
-    } as any);
-
-    const modReact = await import('@midl-xyz/midl-js-react');
-    vi.spyOn(modReact, 'useWaitForTransaction').mockReturnValue({
-      waitForTransaction: mockWaitForTx,
-      isSuccess: false,
-      reset: vi.fn(),
-    } as any);
-
-    vi.spyOn(modExec, 'useERC20Rune').mockReturnValue({
-      erc20Address: '0x0000000000000000000000000000000000000000',
-      erc20State: { dataUpdatedAt: Date.now() },
-    } as any);
-
-    render(<AddRuneDialog open onClose={onClose} />, { wrapper: Wrapper });
-
-    expect(
-      screen.getByRole('heading', { name: /Confirming transaction/i }),
-    ).toBeInTheDocument();
-
-    // Error message is shown instead of loader
-    expect(screen.getByText(/Boom goes the tx/i)).toBeInTheDocument();
-  });
-
-  it('shows fallback error after repeated zero-address polling (retries exhausted)', async () => {
-    const onClose = vi.fn();
-
-    const modExec = await import('@midl-xyz/midl-js-executor-react');
-    vi.spyOn(modExec, 'useAddRuneERC20').mockReturnValue({
-      addRuneERC20: mockAddRune,
-      data: { tx: { id: 'zzz' } },
-      isPending: false,
-      error: undefined,
-      reset: vi.fn(),
-    } as any);
-
-    const modReact = await import('@midl-xyz/midl-js-react');
-    vi.spyOn(modReact, 'useWaitForTransaction').mockReturnValue({
-      waitForTransaction: mockWaitForTx,
-      isSuccess: true, // BTC confirmed to start EVM polling
-      reset: vi.fn(),
-    } as any);
-
-    // Return zeroAddress with increasing dataUpdatedAt values to simulate polling
-    let tick = Date.now();
-    const erc20Spy = vi.spyOn(modExec, 'useERC20Rune');
-    erc20Spy.mockImplementation(
-      () =>
-        ({
-          erc20Address: '0x0000000000000000000000000000000000000000',
-          erc20State: { dataUpdatedAt: tick },
-        }) as any,
-    );
-
-    const { rerender } = render(<AddRuneDialog open onClose={onClose} />, {
-      wrapper: Wrapper,
-    });
-
-    for (let i = 0; i < 6; i++) {
-      tick += 1;
-      erc20Spy.mockImplementation(
-        () =>
-          ({
-            erc20Address: '0x0000000000000000000000000000000000000000',
-            erc20State: { dataUpdatedAt: tick },
-          }) as any,
-      );
-      rerender(<AddRuneDialog open onClose={onClose} />);
-    }
-
-    expect(
-      screen.getByText(
-        /Failed to add the token. Please try doing it once again./i,
-      ),
-    ).toBeInTheDocument();
   });
 });

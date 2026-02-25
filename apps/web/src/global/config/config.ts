@@ -13,6 +13,6 @@ export const config = createMidlConfig({
   runesProvider: new MaestroSymphonyProvider(),
   provider: new MempoolSpaceProvider({
     regtest:
-      process.env.NEXT_PUBLIC_MEMPOOL_RPC || 'https://mempool.regtest.midl.xyz',
+      process.env.NEXT_PUBLIC_MEMPOOL_RPC || 'https://mempool.staging.midl.xyz',
   } as any),
 });

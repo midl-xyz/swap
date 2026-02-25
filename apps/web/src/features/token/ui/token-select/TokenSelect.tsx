@@ -40,9 +40,12 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
   const [searchQuery, setSearchQuery] = useState('');
   const { open } = useRuneDialog();
 
-  const { rune, erc20Address } = useERC20Rune(searchQuery, {
+  const { rune, erc20Address: erc20Data } = useERC20Rune(searchQuery, {
     query: { retry: false, enabled: !!searchQuery },
   });
+  const erc20Address = (Array.isArray(erc20Data) ? erc20Data[0] : erc20Data) as
+    | `0x${string}`
+    | undefined;
 
   const onSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value.trim());
@@ -54,13 +57,15 @@ export const TokenSelect = ({ onSelect }: TokenSelectProps) => {
       return;
     }
 
+    const normalize = (str: string) => str.toLowerCase().replaceAll('•', ' ');
+
+    const query = normalize(searchQuery);
+
     setFilteredTokens(
       tokenList.filter((it) => {
-        const symbol = it.symbol.toLowerCase();
-        const name = it.name.toLowerCase();
+        const symbol = normalize(it.symbol);
+        const name = normalize(it.name);
         const address = it.address.toLowerCase();
-
-        const query = searchQuery.toLowerCase();
 
         return (
           symbol.includes(query) ||
