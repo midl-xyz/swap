@@ -1,3 +1,4 @@
+import { midlRegtest } from '@midl-xyz/midl-js-executor';
 import { Address } from 'viem';
 import type { Config } from 'wagmi';
 
@@ -15,11 +16,11 @@ type Deployments = Record<
 >;
 
 export const deployments: Deployments = {
-  ['777']: {
+  [midlRegtest.id]: {
     UniswapV2Router02: {
-      address: '0xB1F1C1A72dFb4F90d3794a3496703D6cBAAC72FA',
+      address: '0x81704060aa76591c0EfA3A061720f2A48545aFe8',
     },
-    UniswapV2Factory: { address: '0x7C94B93aafB0aF2F58703B56c5EF18Fd10A6Ee06' },
-    UV2Library: { address: '0x24e1aC0E5038C51A50AaDf2a4704a8eC87fE6C18' },
+    UniswapV2Factory: { address: '0x4c7C6926fbF1Cb97D04Ecc486D6e26E8507f97F1' },
+    UV2Library: { address: '0x4511bFE9B283A4c09625Ed7c62acAEB6f16893e5' },
   },
 };

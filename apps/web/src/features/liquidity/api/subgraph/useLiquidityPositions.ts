@@ -133,7 +133,7 @@ export const useLiquidityPositions = (account: Address) => {
       return graphqlClient.request(GetLiquidityPositions, {
         where: {
           user: {
-            id_eq: account,
+            id_eq: account.toLowerCase(),
           },
         },
       });

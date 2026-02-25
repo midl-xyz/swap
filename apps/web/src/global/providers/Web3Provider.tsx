@@ -22,7 +22,7 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
             transports: {
               [midlRegtest.id]: http(
                 process.env.NEXT_PUBLIC_EVM_RPC ||
-                  'https://rpc.regtest.midl.xyz',
+                  'https://rpc.staging.midl.xyz',
               ),
             },
           }}

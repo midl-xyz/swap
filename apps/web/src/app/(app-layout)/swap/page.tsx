@@ -3,7 +3,7 @@ import { ErrorScreen } from '@/widgets/error-screen/ErrorScreen';
 import { createConfig, getRune, regtest } from '@midl-xyz/midl-js-core';
 import {
   executorAbi,
-  executorAddress,
+  SystemContracts,
   midlRegtest,
   runeIdToBytes32,
 } from '@midl-xyz/midl-js-executor';
@@ -34,7 +34,7 @@ const getRuneOrAddress = async (
     try {
       const config = createConfig({
         networks: [regtest],
-        connectors: [],
+        connectors: [] as any,
       });
       const rune = await getRune(config, inputToken);
 
@@ -42,14 +42,14 @@ const getRuneOrAddress = async (
         return undefined;
       }
 
-      const data = await readContract(client, {
+      const [assetAddress] = await readContract(client, {
         abi: executorAbi,
         functionName: 'getAssetAddressByRuneId',
         args: [runeIdToBytes32(rune.id)],
-        address: executorAddress['regtest'] as Address,
+        address: SystemContracts.Executor as Address,
       });
 
-      return data;
+      return assetAddress;
     } catch (error) {
       return undefined;
     }

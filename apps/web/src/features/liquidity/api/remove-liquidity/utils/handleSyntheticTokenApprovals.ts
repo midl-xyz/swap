@@ -1,5 +1,5 @@
 import { tokenList } from '@/global';
-import { executorAddress, PartialIntention } from '@midl-xyz/midl-js-executor';
+import { SystemContracts, PartialIntention } from '@midl-xyz/midl-js-executor';
 import { readContract } from '@wagmi/core';
 import {
   Address,
@@ -36,7 +36,7 @@ const createExecutorApprovalIntention = async (
     address: tokenAddress,
     abi: erc20Abi,
     functionName: 'allowance',
-    args: [userAddress, executorAddress.regtest],
+    args: [userAddress, SystemContracts.Executor],
   });
 
   if (allowance < minAmount) {
@@ -47,7 +47,7 @@ const createExecutorApprovalIntention = async (
           data: encodeFunctionData({
             abi: erc20Abi,
             functionName: 'approve',
-            args: [executorAddress.regtest, maxUint256],
+            args: [SystemContracts.Executor, maxUint256],
           }),
         },
       },

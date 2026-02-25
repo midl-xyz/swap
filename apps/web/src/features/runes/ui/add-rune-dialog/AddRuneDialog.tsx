@@ -1,26 +1,15 @@
 import { TokenLogo } from '@/features';
+import { IntentionSigner } from '@/features/btc/ui/IntentionSigner';
 import { useRuneDialog } from '@/features/runes/api';
 import { Button, Dialog, DialogContent, DialogOverlay } from '@/shared';
 import {
-  calculateTransactionsCost,
-  multisigAddress,
-} from '@midl-xyz/midl-js-executor';
-import {
-  useAddRuneERC20,
-  useERC20Rune,
-  useBTCFeeRate,
+  useAddRuneERC20Intention,
+  useClearTxIntentions,
 } from '@midl-xyz/midl-js-executor-react';
-import {
-  useConfig,
-  useRune,
-  useWaitForTransaction,
-} from '@midl-xyz/midl-js-react';
+import { useRune } from '@midl-xyz/midl-js-react';
 import { DialogProps, DialogTitle } from '@radix-ui/react-dialog';
-import { useEffect, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Loader2Icon } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { formatUnits, zeroAddress } from 'viem';
 import { css } from '~/styled-system/css';
 import { vstack } from '~/styled-system/patterns';
 
@@ -30,6 +19,9 @@ type AddRuneDialogProps = DialogProps & {
 
 export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
   const { state } = useRuneDialog();
+  const [isIntentionMode, setIsIntentionMode] = useState(false);
+  const clearIntentions = useClearTxIntentions();
+
   const { rune } = useRune({
     runeId: state.value.runeId,
     query: {
@@ -37,106 +29,41 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
     },
   });
 
-  const {
-    addRuneERC20,
-    data,
-    isPending: isTransactionBeingFormed,
-    error,
-    reset,
-  } = useAddRuneERC20({
-    mutation: {
-      onError(error) {
-        console.error(error);
-        toast.error(error.message);
+  const { addRuneERC20Async, isPending: isTransactionBeingFormed } =
+    useAddRuneERC20Intention({
+      mutation: {
+        onError(error: any) {
+          console.error(error);
+          toast.error(error.message);
+        },
       },
-      onSuccess(data) {
-        waitForTransaction({
-          txId: data.tx.id,
-        });
-      },
-    },
-  });
-  const {
-    waitForTransaction,
-    isSuccess: isBtcConfirmed,
-    reset: resetWait,
-  } = useWaitForTransaction();
-  const { network } = useConfig();
-
-  const feeRate = useBTCFeeRate();
-
-  const hasBroadcast = Boolean(data?.tx?.id);
-
-  // Start polling ERC result only after BTC is confirmed and tx is broadcasted
-  const shouldPollErc = hasBroadcast && isBtcConfirmed;
-
-  const { erc20Address, erc20State } = useERC20Rune(rune?.id || '', {
-    query: {
-      enabled: shouldPollErc,
-      refetchInterval: 2000,
-    },
-  });
-
-  const { error: erc20Error } = erc20State;
-
-  const isErc20Ready = !!erc20Address && erc20Address !== zeroAddress;
-
-  // Track refetch attempts by observing dataUpdatedAt; after 6 updates with zero address -> error
-  const refetchCountRef = useRef(0);
-  const lastUpdatedAtRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    if (!shouldPollErc) {
-      refetchCountRef.current = 0;
-      lastUpdatedAtRef.current = null;
-      return;
-    }
-    const updatedAt = erc20State?.dataUpdatedAt ?? null;
-    if (updatedAt && updatedAt !== lastUpdatedAtRef.current) {
-      lastUpdatedAtRef.current = updatedAt;
-      if (erc20Address === zeroAddress) {
-        refetchCountRef.current += 1;
-      } else {
-        refetchCountRef.current = 0;
-      }
-    }
-  }, [shouldPollErc, erc20State?.dataUpdatedAt, erc20Address]);
-
-  const retriesExhaustedNoAddress =
-    shouldPollErc &&
-    refetchCountRef.current >= 6 &&
-    erc20Address === zeroAddress;
-
-  const errorMessage =
-    erc20Error?.message ||
-    error?.message ||
-    (retriesExhaustedNoAddress
-      ? 'Failed to add the token. Please try doing it once again.'
-      : null);
-
-  const { data: edictFee } = useQuery({
-    queryKey: ['edictFee'],
-    queryFn: async () => {
-      const fee = calculateTransactionsCost(0n, {
-        hasRunesDeposit: true,
-        feeRate: Number(feeRate.data ?? 1n),
-      });
-
-      return fee > 546n ? fee : 546n;
-    },
-  });
+    });
 
   const onConfirm = async () => {
-    addRuneERC20({
-      runeId: rune!.id,
-      publish: true,
-    });
+    try {
+      await addRuneERC20Async({
+        runeId: rune!.id,
+      });
+      setIsIntentionMode(true);
+    } catch {
+      // Handled by the mutation's onError
+    }
   };
 
+  useEffect(() => {
+    if (!rest.open) {
+      return;
+    }
+
+    setIsIntentionMode(false);
+    clearIntentions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rest.open, state.value.runeId]);
+
   const handleClose = () => {
+    clearIntentions();
     onClose();
-    reset();
-    resetWait();
+    setIsIntentionMode(false);
   };
 
   return (
@@ -149,10 +76,10 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
           width: '100%',
         })}
       >
-        {isBtcConfirmed && isErc20Ready && (
+        {isIntentionMode ? (
           <div
             className={vstack({
-              gap: 8,
+              gap: 4,
               justifyContent: 'stretch',
             })}
           >
@@ -162,71 +89,25 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
                   textStyle: 'h3',
                 })}
               >
-                Transaction confirmed
+                Sign add rune intentions
               </h1>
             </DialogTitle>
 
-            <p>
-              The transaction has been confirmed. The rune has been added to the
-              MIDL ecosystem.
-            </p>
-
-            <Button onClick={handleClose}>Close</Button>
-          </div>
-        )}
-
-        {hasBroadcast && (!isBtcConfirmed || !isErc20Ready) && (
-          <div
-            className={vstack({
-              gap: 8,
-              justifyContent: 'stretch',
-            })}
-          >
-            <DialogTitle asChild>
-              <h1
-                className={css({
-                  textStyle: 'h3',
+            <IntentionSigner onClose={handleClose}>
+              <div
+                className={vstack({
+                  gap: 2,
+                  alignItems: 'center',
                 })}
               >
-                Confirming transaction
-              </h1>
-            </DialogTitle>
-
-            {errorMessage ? (
-              <p
-                className={css({
-                  color: 'red.500',
-                })}
-              >
-                {errorMessage}
-              </p>
-            ) : (
-              <>
-                <Loader2Icon
-                  className={css({
-                    animation: 'spin 1s linear infinite',
-                    display: 'inline-block',
-                  })}
-                />
-                <p>Waiting for the transaction to be confirmed...</p>
-              </>
-            )}
-
-            <a
-              href={`${network?.explorerUrl}/tx/${data?.tx.id}`}
-              target="_blank"
-              className={css({
-                color: 'blue.500',
-                textDecoration: 'underline',
-                fontSize: 14,
-              })}
-            >
-              View transaction
-            </a>
+                <TokenLogo runeId={rune?.id} size={12} />
+                <p>
+                  Adding <b>{rune?.spaced_name}</b> to MIDL
+                </p>
+              </div>
+            </IntentionSigner>
           </div>
-        )}
-
-        {!hasBroadcast && (
+        ) : (
           <div
             className={vstack({
               gap: 8,
@@ -245,20 +126,18 @@ export const AddRuneDialog = ({ onClose, ...rest }: AddRuneDialogProps) => {
 
             <TokenLogo runeId={rune?.id} size={12} />
 
-            <p style={{ wordBreak: 'break-all' }}>
-              To add the token, please transfer the minimum amount (e.g 1{' '}
-              {rune?.symbol}) of <b>{rune?.spaced_name}</b> and validator's fee
-              ({formatUnits(BigInt(edictFee ?? 546), 8)} BTC) to the following
-              address:
-              <br />
-              <i>{multisigAddress[network!.id]}</i>
+            <p>
+              You are about to add <b>{rune?.spaced_name}</b> ({rune?.symbol})
+              to the MIDL ecosystem. This will create an ERC-20 representation
+              of the rune.
             </p>
+
             <Button
               width="full"
               disabled={isTransactionBeingFormed}
               onClick={onConfirm}
             >
-              {isTransactionBeingFormed ? 'Confirming...' : 'Add token'}
+              {isTransactionBeingFormed ? 'Preparing...' : 'Add token'}
             </Button>
           </div>
         )}

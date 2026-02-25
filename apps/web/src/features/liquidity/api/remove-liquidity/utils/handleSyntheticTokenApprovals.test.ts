@@ -35,8 +35,8 @@ vi.mock('@/global', () => ({
 }));
 
 vi.mock('@midl-xyz/midl-js-executor', () => ({
-  executorAddress: {
-    regtest: '0x4444444444444444444444444444444444444444',
+  SystemContracts: {
+    Executor: '0x0000000000000000000000000000000000001003',
   },
   midlRegtest: {},
 }));
@@ -46,7 +46,7 @@ describe('handleSyntheticTokenApprovals', () => {
   const mockUserAddress =
     '0x5555555555555555555555555555555555555555' as Address;
   const mockExecutorAddress =
-    '0x4444444444444444444444444444444444444444' as Address;
+    '0x0000000000000000000000000000000000001003' as Address;
 
   const synthTokenA = '0x1111111111111111111111111111111111111111' as Address;
   const synthTokenB = '0x2222222222222222222222222222222222222222' as Address;
